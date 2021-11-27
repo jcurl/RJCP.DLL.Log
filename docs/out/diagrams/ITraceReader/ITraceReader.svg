@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="233px" preserveAspectRatio="none" style="width:364px;height:233px;background:#FFFFFF;" version="1.1" viewBox="0 0 364 233" width="364px" zoomAndPan="magnify"><defs><filter height="300%" id="f7v7p87u7pf97" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--MD5=[fe50a4f6767356ff4dcdadb85ef8cbdd]
+class IDisposable--><rect codeLine="1" fill="#FEFECE" filter="url(#f7v7p87u7pf97)" height="61.8359" id="IDisposable" style="stroke:#A80036;stroke-width:1.5;" width="99" x="51" y="21"/><ellipse cx="66" cy="37" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M66.9531,33.6406 L66.9531,40.2969 L68.6719,40.2969 Q69.2813,40.2969 69.5469,40.5313 Q69.8125,40.7656 69.8125,41.1563 Q69.8125,41.5313 69.5469,41.7656 Q69.2813,42 68.6719,42 L63.5313,42 Q62.9219,42 62.6563,41.7656 Q62.3906,41.5313 62.3906,41.1406 Q62.3906,40.7656 62.6563,40.5313 Q62.9219,40.2969 63.5313,40.2969 L65.25,40.2969 L65.25,33.6406 L63.5313,33.6406 Q62.9219,33.6406 62.6563,33.4063 Q62.3906,33.1719 62.3906,32.7813 Q62.3906,32.4063 62.6563,32.1719 Q62.9219,31.9375 63.5313,31.9375 L68.6719,31.9375 Q69.2813,31.9375 69.5469,32.1719 Q69.8125,32.4063 69.8125,32.7813 Q69.8125,33.1719 69.5469,33.4063 Q69.2813,33.6406 68.6719,33.6406 L66.9531,33.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="67" x="80" y="41.9102">IDisposable</text><line style="stroke:#A80036;stroke-width:1.5;" x1="52" x2="149" y1="53" y2="53"/><line style="stroke:#A80036;stroke-width:1.5;" x1="52" x2="149" y1="61" y2="61"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="76" x="57" y="76.4189">Dispose() : void</text><!--MD5=[684d20bac0edec56e0afdb1190bcbf55]
+class ITraceReader--><rect codeLine="5" fill="#FEFECE" filter="url(#f7v7p87u7pf97)" height="61.8359" id="ITraceReader" style="stroke:#A80036;stroke-width:1.5;" width="187" x="7" y="158"/><ellipse cx="22" cy="174" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M22.9531,170.6406 L22.9531,177.2969 L24.6719,177.2969 Q25.2813,177.2969 25.5469,177.5313 Q25.8125,177.7656 25.8125,178.1563 Q25.8125,178.5313 25.5469,178.7656 Q25.2813,179 24.6719,179 L19.5313,179 Q18.9219,179 18.6563,178.7656 Q18.3906,178.5313 18.3906,178.1406 Q18.3906,177.7656 18.6563,177.5313 Q18.9219,177.2969 19.5313,177.2969 L21.25,177.2969 L21.25,170.6406 L19.5313,170.6406 Q18.9219,170.6406 18.6563,170.4063 Q18.3906,170.1719 18.3906,169.7813 Q18.3906,169.4063 18.6563,169.1719 Q18.9219,168.9375 19.5313,168.9375 L24.6719,168.9375 Q25.2813,168.9375 25.5469,169.1719 Q25.8125,169.4063 25.8125,169.7813 Q25.8125,170.1719 25.5469,170.4063 Q25.2813,170.6406 24.6719,170.6406 L22.9531,170.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="76" x="36" y="178.9102">ITraceReader</text><rect fill="#FFFFFF" height="17.0938" style="stroke:#000000;stroke-width:1.0;stroke-dasharray:2.0,2.0;" width="77" x="120" y="155"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="75" x="121" y="168.457">T : ITraceLine</text><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="193" y1="190" y2="190"/><line style="stroke:#A80036;stroke-width:1.5;" x1="8" x2="193" y1="198" y2="198"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="127" x="13" y="213.4189">GetLineAsync() : Task&lt;T&gt;</text><!--MD5=[88ea6b0307e645c9893f60c417406741]
+class ITraceLine--><rect codeLine="9" fill="#FEFECE" filter="url(#f7v7p87u7pf97)" height="89.5078" id="ITraceLine" style="stroke:#A80036;stroke-width:1.5;" width="91" x="259" y="7"/><ellipse cx="274" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M274.9531,19.6406 L274.9531,26.2969 L276.6719,26.2969 Q277.2813,26.2969 277.5469,26.5313 Q277.8125,26.7656 277.8125,27.1563 Q277.8125,27.5313 277.5469,27.7656 Q277.2813,28 276.6719,28 L271.5313,28 Q270.9219,28 270.6563,27.7656 Q270.3906,27.5313 270.3906,27.1406 Q270.3906,26.7656 270.6563,26.5313 Q270.9219,26.2969 271.5313,26.2969 L273.25,26.2969 L273.25,19.6406 L271.5313,19.6406 Q270.9219,19.6406 270.6563,19.4063 Q270.3906,19.1719 270.3906,18.7813 Q270.3906,18.4063 270.6563,18.1719 Q270.9219,17.9375 271.5313,17.9375 L276.6719,17.9375 Q277.2813,17.9375 277.5469,18.1719 Q277.8125,18.4063 277.8125,18.7813 Q277.8125,19.1719 277.5469,19.4063 Q277.2813,19.6406 276.6719,19.6406 L274.9531,19.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="59" x="288" y="27.9102">ITraceLine</text><line style="stroke:#A80036;stroke-width:1.5;" x1="260" x2="349" y1="39" y2="39"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="54" x="265" y="54.4189">Text: string</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="37" x="265" y="68.2549">Line: int</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="63" x="265" y="82.0908">Position: long</text><line style="stroke:#A80036;stroke-width:1.5;" x1="260" x2="349" y1="88.5078" y2="88.5078"/><!--MD5=[56e4c9075fa7c9f4c09ef0a20c49f72c]
+class T--><rect codeLine="16" fill="#FEFECE" filter="url(#f7v7p87u7pf97)" height="48" id="T" style="stroke:#A80036;stroke-width:1.5;" width="39" x="285" y="165"/><ellipse cx="300" cy="181" fill="#DA70D6" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M300.9219,178.3906 L300.9219,185.0469 L302.0781,185.0469 Q302.6875,185.0469 302.9453,185.2813 Q303.2031,185.5156 303.2031,185.9063 Q303.2031,186.2813 302.9453,186.5156 Q302.6875,186.75 302.0781,186.75 L298.0938,186.75 Q297.4688,186.75 297.2109,186.5156 Q296.9531,186.2813 296.9531,185.8906 Q296.9531,185.5156 297.2109,185.2813 Q297.4688,185.0469 298.0938,185.0469 L299.2188,185.0469 L299.2188,178.3906 L297.375,178.3906 L297.375,180 Q297.375,180.6094 297.1406,180.875 Q296.9063,181.1406 296.5313,181.1406 Q296.1563,181.1406 295.9219,180.875 Q295.6875,180.6094 295.6875,180 L295.6875,176.6875 L304.5,176.6875 L304.5,180 Q304.5,180.6094 304.2578,180.875 Q304.0156,181.1406 303.6406,181.1406 Q303.2656,181.1406 303.0313,180.875 Q302.7969,180.6094 302.7969,180 L302.7969,178.3906 L300.9219,178.3906 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="7" x="314" y="185.9102">T</text><line style="stroke:#A80036;stroke-width:1.5;" x1="286" x2="323" y1="197" y2="197"/><line style="stroke:#A80036;stroke-width:1.5;" x1="286" x2="323" y1="205" y2="205"/><!--MD5=[f95857f2d59599b05cf08656f75fea18]
+reverse link IDisposable to ITraceReader--><path codeLine="18" d="M100.5,103.57 C100.5,121.82 100.5,141.84 100.5,157.8 " fill="none" id="IDisposable-backto-ITraceReader" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="none" points="93.5,103.3,100.5,83.3,107.5,103.3,93.5,103.3" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[7dd2f7c38bf53ab630df0930dab9811e]
+link ITraceReader to T--><path codeLine="19" d="M194.14,189 C228.29,189 263.69,189 284.91,189 " fill="none" id="ITraceReader-T" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="54" x="212.5" y="182.4951">«returns»</text><!--MD5=[28bf4fcc5fa1a7020ee2d111d110de7b]
+reverse link ITraceLine to T--><path codeLine="20" d="M304.5,117.24 C304.5,134.32 304.5,151.68 304.5,164.93 " fill="none" id="ITraceLine-backto-T" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="297.5,117.2,304.5,97.2,311.5,117.2,297.5,117.2" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[edf641923f339c3b6177eacdc2f7a708]
+@startuml ITraceReader
+interface IDisposable {
+    Dispose() : void
+}
+
+interface ITraceReader<T : ITraceLine> {
+    GetLineAsync() : Task<T>
+}
+
+interface ITraceLine {
+    Text: string
+    Line: int
+    Position: long
+}
+
+'A type
+class T <<(T,orchid)>>
+
+IDisposable <|- - ITraceReader
+ITraceReader . T : <<returns>>
+ITraceLine <|.. T
+@enduml
+
+@startuml ITraceReader
+interface IDisposable {
+    Dispose() : void
+}
+
+interface ITraceReader<T : ITraceLine> {
+    GetLineAsync() : Task<T>
+}
+
+interface ITraceLine {
+    Text: string
+    Line: int
+    Position: long
+}
+
+class T <<(T,orchid)>>
+
+IDisposable <|- - ITraceReader
+ITraceReader . T : <<returns>>
+ITraceLine <|.. T
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 17:46:50 CET 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>

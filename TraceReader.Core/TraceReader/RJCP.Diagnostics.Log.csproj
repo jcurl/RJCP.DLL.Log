@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <Configurations>Debug;Release</Configurations>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <AssemblyName>RJCP.Diagnostics.Log</AssemblyName>
+    <AssemblyTitle>RJCP.Diagnostics.Log</AssemblyTitle>
+    <Product>RJCP.Diagnostics.Log</Product>
+    <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2011-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <PackageId>RJCP.Diagnostics.Log</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.Log.git</PackageProjectUrl>
+    <Description>Parse external log streams.</Description>
+    <Version>0.8.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Decoder\ITraceDecoder.cs" />
+    <Compile Include="Decoder\TextDecoder.cs" />
+    <Compile Include="Decoder\TextDecoderBase.cs" />
+    <Compile Include="ITraceReader.cs" />
+    <Compile Include="ITraceReaderFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ITraceLine.cs" />
+    <Compile Include="TextTraceReaderFactory.cs" />
+    <Compile Include="TraceLine.cs" />
+    <Compile Include="TraceReader.cs" />
+    <Compile Include="TraceReaderFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

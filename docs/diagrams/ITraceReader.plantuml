@@ -1,0 +1,22 @@
+@startuml ITraceReader
+interface IDisposable {
+    Dispose() : void
+}
+
+interface ITraceReader<T : ITraceLine> {
+    GetLineAsync() : Task<T>
+}
+
+interface ITraceLine {
+    Text: string
+    Line: int
+    Position: long
+}
+
+'A type
+class T <<(T,orchid)>>
+
+IDisposable <|-- ITraceReader
+ITraceReader . T : <<returns>>
+ITraceLine <|.. T
+@enduml
