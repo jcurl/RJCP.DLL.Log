@@ -48,12 +48,15 @@
 
   <ItemGroup>
     <Compile Include="Decoder\ITraceDecoder.cs" />
+    <Compile Include="Decoder\TeraTermDecoder.cs" />
     <Compile Include="Decoder\TextDecoder.cs" />
     <Compile Include="Decoder\TextDecoderBase.cs" />
     <Compile Include="ITraceReader.cs" />
     <Compile Include="ITraceReaderFactory.cs" />
+    <Compile Include="LogTraceLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ITraceLine.cs" />
+    <Compile Include="TeraTermTraceReaderFactory.cs" />
     <Compile Include="TextTraceReaderFactory.cs" />
     <Compile Include="TraceLine.cs" />
     <Compile Include="TraceReader.cs" />

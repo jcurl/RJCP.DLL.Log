@@ -1,0 +1,43 @@
+@startuml TextDecoder
+class Main
+
+namespace Decoder {
+    interface ITraceDecoder<T : ITraceLine>
+    abstract class TextDecoderBase<T : ITraceLine> {
+        #TextDecoderBase()
+        #TextDecoderBase(encoding: Encoding)
+        ..
+        +Encoding: Encoding
+        ..
+        +Decode(buffer: ReadOnlySpan<byte>, position: long): IEnumerable<T>
+        +Flush(): IEnumerable<T>
+        #GetLine(line: Span<char>, position: long): T
+    }
+
+    class TextDecoder
+    class TeraTermDecoder
+}
+
+Decoder.ITraceDecoder <|.. Decoder.TextDecoderBase
+Decoder.TextDecoderBase <|-- Decoder.TextDecoder : T > TraceLine
+Decoder.TextDecoderBase <|-- Decoder.TeraTermDecoder : T > LogTraceLine
+
+abstract class TraceReaderFactory<T : ITraceLine>
+class TraceReader<T : ITraceLine>
+class TeraTermTraceReaderFactory
+class TextTraceReaderFactory
+
+TraceReaderFactory <|-- TextTraceReaderFactory : T > TraceLine
+TraceReaderFactory <|-- TeraTermTraceReaderFactory : T > LogTraceLine
+
+TextTraceReaderFactory .. Decoder.TextDecoder : <<instantiates>>
+TextTraceReaderFactory .. TraceReader : <<returns>>\nT > TraceLine
+
+TeraTermTraceReaderFactory .. Decoder.TeraTermDecoder : <<instantiates>>
+TeraTermTraceReaderFactory .. TraceReader : <<returns>>\nT > LogTraceLine
+
+Main .. TeraTermTraceReaderFactory : <<instantiates>>
+Main .. TextTraceReaderFactory : <<instantiates>>
+'Main *-- TraceReader
+TraceReader --* Main
+@enduml

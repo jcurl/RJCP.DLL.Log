@@ -56,12 +56,16 @@
     <Compile Include="EmptyTraceReaderFactory.cs" />
     <Compile Include="IO\ReadLimitStream.cs" />
     <Compile Include="IO\WriteOnlyStream.cs" />
+    <Compile Include="TeraTermTraceReaderTest.cs" />
     <Compile Include="TextTraceReaderTest.cs" />
     <Compile Include="TraceReaderFactoryTest.cs" />
     <Compile Include="TraceReaderTest.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="TestResources\TextFiles\TeraTerm.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestResources\TextFiles\TextFile.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

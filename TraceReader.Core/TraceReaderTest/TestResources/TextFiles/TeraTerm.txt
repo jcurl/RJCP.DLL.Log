@@ -1,0 +1,13 @@
+[Fri Aug 19 16:25:30.861 2011] login: root
+[Fri Aug 19 16:25:30.861 2011] Password: 
+[Fri Aug 19 16:25:30.971 2011] hostname:/dev/shmem> *** JCURL:
+*** JCURL: -=> 1 <=-
+*** JCURL:
+/opt/bin/LcCommander appreset
+[Fri Aug 19 16:25:32.096 2011] application reset
+[Fri Aug 19 16:25:32.393 2011] [MSG]@229406 (4104.6): LcRequester: Exec: Current=Normal; Requested=Reset
+[Fri Aug 19 16:25:33.533 2011] [MSG]@230547 (4104.6): LcRequester: Exec: Current=_preResetNormal; Requested=Reset
+[Fri Aug 19 16:25:33.580 2011] System shutting down
+
+[Fri Jan 01 00:00:00.000 2021]
+Log File Parsed
