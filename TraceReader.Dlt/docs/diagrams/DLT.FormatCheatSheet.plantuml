@@ -1,0 +1,133 @@
+@startuml DLT.FormatCheatSheet
+map "Storage Header (Optional)" as StorageHeader {
+    0..3 => DLT Pattern DLT\1
+    4..11 => Real-Clock Time Stamp
+    12..15 => ECU ID
+}
+
+map "Standard Header (4-16 bytes)" as StandardHeader {
+    0 => Header Type (HTYP)
+    1 => Message Counter (MCNT)
+    2..3 => Length (LEN)
+    4..7 => ECU ID (ECU, Optional)
+    8..11 => Session ID (SEID, Optional)
+    12..15 => Device Time Stamp (TMSP, Optional)
+}
+
+map "Header Type (1 byte)" as HeaderType {
+    b0 => Use Extended Header (UEH)
+    b1 => Most Significant Byte First (MSBF)
+    b2 => With ECU ID (WEID)
+    b3 => With Session ID (WSID)
+    b4 => With Time Stamp (WTMS)
+    b5..b7 => Version Identifier (VERS)
+}
+
+map "Extended Header (Optional)" as ExtendedHeader {
+    0 => Message Info (MSIN)
+    1 => Argument Count (NOAR)
+    2..5 => Application ID (APID)
+    6..9 => Context ID (CTID)
+}
+
+map "Message Info (1 byte)" as MessageInfo {
+    b0 => Verbose (VERB)
+    b1..b3 => Message Type (MSTP)
+    b4..b7 => Message Type Info (MTIN)
+}
+
+map "MTIN DLT_TYPE_LOG (MSTP=0)" as DLT_TYPE_LOG {
+    1 => DLT_LOG_FATAL
+    2 => DLT_LOG_ERROR
+    3 => DLT_LOG_WARN
+    4 => DLT_LOG_INFO
+    5 => DLT_LOG_WARN
+    6 => DLT_LOG_VERBOSE
+}
+
+map "MTIN DLT_TYPE_APP_TRACE (MSTP=1)" as DLT_TYPE_APP_TRACE {
+    1 => DLT_TRACE_VARIABLE
+    2 => DLT_TRACE_FUNCTION_IN
+    3 => DLT_TRACE_FUNCTION_OUT
+    4 => DLT_TRACE_STATE
+    5 => DLT_TRACE_VFB
+}
+
+map "MTIN DLT_TYPE_NW_TRACE (MSTP=2)" as DLT_TYPE_NW_TRACE {
+    1 =>  DLT_NW_TRACE_IPC
+    2 =>  DLT_NW_TRACE_CAN
+    3 =>  DLT_NW_TRACE_FLEXRAY
+    4 =>  DLT_NW_TRACE_MOST
+    5 =>  DLT_NW_TRACE_ETHERNET
+    6 =>  DLT_NW_TRACE_SOMEIP
+    7..15 => User Defined
+}
+
+map "MTIN DLT_TYPE_CONTROL (MSTP=3)" as DLT_TYPE_CONTROL {
+    1 => DLT_CONTROL_REQUEST
+    2 => DLT_CONTROL_RESPONSE
+    3 => DLT_CONTROL_TIME
+}
+
+object "Verbose Payload" as Payload {
+    Arg 1
+    Arg 2
+    Arg n
+}
+
+map "Non-verbose Payload" as NonVerbosePayload {
+    0..3 => Message Identifier
+    4.. => Dynamic Data
+}
+
+map Argument {
+    0..3 => Type Info
+    4..n => Variable Info (Optional)
+    n+1.. => Payload
+}
+
+map "Type Info (4 bytes)" as TypeInfo {
+   b0..b3 => Type Length (TYLE)
+   b4 => Boolean (BOOL)
+   b5 => Signed Int (SINT)
+   b6 => Unsigned Int (UINT)
+   b7 => Float (FLOA)
+   b8 => Array (ARAY)
+   b9 => String (STRG)
+   b10 => Raw (RAWD)
+   b11 => Variable Information (VARI)
+   b12 => Fixed Point (FIXP)
+   b13 => Trace Information (TRAI)
+   b14 => Struct (STRU)
+   b15..b17 => String encoding (SCOD)
+}
+
+map "Type Length (TYLE)" as TypeLength {
+    0 => Undefined
+    1 => 8-bit
+    2 => 16-bit
+    3 => 32-bit
+    4 => 64-bit
+    5 => 128-bit
+}
+
+map "String encoding (SCOD)" as StringCoding {
+    0 => ASCII
+    1 => UTF-8
+}
+
+StorageHeader - StandardHeader
+StandardHeader - ExtendedHeader
+StandardHeader -- HeaderType
+ExtendedHeader - Payload
+ExtendedHeader - NonVerbosePayload
+ExtendedHeader -- MessageInfo
+MessageInfo -- DLT_TYPE_LOG
+MessageInfo -- DLT_TYPE_APP_TRACE
+MessageInfo -- DLT_TYPE_NW_TRACE
+MessageInfo -- DLT_TYPE_CONTROL
+Payload "0..*" -- Argument
+Argument -- TypeInfo
+TypeInfo -- TypeLength
+TypeInfo -- StringCoding
+@enduml
