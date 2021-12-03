@@ -1,0 +1,17 @@
+@startuml DLT.TraceLine
+interface ITraceLine
+abstract class DltTraceLineBase
+class DltTraceLine
+class DltControlTraceLine
+
+ITraceLine <|.. DltTraceLineBase
+DltTraceLineBase <|-- DltTraceLine
+DltTraceLineBase <|-- DltControlTraceLine
+
+interface IDltLineBuilder
+class DltLineBuilder
+
+IDltLineBuilder <|.. DltLineBuilder
+DltLineBuilder --> DltTraceLine : <<creates>>
+DltLineBuilder --> DltControlTraceLine : <<creates>>
+@enduml

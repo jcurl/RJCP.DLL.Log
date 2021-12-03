@@ -1,0 +1,9 @@
+@startuml DLT.DecoderSequence
+start
+repeat
+    :Scan for Packet Start;
+    :Ensure Valid Version (VERS)\nand Length (LEN) from HTYP;
+    :Decode Packet;
+repeat while (More Data Available?)
+stop
+@enduml

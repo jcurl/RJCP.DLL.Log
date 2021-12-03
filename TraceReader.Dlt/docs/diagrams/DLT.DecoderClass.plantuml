@@ -1,0 +1,21 @@
+@startuml DLT.DecoderClass
+abstract class DltBaseTraceDecoder
+class DltTraceDecoder
+class DltFileTraceDecoder
+class DltSerialTraceDecoder
+
+DltTraceDecoder -d-|> DltBaseTraceDecoder
+DltFileTraceDecoder -d-|> DltBaseTraceDecoder
+DltSerialTraceDecoder -d-|> DltBaseTraceDecoder
+
+interface IDltLineBuilder
+class DltLineBuilder
+
+DltLineBuilder .d.|> IDltLineBuilder
+DltLineBuilder .r. DltBaseTraceDecoder : <<use>>
+
+DltBaseTraceDecoder o-d- IDltLineBuilder
+DltTraceDecoder .d.> DltLineBuilder : <<instantiate>>
+DltFileTraceDecoder .d.> DltLineBuilder
+DltSerialTraceDecoder .d.> DltLineBuilder
+@enduml
