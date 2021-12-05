@@ -13,14 +13,18 @@ considerably simplified with the goal of just reading and writing the files. As
 such, speed is of concern, buffering is removed where possible, threading is
 reduced to using asynchronous and awaitable methods instead.
 
-## Core Library
+## Core Library (RJCP.Diagnostics.Log)
 
 It consists of the core library, which lays down the framework for loading files
 and parsing them, and returning each line in the log file as structured data,
 which then other applications can group, sort or filter as required to gain
 extra knowledge.
 
-## Text Library
+## Text Library (RJCP.Diagnostics.Log)
 
 The text reading library is the simplest application of the core library, which
 reads a text file and returns each individual line in the text file.
+
+## DLT Library (RJCP.Diagnostics.Log.Dlt)
+
+Implements decoding DLT messages as defined by AutoSAR.
