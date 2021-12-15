@@ -12,13 +12,30 @@
     /// It is very useful to test decoders by limiting reads to arbitrarily small numbers, where small is usually much
     /// smaller than the usual packet size. This stream wraps another stream which will limit those sizes which make
     /// fuzzing of boundary condition errors much more probable.
+    /// <para>
+    /// This <see cref="Stream"/> will manage the underlying stream, disposing of this object automatically disposes the
+    /// underlying stream. This simplifies lifetime management.
+    /// </para>
     /// </remarks>
-    internal class ReadLimitStream : Stream
+    public class ReadLimitStream : Stream
     {
         private readonly Random m_Rnd;
         private readonly Stream m_Stream;
         private readonly int m_MinReadLength;
         private readonly int m_MaxReadLength;
+        private readonly int[] m_LengthSequence;
+        private int m_SequenceNext;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
+        /// </summary>
+        /// <param name="buffer">
+        /// The array buffer that contains the preinitialized data to read via a memory stream.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
+        /// <remarks>No random read lengths are made, this method simply wraps the stream.</remarks>
+        public ReadLimitStream(byte[] buffer)
+            : this(buffer, 0) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
@@ -30,6 +47,7 @@
         /// The maximum length of a read. If zero, then no limitation of reads to smaller chunks are made. Otherwise
         /// reads are limited from 1..readLength bytes.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
         public ReadLimitStream(byte[] buffer, int readLength)
             : this(new MemoryStream(buffer), MinRead(readLength), MaxRead(readLength)) { }
 
@@ -43,6 +61,7 @@
         /// <param name="maxReadLength">
         /// The maximum read length. Must be greater than the <paramref name="minReadLength"/>.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="minReadLength"/> must be 1 or greater.
         /// <para>- or -</para>
@@ -54,11 +73,41 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
         /// </summary>
+        /// <param name="buffer">
+        /// The array buffer that contains the preinitialized data to read via a memory stream.
+        /// </param>
+        /// <param name="sequenceLength">
+        /// Defines the sequences that are returned when reading data. Can be used to test boundary conditions for
+        /// streams that are being read.
+        /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="stream"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="sequenceLength"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="sequenceLength"/> is of zero length.</exception>
+        public ReadLimitStream(byte[] buffer, int[] lengthSequence)
+            : this(new MemoryStream(buffer), lengthSequence) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
+        /// </summary>
+        /// <param name="stream">The stream to wrap.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
+        /// <remarks>No random read lengths are made, this method simply wraps the stream.</remarks>
+        public ReadLimitStream(Stream stream)
+            : this(stream, 0) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
+        /// </summary>
         /// <param name="stream">The stream to wrap.</param>
         /// <param name="readLength">
         /// The maximum length of a read. If zero, then no limitation of reads to smaller chunks are made. Otherwise
         /// reads are limited from 1..readLength bytes.
         /// </param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public ReadLimitStream(Stream stream, int readLength)
             : this(stream, MinRead(readLength), MaxRead(readLength)) { }
 
@@ -94,6 +143,36 @@
             if (m_MinReadLength != m_MaxReadLength) {
                 m_Rnd = new Random();
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReadLimitStream"/> class.
+        /// </summary>
+        /// <param name="stream">The stream to wrap.</param>
+        /// <param name="sequenceLength">
+        /// Defines the sequences that are returned when reading data. Can be used to test boundary conditions for
+        /// streams that are being read.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="stream"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="sequenceLength"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="sequenceLength"/> is of zero length.</exception>
+        public ReadLimitStream(Stream stream, int[] sequenceLength)
+        {
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (sequenceLength == null) throw new ArgumentNullException(nameof(sequenceLength));
+            if (sequenceLength.Length == 0) throw new ArgumentException("Sequence length must be non-zero", nameof(sequenceLength));
+
+            if (stream is MemoryStream memStream) {
+                // A small optimization for reading tests, we set the beginning of the stream.
+                memStream.Seek(0, SeekOrigin.Begin);
+            }
+
+            m_Stream = stream;
+            m_LengthSequence = sequenceLength;
+            m_SequenceNext = 0;
         }
 
         private static int MinRead(int readLength)
@@ -147,9 +226,15 @@
 
         private int GetCount(int maxCount)
         {
-            int count = m_MaxReadLength < maxCount ? m_MaxReadLength : maxCount;
-            if (m_MinReadLength == m_MaxReadLength) return count;
+            int count;
+            if (m_LengthSequence != null) {
+                count = m_LengthSequence[m_SequenceNext];
+                m_SequenceNext = (m_SequenceNext + 1) % m_LengthSequence.Length;
+                return count;
+            }
 
+            count = m_MaxReadLength < maxCount ? m_MaxReadLength : maxCount;
+            if (m_MinReadLength == m_MaxReadLength) return count;
             return Math.Min(count, m_Rnd.Next(m_MinReadLength, m_MaxReadLength));
         }
 
@@ -359,6 +444,22 @@
         public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
             return m_Stream.BeginWrite(buffer, offset, count, callback, state);
+        }
+
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="Stream"/> and optionally releases the managed
+        /// resources.
+        /// </summary>
+        /// <param name="disposing">
+        /// <see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release
+        /// only unmanaged resources.
+        /// </param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) {
+                m_Stream.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

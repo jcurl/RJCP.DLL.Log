@@ -43,19 +43,25 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
+    <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Dlt\DltLineBuilder.cs" />
-    <Compile Include="Dlt\IDltLineBuilder.cs" />
-    <Compile Include="Dlt\DltLineFeatures.cs" />
+    <Compile Include="Decoder\DltTraceDecoder.cs" />
+    <Compile Include="Decoder\DltTraceDecoderBase.cs" />
+    <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
     <Compile Include="DltTraceLine.cs" />
+    <Compile Include="DltTraceReaderFactory.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
+    <Compile Include="Dlt\DltLineBuilder.cs" />
+    <Compile Include="Dlt\DltLineFeatures.cs" />
+    <Compile Include="Dlt\DltTraceLineBase.cs" />
     <Compile Include="Dlt\DltType.cs" />
     <Compile Include="Dlt\DltTypeExtension.cs" />
+    <Compile Include="Dlt\IdHashList.cs" />
+    <Compile Include="Dlt\IDltLineBuilder.cs" />
     <Compile Include="Dlt\IDltLineFeatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dlt\DltTraceLineBase.cs" />
   </ItemGroup>
 
   <ItemGroup>

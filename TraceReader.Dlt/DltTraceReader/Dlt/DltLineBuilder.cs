@@ -128,6 +128,9 @@
         /// <returns>The DLT trace line for skipped bytes.</returns>
         public DltTraceLineBase GetSkippedResult(string reason, long bytes)
         {
+            // TODO: When we can create lines with arguments, update this method to have constant strings and the
+            // reason/bytes as separate arguments.
+
             if (m_Online) TimeStamp = DateTime.Now;
             DltTraceLine line = new DltTraceLine() {
                 Line = m_Line,
@@ -140,7 +143,9 @@
                 Count = DltTraceLineBase.InvalidCounter,
                 DeviceTimeStamp = DeviceTimeStamp,
                 Type = DltType,
-                Text = $"Skipped: {bytes} bytes; {reason}"
+                Text = reason == null ?
+                    $"Skipped: {bytes}" :
+                    $"Skipped: {bytes} bytes; {reason}"
             };
             ((DltLineFeatures)line.Features).Set((DltLineFeatures)Features);
             line.Features.IsVerbose = true;
@@ -355,7 +360,7 @@
         {
             TimeStamp = DateTimeOffset.FromUnixTimeSeconds(seconds)
                 .AddTicks(microseconds * (TimeSpan.TicksPerMillisecond / 1000))
-                .LocalDateTime;
+                .UtcDateTime;
             Features.TimeStamp = true;
             return this;
         }
