@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Support class that knows how to build DLT Packets.
@@ -70,6 +71,32 @@
         }
 
         /// <summary>
+        /// Adds some random (corrupted) data to the stream.
+        /// </summary>
+        /// <param name="bytes">The number of random bytes to generate and add.</param>
+        /// <returns>The number of bytes that were written.</returns>
+        public int Random(int bytes)
+        {
+            byte[] data = new byte[bytes];
+            new Random().NextBytes(data);
+            m_Packets.Add(data);
+            return bytes;
+        }
+
+        /// <summary>
+        /// Copies the buffer data to the stream.
+        /// </summary>
+        /// <param name="buffer">The buffer with the data to copy.</param>
+        /// <returns>The number of bytes that were written.</returns>
+        public int Data(byte[] buffer)
+        {
+            byte[] data = new byte[buffer.Length];
+            buffer.CopyTo(data, 0);
+            m_Packets.Add(data);
+            return buffer.Length;
+        }
+
+        /// <summary>
         /// Returns a stream that contains all the appended packets.
         /// </summary>
         /// <returns>A <see cref="System.IO.Stream"/> that can be read</returns>
@@ -81,6 +108,37 @@
             }
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
+        }
+
+        /// <summary>
+        /// Writes the stream to the file name given.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <remarks>
+        /// This allows a test case to write the results of a test case to a file for comparison with other decoders.
+        /// </remarks>
+        public void Write(string fileName)
+        {
+            using (Stream stream = Stream())
+            using (FileStream file = new FileStream(fileName, FileMode.Create)) {
+                stream.CopyTo(file);
+            }
+        }
+
+        /// <summary>
+        /// Writes the stream to the file name given.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>A Task representing the asynchronous operation.</returns>
+        /// <remarks>
+        /// This allows a test case to write the results of a test case to a file for comparison with other decoders.
+        /// </remarks>
+        public async Task WriteAsync(string fileName)
+        {
+            using (Stream stream = Stream())
+            using (FileStream file = new FileStream(fileName, FileMode.Create)) {
+                await stream.CopyToAsync(file);
+            }
         }
 
         /// <summary>

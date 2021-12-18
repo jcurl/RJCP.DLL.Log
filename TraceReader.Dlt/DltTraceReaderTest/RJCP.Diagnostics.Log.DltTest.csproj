@@ -49,9 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Decoder\DltTraceDecoderTest.cs" />
+    <Compile Include="Decoder\DltTraceDecoderCommonTest.cs" />
+    <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
     <Compile Include="Decoder\LineCacheAccessor.cs" />
     <Compile Include="Decoder\LineCacheTest.cs" />
+    <Compile Include="DltFactory.cs" />
+    <Compile Include="DltFactoryType.cs" />
     <Compile Include="DltTime.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />

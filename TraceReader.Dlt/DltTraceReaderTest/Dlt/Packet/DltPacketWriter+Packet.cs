@@ -9,10 +9,12 @@
 
         private sealed class Packet
         {
+            private bool m_HasSerialMarker;
             private bool m_HasStorageHeader;
             private bool m_HasStandardHeader;
             private bool m_HasExtendedHeader;
 
+            private static readonly byte[] SerialMarker = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
             private readonly byte[] m_StorageHeader = new byte[16];
             private readonly byte[] m_Packet = new byte[PacketSize];
             private int m_ExtendedHeaderPos = 0;
@@ -21,9 +23,17 @@
 
             internal Packet() { }
 
+            public void CreateSerialMarker()
+            {
+                if (m_HasStorageHeader) throw new InvalidOperationException("Storage Header already constructed");
+                if (m_HasSerialMarker) throw new InvalidOperationException("Serial Marker already constructed");
+                m_HasSerialMarker = true;
+            }
+
             public void CreateStorageHeader(DateTime time, string ecuId)
             {
                 if (m_HasStorageHeader) throw new InvalidOperationException("Storage Header already constructed");
+                if (m_HasSerialMarker) throw new InvalidOperationException("Serial Marker already constructed");
                 m_StorageHeader[0] = (byte)'D';
                 m_StorageHeader[1] = (byte)'L';
                 m_StorageHeader[2] = (byte)'T';
@@ -110,8 +120,9 @@
             {
                 get
                 {
-                    if (!m_HasStorageHeader) return m_PacketLength;
-                    return m_PacketLength + m_StorageHeader.Length;
+                    if (m_HasStorageHeader) return m_PacketLength + m_StorageHeader.Length;
+                    if (m_HasSerialMarker) return m_PacketLength + SerialMarker.Length;
+                    return m_PacketLength;
                 }
             }
 
@@ -121,12 +132,18 @@
 
                 BitOperations.Copy16ShiftBigEndian(m_PacketLength, m_Packet, 2);
 
-                if (!m_HasStorageHeader) return m_Packet[0..m_PacketLength];
-
-                byte[] packet = new byte[m_StorageHeader.Length + m_PacketLength];
-                m_StorageHeader.CopyTo(packet, 0);
-                Array.Copy(m_Packet, 0, packet, m_StorageHeader.Length, m_PacketLength);
-                return packet;
+                if (m_HasStorageHeader) {
+                    byte[] packet = new byte[m_StorageHeader.Length + m_PacketLength];
+                    m_StorageHeader.CopyTo(packet, 0);
+                    Array.Copy(m_Packet, 0, packet, m_StorageHeader.Length, m_PacketLength);
+                    return packet;
+                } else if (m_HasSerialMarker) {
+                    byte[] packet = new byte[SerialMarker.Length + m_PacketLength];
+                    SerialMarker.CopyTo(packet, 0);
+                    Array.Copy(m_Packet, 0, packet, SerialMarker.Length, m_PacketLength);
+                    return packet;
+                }
+                return m_Packet[0..m_PacketLength];
             }
 
             private static void WriteId(byte[] buffer, int offset, string id)

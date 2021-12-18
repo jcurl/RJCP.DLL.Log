@@ -69,7 +69,7 @@
                         decodeBuffer = CacheMinimumPacket(decodeBuffer, out _);
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
-                            bytes -= m_Cache.Consume(bytes);
+                            bytes -= m_Cache.Consume(skip);
                             m_SkippedBytes += skip;
                             decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool isCached);
                             if (!isCached) return m_Lines;

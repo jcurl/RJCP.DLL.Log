@@ -60,7 +60,7 @@
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -80,7 +80,7 @@
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
             Assert.That(builder.IsVerbose, Is.True);
             Assert.That(builder.SessionId, Is.EqualTo(1435));
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(10));
 
@@ -105,7 +105,7 @@
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
             Assert.That(dltLine.Features.TimeStamp, Is.True);
-            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.True);
         }
@@ -115,7 +115,7 @@
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -134,7 +134,7 @@
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(builder.IsVerbose, Is.True);
             Assert.That(builder.SessionId, Is.EqualTo(0));
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(10));
 
@@ -159,7 +159,7 @@
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(dltLine.Features.TimeStamp, Is.True);
-            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.True);
         }
@@ -169,7 +169,7 @@
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -200,12 +200,12 @@
             Assert.That(line.Features.DeviceTimeStamp, Is.True);
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(line.Features.TimeStamp, Is.True);
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
 
             builder.SetEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 17, 56, 24, 122.1));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 24.1221));
             builder.SetCount(128);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -235,7 +235,7 @@
             Assert.That(line.Features.DeviceTimeStamp, Is.True);
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55356000)));
             Assert.That(line.Features.TimeStamp, Is.True);
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 24, 122.1)));
+            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 24.1221)));
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
         }
@@ -307,18 +307,18 @@
         public void GenerateLogTimeStamp()
         {
             IDltLineBuilder builder = new DltLineBuilder();
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 21, 33, 14, 344.9));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449));
             Assert.That(builder.Features.TimeStamp, Is.True);
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 21, 33, 14, 344.9)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449)));
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
             Assert.That(line.Features.TimeStamp, Is.True);
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 21, 33, 14, 344.9)));
+            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449)));
 
             // The Time Stamp is *not* reset, only the feature flag.
             builder.Reset();
             Assert.That(builder.Features.TimeStamp, Is.False);
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 21, 33, 14, 344.9)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449)));
         }
 
         [Test]
@@ -483,12 +483,12 @@
         public void GenerateSkippedLineWithTimeStamp()
         {
             IDltLineBuilder builder = new DltLineBuilder();
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 5, 10, 39, 23, 45.6));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456));
 
             DltTraceLine line = (DltTraceLine)builder.GetSkippedResult("header", 25);
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 5, 10, 39, 23, 45.6)));
+            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456)));
             Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; header"));
             Assert.That(line.Features.IsVerbose, Is.True);
             Assert.That(line.Features.TimeStamp, Is.True);        // Use last set time stamp, as otherwise not available
@@ -500,7 +500,7 @@
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4));
+            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -518,7 +518,7 @@
             DltTraceLine line = (DltTraceLine)builder.GetSkippedResult("header", 25);
             Assert.That(line.Line, Is.EqualTo(1));
             Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.LogTime(2021, 12, 4, 17, 56, 23, 563.4)));
+            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
             Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; header"));
             Assert.That(line.Features.IsVerbose, Is.True);

@@ -48,6 +48,16 @@
             }
 
             /// <summary>
+            /// Creats a serial marker for this packet.
+            /// </summary>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder SerialMarker()
+            {
+                m_Packet.CreateSerialMarker();
+                return this;
+            }
+
+            /// <summary>
             /// Creates a storage header for this packet.
             /// </summary>
             /// <param name="time">The DLT time of the logger.</param>
