@@ -71,6 +71,7 @@
             ((DltLineFeatures)Features).Set(features);
             Features.TimeStamp = m_Online;
 
+            m_LastEcuId = EcuId;
             EcuId = null;
             ApplicationId = null;
             ContextId = null;
@@ -123,6 +124,7 @@
         private string m_SkippedReason;
         private DateTime m_LastValidTimeStamp = DltConstants.DefaultTimeStamp;
         private TimeSpan m_LastValidDeviceTimeStamp = new TimeSpan(0);
+        private string m_LastEcuId;
 
         /// <summary>
         /// Indicates that bytes were skipped. Take a snapshot of the time stamps.
@@ -164,7 +166,7 @@
                 Line = m_Line,
                 Position = Position,
                 TimeStamp = m_LastValidTimeStamp,
-                EcuId = EcuId ?? string.Empty,
+                EcuId = m_LastEcuId ?? string.Empty,
                 ApplicationId = string.Empty,
                 ContextId = string.Empty,
                 Count = DltTraceLineBase.InvalidCounter,

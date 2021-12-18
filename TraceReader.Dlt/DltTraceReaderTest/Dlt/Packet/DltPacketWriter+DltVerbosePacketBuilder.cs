@@ -98,6 +98,22 @@
                 m_DltPacketWriter.m_Packets.Add(Build());
                 return m_Packet.Length;
             }
+
+            /// <summary>
+            /// Appends this instance to the <see cref="DltPacketWriter"/> but truncates the output.
+            /// </summary>
+            /// <param name="maxLength">The maximum length to truncate at.</param>
+            /// <returns>The length of the packet that was built and added.</returns>
+            public int Append(int maxLength)
+            {
+                byte[] fullPacket = Build();
+                if (maxLength < fullPacket.Length) {
+                    m_DltPacketWriter.m_Packets.Add(fullPacket[..maxLength]);
+                    return maxLength;
+                }
+                m_DltPacketWriter.m_Packets.Add(fullPacket);
+                return fullPacket.Length;
+            }
         }
     }
 }

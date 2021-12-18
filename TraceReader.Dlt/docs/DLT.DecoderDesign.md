@@ -201,8 +201,10 @@ The minimum length is expected to be:
 * 4 bytes for the ECU ID if present (WEID)
 * 4 bytes for the Session ID if present (WSID)
 * 4 bytes for the Time Stamp if present (WTMS)
+* 10 bytes for the extended header if present (UEH)
 
-The length field in the packet does not include the storage header.
+The length field in the packet does not include the storage header or the serial
+marker.
 
 Thus, if the length field is less than the minimum, we can conclude the packet
 is not a valid DLT packet, it can be discarded (the minimum amount of data), and

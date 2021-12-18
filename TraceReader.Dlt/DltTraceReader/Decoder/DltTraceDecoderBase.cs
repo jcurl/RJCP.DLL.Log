@@ -10,7 +10,11 @@
     /// </summary>
     public abstract partial class DltTraceDecoderBase : ITraceDecoder<DltTraceLineBase>
     {
+#if DEBUG
+        private /* readonly */ LineCache m_Cache = new LineCache();
+#else
         private readonly LineCache m_Cache = new LineCache();
+#endif
         private readonly IDltLineBuilder m_DltLineBuilder;
 
         private bool m_ValidHeaderFound = false;
@@ -36,8 +40,9 @@
         /// <param name="position">The position in the stream where the data begins.</param>
         /// <returns>An enumerable collection of the decoded lines.</returns>
         /// <remarks>
-        /// The <see cref="Decode"/> method shall accept any number of bytes for decoding. It should also consume all
-        /// data that is received, so that data which is not processed is buffered locally by the decoder.
+        /// The <see cref="Decode(ReadOnlySpan{byte}, long)"/> method shall accept any number of bytes for decoding. It
+        /// should also consume all data that is received, so that data which is not processed is buffered locally by
+        /// the decoder.
         /// <para>
         /// On return, this method should return a read only collection of trace lines that were fully decoded. If no
         /// lines were decoded, it should return an empty collection (and avoid <see langword="null"/>).
@@ -45,14 +50,30 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
+            return Decode(buffer, position, false);
+        }
+
+        private IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position, bool flush)
+        {
+            // When flushing, there should be no access to the m_Cache variable. It is expected that the user
+            // provides the buffer from m_Cache when flushing.
+
             ReadOnlySpan<byte> decodeBuffer = buffer;
             m_Lines.Clear();
 
-            int bytes = m_Cache.Length + buffer.Length;
+            int bytes = flush ?
+                buffer.Length :
+                m_Cache.Length + buffer.Length;
             while (bytes > 0) {
                 ReadOnlySpan<byte> dltPacket = decodeBuffer;
                 if (!m_ValidHeaderFound) {
                     if (bytes < StandardHeaderOffset + 4) {
+                        if (flush) {
+                            m_DltLineBuilder.AddSkippedBytes(bytes, "End of stream");
+                            if (m_DltLineBuilder.SkippedBytes > 0)
+                                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                            return m_Lines;
+                        }
                         m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                         return m_Lines;
                     }
@@ -60,7 +81,7 @@
                     // Search for the initial marker defining the start of the DLT frame. If data is already cached, we
                     // append and search there.
                     bool found;
-                    if (m_Cache.Length != 0) {
+                    if (!flush && m_Cache.Length != 0) {
                         // TODO: We could optimize this logic by realising there's no need to add cache if all the data
                         // we need is in the original input `buffer`. Then we'd just set the `decodeBuffer` to the
                         // equivalent position in `buffer`, reset the cache, and start again. This could reduce a lot of
@@ -82,6 +103,12 @@
 
                             // We need the standard header before we know what is happening.
                             if (bytes < StandardHeaderOffset + 4) {
+                                if (flush) {
+                                    m_DltLineBuilder.AddSkippedBytes(bytes, "End of stream");
+                                    if (m_DltLineBuilder.SkippedBytes > 0)
+                                        m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                                    return m_Lines;
+                                }
                                 m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                                 return m_Lines;
                             }
@@ -98,7 +125,7 @@
 
                     if (!IsValidPacket(dltPacket[StandardHeaderOffset..], out m_ExpectedLength)) {
                         bytes -= MinimumDiscard;
-                        decodeBuffer = SkipBytes(MinimumDiscard, "Invalid packet standard header", decodeBuffer);
+                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Invalid packet standard header");
                         continue;
                     }
 
@@ -108,6 +135,14 @@
                 // If we don't have enough data, parsing doesn't make sense. Cache it and exit, waiting for more data.
                 if (bytes < StandardHeaderOffset + m_ExpectedLength) {
                     // Cache all data until we have the complete packet
+                    if (flush) {
+                        // In case we don't have enough data, we assume that we might have corruption that the length
+                        // could be incorrect, and hence look for the next packet. This may result in additional packets
+                        // at the end of the stream if data within a packet could be interpreted as a new DLT packet.
+                        bytes -= MinimumDiscard;
+                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Incomplete packet at end of stream");
+                        continue;
+                    }
                     m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                     return m_Lines;
                 }
@@ -124,7 +159,7 @@
                 if (!ParsePrefixHeader(dltPacket, m_DltLineBuilder) ||
                     !ParsePacket(dltPacket[StandardHeaderOffset..])) {
                     bytes -= MinimumDiscard;
-                    decodeBuffer = SkipBytes(MinimumDiscard, "Invalid packet", decodeBuffer);
+                    decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Invalid packet");
                     m_ValidHeaderFound = false;
                     continue;
                 }
@@ -140,6 +175,8 @@
                 m_ValidHeaderFound = false;
             }
 
+            if (flush && m_DltLineBuilder.SkippedBytes > 0)
+                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
             return m_Lines;
         }
 
@@ -162,9 +199,12 @@
             return decodeBuffer;
         }
 
-        private ReadOnlySpan<byte> SkipBytes(int skip, string reason, ReadOnlySpan<byte> decodeBuffer)
+        private ReadOnlySpan<byte> SkipBytes(int skip, ReadOnlySpan<byte> decodeBuffer, bool flush, string reason)
         {
+            if (skip == 0) return decodeBuffer;
             m_DltLineBuilder.AddSkippedBytes(skip, reason);
+
+            if (flush) return decodeBuffer[skip..];
             return Consume(skip, decodeBuffer);
         }
 
@@ -308,10 +348,26 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Flush()
         {
-            // TODO: We should parse through the cached buffer, as if it is the input buffer, but with the knowledge
-            // that we're flushing, so that instead of caching a second time, it is added to the skipped data.
+            if (m_Cache.Length == 0) {
+                if (m_DltLineBuilder.SkippedBytes == 0)
+                    return Array.Empty<DltTraceLineBase>();
+                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                return m_Lines;
+            }
 
-            return Array.Empty<DltTraceLineBase>();
+            ReadOnlySpan<byte> buffer = m_Cache.GetCache();
+#if DEBUG
+            // When flushing, there should be no access to the `m_Cache` variable within the `Decode` method. By setting
+            // the cache to `null`, we are able to find incorrect accesses bugs quicker.
+
+            LineCache cache = m_Cache;
+            m_Cache = null;
+            IEnumerable<DltTraceLineBase> lines = Decode(buffer, 0, true);
+            m_Cache = cache;
+            return lines;
+#else
+            return Decode(buffer, 0, true);
+#endif
         }
 
         /// <summary>
