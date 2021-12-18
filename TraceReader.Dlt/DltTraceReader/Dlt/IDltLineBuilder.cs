@@ -31,12 +31,23 @@
         DltTraceLineBase GetResult();
 
         /// <summary>
+        /// Indicates that bytes were skipped. Take a snapshot of the time stamps.
+        /// </summary>
+        /// <param name="bytes">The number of bytes that were skipped.</param>
+        /// <param name="reason">The reason why bytes were skipped.</param>
+        void AddSkippedBytes(int bytes, string reason);
+
+        /// <summary>
+        /// Gets the current number of skipped bytes.
+        /// </summary>
+        /// <value>The number of skipped bytes.</value>
+        long SkippedBytes { get; }
+
+        /// <summary>
         /// Creates and returns the DLT trace line instance expressing skipped data.
         /// </summary>
-        /// <param name="reason">The reason why data was skipped.</param>
-        /// <param name="bytes">The number of bytes skipped.</param>
         /// <returns>The DLT trace line for skipped bytes.</returns>
-        DltTraceLineBase GetSkippedResult(string reason, long bytes);
+        DltTraceLineBase GetSkippedResult();
 
         /// <summary>
         /// Gets the features which are set for this line.

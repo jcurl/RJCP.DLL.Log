@@ -469,7 +469,8 @@
         {
             IDltLineBuilder builder = new DltLineBuilder();
 
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult("header", 25);
+            builder.AddSkippedBytes(25, "header");
+            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
@@ -485,7 +486,8 @@
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetTimeStamp(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456));
 
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult("header", 25);
+            builder.AddSkippedBytes(25, "header");
+            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456)));
@@ -515,7 +517,8 @@
             _ = builder.GetResult();
             builder.Reset();
 
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult("header", 25);
+            builder.AddSkippedBytes(25, "header");
+            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(1));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));

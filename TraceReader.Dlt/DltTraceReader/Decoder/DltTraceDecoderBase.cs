@@ -12,7 +12,6 @@
     {
         private readonly LineCache m_Cache = new LineCache();
         private readonly IDltLineBuilder m_DltLineBuilder;
-        private long m_SkippedBytes;
 
         private bool m_ValidHeaderFound = false;
         private int m_ExpectedLength;
@@ -54,7 +53,7 @@
                 ReadOnlySpan<byte> dltPacket = decodeBuffer;
                 if (!m_ValidHeaderFound) {
                     if (bytes < StandardHeaderOffset + 4) {
-                        m_SkippedBytes += m_Cache.Append(decodeBuffer);
+                        m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                         return m_Lines;
                     }
 
@@ -70,7 +69,7 @@
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
                             bytes -= m_Cache.Consume(skip);
-                            m_SkippedBytes += skip;
+                            m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
                             decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool isCached);
                             if (!isCached) return m_Lines;
                         }
@@ -78,12 +77,12 @@
                         found = ScanStartFrame(decodeBuffer, out int skip);
                         if (skip > 0) {
                             bytes -= skip;
-                            m_SkippedBytes += skip;
+                            m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
                             decodeBuffer = decodeBuffer[skip..];
 
                             // We need the standard header before we know what is happening.
                             if (bytes < StandardHeaderOffset + 4) {
-                                m_SkippedBytes += m_Cache.Append(decodeBuffer);
+                                m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                                 return m_Lines;
                             }
                         }
@@ -99,7 +98,7 @@
 
                     if (!IsValidPacket(dltPacket[StandardHeaderOffset..], out m_ExpectedLength)) {
                         bytes -= MinimumDiscard;
-                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer);
+                        decodeBuffer = SkipBytes(MinimumDiscard, "Invalid packet standard header", decodeBuffer);
                         continue;
                     }
 
@@ -109,7 +108,7 @@
                 // If we don't have enough data, parsing doesn't make sense. Cache it and exit, waiting for more data.
                 if (bytes < StandardHeaderOffset + m_ExpectedLength) {
                     // Cache all data until we have the complete packet
-                    m_SkippedBytes += m_Cache.Append(decodeBuffer);
+                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                     return m_Lines;
                 }
 
@@ -117,7 +116,7 @@
                 // data wasn't cached, then dltPacket already points to the start of the DLT packet.
                 if (m_Cache.Length != 0) {
                     int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.Length;
-                    m_SkippedBytes += m_Cache.Append(decodeBuffer[0..restLength]);
+                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..restLength]), "Cache overflow");
                     decodeBuffer = decodeBuffer[restLength..];
                     dltPacket = m_Cache.GetCache();
                 }
@@ -125,14 +124,13 @@
                 if (!ParsePrefixHeader(dltPacket, m_DltLineBuilder) ||
                     !ParsePacket(dltPacket[StandardHeaderOffset..])) {
                     bytes -= MinimumDiscard;
-                    decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer);
+                    decodeBuffer = SkipBytes(MinimumDiscard, "Invalid packet", decodeBuffer);
                     m_ValidHeaderFound = false;
                     continue;
                 }
 
-                if (m_SkippedBytes > 0) {
-                    m_Lines.Add(m_DltLineBuilder.GetSkippedResult(null, m_SkippedBytes));
-                    m_SkippedBytes = 0;
+                if (m_DltLineBuilder.SkippedBytes > 0) {
+                    m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                 }
                 m_Lines.Add(m_DltLineBuilder.GetResult());
                 m_DltLineBuilder.Reset();
@@ -150,12 +148,12 @@
             int minLen = StandardHeaderOffset + 4 - m_Cache.Length;
             if (minLen > 0) {
                 if (decodeBuffer.Length >= minLen) {
-                    m_SkippedBytes += m_Cache.Append(decodeBuffer[0..minLen]);
+                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..minLen]), "Cache overflow");
                     isCached = true;
                     return decodeBuffer[minLen..];
                 }
 
-                m_SkippedBytes += m_Cache.Append(decodeBuffer);
+                m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
                 isCached = false;
                 return ReadOnlySpan<byte>.Empty;
             }
@@ -164,9 +162,9 @@
             return decodeBuffer;
         }
 
-        private ReadOnlySpan<byte> SkipBytes(int skip, ReadOnlySpan<byte> decodeBuffer)
+        private ReadOnlySpan<byte> SkipBytes(int skip, string reason, ReadOnlySpan<byte> decodeBuffer)
         {
-            m_SkippedBytes += skip;
+            m_DltLineBuilder.AddSkippedBytes(skip, reason);
             return Consume(skip, decodeBuffer);
         }
 

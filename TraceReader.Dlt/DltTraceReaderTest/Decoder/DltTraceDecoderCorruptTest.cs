@@ -65,7 +65,25 @@
                         // Corrupted data, should be a line indicated data is skipped as a new marker is identified
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(1));
+                        Assert.That(line.TimeStamp, Is.EqualTo(m_Factory.ExpectedTimeStamp(DltTime.FileTime(2021, 12, 16, 20, 59, 35.2376))));
+                        Assert.That(line.Count, Is.EqualTo(-1));                       // Not available for skipped lines
+                        Assert.That(line.EcuId, Is.EqualTo("ECU1"));                   // Use the last ECU ID
+                        Assert.That(line.SessionId, Is.EqualTo(0));                    // Not available for skipped lines
+                        Assert.That(line.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(1.231)));  // Use the last time stamp
+                        Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
+                        Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));     // Not available for skipped lines
+                        Assert.That(line.ContextId, Is.EqualTo(string.Empty));         // Not available for skipped lines
+                        // TODO: When line arguments are passed: Assert.That(line.Text, Is.EqualTo("Skipped"));
+
                         Assert.That(line.Features.TimeStamp, Is.EqualTo(m_Factory.FactoryType == DltFactoryType.File));
+                        Assert.That(line.Features.EcuId, Is.False);
+                        Assert.That(line.Features.SessionId, Is.False);
+                        Assert.That(line.Features.DeviceTimeStamp, Is.True);
+                        Assert.That(line.Features.BigEndian, Is.False);
+                        Assert.That(line.Features.IsVerbose, Is.True);
+                        Assert.That(line.Features.MessageType, Is.False);
+                        Assert.That(line.Features.ApplicationId, Is.False);
+                        Assert.That(line.Features.ContextId, Is.False);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(2));
@@ -134,7 +152,25 @@
                         // Corrupted data, should be a line indicated data is skipped as a new marker is identified
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(1));
+                        Assert.That(line.TimeStamp, Is.EqualTo(m_Factory.ExpectedTimeStamp(DltTime.FileTime(2021, 12, 16, 20, 59, 35.2376))));
+                        Assert.That(line.Count, Is.EqualTo(-1));                       // Not available for skipped lines
+                        Assert.That(line.EcuId, Is.EqualTo("ECU1"));                   // Use the last ECU ID
+                        Assert.That(line.SessionId, Is.EqualTo(0));                    // Not available for skipped lines
+                        Assert.That(line.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(1.231)));  // Use the last time stamp
+                        Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
+                        Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));     // Not available for skipped lines
+                        Assert.That(line.ContextId, Is.EqualTo(string.Empty));         // Not available for skipped lines
+                        // TODO: When line arguments are passed: Assert.That(line.Text, Is.EqualTo("Skipped"));
+
                         Assert.That(line.Features.TimeStamp, Is.EqualTo(m_Factory.FactoryType == DltFactoryType.File));
+                        Assert.That(line.Features.EcuId, Is.False);
+                        Assert.That(line.Features.SessionId, Is.False);
+                        Assert.That(line.Features.DeviceTimeStamp, Is.True);
+                        Assert.That(line.Features.BigEndian, Is.False);
+                        Assert.That(line.Features.IsVerbose, Is.True);
+                        Assert.That(line.Features.MessageType, Is.False);
+                        Assert.That(line.Features.ApplicationId, Is.False);
+                        Assert.That(line.Features.ContextId, Is.False);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(2));

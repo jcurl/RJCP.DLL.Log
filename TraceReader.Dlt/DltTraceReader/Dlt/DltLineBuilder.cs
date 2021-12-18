@@ -120,13 +120,41 @@
             return line;
         }
 
+        private string m_SkippedReason;
+        private DateTime m_LastValidTimeStamp = DltConstants.DefaultTimeStamp;
+        private TimeSpan m_LastValidDeviceTimeStamp = new TimeSpan(0);
+
+        /// <summary>
+        /// Indicates that bytes were skipped. Take a snapshot of the time stamps.
+        /// </summary>
+        /// <param name="bytes">The number of bytes that were skipped.</param>
+        /// <param name="reason">The reason why bytes were skipped.</param>
+        public void AddSkippedBytes(int bytes, string reason)
+        {
+            if (bytes <= 0) return;
+
+            if (SkippedBytes == 0) {
+                m_SkippedReason = reason;
+                m_LastValidTimeStamp = m_Online ? DateTime.Now : TimeStamp;
+                m_LastValidDeviceTimeStamp = DeviceTimeStamp;
+            }
+            SkippedBytes += bytes;
+        }
+
+        /// <summary>
+        /// Gets the current number of skipped bytes.
+        /// </summary>
+        /// <value>The number of skipped bytes.</value>
+        public long SkippedBytes { get; private set; }
+
         /// <summary>
         /// Creates and returns the DLT trace line instance expressing skipped data.
         /// </summary>
-        /// <param name="reason">The reason why data was skipped.</param>
-        /// <param name="bytes">The number of bytes skipped.</param>
-        /// <returns>The DLT trace line for skipped bytes.</returns>
-        public DltTraceLineBase GetSkippedResult(string reason, long bytes)
+        /// <returns>
+        /// The DLT trace line for skipped bytes. The Skip counter is reset to zero. The line given uses the time stamps
+        /// available when the first set of bytes skipped were identified.
+        /// </returns>
+        public DltTraceLineBase GetSkippedResult()
         {
             // TODO: When we can create lines with arguments, update this method to have constant strings and the
             // reason/bytes as separate arguments.
@@ -135,22 +163,21 @@
             DltTraceLine line = new DltTraceLine() {
                 Line = m_Line,
                 Position = Position,
-                TimeStamp = m_Online ? DateTime.Now : TimeStamp,
+                TimeStamp = m_LastValidTimeStamp,
                 EcuId = EcuId ?? string.Empty,
-                ApplicationId = ApplicationId ?? string.Empty,
-                ContextId = ContextId ?? string.Empty,
-                SessionId = SessionId,
+                ApplicationId = string.Empty,
+                ContextId = string.Empty,
                 Count = DltTraceLineBase.InvalidCounter,
-                DeviceTimeStamp = DeviceTimeStamp,
-                Type = DltType,
-                Text = reason == null ?
-                    $"Skipped: {bytes}" :
-                    $"Skipped: {bytes} bytes; {reason}"
+                DeviceTimeStamp = m_LastValidDeviceTimeStamp,
+                Type = DltType.LOG_WARN,
+                Text = m_SkippedReason == null ?
+                    $"Skipped: {SkippedBytes}" :
+                    $"Skipped: {SkippedBytes} bytes; {m_SkippedReason}"
             };
-            ((DltLineFeatures)line.Features).Set((DltLineFeatures)Features);
             line.Features.IsVerbose = true;
             line.Features.DeviceTimeStamp = DeviceTimeStamp.Ticks != 0;
             line.Features.TimeStamp = m_Online || TimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks;
+            SkippedBytes = 0;
             m_Line++;
 
             return line;
