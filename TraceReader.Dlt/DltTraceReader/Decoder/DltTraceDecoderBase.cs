@@ -61,9 +61,9 @@
             ReadOnlySpan<byte> decodeBuffer = buffer;
             m_Lines.Clear();
 
-            int bytes = flush ?
-                buffer.Length :
-                m_Cache.Length + buffer.Length;
+            int bytes = flush ? buffer.Length : m_Cache.Length + buffer.Length;
+            if (!flush) m_Cache.VirtualOffset = -m_Cache.Length;
+
             while (bytes > 0) {
                 ReadOnlySpan<byte> dltPacket = decodeBuffer;
                 if (!m_ValidHeaderFound) {
@@ -82,17 +82,31 @@
                     // append and search there.
                     bool found;
                     if (!flush && m_Cache.Length != 0) {
-                        // TODO: We could optimize this logic by realising there's no need to add cache if all the data
-                        // we need is in the original input `buffer`. Then we'd just set the `decodeBuffer` to the
-                        // equivalent position in `buffer`, reset the cache, and start again. This could reduce a lot of
-                        // copy operations between buffer and the cache in some cases.
+                        // Put the smallest amount of data into the cache, that if we find the start marker, and it
+                        // happens to be at the start, we already have the packet.
                         decodeBuffer = CacheMinimumPacket(decodeBuffer, out _);
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
                             bytes -= m_Cache.Consume(skip);
                             m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
-                            decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool isCached);
-                            if (!isCached) return m_Lines;
+                            if (m_Cache.VirtualOffset >= 0) {
+                                // We've consumed enough data from the cache, that, even though there might still be
+                                // data in the cache, it's a subset of the original buffer, and we should use that
+                                // instead. If we continue to use the cache, we'll end up copying most of what's in the
+                                // buffer into the cache just because the data didn't align properly to start with.
+                                decodeBuffer = buffer[m_Cache.VirtualOffset..];
+                                m_Cache.Reset();
+
+                                // The variable m_Cache.VirtualOffset is not reset, and remains as it was. However, as
+                                // the m_Cache has been reset (it is now empty), we'll never get back here from within
+                                // the loop. Data is added to the cache only shortly before this decode function is
+                                // exited. The `continue` saves us having to check if we have enough data, and we'll
+                                // check at the beginning of the loop, and if there isn't enough remaining, we exit.
+                                continue;
+                            } else {
+                                decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool isCached);
+                                if (!isCached) return m_Lines;
+                            }
                         }
                     } else {
                         found = ScanStartFrame(decodeBuffer, out int skip);

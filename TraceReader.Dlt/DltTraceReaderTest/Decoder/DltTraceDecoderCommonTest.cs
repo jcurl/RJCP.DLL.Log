@@ -243,7 +243,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     DltTraceLineBase line;
 
-                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
+                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
                         Assert.That(line.TimeStamp, Is.EqualTo(m_Factory.ExpectedTimeStamp(DltTime.FileTime(2021, 12, 16, 20, 59, 35.556))));
@@ -309,7 +309,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     DltTraceLineBase line;
 
-                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
+                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
                         Assert.That(line.TimeStamp, Is.EqualTo(m_Factory.ExpectedTimeStamp(DltTime.FileTime(2021, 12, 16, 20, 59, 35.556))));

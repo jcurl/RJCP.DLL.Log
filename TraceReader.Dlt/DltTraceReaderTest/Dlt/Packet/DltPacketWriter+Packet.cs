@@ -20,6 +20,7 @@
             private int m_ExtendedHeaderPos = 0;
             private int m_PayLoadPos = 0;
             private int m_PacketLength = 0;
+            private int m_OverrideLength = -1;
 
             internal Packet() { }
 
@@ -130,7 +131,11 @@
             {
                 if (!m_HasExtendedHeader) throw new InvalidOperationException("Incomplete packet, missing extended header");
 
-                BitOperations.Copy16ShiftBigEndian(m_PacketLength, m_Packet, 2);
+                if (m_OverrideLength >= 0) {
+                    BitOperations.Copy16ShiftBigEndian(m_OverrideLength, m_Packet, 2);
+                } else {
+                    BitOperations.Copy16ShiftBigEndian(m_PacketLength, m_Packet, 2);
+                }
 
                 if (m_HasStorageHeader) {
                     byte[] packet = new byte[m_StorageHeader.Length + m_PacketLength];
@@ -159,6 +164,17 @@
             private static int GetDltTimeStamp(TimeSpan time)
             {
                 return unchecked((int)(time.Ticks / TimeSpan.TicksPerMillisecond * 10));
+            }
+
+            public void SetLength(int length)
+            {
+                if (length < 0) {
+                    m_OverrideLength = -1;
+                } else if (length <= ushort.MaxValue) {
+                    m_OverrideLength = length;
+                } else {
+                    throw new ArgumentOutOfRangeException(nameof(length), "Length must be 16-bit in size");
+                }
             }
         }
     }

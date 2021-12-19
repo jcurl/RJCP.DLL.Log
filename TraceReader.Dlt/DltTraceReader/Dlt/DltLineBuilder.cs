@@ -177,8 +177,8 @@
                     $"Skipped: {SkippedBytes} bytes; {m_SkippedReason}"
             };
             line.Features.IsVerbose = true;
-            line.Features.DeviceTimeStamp = DeviceTimeStamp.Ticks != 0;
-            line.Features.TimeStamp = m_Online || TimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks;
+            line.Features.DeviceTimeStamp = m_LastValidDeviceTimeStamp.Ticks != 0;
+            line.Features.TimeStamp = m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks;
             SkippedBytes = 0;
             m_Line++;
 

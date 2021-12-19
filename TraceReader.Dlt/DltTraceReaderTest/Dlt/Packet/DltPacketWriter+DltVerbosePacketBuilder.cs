@@ -48,6 +48,17 @@
             }
 
             /// <summary>
+            /// Overrides the calculated length with the current length.
+            /// </summary>
+            /// <param name="length">The length reported in the packet (not the actual packet length).</param>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder Length(int length)
+            {
+                m_Packet.SetLength(length);
+                return this;
+            }
+
+            /// <summary>
             /// Creats a serial marker for this packet.
             /// </summary>
             /// <returns>This object.</returns>

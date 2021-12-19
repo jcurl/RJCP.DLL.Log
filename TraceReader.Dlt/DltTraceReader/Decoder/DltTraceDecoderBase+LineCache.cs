@@ -21,15 +21,34 @@
 
             public int Length { get { return m_CacheLength; } }
 
+            /// <summary>
+            /// Gets or sets the virtual offset.
+            /// </summary>
+            /// <value>The virtual offset, in bytes.</value>
+            /// <remarks>
+            /// The virtual offset can be set by the decoder, to calculate the offset of bytes where cached data is
+            /// present, in comparison to the actual input data. Usually it will initialize the
+            /// <see cref="VirtualOffset"/> property to be the negative of the <see cref="Length"/>, indicating that
+            /// there are <see cref="Length"/> bytes available before the buffer start.
+            /// <para>
+            /// As data is <see cref="Consume(int)"/> d, the <see cref="VirtualOffset"/> is incremented. The decoder can
+            /// use this to determine if enough data has been consumed, that it can clear this cache and just use the
+            /// original buffer at the real offset given by this <see cref="VirtualOffset"/>.
+            /// </para>
+            /// </remarks>
+            public int VirtualOffset { get; set; }
+
             public ReadOnlySpan<byte> GetCache() { return m_Cache.AsSpan(m_CacheStart, m_CacheLength); }
 
             public int Consume(int bytes)
             {
                 if (bytes >= m_CacheLength) {
                     int consumed = m_CacheLength;
+                    VirtualOffset += m_CacheLength;
                     Reset();
                     return consumed;
                 }
+                VirtualOffset += bytes;
                 m_CacheStart += bytes;
                 m_CacheLength -= bytes;
                 return bytes;
