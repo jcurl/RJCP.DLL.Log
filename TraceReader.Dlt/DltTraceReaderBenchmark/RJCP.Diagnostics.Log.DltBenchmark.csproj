@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+
+    <AssemblyName>RJCP.Diagnostics.Log.DltBenchmark</AssemblyName>
+    <AssemblyTitle>RJCP.Diagnostics.Log.DltBenchmark</AssemblyTitle>
+    <Product>RJCP.Diagnostics.Log.Dlt</Product>
+    <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2015-2021, Jason Curl</Copyright>
+    <Company></Company>
+    <Description>Benchmark harness for RJCP.Diagnostics.Log.Dlt.</Description>
+    <Version>1.0.0</Version>
+
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <ProjectReference Include="..\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="DltDecoderBenchmark.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+
+</Project>
