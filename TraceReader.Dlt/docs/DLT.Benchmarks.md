@@ -32,14 +32,14 @@ $ dotnet exec RJCP.Diagnostics.Log.DltBenchmark.dll --filter *
 ```text
 Results = netcore31
 
-BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19043.1348 (21H1/May2021Update)
+BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19043.1415 (21H1/May2021Update)
 Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical core(s)
-  [HOST] : .NET Core 3.1.21 (CoreCLR 4.700.21.51404, CoreFX 4.700.21.51508), X64 RyuJIT
+  [HOST] : .NET Core 3.1.22 (CoreCLR 4.700.21.56803, CoreFX 4.700.21.57101), X64 RyuJIT
 ```
 
 | Project 'dlt' Type  | Method            | mean (netcore31) | stderr |
 |:--------------------|:------------------|-----------------:|-------:|
-| DltDecoderBenchmark | DecodeFilePackets | 2423.35          | 3.59   |
+| DltDecoderBenchmark | DecodeFilePackets | 2110.05          | 1.46   |
 
 Description of the test results:
 

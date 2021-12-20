@@ -407,7 +407,7 @@
         public void GenerateIsVerbose()
         {
             IDltLineBuilder builder = new DltLineBuilder();
-            builder.Features.IsVerbose = true;
+            builder.Features += DltLineFeatures.VerboseFeature;
             Assert.That(builder.Features.IsVerbose, Is.True);
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
@@ -418,10 +418,10 @@
         }
 
         [Test]
-        public void GeneateIsBigEndian()
+        public void GenerateIsBigEndian()
         {
             IDltLineBuilder builder = new DltLineBuilder();
-            builder.Features.BigEndian = true;
+            builder.Features += DltLineFeatures.BigEndianFeature;
             Assert.That(builder.Features.BigEndian, Is.True);
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();

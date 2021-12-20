@@ -53,7 +53,7 @@
         /// Gets the features which are set for this line.
         /// </summary>
         /// <value>The features set for this line.</value>
-        IDltLineFeatures Features { get; }
+        DltLineFeatures Features { get; set; }
 
         /// <summary>
         /// Gets or sets the ECU identifier.

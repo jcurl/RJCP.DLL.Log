@@ -42,10 +42,17 @@
 
             // Reset doesn't reconstruct the time stamp. This is done when we create the line, as it can be based on the
             // actual system clock. This allows data skipped to use the last set time stamp.
-            ((DltLineFeatures)Features).Reset();
-            Features.TimeStamp = m_Online;
-            TimeStamp = m_Online ? DateTime.Now : DltConstants.DefaultTimeStamp;
+            if (m_Online) {
+                Features = DltLineFeatures.LogTimeStampFeature;
+                TimeStamp = DateTime.Now;
+            } else {
+                Features = DltLineFeatures.NoFeatures;
+                TimeStamp = DltConstants.DefaultTimeStamp;
+            }
         }
+
+        // This defines the set of features that are not reset on the call to Reset()
+        private static readonly DltLineFeatures ResetMask = ~DltLineFeatures.BigEndianFeature;
 
         /// <summary>
         /// Prepare the builder for the construction of a new DLT trace line.
@@ -60,16 +67,15 @@
         /// <item><see cref="BigEndian"/>: Is not reset, as it is generally constant.</item>
         /// <item>
         /// <see cref="DeviceTimeStamp"/>: Is not reset, but the feature flag is set to <see langword="false"/>. This
-        /// means the last set time stamp is used if the <see cref="IDltLineFeatures.DeviceTimeStamp"/> is ignored. The
+        /// means the last set time stamp is used if the <see cref="DltLineFeatures.DeviceTimeStamp"/> is ignored. The
         /// property must be set to enable the feature flag.
         /// </item>
         /// </list>
         /// </remarks>
         public IDltLineBuilder Reset()
         {
-            int features = ((DltLineFeatures)Features).Features & DltLineFeatures.BigEndianFeature;
-            ((DltLineFeatures)Features).Set(features);
-            Features.TimeStamp = m_Online;
+            // Remove all features, except the BigEndianFeature if it still remains
+            Features -= ResetMask;
 
             m_LastEcuId = EcuId;
             EcuId = null;
@@ -113,9 +119,9 @@
                 Count = Count,
                 DeviceTimeStamp = DeviceTimeStamp,
                 Type = DltType,
+                Features = Features,
                 Text = string.Empty
             };
-            ((DltLineFeatures)line.Features).Set((DltLineFeatures)Features);
             m_Line++;
 
             return line;
@@ -149,6 +155,8 @@
         /// <value>The number of skipped bytes.</value>
         public long SkippedBytes { get; private set; }
 
+        private static readonly DltLineFeatures SkippedLineFeatures = DltLineFeatures.VerboseFeature;
+
         /// <summary>
         /// Creates and returns the DLT trace line instance expressing skipped data.
         /// </summary>
@@ -172,13 +180,17 @@
                 Count = DltTraceLineBase.InvalidCounter,
                 DeviceTimeStamp = m_LastValidDeviceTimeStamp,
                 Type = DltType.LOG_WARN,
+                Features = SkippedLineFeatures,
                 Text = m_SkippedReason == null ?
                     $"Skipped: {SkippedBytes}" :
                     $"Skipped: {SkippedBytes} bytes; {m_SkippedReason}"
             };
-            line.Features.IsVerbose = true;
-            line.Features.DeviceTimeStamp = m_LastValidDeviceTimeStamp.Ticks != 0;
-            line.Features.TimeStamp = m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks;
+
+            if (m_LastValidDeviceTimeStamp.Ticks != 0)
+                line.Features += DltLineFeatures.DevTimeStampFeature;
+            if (m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks)
+                line.Features += DltLineFeatures.LogTimeStampFeature;
+
             SkippedBytes = 0;
             m_Line++;
 
@@ -189,7 +201,7 @@
         /// Gets the features which are set for this line.
         /// </summary>
         /// <value>The features set for this line.</value>
-        public IDltLineFeatures Features { get; } = new DltLineFeatures();
+        public DltLineFeatures Features { get; set; }
 
         /// <summary>
         /// Gets or sets the ECU identifier.
@@ -224,7 +236,7 @@
         public IDltLineBuilder SetEcuId(string id)
         {
             EcuId = id;
-            Features.EcuId = true;
+            Features += DltLineFeatures.EcuIdFeature;
             return this;
         }
 
@@ -246,7 +258,7 @@
         public IDltLineBuilder SetApplicationId(string id)
         {
             ApplicationId = id;
-            Features.ApplicationId = true;
+            Features += DltLineFeatures.AppIdFeature;
             return this;
         }
 
@@ -268,7 +280,7 @@
         public IDltLineBuilder SetContextId(string id)
         {
             ContextId = id;
-            Features.ContextId = true;
+            Features += DltLineFeatures.CtxIdFeature;
             return this;
         }
 
@@ -310,7 +322,7 @@
         public IDltLineBuilder SetDeviceTimeStamp(long ticks)
         {
             DeviceTimeStamp = new TimeSpan(ticks);
-            Features.DeviceTimeStamp = true;
+            Features += DltLineFeatures.DevTimeStampFeature;
             return this;
         }
 
@@ -328,7 +340,7 @@
         public IDltLineBuilder SetDltType(DltType type)
         {
             DltType = type;
-            Features.MessageType = true;
+            Features += DltLineFeatures.MessageTypeFeature;
             return this;
         }
 
@@ -347,7 +359,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder SetIsVerbose(bool value)
         {
-            Features.IsVerbose = value;
+            Features = Features.Update(DltLineFeatures.VerboseFeature, value);
             return this;
         }
 
@@ -369,7 +381,7 @@
         public IDltLineBuilder SetSessionId(int id)
         {
             SessionId = id;
-            Features.SessionId = true;
+            Features += DltLineFeatures.SessionIdFeature;
             return this;
         }
 
@@ -390,7 +402,7 @@
             TimeStamp = DateTimeOffset.FromUnixTimeSeconds(seconds)
                 .AddTicks(microseconds * (TimeSpan.TicksPerMillisecond / 1000))
                 .UtcDateTime;
-            Features.TimeStamp = true;
+            Features += DltLineFeatures.LogTimeStampFeature;
             return this;
         }
 
@@ -402,7 +414,7 @@
         public IDltLineBuilder SetTimeStamp(DateTime dateTime)
         {
             TimeStamp = dateTime;
-            Features.TimeStamp = true;
+            Features += DltLineFeatures.LogTimeStampFeature;
             return this;
         }
 
@@ -441,7 +453,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder SetBigEndian(bool bigEndian)
         {
-            Features.BigEndian = bigEndian;
+            Features = Features.Update(DltLineFeatures.BigEndianFeature, bigEndian);
             return this;
         }
     }

@@ -46,7 +46,7 @@ namespace RJCP.Diagnostics.Log.Dlt
         /// A DLT line has many fields of which some may not be present. This property allows to determine which of
         /// those fields are valid.
         /// </remarks>
-        public abstract IDltLineFeatures Features { get; }
+        public DltLineFeatures Features { get; set; }
 
         /// <summary>
         /// Gets or sets the ECU identifier.

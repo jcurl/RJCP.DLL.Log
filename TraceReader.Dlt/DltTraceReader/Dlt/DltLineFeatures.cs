@@ -7,38 +7,121 @@
     /// This is a value type, which is a wrapper around an integer. The enablement/disablement of features is done by
     /// bit toggling (the values of the bits are not related to any particular values defined in AutoSAR). THe bits are
     /// set or cleared depending on the features.
+    /// <para>To combine features, use the predefined values and add them together with the <c>+</c> operator.</para>
     /// </remarks>
-    internal class DltLineFeatures : IDltLineFeatures
+    public readonly struct DltLineFeatures
     {
-        internal const int NoFeatures = 0;
-        internal const int EcuIdFeature = 1;          // As defined by WEID
-        internal const int AppIdFeature = 2;          // As defined by UEH
-        internal const int CtxIdFeature = 4;          // As defined by UEH
-        internal const int LogTimeStampFeature = 8;   // As defined by WTMS
-        internal const int DevTimeStampFeature = 16;  // If a storage header is present
-        internal const int MessageTypeFeature = 32;   // As defined by UEH
-        internal const int SessionIdFeature = 64;     // As defined by SEID
-        internal const int VerboseFeature = 128;      // As defined by VERB
-        internal const int BigEndianFeature = 256;    // As defined by MSBF
-
-        // The ECU ID is presented twice in the protocol, but the feature is only set based on the WEID bit, not on
-        // the presence of the storage header, to allow control when writing a packet.
-        internal const int HasStorageHeader = DevTimeStampFeature;
-
-        // The presence of the extended header UEH, implies these features are also present.
-        internal const int HasExtendedHeader = AppIdFeature + CtxIdFeature + MessageTypeFeature;
+        /// <summary>
+        /// The set of no features.
+        /// </summary>
+        public static readonly DltLineFeatures NoFeatures = new DltLineFeatures(0);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DltLineFeatures"/> class with no features set.
+        /// The ECU Identifier is present, as defined by the WEID bit (not, the storage header does not set this
+        /// feature).
         /// </summary>
-        protected internal DltLineFeatures() : this(NoFeatures) { }
+        public static readonly DltLineFeatures EcuIdFeature = new DltLineFeatures(1);
 
-        internal DltLineFeatures(int features)
+        /// <summary>
+        /// The Application Identifier is present, as defined by the UEH bit.
+        /// </summary>
+        public static readonly DltLineFeatures AppIdFeature = new DltLineFeatures(2);
+
+        /// <summary>
+        /// The Context Identifier is present, as defined by the UEH bit.
+        /// </summary>
+        public static readonly DltLineFeatures CtxIdFeature = new DltLineFeatures(4);
+
+        /// <summary>
+        /// The log time stamp is present, as defined if there is a storage header present.
+        /// </summary>
+        public static readonly DltLineFeatures LogTimeStampFeature = new DltLineFeatures(8);
+
+        /// <summary>
+        /// The device time stamp is present, as defined by the WTMS bit.
+        /// </summary>
+        public static readonly DltLineFeatures DevTimeStampFeature = new DltLineFeatures(16);
+
+        /// <summary>
+        /// The Message Type is present, as defined by the UEH bit.
+        /// </summary>
+        public static readonly DltLineFeatures MessageTypeFeature = new DltLineFeatures(32);
+
+        /// <summary>
+        /// The Session Identifier is present, as defined by the SEID bit.
+        /// </summary>
+        public static readonly DltLineFeatures SessionIdFeature = new DltLineFeatures(64);
+
+        /// <summary>
+        /// The Verbose bit is set, as defined by the VERB bit.
+        /// </summary>
+        public static readonly DltLineFeatures VerboseFeature = new DltLineFeatures(128);
+
+        /// <summary>
+        /// The Big Endian encoding is enabled, as defined by the MSBF bit.
+        /// </summary>
+        public static readonly DltLineFeatures BigEndianFeature = new DltLineFeatures(256);
+
+        private static readonly int FeatureMask = 0x1FF;
+
+        private readonly int m_Feature;
+
+        private DltLineFeatures(int features)
         {
-            Features = features;
+            m_Feature = features;
         }
 
-        internal int Features { get; set; }
+        /// <summary>
+        /// Implements the + operator, combining two features together.
+        /// </summary>
+        /// <param name="feature">The feature to add from.</param>
+        /// <param name="newFeature">The new feature to add to.</param>
+        /// <returns>The result of the operator with the two features combined.</returns>
+        public static DltLineFeatures operator +(DltLineFeatures feature, DltLineFeatures newFeature)
+        {
+            return new DltLineFeatures(feature.m_Feature | newFeature.m_Feature);
+        }
+
+        /// <summary>
+        /// Implements the - operator, removing a set of features.
+        /// </summary>
+        /// <param name="feature">The feature to remove from.</param>
+        /// <param name="delFeature">The features to remove.</param>
+        /// <returns>The result of the operator, with the features on the right removed.</returns>
+        public static DltLineFeatures operator -(DltLineFeatures feature, DltLineFeatures delFeature)
+        {
+            return new DltLineFeatures(feature.m_Feature & (~delFeature.m_Feature));
+        }
+
+        /// <summary>
+        /// Implements the ~ operator, which inverts all the features
+        /// </summary>
+        /// <param name="feature">The feature set that should be inverted.</param>
+        /// <returns>The result of the invert operator.</returns>
+        /// <remarks>
+        /// This feature is useful in removing all features but a single element.
+        /// </remarks>
+        public static DltLineFeatures operator ~(DltLineFeatures feature)
+        {
+            return new DltLineFeatures(FeatureMask & (~feature.m_Feature));
+        }
+
+        /// <summary>
+        /// Sets or clears the specified features.
+        /// </summary>
+        /// <param name="feature">The feature set to change.</param>
+        /// <param name="value">
+        /// Set the features if <see langword="true"/>, otherwise if <see langword="false"/> then clear the features.
+        /// </param>
+        /// <returns>The result of the set operation.</returns>
+        public DltLineFeatures Update(DltLineFeatures feature, bool value)
+        {
+            if (value) {
+                return new DltLineFeatures(m_Feature | feature.m_Feature);
+            } else {
+                return new DltLineFeatures(m_Feature & ~feature.m_Feature);
+            }
+        }
 
         /// <summary>
         /// Get or sets a value if the AutoSAR WEID bit is set for a DLT message.
@@ -50,7 +133,6 @@
         public bool EcuId
         {
             get { return GetBit(EcuIdFeature); }
-            set { SetBit(EcuIdFeature, value); }
         }
 
         /// <summary>
@@ -63,7 +145,6 @@
         public bool TimeStamp
         {
             get { return GetBit(LogTimeStampFeature); }
-            set { SetBit(LogTimeStampFeature, value); }
         }
 
         /// <summary>
@@ -76,7 +157,6 @@
         public bool ApplicationId
         {
             get { return GetBit(AppIdFeature); }
-            set { SetBit(AppIdFeature, value); }
         }
 
         /// <summary>
@@ -89,7 +169,6 @@
         public bool ContextId
         {
             get { return GetBit(CtxIdFeature); }
-            set { SetBit(CtxIdFeature, value); }
         }
 
         /// <summary>
@@ -102,7 +181,6 @@
         public bool MessageType
         {
             get { return GetBit(MessageTypeFeature); }
-            set { SetBit(MessageTypeFeature, value); }
         }
 
         /// <summary>
@@ -116,7 +194,6 @@
         public bool SessionId
         {
             get { return GetBit(SessionIdFeature); }
-            set { SetBit(SessionIdFeature, value); }
         }
 
         /// <summary>
@@ -129,7 +206,6 @@
         public bool DeviceTimeStamp
         {
             get { return GetBit(DevTimeStampFeature); }
-            set { SetBit(DevTimeStampFeature, value); }
         }
 
         /// <summary>
@@ -141,7 +217,6 @@
         public bool IsVerbose
         {
             get { return GetBit(VerboseFeature); }
-            set { SetBit(VerboseFeature, value); }
         }
 
         /// <summary>
@@ -154,37 +229,17 @@
         public bool BigEndian
         {
             get { return GetBit(BigEndianFeature); }
-            set { SetBit(BigEndianFeature, value); }
         }
 
-        internal void Reset()
+        private bool GetBit(DltLineFeatures bit) { return (m_Feature & bit.m_Feature) != 0; }
+
+        /// <summary>
+        /// Returns a <see cref="string"/> that represents this instance.
+        /// </summary>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
+        public override string ToString()
         {
-            Features = 0;
+            return m_Feature.ToString("X");
         }
-
-        internal void Set(int features)
-        {
-            Features = features;
-        }
-
-        internal void Set(DltLineFeatures features)
-        {
-            Features = features.Features;
-        }
-
-        private void SetBit(int bitValue, bool value)
-        {
-            if (value) {
-                SetBit(bitValue);
-            } else {
-                ClrBit(bitValue);
-            }
-        }
-
-        private void SetBit(int bitValue) { Features |= bitValue; }
-
-        private void ClrBit(int bitValue) { Features &= ~bitValue; }
-
-        private bool GetBit(int bitValue) { return (Features & bitValue) != 0; }
     }
 }

@@ -64,7 +64,6 @@
     <Compile Include="Dlt\DltTypeExtension.cs" />
     <Compile Include="Dlt\IdHashList.cs" />
     <Compile Include="Dlt\IDltLineBuilder.cs" />
-    <Compile Include="Dlt\IDltLineFeatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
