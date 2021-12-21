@@ -46,6 +46,7 @@
     <ProjectReference Include="..\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
     <ProjectReference Include="..\..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
     <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
+    <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +63,8 @@
     <Compile Include="Dlt\Packet\DltPacketWriter.cs" />
     <Compile Include="Dlt\IdHashListAccessor.cs" />
     <Compile Include="Dlt\IdHashListTest.cs" />
+    <Compile Include="GlobalLogger.cs" />
+    <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>
 
 </Project>
