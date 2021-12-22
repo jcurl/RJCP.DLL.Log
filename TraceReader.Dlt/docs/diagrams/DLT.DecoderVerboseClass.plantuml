@@ -1,0 +1,56 @@
+@startuml DLT.DecoderVerboseClass
+class DltTraceDecoderBase
+DltTraceDecoderBase -r-> IVerboseDltDecoder : <<uses>>
+
+interface IVerboseDltDecoder {
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+}
+note right
+    Uses the line builder to know how many
+    arguments and scans through all arguments
+end note
+
+class VerboseDltDecoder {
+    .ctor(argDecoder: IVerboseArgDecoder)
+}
+note right
+    This interprets the type info
+    and then uses specialized classes
+    to decode the individual types
+end note
+IVerboseDltDecoder <|.d. VerboseDltDecoder
+
+interface IVerboseArgDecoder {
+    +Decode(buffer: ReadOnlySpan<byte>, msbf: bool, [out] IDltArg *arg): int
+}
+
+class BoolArgDecoder
+class SignedIntArgDecoder
+class UnsignedIntArgDecoder
+class FloatArgDecoder
+class StringArgDecoder
+class RawDataArgDecoder
+class ArrayArgDecoder
+class StructArgDecoder
+
+IVerboseArgDecoder <|.d. BoolArgDecoder
+IVerboseArgDecoder <|.d. SignedIntArgDecoder
+IVerboseArgDecoder <|.d. UnsignedIntArgDecoder
+IVerboseArgDecoder <|.d. FloatArgDecoder
+IVerboseArgDecoder <|.d. StringArgDecoder
+IVerboseArgDecoder <|.d. RawDataArgDecoder
+IVerboseArgDecoder <|.d. ArrayArgDecoder
+IVerboseArgDecoder <|.d. StructArgDecoder
+
+VerboseDltDecoder o-d- VerboseArgDecoder
+
+IVerboseArgDecoder <|.l. VerboseArgDecoder
+VerboseArgDecoder *-- BoolArgDecoder
+VerboseArgDecoder *-- SignedIntArgDecoder
+VerboseArgDecoder *-- UnsignedIntArgDecoder
+VerboseArgDecoder *-- FloatArgDecoder
+VerboseArgDecoder *-- StringArgDecoder
+VerboseArgDecoder *-- RawDataArgDecoder
+VerboseArgDecoder *-- ArrayArgDecoder
+VerboseArgDecoder *-- StructArgDecoder
+@enduml

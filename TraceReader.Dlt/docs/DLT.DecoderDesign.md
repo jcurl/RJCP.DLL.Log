@@ -21,8 +21,13 @@ The decoder is based on the [DLT Format](DLT.Format.md).
       - [1.4.5.1. Non-Verbose Messages](#1451-non-verbose-messages)
       - [1.4.5.2. Verbose Messages](#1452-verbose-messages)
       - [1.4.5.3. Control Messages](#1453-control-messages)
-  - [1.5. Position within the Stream](#15-position-within-the-stream)
-- [2. Trace Lines](#2-trace-lines)
+  - [1.5. Exception Handling](#15-exception-handling)
+  - [1.6. Position within the Stream](#16-position-within-the-stream)
+- [2. Decoding Verbose Messages](#2-decoding-verbose-messages)
+  - [2.1. Bit Structure](#21-bit-structure)
+  - [2.2. Decoding Arguments](#22-decoding-arguments)
+  - [2.3. Extending the Verbose Argument Decoding](#23-extending-the-verbose-argument-decoding)
+- [3. Trace Lines](#3-trace-lines)
 
 ## 1. DLT Trace Decoder
 
@@ -271,7 +276,25 @@ no arguments.
 It has been observed that not all implementations writing DLT strictly conform
 to the specification given in the AutoSAR DLT PRS standard.
 
-### 1.5. Position within the Stream
+### 1.5. Exception Handling
+
+The decoder loop shall not raise exceptions when decoding. In certain cases,
+raising exceptions can cause a high overhead, even if the exceptions are
+handled.
+
+.NET has the [FirstChanceException
+handler](https://docs.microsoft.com/en-us/dotnet/api/system.appdomain.firstchanceexception).
+Applications may register to this event for diagnostics purposes, and so will
+capture internal events. For example, the
+[RJCP.DLL.CrashReporter](https://github.com/jcurl/RJCP.DLL.CrashReporter) is a
+library that logs exception events to help application developers debug their
+software when crashing in the field.
+
+In case of errors, the design of the decoder shall be such that a success/fail
+condition is observed. Methods when parsing strings shall use the `TryParse`
+methods instead of relying on exceptions when parsing.
+
+### 1.6. Position within the Stream
 
 It is important that the position of each decoded packet is made avaialble with
 the decoded `DltBaseTraceLine`. This will help debug corrupted packets, that a
@@ -284,7 +307,91 @@ each call to the `Decode` method doesn't skip bytes. This can happen when
 decoding encapsulated streams, such as DLT from a PCAP file, where the DLT is
 encapsulated within UDP packets.
 
-## 2. Trace Lines
+## 2. Decoding Verbose Messages
+
+A DLT Verbose message is a DLT packet that has an extended header (defined by
+the UEH bit), and is a message of type of `DLT_TYPE_LOG` (MSTP is 3). It
+typically consists of one or more arguments (NOAR), and the payload information
+follows immediately after the extended header. The payload is a packed sequence
+of data, each defined by type information (Type Info) and the payload for the
+argument.
+
+A summary of the verbose argument is given in the following diagram:
+
+![DLT Verbose Format](out/diagrams/DLT.FormatVerbose/DLT.FormatVerbose.svg)
+
+### 2.1. Bit Structure
+
+A summary of the bits, as copied from the AutoSAR PRS
+
+| Variable Type | TYLE | VARI | FIXP | SCOD |
+| ------------- | :--: | :--: | :--: | :--: |
+| BOOL          | X    | O    |      |      |
+| SINT          | X    | O    | O    |      |
+| UINT          | X    | O    | O    |      |
+| FLOA          | X    | O    |      |      |
+| ARAY          |      | O    |      |      |
+| STRG          |      | O    |      | X    |
+| RAWD          |      | O    |      |      |
+| TRAI          |      |      |      | X    |
+| STRU          |      | O    |      |      |
+
+* `X` - Mandatory to set
+* `O` - Optional to set
+* Others will be ignored
+
+### 2.2. Decoding Arguments
+
+Once a complete DLT packet has been obtained (as determined by the packet length
+in the standard header), the payload will be interpreted sequentially as per the
+number of arguments (NOAR).
+
+![DLT Verbose Decoding](out/diagrams/DLT.DecoderVerboseClass/DLT.DecoderVerboseClass.svg)
+
+The `DltTraceDecoderBase` will have a reference to a `IVerboseDltDecoder` which
+will take the start of the payload and the line builder. As it parses through
+the arguments, it will add them to the line builder. The number of arguments is
+already provided by the line builder. Any required decoding diagnostics, such as
+the position where the frame starts, is provided by the line builder.
+
+The `IVerboseDltDecoder` takes the relevant information from the given
+`lineBuilder`, such as the MSBF bit if required. It starts from the beginning of
+the buffer, asking the `VerboseArgDecoder` (which is injected in via its
+constructor) to decode.
+
+The `VerboseArgDecoder` should interpret the type information, and then decode
+the data using the more specialized argument decoder. The `VerboseArgDecoder`
+returns the results of the more specialized decoder, such as the length of data
+decoded and the argument that was decoded.
+
+If the argument is unknown, it is no longer possible to decode the remainder
+arguments, thus rendering effectively the entire packet unknown. The length
+information is implicity part of the verbose DLT argument and is not encoded in
+a consistent manner across all arguments.
+
+When the packet is completely decoded, the length of the payload by summing the
+decoding of each argument, should match the expected length of the entire packet
+(after taking into account the headers and previous data structures). The length
+can be used as a plausibility check for the validity of the packet, to guard
+against corrupted headers.
+
+By separating the decoding between the `VerboseDltDecoder` and the
+`VerboseArgDecoder`, one can use the same implementation for argument decoding
+(`VerboseArgDecoder`) when trying to decode structures and arrays.
+
+### 2.3. Extending the Verbose Argument Decoding
+
+If the user wishes to extend the implementation, or modify or improve the
+argument decoding, they should be able to provide a replacement implementation
+of `VerboseArgDecoder`, injected into the `VerboseDltDecoder`. The replacement
+implementation will need to decode the type information, and then decode one
+argument at a time.
+
+The output of the `VerboseArgDecoder` is then an `IDltArg` which the
+`VerboseDltDecoder` adds to the line builder, and the size of the buffer that
+should be advanced from the start of the argument to find the next argument.
+
+## 3. Trace Lines
 
 All DLT trace lines are derived from the `DltTraceLineBase`.
 

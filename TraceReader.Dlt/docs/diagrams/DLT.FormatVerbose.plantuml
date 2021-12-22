@@ -1,0 +1,118 @@
+@startuml DLT.FormatVerbose
+map Argument {
+    0..3 => Type Info
+    4..n => Variable Info (Optional)
+    n+1.. => Payload
+}
+
+map "Type Info (4 bytes) Little Endian" as TypeInfo {
+   b0..b3 => Type Length (TYLE)
+   b4 => Boolean (BOOL)
+   b5 => Signed Int (SINT)
+   b6 => Unsigned Int (UINT)
+   b7 => Float (FLOA)
+   b8 => Array (ARAY)
+   b9 => String (STRG)
+   b10 => Raw (RAWD)
+   b11 => Variable Information (VARI)
+   b12 => Fixed Point (FIXP)
+   b13 => Trace Information (TRAI)
+   b14 => Struct (STRU)
+   b15..b17 => String encoding (SCOD)
+}
+
+map "Type Length (TYLE)" as TypeLength {
+    0 => Undefined
+    1 => 8-bit
+    2 => 16-bit
+    3 => 32-bit
+    4 => 64-bit
+    5 => 128-bit
+}
+
+map "String encoding (SCOD)" as StringCoding {
+    0 => ASCII
+    1 => UTF-8
+}
+
+Argument -u- TypeInfo
+TypeInfo -r- TypeLength
+TypeInfo -r- StringCoding
+
+package Arguments {
+    map "Var" as variname {
+        0..1 => Name Length
+        2..n => Name: string + NUL
+    }
+
+    map "Var w/ Unit" as variunit {
+        0..1 => Name Length
+        2..3 => Unit Length
+        4..n => Name: string + NUL
+        n..m => Unit: string + NUL
+    }
+
+    map "BOOL" as bool {
+        variname => optional
+        1 byte => 0 = false; 1 = true
+    }
+
+    map "SINT, UINT" as int {
+        variunit => optional
+        1, 2, 3, 4, 5 bytes => Integer
+    }
+
+    map "FLOAT" as float {
+        variunit => optional
+        2, 3, 4, 5 bytes => IEEE 768
+    }
+
+    map "STRING" as string {
+        2 bytes => Length
+        variname => optional
+        n bytes => payload: string + NUL
+    }
+
+    map "ARAY" as array {
+        2 bytes => Dimension
+        2*d bytes => Row Dimensons
+        variunit => optional
+        l*e bytes => Payload (l = type size; e = # elements)
+    }
+
+    map "STRU" as struct {
+        2 bytes => entries
+        variname => optional
+        4 + e1 => Type Info + Entry 1
+        4 + e2 => Type Info + Entry 2
+    }
+
+    map "RAWD" as raw {
+        2 bytes => Length
+        variname => optional
+        l bytes => Payload
+    }
+
+    map "TRAI" as traceinfo {
+        2 bytes => Length
+        n bytes => payload: string + NUL
+    }
+
+    variname -u-* bool
+    variunit -u-* int
+    variunit -u-* float
+    variname -u-* string
+    variunit -u-* array
+    variname -u-* struct
+    variname -u-* raw
+}
+
+Argument *-- bool
+Argument *-- int
+Argument *-- float
+Argument *-- string
+Argument *-- array
+Argument *-- struct
+Argument *-- raw
+Argument *-- traceinfo
+@enduml
