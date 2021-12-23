@@ -57,6 +57,7 @@
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />
     <Compile Include="DltTime.cs" />
+    <Compile Include="Dlt\Args\CustomArg.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />

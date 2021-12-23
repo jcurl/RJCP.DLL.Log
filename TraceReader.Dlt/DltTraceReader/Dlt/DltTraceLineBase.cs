@@ -24,7 +24,7 @@ namespace RJCP.Diagnostics.Log.Dlt
         /// This is a string, that should normally present the text log that was emitted by the device being logged.
         /// That is, all metadata, such as timestamps, severity and other information is not present in this string.
         /// </value>
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
 
         /// <summary>
         /// The current line in the log file.
@@ -51,70 +51,53 @@ namespace RJCP.Diagnostics.Log.Dlt
         /// <summary>
         /// Gets or sets the ECU identifier.
         /// </summary>
-        /// <value>
-        /// The ECU identifier.
-        /// </value>
+        /// <value>The ECU identifier.</value>
         public string EcuId { get; set; }
 
         /// <summary>
         /// Gets or sets the DLT message counter.
         /// </summary>
-        /// <value>
-        /// The DLT message counter.
-        /// </value>
+        /// <value>The DLT message counter.</value>
         /// <remarks>
-        /// The user of this class is expected to set the value of this field if it is not set
-        /// explicitly through any of the available constructors. If this is the case, it shall be
-        /// initialized with the default value of <see cref="InvalidCounter"/>.
+        /// The user of this class is expected to set the value of this field if it is not set explicitly through any of
+        /// the available constructors. If this is the case, it shall be initialized with the default value of
+        /// <see cref="InvalidCounter"/>.
         /// </remarks>
         public int Count { get; set; } = InvalidCounter;
 
         /// <summary>
         /// Gets or sets the device time stamp.
         /// </summary>
-        /// <value>
-        /// The device time stamp.
-        /// </value>
+        /// <value>The device time stamp.</value>
         public TimeSpan DeviceTimeStamp { get; set; }
 
         /// <summary>
         /// Gets or sets the application identifier.
         /// </summary>
-        /// <value>
-        /// The application identifier.
-        /// </value>
+        /// <value>The application identifier.</value>
         public string ApplicationId { get; set; }
 
         /// <summary>
         /// Gets or sets the context identifier.
         /// </summary>
-        /// <value>
-        /// The context identifier.
-        /// </value>
+        /// <value>The context identifier.</value>
         public string ContextId { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
+        /// <value>The type.</value>
         /// <remarks>
-        /// The value of this field is a combination of the type and
-        /// subtype, as defined in the Diagnostic Log and Trace AUTOSAR
-        /// Release 4.2.2 specification. The value shall always be a
-        /// two digit number, the first digit representing the type of
-        /// the DLT message, while the second digit represents the
-        /// subtype of the DLT message.
+        /// The value of this field is a combination of the type and subtype, as defined in the Diagnostic Log and Trace
+        /// AUTOSAR Release 4.2.2 specification. The value shall always be a two digit number, the first digit
+        /// representing the type of the DLT message, while the second digit represents the subtype of the DLT message.
         /// </remarks>
-        public DltType Type { get; set; }
+        public DltType Type { get; set; } = DltType.UNKNOWN;
 
         /// <summary>
         /// Gets or sets the session identifier.
         /// </summary>
-        /// <value>
-        /// The session identifier.
-        /// </value>
+        /// <value>The session identifier.</value>
         public int SessionId { get; set; }
 
         /// <summary>
@@ -127,15 +110,12 @@ namespace RJCP.Diagnostics.Log.Dlt
         public DateTime TimeStamp { get; set; } = DltConstants.DefaultTimeStamp;
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents this instance.
+        /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>
-        /// <returns>
-        /// A <see cref="string" /> that represents this instance.
-        /// </returns>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
         /// <remarks>
-        /// Shall return a string containing the values of the DLT line fields,
-        /// similar to a DLT trace line, exported to a text file using DLT Viewer
-        /// 2.18.0.
+        /// Shall return a string containing the values of the DLT line fields, similar to a DLT trace line, exported to
+        /// a text file using DLT Viewer 2.18.0. The date of the log message is converted to local time.
         /// </remarks>
         public override string ToString()
         {

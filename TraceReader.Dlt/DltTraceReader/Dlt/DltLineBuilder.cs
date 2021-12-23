@@ -1,6 +1,8 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt
 {
     using System;
+    using System.Collections.Generic;
+    using Args;
 
     /// <summary>
     /// DLT trace line builder.
@@ -22,6 +24,7 @@
     {
         private int m_Line = 0;
         private readonly bool m_Online;
+        private readonly List<IDltArg> m_Arguments = new List<IDltArg>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltLineBuilder"/> class in offline mode.
@@ -37,6 +40,7 @@
         /// </param>
         public DltLineBuilder(bool online)
         {
+            Arguments = m_Arguments;
             m_Online = online;
             Reset();
 
@@ -85,6 +89,8 @@
             DltType = DltType.UNKNOWN;
             SessionId = 0;
             Position = 0;
+            NumberOfArgs = 0;
+            m_Arguments.Clear();
             return this;
         }
 
@@ -108,7 +114,7 @@
             }
 
             if (m_Online) TimeStamp = DateTime.Now;
-            DltTraceLine line = new DltTraceLine() {
+            DltTraceLine line = new DltTraceLine(m_Arguments) {
                 Line = m_Line,
                 Position = Position,
                 TimeStamp = TimeStamp,
@@ -119,8 +125,7 @@
                 Count = Count,
                 DeviceTimeStamp = DeviceTimeStamp,
                 Type = DltType,
-                Features = Features,
-                Text = string.Empty
+                Features = Features
             };
             m_Line++;
 
@@ -454,6 +459,65 @@
         public IDltLineBuilder SetBigEndian(bool bigEndian)
         {
             Features = Features.Update(DltLineFeatures.BigEndianFeature, bigEndian);
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the number of arguments found in the payload of a verbose message.
+        /// </summary>
+        /// <value>The number of arguments found in the payload of a verbose message.</value>
+        /// <remarks>
+        /// The value being returned is expected to be the same as it is found in the extended header of a DLT packet.
+        /// </remarks>
+        public int NumberOfArgs { get; private set; }
+
+        /// <summary>
+        /// Sets the number of arguments found in the payload of a verbose message.
+        /// </summary>
+        /// <param name="value">The argument count.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        /// <remarks>
+        /// The value being set is expected to be the same as it is found in the extended header of a DLT packet.
+        /// </remarks>
+        public IDltLineBuilder SetNumberOfArgs(byte value)
+        {
+            NumberOfArgs = value;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the arguments as a non-modifiable list.
+        /// </summary>
+        /// <value>The arguments.</value>
+        /// <remarks>
+        /// When using this argument list, make sure that a copy is made before modifying the state of this object
+        /// again, as the list is reused.
+        /// </remarks>
+        public IReadOnlyList<IDltArg> Arguments { get; private set; }
+
+        /// <summary>
+        /// Adds the given argument to the payload.
+        /// </summary>
+        /// <param name="argument">The argument to be added to the payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder AddArgument(IDltArg argument)
+        {
+            if (argument != null)
+                m_Arguments.Add(argument);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the given arguments to the payload.
+        /// </summary>
+        /// <param name="arguments">The argument to be added to the payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments)
+        {
+            if (arguments != null) {
+                foreach (IDltArg argument in arguments)
+                    AddArgument(argument);
+            }
             return this;
         }
     }

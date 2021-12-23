@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading;
+    using Args;
     using NUnit.Framework;
 
     [TestFixture]
@@ -22,6 +23,8 @@
             Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(0));
+            Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
         }
 
         [Test]
@@ -35,6 +38,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(0));
+            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0  non-verbose "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.EcuId, Is.False);
             Assert.That(dltLine.EcuId, Is.EqualTo(string.Empty));
@@ -53,14 +57,17 @@
             Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.False);
+            Assert.That(dltLine.Arguments.Count, Is.EqualTo(0));
         }
 
         [Test]
         public void ConstructFullVerboseLine()
         {
+            DateTime time = DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634);
+
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
+            builder.SetTimeStamp(time);
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -71,6 +78,8 @@
             builder.SetIsVerbose(true);
             builder.SetDltType(DltType.LOG_INFO);
             builder.SetPosition(10);
+            builder.SetNumberOfArgs(1);
+            builder.AddArgument(new CustomArg());
 
             Assert.That(builder.EcuId, Is.EqualTo("ECU1"));
             Assert.That(builder.ApplicationId, Is.EqualTo("APP1"));
@@ -80,7 +89,7 @@
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
             Assert.That(builder.IsVerbose, Is.True);
             Assert.That(builder.SessionId, Is.EqualTo(1435));
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(time));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(10));
 
@@ -90,7 +99,8 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(10));
-            Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose custom"));
+            Assert.That(dltLine.Text, Is.EqualTo("custom"));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
             Assert.That(dltLine.Features.ApplicationId, Is.True);
@@ -105,7 +115,68 @@
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
             Assert.That(dltLine.Features.TimeStamp, Is.True);
-            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(time));
+            Assert.That(dltLine.Features.BigEndian, Is.False);
+            Assert.That(dltLine.Features.IsVerbose, Is.True);
+        }
+
+        [Test]
+        public void ConstructFullVerboseLine2Args()
+        {
+            DateTime time = DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634);
+
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetStorageHeaderEcuId("FCU1");
+            builder.SetTimeStamp(time);
+            builder.SetCount(127);
+            builder.SetBigEndian(false);
+            builder.SetEcuId("ECU1");
+            builder.SetSessionId(1435);
+            builder.SetDeviceTimeStamp(DltTime.DeviceTime(5.5352).Ticks);
+            builder.SetApplicationId("APP1");
+            builder.SetContextId("CTX1");
+            builder.SetIsVerbose(true);
+            builder.SetDltType(DltType.LOG_INFO);
+            builder.SetPosition(10);
+            builder.SetNumberOfArgs(2);
+            builder.AddArgument(new CustomArg());
+            builder.AddArgument(new CustomArg("foo"));
+
+            Assert.That(builder.EcuId, Is.EqualTo("ECU1"));
+            Assert.That(builder.ApplicationId, Is.EqualTo("APP1"));
+            Assert.That(builder.ContextId, Is.EqualTo("CTX1"));
+            Assert.That(builder.Count, Is.EqualTo(127));
+            Assert.That(builder.DltType, Is.EqualTo(DltType.LOG_INFO));
+            Assert.That(builder.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
+            Assert.That(builder.IsVerbose, Is.True);
+            Assert.That(builder.SessionId, Is.EqualTo(1435));
+            Assert.That(builder.TimeStamp, Is.EqualTo(time));
+            Assert.That(builder.BigEndian, Is.False);
+            Assert.That(builder.Position, Is.EqualTo(10));
+
+            DltTraceLineBase line = builder.GetResult();
+            Assert.That(line, Is.TypeOf<DltTraceLine>());
+
+            DltTraceLine dltLine = (DltTraceLine)line;
+            Assert.That(dltLine.Line, Is.EqualTo(0));
+            Assert.That(dltLine.Position, Is.EqualTo(10));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose custom foo"));
+            Assert.That(dltLine.Text, Is.EqualTo("custom foo"));
+            Assert.That(dltLine.Features.EcuId, Is.True);
+            Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
+            Assert.That(dltLine.Features.ApplicationId, Is.True);
+            Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
+            Assert.That(dltLine.Features.ContextId, Is.True);
+            Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
+            Assert.That(dltLine.Count, Is.EqualTo(127));
+            Assert.That(dltLine.Features.MessageType, Is.True);
+            Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
+            Assert.That(dltLine.Features.SessionId, Is.True);
+            Assert.That(dltLine.SessionId, Is.EqualTo(1435));
+            Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
+            Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
+            Assert.That(dltLine.Features.TimeStamp, Is.True);
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(time));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.True);
         }
@@ -113,9 +184,11 @@
         [Test]
         public void ConstructVerboseLineNoSessionId()
         {
+            DateTime time = DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634);
+
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
+            builder.SetTimeStamp(time);
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -134,7 +207,7 @@
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(builder.IsVerbose, Is.True);
             Assert.That(builder.SessionId, Is.EqualTo(0));
-            Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
+            Assert.That(builder.TimeStamp, Is.EqualTo(time));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(10));
 
@@ -144,6 +217,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(10));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 0 log info verbose "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
@@ -159,7 +233,7 @@
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(dltLine.Features.TimeStamp, Is.True);
-            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(time));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.True);
         }
@@ -167,9 +241,12 @@
         [Test]
         public void GenerateMultipleLines()
         {
+            DateTime time = DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634);
+            DateTime time2 = DltTime.FileTime(2021, 12, 4, 17, 56, 24.1221);
+
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetStorageHeaderEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634));
+            builder.SetTimeStamp(time);
             builder.SetCount(127);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -185,6 +262,7 @@
             builder.Reset();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(10));
+            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose "));
             Assert.That(line.Text, Is.EqualTo(string.Empty));
             Assert.That(line.Features.EcuId, Is.True);
             Assert.That(line.EcuId, Is.EqualTo("ECU1"));
@@ -200,12 +278,12 @@
             Assert.That(line.Features.DeviceTimeStamp, Is.True);
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(line.Features.TimeStamp, Is.True);
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
+            Assert.That(line.TimeStamp, Is.EqualTo(time));
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
 
             builder.SetEcuId("FCU1");
-            builder.SetTimeStamp(DltTime.FileTime(2021, 12, 4, 17, 56, 24.1221));
+            builder.SetTimeStamp(time2);
             builder.SetCount(128);
             builder.SetBigEndian(false);
             builder.SetEcuId("ECU1");
@@ -220,6 +298,7 @@
             builder.Reset();
             Assert.That(line.Line, Is.EqualTo(1));                     // This number must be incremented by 1
             Assert.That(line.Position, Is.EqualTo(60));
+            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time2)} 5.5356 128 ECU1 APP1 CTX1 0 log info verbose "));
             Assert.That(line.Text, Is.EqualTo(string.Empty));
             Assert.That(line.Features.EcuId, Is.True);
             Assert.That(line.EcuId, Is.EqualTo("ECU1"));
@@ -235,7 +314,7 @@
             Assert.That(line.Features.DeviceTimeStamp, Is.True);
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55356000)));
             Assert.That(line.Features.TimeStamp, Is.True);
-            Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 24.1221)));
+            Assert.That(line.TimeStamp, Is.EqualTo(time2));
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
         }
@@ -444,6 +523,121 @@
 
             builder.Reset();
             Assert.That(builder.Position, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void GenerateNumberOfArguments()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(2);
+            Assert.That(builder.NumberOfArgs, Is.EqualTo(2));
+
+            DltTraceLine line = (DltTraceLine)builder.GetResult();
+            Assert.That(line.Arguments.Count, Is.EqualTo(0));       // The number of arguments isn't used.
+
+            builder.Reset();
+            Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArgument()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(1);
+            builder.AddArgument(new CustomArg());
+            Assert.That(builder.Arguments.Count, Is.EqualTo(1));
+
+            DltTraceLine line = (DltTraceLine)builder.GetResult();
+            Assert.That(line.Arguments.Count, Is.EqualTo(1));
+            Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
+            Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
+
+            // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
+            // reference.
+            builder.AddArgument(new CustomArg("foo"));
+            Assert.That(line.Arguments.Count, Is.EqualTo(1));
+
+            builder.Reset();
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArgumentTwice()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(2);
+            builder.AddArgument(new CustomArg());
+            builder.AddArgument(new CustomArg("foo"));
+            Assert.That(builder.Arguments.Count, Is.EqualTo(2));
+
+            DltTraceLine line = (DltTraceLine)builder.GetResult();
+            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
+            Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
+            Assert.That(line.Arguments[1], Is.TypeOf<CustomArg>());
+            Assert.That(line.Arguments[1].ToString(), Is.EqualTo("foo"));
+
+            // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
+            // reference.
+            builder.AddArgument(new CustomArg("bar"));
+            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+
+            builder.Reset();
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArguments()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(2);
+            builder.AddArguments(new IDltArg[] {
+                new CustomArg(),
+                new CustomArg("foo")
+            });
+            Assert.That(builder.Arguments.Count, Is.EqualTo(2));
+
+            DltTraceLine line = (DltTraceLine)builder.GetResult();
+            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
+            Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
+            Assert.That(line.Arguments[1], Is.TypeOf<CustomArg>());
+            Assert.That(line.Arguments[1].ToString(), Is.EqualTo("foo"));
+
+            // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
+            // reference.
+            builder.AddArgument(new CustomArg("bar"));
+            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+
+            builder.Reset();
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArgumentsNull()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(0);
+            builder.AddArguments(null);
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArgumentsEmpty()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(0);
+            builder.AddArguments(Array.Empty<IDltArg>());
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AddArgumentNone()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetNumberOfArgs(0);
+            builder.AddArgument(null);
+            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
         }
 
         [Test]

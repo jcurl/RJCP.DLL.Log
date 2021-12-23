@@ -339,14 +339,14 @@
                 DltType messageType = (DltType)(messageInfo & DltConstants.MessageInfo.MessageTypeMask);
                 m_DltLineBuilder.SetDltType(messageType);
 
+                byte noar = standardHeader[offset + 1];
+                m_DltLineBuilder.SetNumberOfArgs(noar);
+
                 int appid = BitOperations.To32ShiftBigEndian(standardHeader[(offset + 2)..(offset + 6)]);
                 m_DltLineBuilder.SetApplicationId(IdHashList.Instance.ParseId(appid));
 
                 int ctxid = BitOperations.To32ShiftBigEndian(standardHeader[(offset + 6)..(offset + 10)]);
                 m_DltLineBuilder.SetContextId(IdHashList.Instance.ParseId(ctxid));
-
-                // TODO: Set the number of arguments (NOAR) when we start parsing the arguments for verbose and
-                // non-verbose messages.
             }
 
             return true;

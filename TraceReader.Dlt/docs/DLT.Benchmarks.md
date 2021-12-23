@@ -39,13 +39,13 @@ Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical co
 
 | Project 'dlt' Type  | Method            | mean (netcore31) | stderr |
 |:--------------------|:------------------|-----------------:|-------:|
-| DltDecoderBenchmark | DecodeFilePackets | 2110.05          | 1.46   |
+| DltDecoderBenchmark | DecodeFilePackets | 2384.60          | 2.99   |
 
 Description of the test results:
 
-* `DltDecoderBenchmark.DecodeFilePackets`: Decodes ten normal DLT packets with a
-  storage header that are already in memory. Each message is a normal verbose
-  DLT message with a single string argument.
+* `DltDecoderBenchmark.DecodeFilePackets`: Decodes **ten** normal DLT packets
+  with a storage header that are already in memory. Each message is a normal
+  verbose DLT message with a single string argument.
 
 ### Notes for Results
 

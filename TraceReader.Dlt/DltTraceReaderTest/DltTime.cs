@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log
 {
     using System;
+    using System.Globalization;
 
     public static class DltTime
     {
@@ -17,6 +18,11 @@
             // microseconds. As per docs, "The value parameter is rounded to the nearest millisecond".
             return new DateTime(year, month, day, hour, minute, 0, DateTimeKind.Utc)
                 .AddTicks((long)(seconds * TimeSpan.TicksPerSecond));
+        }
+
+        public static string LocalTime(DateTime time)
+        {
+            return time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture);
         }
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="DltSerialTraceReaderFactory.cs" />
     <Compile Include="DltTraceLine.cs" />
     <Compile Include="DltTraceReaderFactory.cs" />
+    <Compile Include="Dlt\Args\IDltArg.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />

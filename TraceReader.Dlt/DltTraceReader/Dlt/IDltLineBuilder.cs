@@ -1,6 +1,8 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt
 {
     using System;
+    using System.Collections.Generic;
+    using Args;
 
     /// <summary>
     /// DLT trace line builder interface.
@@ -244,5 +246,44 @@
         /// </param>
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         IDltLineBuilder SetBigEndian(bool bigEndian);
+
+        /// <summary>
+        /// Gets the number of arguments found in the payload of a verbose message.
+        /// </summary>
+        /// <value>The number of arguments found in the payload of a verbose message.</value>
+        /// <remarks>
+        /// The value being returned is expected to be the same as it is found in the extended header of a DLT packet.
+        /// </remarks>
+        int NumberOfArgs { get; }
+
+        /// <summary>
+        /// Sets the number of arguments found in the payload of a verbose message.
+        /// </summary>
+        /// <param name="value">The argument count.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        /// <remarks>
+        /// The value being set is expected to be the same as it is found in the extended header of a DLT packet.
+        /// </remarks>
+        IDltLineBuilder SetNumberOfArgs(byte value);
+
+        /// <summary>
+        /// Gets the arguments as a non-modifiable list.
+        /// </summary>
+        /// <value>The arguments.</value>
+        IReadOnlyList<IDltArg> Arguments { get; }
+
+        /// <summary>
+        /// Adds the given argument to the payload.
+        /// </summary>
+        /// <param name="argument">The argument to be added to the payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder AddArgument(IDltArg argument);
+
+        /// <summary>
+        /// Adds the given arguments to the payload.
+        /// </summary>
+        /// <param name="arguments">The argument to be added to the payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments);
     }
 }
