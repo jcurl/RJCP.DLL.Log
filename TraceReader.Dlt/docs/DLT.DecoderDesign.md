@@ -27,6 +27,8 @@ The decoder is based on the [DLT Format](DLT.Format.md).
   - [2.1. Bit Structure](#21-bit-structure)
   - [2.2. Decoding Arguments](#22-decoding-arguments)
   - [2.3. Extending the Verbose Argument Decoding](#23-extending-the-verbose-argument-decoding)
+  - [2.4. Supported DLT Argument Types](#24-supported-dlt-argument-types)
+  - [2.5. Unsupported DLT Argument Types](#25-unsupported-dlt-argument-types)
 - [3. Trace Lines](#3-trace-lines)
 
 ## 1. DLT Trace Decoder
@@ -326,15 +328,15 @@ A summary of the bits, as copied from the AutoSAR PRS
 
 | Variable Type | TYLE | VARI | FIXP | SCOD |
 | ------------- | :--: | :--: | :--: | :--: |
-| BOOL          | X    | O    |      |      |
-| SINT          | X    | O    | O    |      |
-| UINT          | X    | O    | O    |      |
-| FLOA          | X    | O    |      |      |
-| ARAY          |      | O    |      |      |
-| STRG          |      | O    |      | X    |
-| RAWD          |      | O    |      |      |
-| TRAI          |      |      |      | X    |
-| STRU          |      | O    |      |      |
+| BOOL          |  X   |  O   |      |      |
+| SINT          |  X   |  O   |  O   |      |
+| UINT          |  X   |  O   |  O   |      |
+| FLOA          |  X   |  O   |      |      |
+| ARAY          |      |  O   |      |      |
+| STRG          |      |  O   |      |  X   |
+| RAWD          |      |  O   |      |      |
+| TRAI          |      |      |      |  X   |
+| STRU          |      |  O   |      |      |
 
 * `X` - Mandatory to set
 * `O` - Optional to set
@@ -390,6 +392,41 @@ argument at a time.
 The output of the `VerboseArgDecoder` is then an `IDltArg` which the
 `VerboseDltDecoder` adds to the line builder, and the size of the buffer that
 should be advanced from the start of the argument to find the next argument.
+
+### 2.4. Supported DLT Argument Types
+
+Software supports these argument types and formats
+
+| Argument Type | 8-bit | 16-bit | 32-bit | 64-bit | 128-bit | VARI | Notes                                        |
+| ------------- | ----- | ------ | ------ | ------ | ------- | ---- | -------------------------------------------- |
+| BOOL          | Yes   | -      | -      | -      | -       | No   | Size is not needed, except for deserializing |
+| UINT          | Yes   | Yes    | yes    | Yes    | No      | No   | 128-bit is not native to .NET                |
+| SINT          | Yes   | Yes    | Yes    | Yes    | No      | No   | 128-bit is not native to .NET                |
+| Hex INT       | Yes   | Yes    | Yes    | Yes    | No      | No   | Same as SINT, prints as Hex                  |
+| Binary INT    | Yes   | Yes    | Yes    | Yes    | No      | No   | Same as SINT, prints as binary string        |
+| FIXP INT      | No    | No     | No     | No     | No      | No   | Fixed point types not represented            |
+| FLOAT         | -     | No     | Yes    | Yes    | No      | No   |                                              |
+| Raw           | -     | -      | -      | -      | -       | No   | A byte array, shown as a hex string          |
+| String        | -     | -      | -      | -      | -       | No   |                                              |
+
+The float formats are:
+
+| Length  | Mantissa | Exponent | Supported | Notes                                |
+| ------- | -------- | -------- | --------- | ------------------------------------ |
+| 16-bit  | 10       | 5        | No        | Half floats are supported by .NET 5+ |
+| 32-bit  | 23       | 8        | Yes       |                                      |
+| 64-bit  | 52       | 11       | Yes       |                                      |
+| 128-bit | 112      | 15       | No        | .NET doesn't support 128-bit floats  |
+
+### 2.5. Unsupported DLT Argument Types
+
+The following verbose types are not supported.
+
+| Argument Type | VARI | Notes                                            |
+| ------------- | ---- | ------------------------------------------------ |
+| Trace Info    | -    |                                                  |
+| Struct        | O    | Inner types decoded are those that are supported |
+| Array         | O    | Inner types decoded are those that are supported |
 
 ## 3. Trace Lines
 

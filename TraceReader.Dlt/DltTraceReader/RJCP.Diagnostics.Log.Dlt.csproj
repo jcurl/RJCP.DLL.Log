@@ -45,6 +45,7 @@
     <ProjectReference Include="..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
     <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
+    <ProjectReference Include="..\..\..\textutils\code\RJCP.Core.Text.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,7 +58,19 @@
     <Compile Include="DltSerialTraceReaderFactory.cs" />
     <Compile Include="DltTraceLine.cs" />
     <Compile Include="DltTraceReaderFactory.cs" />
+    <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />
+    <Compile Include="Dlt\Args\BoolDltArg.cs" />
+    <Compile Include="Dlt\Args\DltArgBase.cs" />
+    <Compile Include="Dlt\Args\Float32DltArg.cs" />
+    <Compile Include="Dlt\Args\Float64DltArg.cs" />
+    <Compile Include="Dlt\Args\HexConvert.cs" />
+    <Compile Include="Dlt\Args\HexIntDltArg.cs" />
     <Compile Include="Dlt\Args\IDltArg.cs" />
+    <Compile Include="Dlt\Args\RawDltArg.cs" />
+    <Compile Include="Dlt\Args\SignedIntDltArg.cs" />
+    <Compile Include="Dlt\Args\StringDltArg.cs" />
+    <Compile Include="Dlt\Args\StringEncodingType.cs" />
+    <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />

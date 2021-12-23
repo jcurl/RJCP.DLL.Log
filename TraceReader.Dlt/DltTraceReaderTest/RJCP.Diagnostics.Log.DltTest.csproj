@@ -57,7 +57,16 @@
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />
     <Compile Include="DltTime.cs" />
+    <Compile Include="Dlt\Args\BinaryIntDltArgTest.cs" />
+    <Compile Include="Dlt\Args\BoolDltArgTest.cs" />
     <Compile Include="Dlt\Args\CustomArg.cs" />
+    <Compile Include="Dlt\Args\Float32DltArgTest.cs" />
+    <Compile Include="Dlt\Args\Float64DltArgTest.cs" />
+    <Compile Include="Dlt\Args\HexIntDltArgTest.cs" />
+    <Compile Include="Dlt\Args\RawDltArgTest.cs" />
+    <Compile Include="Dlt\Args\SignedIntDltArgTest.cs" />
+    <Compile Include="Dlt\Args\StringDltArgTest.cs" />
+    <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />
