@@ -88,7 +88,7 @@
                 arg = Create8BitArgument(buffer[DltConstants.TypeInfo.TypeInfoSize], coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 1;
             default:
-                Log.Dlt.TraceEvent(TraceEventType.Warning, $"Integer argument with unsupported length of {argLength}");
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Integer argument with unsupported length of {0}", argLength);
                 arg = null;
                 return -1;
             }

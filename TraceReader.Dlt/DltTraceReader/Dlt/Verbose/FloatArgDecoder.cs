@@ -48,7 +48,7 @@
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 2)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 2;
             default:
-                Log.Dlt.TraceEvent(TraceEventType.Warning, $"Float argument with unsupported length of {argLength}");
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with unsupported length of {0}", argLength);
                 arg = null;
                 return -1;
             }
