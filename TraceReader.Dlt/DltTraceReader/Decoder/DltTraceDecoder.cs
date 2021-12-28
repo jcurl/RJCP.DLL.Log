@@ -11,7 +11,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoder"/> class.
         /// </summary>
-        public DltTraceDecoder() : base(new DltLineBuilder()) { }
+        public DltTraceDecoder() : base() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoder"/> class.
@@ -19,7 +19,7 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltTraceDecoder(bool online) : base(new DltLineBuilder(online)) { }
+        public DltTraceDecoder(bool online) : base(GetVerboseDecoder(), new DltLineBuilder(online)) { }
 
         /// <summary>
         /// Searches for the start of the DLT frame.

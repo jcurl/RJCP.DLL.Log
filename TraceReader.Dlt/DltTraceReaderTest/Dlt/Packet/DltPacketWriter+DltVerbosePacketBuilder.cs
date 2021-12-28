@@ -36,6 +36,22 @@
             }
 
             /// <summary>
+            /// Prepares a Verbose packet.
+            /// </summary>
+            /// <param name="time">The device time stamp.</param>
+            /// <param name="msgType">The type of the message.</param>
+            /// <param name="noar">The number of verbose arguments in the payload.</param>
+            /// <param name="payload">The raw verbose payload data.</param>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder Line(TimeSpan time, DltType msgType, int noar, byte[] payload)
+            {
+                m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
+                m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId);
+                if (payload != null) m_Packet.AddPayload(noar, payload);
+                return this;
+            }
+
+            /// <summary>
             /// Writes the specified version into the standard header.
             /// </summary>
             /// <param name="version">The version in the range 0 to 7.</param>

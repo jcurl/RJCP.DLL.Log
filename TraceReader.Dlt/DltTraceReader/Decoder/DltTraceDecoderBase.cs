@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Dlt;
+    using Dlt.Verbose;
     using RJCP.Core;
 
     /// <summary>
@@ -15,19 +17,43 @@
 #else
         private readonly LineCache m_Cache = new LineCache();
 #endif
+        private readonly IVerboseDltDecoder m_VerboseDecoder;
         private readonly IDltLineBuilder m_DltLineBuilder;
 
         private bool m_ValidHeaderFound = false;
         private int m_ExpectedLength;
 
         /// <summary>
+        /// Gets the verbose decoder that should be used when instantiating this class.
+        /// </summary>
+        /// <returns></returns>
+        protected static IVerboseDltDecoder GetVerboseDecoder()
+        {
+            return new VerboseDltDecoder(new VerboseArgDecoder());
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
         /// </summary>
+        /// <remarks>
+        /// Instantiate a trace decoder using recommended default decoders. This class must still be extended on how to
+        /// find the start of a frame, and the size of data that can be skipped when searching for a frame.
+        /// </remarks>
+        protected DltTraceDecoderBase()
+            : this(GetVerboseDecoder(), new DltLineBuilder()) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
+        /// </summary>
+        /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
         /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
         /// <exception cref="ArgumentNullException"><paramref name="lineBuilder"/> is <see langword="null"/>.</exception>
-        protected DltTraceDecoderBase(IDltLineBuilder lineBuilder)
+        protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, IDltLineBuilder lineBuilder)
         {
+            if (verboseDecoder == null) throw new ArgumentNullException(nameof(verboseDecoder));
             if (lineBuilder == null) throw new ArgumentNullException(nameof(lineBuilder));
+
+            m_VerboseDecoder = verboseDecoder;
             m_DltLineBuilder = lineBuilder;
         }
 
@@ -171,7 +197,8 @@
                 }
 
                 if (!ParsePrefixHeader(dltPacket, m_DltLineBuilder) ||
-                    !ParsePacket(dltPacket[StandardHeaderOffset..])) {
+                    !ParsePacket(dltPacket[StandardHeaderOffset..(StandardHeaderOffset + m_ExpectedLength)])) {
+                    m_DltLineBuilder.Reset();
                     bytes -= MinimumDiscard;
                     decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Invalid packet");
                     m_ValidHeaderFound = false;
@@ -275,8 +302,12 @@
         {
             int headerType = standardHeader[0];
 
-            if ((headerType & DltConstants.HeaderType.VersionIdentifierMask) != DltConstants.HeaderType.Version1) {
+            int version = headerType & DltConstants.HeaderType.VersionIdentifierMask;
+            if (version != DltConstants.HeaderType.Version1) {
                 length = 0;
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet version {0} found, expected {1}",
+                    version >> DltConstants.HeaderType.VersionBitShift,
+                    DltConstants.HeaderType.Version1 >> DltConstants.HeaderType.VersionBitShift);
                 return false;
             }
 
@@ -287,7 +318,11 @@
             if ((headerType & DltConstants.HeaderType.UseExtendedHeader) != 0) minLength += 10;
 
             length = BitOperations.To16ShiftBigEndian(standardHeader[2..4]);
-            if (length < minLength) return false;
+            if (length < minLength) {
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "Packet with length {0} found, expected minimum {1}", length, minLength);
+                return false;
+            }
             return true;
         }
 
@@ -347,6 +382,24 @@
 
                 int ctxid = BitOperations.To32ShiftBigEndian(standardHeader[(offset + 6)..(offset + 10)]);
                 m_DltLineBuilder.SetContextId(IdHashList.Instance.ParseId(ctxid));
+
+                offset += 10;
+            }
+
+            if (m_DltLineBuilder.IsVerbose) {
+                int payloadLength = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (payloadLength == -1) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose payload cannot be decoded");
+                    return false;
+                }
+                if (m_ExpectedLength != offset + payloadLength) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose payload length {0} found, expected {1}",
+                        payloadLength, m_ExpectedLength - offset);
+                    return false;
+                }
+            } else {
+                // TODO: Support non-verbose as simple raw data.
+                return false;
             }
 
             return true;

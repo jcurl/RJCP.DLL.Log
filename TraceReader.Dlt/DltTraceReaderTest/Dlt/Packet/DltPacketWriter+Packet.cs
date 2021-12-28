@@ -117,6 +117,16 @@
                 m_PacketLength = m_PayLoadPos;
             }
 
+            public void AddPayload(int noar, byte[] data)
+            {
+                if (!m_HasExtendedHeader) throw new InvalidOperationException("Arguments must have an extended header");
+
+                data.CopyTo(m_Packet, m_PayLoadPos);
+                m_Packet[m_ExtendedHeaderPos + 1] += (byte)noar;
+                m_PayLoadPos += data.Length;
+                m_PacketLength = m_PayLoadPos;
+            }
+
             public int Length
             {
                 get

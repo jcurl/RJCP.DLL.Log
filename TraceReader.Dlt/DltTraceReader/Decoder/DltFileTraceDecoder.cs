@@ -12,7 +12,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
         /// </summary>
-        public DltFileTraceDecoder() : base(new DltLineBuilder()) { }
+        public DltFileTraceDecoder() : base() { }
 
         private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x54, 0x01 };
 

@@ -11,7 +11,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.
         /// </summary>
-        public DltSerialTraceDecoder() : base(new DltLineBuilder()) { }
+        public DltSerialTraceDecoder() : base() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.
@@ -19,7 +19,7 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltSerialTraceDecoder(bool online) : base(new DltLineBuilder(online)) { }
+        public DltSerialTraceDecoder(bool online) : base(GetVerboseDecoder(), new DltLineBuilder(online)) { }
 
         private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
 

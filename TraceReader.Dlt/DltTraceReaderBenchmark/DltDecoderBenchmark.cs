@@ -1,11 +1,20 @@
 ﻿namespace RJCP.Diagnostics.Log
 {
+    using System.Text;
     using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Engines;
     using Decoder;
 
     public class DltDecoderBenchmark
     {
+        [GlobalSetup]
+        public void InitializeCodePages()
+        {
+            // Required to decode ISO-8859-15 when encoded as ASCII.
+            var instance = CodePagesEncodingProvider.Instance;
+            Encoding.RegisterProvider(instance);
+        }
+
         private static readonly DltFileTraceDecoder DltFilePacketsDecoder = new DltFileTraceDecoder();
 
         // 10 DLT packets with a storage header. Each line is one packet.

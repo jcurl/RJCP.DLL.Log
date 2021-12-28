@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
     using System;
+    using System.Diagnostics;
     using Args;
 
     /// <summary>
@@ -38,23 +39,29 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public int Decode(ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
-            int type = (buffer[0] | (buffer[1] << 8)) & TypeInfoMask;
+            try {
+                int type = (buffer[0] | (buffer[1] << 8)) & TypeInfoMask;
 
-            switch (type) {
-            case BoolType:
-                return m_BoolArgDecoder.Decode(buffer, msbf, out arg);
-            case SignedIntegerType:
-                return m_SignedIntArgDecoder.Decode(buffer, msbf, out arg);
-            case UnsignedIntegerType:
-                return m_UnsignedIntArgDecoder.Decode(buffer, msbf, out arg);
-            case FloatType:
-                return m_FloatArgDecoder.Decode(buffer, msbf, out arg);
-            case StringType:
-                return m_StringArgDecoder.Decode(buffer, msbf, out arg);
-            case RawType:
-                return m_RawArgDecoder.Decode(buffer, msbf, out arg);
-            default:
-                Log.Dlt.TraceEvent(System.Diagnostics.TraceEventType.Warning, $"Unsupported Verbose Message {type:x}");
+                switch (type) {
+                case BoolType:
+                    return m_BoolArgDecoder.Decode(buffer, msbf, out arg);
+                case SignedIntegerType:
+                    return m_SignedIntArgDecoder.Decode(buffer, msbf, out arg);
+                case UnsignedIntegerType:
+                    return m_UnsignedIntArgDecoder.Decode(buffer, msbf, out arg);
+                case FloatType:
+                    return m_FloatArgDecoder.Decode(buffer, msbf, out arg);
+                case StringType:
+                    return m_StringArgDecoder.Decode(buffer, msbf, out arg);
+                case RawType:
+                    return m_RawArgDecoder.Decode(buffer, msbf, out arg);
+                default:
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Unsupported Verbose Message {0:x}", type);
+                    arg = null;
+                    return -1;
+                }
+            } catch (Exception ex) {
+                Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding");
                 arg = null;
                 return -1;
             }

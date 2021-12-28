@@ -88,12 +88,14 @@
     <Compile Include="Dlt\Verbose\IntegerArgDecoder.cs" />
     <Compile Include="Dlt\Args\IntegerEncodingType.cs" />
     <Compile Include="Dlt\Verbose\IVerboseArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\IVerboseDltDecoder.cs" />
     <Compile Include="Dlt\Verbose\RawArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\SignedIntArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\StringArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\TypeInfo.cs" />
     <Compile Include="Dlt\Verbose\UnsignedIntArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\VerboseArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

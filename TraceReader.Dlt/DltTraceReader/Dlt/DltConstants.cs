@@ -90,6 +90,11 @@
             public const int WithTimeStamp = 0x10;
 
             /// <summary>
+            /// The version identifier value to shift right after masking (VERS).
+            /// </summary>
+            public const int VersionBitShift = 5;
+
+            /// <summary>
             /// The version identifier mask (VERS).
             /// </summary>
             public const int VersionIdentifierMask = 0xe0;

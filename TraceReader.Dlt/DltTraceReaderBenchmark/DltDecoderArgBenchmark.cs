@@ -6,7 +6,8 @@
 
     public class DltDecoderArgBenchmark
     {
-        public DltDecoderArgBenchmark()
+        [GlobalSetup]
+        public void InitializeCodePages()
         {
             // Required to decode ISO-8859-15 when encoded as ASCII.
             var instance = CodePagesEncodingProvider.Instance;

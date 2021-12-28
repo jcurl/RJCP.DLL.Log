@@ -56,6 +56,7 @@
     <Compile Include="Decoder\LineCacheTest.cs" />
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />
+    <Compile Include="DltTestData.cs" />
     <Compile Include="DltTime.cs" />
     <Compile Include="Dlt\Args\BinaryIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\BoolDltArgTest.cs" />
