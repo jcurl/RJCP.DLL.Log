@@ -66,6 +66,7 @@
     <Compile Include="Dlt\Args\RawDltArgTest.cs" />
     <Compile Include="Dlt\Args\SignedIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\StringDltArgTest.cs" />
+    <Compile Include="Dlt\Args\UnknownVerboseDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
@@ -73,6 +74,14 @@
     <Compile Include="Dlt\Packet\DltPacketWriter.cs" />
     <Compile Include="Dlt\IdHashListAccessor.cs" />
     <Compile Include="Dlt\IdHashListTest.cs" />
+    <Compile Include="Dlt\Verbose\BoolArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\FloatArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\ArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\RawArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\SignedIntArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\StringArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\UnsignedIntArgDecoderTest.cs" />
+    <Compile Include="Dlt\Verbose\VerboseArgDecoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
     <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>

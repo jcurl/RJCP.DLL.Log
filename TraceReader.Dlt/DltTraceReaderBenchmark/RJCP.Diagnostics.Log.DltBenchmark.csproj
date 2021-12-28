@@ -44,6 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="DltDecoderArgBenchmark.cs" />
     <Compile Include="DltDecoderBenchmark.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />

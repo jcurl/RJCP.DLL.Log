@@ -115,5 +115,116 @@
             /// </summary>
             public const int MessageTypeMask = 0xFE;
         }
+
+        /// <summary>
+        /// Bit fields in the verbose argument Type Info.
+        /// </summary>
+        public static class TypeInfo
+        {
+            /// <summary>
+            /// The number of bytes the Type Info field requires.
+            /// </summary>
+            public const int TypeInfoSize = 4;
+
+            /// <summary>
+            /// The type length mask to get the length of the verbose argument.
+            /// </summary>
+            public const int TypeLengthMask = 0xF;
+
+            /// <summary>
+            /// The type length is unknown.
+            /// </summary>
+            public const int TypeLengthUnknown = 0;
+
+            /// <summary>
+            /// The type length of 1 byte.
+            /// </summary>
+            public const int TypeLength8bit = 1;
+
+            /// <summary>
+            /// The type length of 2 bytes.
+            /// </summary>
+            public const int TypeLength16bit = 2;
+
+            /// <summary>
+            /// The type length of 4 bytes.
+            /// </summary>
+            public const int TypeLength32bit = 3;
+
+            /// <summary>
+            /// The type length of 8 bytes.
+            /// </summary>
+            public const int TypeLength64bit = 4;
+
+            /// <summary>
+            /// The type length of 16 bytes.
+            /// </summary>
+            public const int TypeLength128bit = 5;
+
+            /// <summary>
+            /// The boolean type.
+            /// </summary>
+            public const int TypeBool = 0x10;
+
+            /// <summary>
+            /// The signed integer type.
+            /// </summary>
+            public const int TypeSint = 0x20;
+
+            /// <summary>
+            /// The unsigned integer type.
+            /// </summary>
+            public const int TypeUint = 0x40;
+
+            /// <summary>
+            /// The float type.
+            /// </summary>
+            public const int TypeFloat = 0x80;
+
+            /// <summary>
+            /// The array type.
+            /// </summary>
+            public const int TypeArray = 0x100;
+
+            /// <summary>
+            /// The string type.
+            /// </summary>
+            public const int TypeString = 0x200;
+
+            /// <summary>
+            /// The raw type.
+            /// </summary>
+            public const int TypeRaw = 0x400;
+
+            /// <summary>
+            /// The variable information bit flag.
+            /// </summary>
+            public const int VariableInfo = 0x800;
+
+            /// <summary>
+            /// The fixed point flag with integer types.
+            /// </summary>
+            public const int FixedPoint = 0x1000;
+
+            /// <summary>
+            /// The trace information type.
+            /// </summary>
+            public const int TraceInfo = 0x2000;
+
+            /// <summary>
+            /// The structure type.
+            /// </summary>
+            public const int TypeStruct = 0x4000;
+
+            /// <summary>
+            /// The coding bit shift to the right where the coding mask starts.
+            /// </summary>
+            public const int CodingBitShift = 15;
+
+            /// <summary>
+            /// The string coding and integer mask before the shift.
+            /// </summary>
+            public const int CodingMask = 0x38000;
+        }
     }
 }

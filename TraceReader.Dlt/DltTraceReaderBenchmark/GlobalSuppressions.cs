@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "BenchmarkDotNet needs non-static", Scope = "type", Target = "~T:RJCP.Diagnostics.Log.DltDecoderBenchmark")]
+[assembly: SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "BenchmarkDotNet needs non-static", Scope = "type", Target = "~T:RJCP.Diagnostics.Log.DltDecoderArgBenchmark")]

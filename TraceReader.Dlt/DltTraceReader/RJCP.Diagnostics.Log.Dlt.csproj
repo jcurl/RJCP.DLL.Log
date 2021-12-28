@@ -42,6 +42,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
     <ProjectReference Include="..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
     <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
@@ -61,6 +62,7 @@
     <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />
     <Compile Include="Dlt\Args\BoolDltArg.cs" />
     <Compile Include="Dlt\Args\DltArgBase.cs" />
+    <Compile Include="Dlt\Args\DltTypeInfo.cs" />
     <Compile Include="Dlt\Args\Float32DltArg.cs" />
     <Compile Include="Dlt\Args\Float64DltArg.cs" />
     <Compile Include="Dlt\Args\HexConvert.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="Dlt\Args\SignedIntDltArg.cs" />
     <Compile Include="Dlt\Args\StringDltArg.cs" />
     <Compile Include="Dlt\Args\StringEncodingType.cs" />
+    <Compile Include="Dlt\Args\UnknownDltArg.cs" />
+    <Compile Include="Dlt\Args\UnknownVerboseDltArg.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
@@ -79,6 +83,17 @@
     <Compile Include="Dlt\DltTypeExtension.cs" />
     <Compile Include="Dlt\IdHashList.cs" />
     <Compile Include="Dlt\IDltLineBuilder.cs" />
+    <Compile Include="Dlt\Verbose\BoolArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\FloatArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\IntegerArgDecoder.cs" />
+    <Compile Include="Dlt\Args\IntegerEncodingType.cs" />
+    <Compile Include="Dlt\Verbose\IVerboseArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\RawArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\SignedIntArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\StringArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\TypeInfo.cs" />
+    <Compile Include="Dlt\Verbose\UnsignedIntArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\VerboseArgDecoder.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

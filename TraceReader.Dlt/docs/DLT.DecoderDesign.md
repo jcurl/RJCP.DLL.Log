@@ -28,6 +28,8 @@ The decoder is based on the [DLT Format](DLT.Format.md).
   - [2.2. Decoding Arguments](#22-decoding-arguments)
   - [2.3. Extending the Verbose Argument Decoding](#23-extending-the-verbose-argument-decoding)
   - [2.4. Supported DLT Argument Types](#24-supported-dlt-argument-types)
+    - [2.4.1. Decoding String Types](#241-decoding-string-types)
+    - [2.4.2. Decoding Integer Types](#242-decoding-integer-types)
   - [2.5. Unsupported DLT Argument Types](#25-unsupported-dlt-argument-types)
 - [3. Trace Lines](#3-trace-lines)
 
@@ -296,6 +298,11 @@ In case of errors, the design of the decoder shall be such that a success/fail
 condition is observed. Methods when parsing strings shall use the `TryParse`
 methods instead of relying on exceptions when parsing.
 
+To keep code small and lean, the initial implementation of decoding shall rely
+on underlying .NET checks for `Span<byte>` boundary ranges, instead of checking
+span ranges explicitly before access. If the checks introduce minor perfomance
+impacts then these can be introduced to check boundary lengths before access.
+
 ### 1.6. Position within the Stream
 
 It is important that the position of each decoded packet is made avaialble with
@@ -397,17 +404,21 @@ should be advanced from the start of the argument to find the next argument.
 
 Software supports these argument types and formats
 
-| Argument Type | 8-bit | 16-bit | 32-bit | 64-bit | 128-bit | VARI | Notes                                        |
-| ------------- | ----- | ------ | ------ | ------ | ------- | ---- | -------------------------------------------- |
-| BOOL          | Yes   | -      | -      | -      | -       | No   | Size is not needed, except for deserializing |
-| UINT          | Yes   | Yes    | yes    | Yes    | No      | No   | 128-bit is not native to .NET                |
-| SINT          | Yes   | Yes    | Yes    | Yes    | No      | No   | 128-bit is not native to .NET                |
-| Hex INT       | Yes   | Yes    | Yes    | Yes    | No      | No   | Same as SINT, prints as Hex                  |
-| Binary INT    | Yes   | Yes    | Yes    | Yes    | No      | No   | Same as SINT, prints as binary string        |
-| FIXP INT      | No    | No     | No     | No     | No      | No   | Fixed point types not represented            |
-| FLOAT         | -     | No     | Yes    | Yes    | No      | No   |                                              |
-| Raw           | -     | -      | -      | -      | -       | No   | A byte array, shown as a hex string          |
-| String        | -     | -      | -      | -      | -       | No   |                                              |
+| Argument Type | 8-bit | 16-bit   | 32-bit | 64-bit | 128-bit  | VARI | Notes                                        |
+| ------------- | ----- | -------- | ------ | ------ | -------- | ---- | -------------------------------------------- |
+| BOOL          | Yes   | -        | -      | -      | -        | No   | Size is not needed, except for deserializing |
+| UINT          | Yes   | Yes      | yes    | Yes    | Unknown† | No   | 128-bit is not native to .NET                |
+| SINT          | Yes   | Yes      | Yes    | Yes    | Unknown† | No   | 128-bit is not native to .NET                |
+| Hex UINT      | Yes   | Yes      | Yes    | Yes    | Unknown† | No   | Same as UINT, prints as Hex                  |
+| Binary UINT   | Yes   | Yes      | Yes    | Yes    | Unknown† | No   | Same as UINT, prints as binary string        |
+| FIXP INT      | No    | No       | No     | No     | No       | No   | Fixed point types not represented            |
+| FLOAT         | -     | Unknown† | Yes    | Yes    | Unknown† | No   |                                              |
+| Raw           | -     | -        | -      | -      | -        | No   | A byte array, shown as a hex string          |
+| String        | -     | -        | -      | -      | -        | No   |                                              |
+
+* †: This argument is returned as an `UnknownDltArg`. Thus, while the argument
+  cannot be represented as a native type, it is still decoded and the byte
+  contents are returned.
 
 The float formats are:
 
@@ -418,6 +429,44 @@ The float formats are:
 | 64-bit  | 52       | 11       | Yes       |                                      |
 | 128-bit | 112      | 15       | No        | .NET doesn't support 128-bit floats  |
 
+#### 2.4.1. Decoding String Types
+
+Strings can be encoded using ASCII or UTF8. The implementation uses ISO-8859-15
+as the coding type for interpreting ASCII data. For .NET Core, this requires
+some preparation in client software before usage:
+
+Include the following package in the project:
+
+* `System.Text.Coding.Provider` version 4.7.0 or later.
+
+  ```xml
+  <ItemGroup>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
+  </ItemGroup>
+  ```
+
+Somewhere in the initialization of your code, add the provider:
+
+```csharp
+using System.Text;
+
+var instance = CodePagesEncodingProvider.Instance;
+Encoding.RegisterProvider(instance);
+```
+
+#### 2.4.2. Decoding Integer Types
+
+The Genivi DLT implementation also provides coding support for binary and
+hexadecimal for unsigned integer types, which is supported by this decoder
+(signed integer types are not affected). The following coding bits are
+supported:
+
+| Coding (b17..b15) | Coding      |
+| ----------------- | ----------- |
+| 0                 | Decimal     |
+| 2                 | Hexadecimal |
+| 3                 | Binary      |
+
 ### 2.5. Unsupported DLT Argument Types
 
 The following verbose types are not supported.
@@ -427,6 +476,9 @@ The following verbose types are not supported.
 | Trace Info    | -    |                                                  |
 | Struct        | O    | Inner types decoded are those that are supported |
 | Array         | O    | Inner types decoded are those that are supported |
+
+To extend support for new types, provide a new implementation of
+`VerboseArgDecoder`.
 
 ## 3. Trace Lines
 
