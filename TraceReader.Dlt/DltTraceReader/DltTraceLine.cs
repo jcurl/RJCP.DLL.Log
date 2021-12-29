@@ -60,7 +60,7 @@
         /// Gets the arguments as a non-modifiable list.
         /// </summary>
         /// <value>The arguments.</value>
-        public IList<IDltArg> Arguments { get; }
+        public IList<IDltArg> Arguments { get; protected set; }
 
         private string BuildArgumentText()
         {

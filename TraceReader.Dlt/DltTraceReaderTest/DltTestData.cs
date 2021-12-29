@@ -12,28 +12,33 @@
         public static readonly DateTime Time4 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.556);
         public static readonly DateTime Time5 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.5767);
 
-        public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time)
+        public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time, long bytes)
         {
-            DateTime expectedTime = factory.ExpectedTimeStamp(time);
+            Assert.That(line, Is.TypeOf<DltSkippedTraceLine>());
 
-            Assert.That(line.TimeStamp, Is.EqualTo(expectedTime));
-            Assert.That(line.Count, Is.EqualTo(-1));
-            Assert.That(line.EcuId, Is.EqualTo(string.Empty));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
-            Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
-            Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));
-            Assert.That(line.ContextId, Is.EqualTo(string.Empty));
-            // TODO: When line arguments are passed: Assert.That(line.Text, Is.EqualTo("Skipped"));
-            Assert.That(line.Features.TimeStamp, Is.EqualTo(expectedTime != DltTime.Default));
-            Assert.That(line.Features.EcuId, Is.False);
-            Assert.That(line.Features.SessionId, Is.False);
-            Assert.That(line.Features.DeviceTimeStamp, Is.False);
-            Assert.That(line.Features.BigEndian, Is.False);
-            Assert.That(line.Features.IsVerbose, Is.True);
-            Assert.That(line.Features.MessageType, Is.False);
-            Assert.That(line.Features.ApplicationId, Is.False);
-            Assert.That(line.Features.ContextId, Is.False);
+            DateTime expectedTime = factory.ExpectedTimeStamp(time);
+            DltSkippedTraceLine skipLine = (DltSkippedTraceLine)line;
+            Assert.That(skipLine.TimeStamp, Is.EqualTo(expectedTime));
+            Assert.That(skipLine.Count, Is.EqualTo(-1));
+            Assert.That(skipLine.EcuId, Is.EqualTo(string.Empty));
+            Assert.That(skipLine.SessionId, Is.EqualTo(0));
+            Assert.That(skipLine.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(skipLine.Type, Is.EqualTo(DltType.LOG_WARN));
+            Assert.That(skipLine.ApplicationId, Is.EqualTo(string.Empty));
+            Assert.That(skipLine.ContextId, Is.EqualTo(string.Empty));
+            Assert.That(skipLine.Arguments.Count, Is.EqualTo(4));
+            Assert.That(skipLine.Reason, Is.Not.Null);
+            Assert.That(skipLine.BytesSkipped, Is.EqualTo(bytes));
+            Assert.That(skipLine.Text, Is.EqualTo($"Skipped: {skipLine.BytesSkipped} bytes; Reason: {skipLine.Reason}"));
+            Assert.That(skipLine.Features.TimeStamp, Is.EqualTo(expectedTime != DltTime.Default));
+            Assert.That(skipLine.Features.EcuId, Is.False);
+            Assert.That(skipLine.Features.SessionId, Is.False);
+            Assert.That(skipLine.Features.DeviceTimeStamp, Is.False);
+            Assert.That(skipLine.Features.BigEndian, Is.False);
+            Assert.That(skipLine.Features.IsVerbose, Is.True);
+            Assert.That(skipLine.Features.MessageType, Is.False);
+            Assert.That(skipLine.Features.ApplicationId, Is.False);
+            Assert.That(skipLine.Features.ContextId, Is.False);
         }
 
         public static void IsLine1(this DltFactory factory, DltTraceLineBase line, int linenum, int count)

@@ -138,7 +138,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Version(2).Append();
+                int l1 = m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Version(2).Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPacketVersion2));
 
                 using (Stream stream = writer.Stream())
@@ -153,7 +153,7 @@
                         // decoding this packet is almost hopeless and that decoding packets after this one is
                         // implementation defined.
 
-                        m_Factory.IsSkippedLine(line, DltTime.Default);
+                        m_Factory.IsSkippedLine(line, DltTime.Default, l1);
                     }
                 }
             }
@@ -166,7 +166,7 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
-                writer.Data(new byte[] { 0x41, 0x41, 0x41, 0x41 });
+                int d = writer.Data(new byte[] { 0x41, 0x41, 0x41, 0x41 });
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltInvalidDataAtEnd));
 
                 using (Stream stream = writer.Stream())
@@ -177,7 +177,7 @@
                         m_Factory.IsLine2(line, 0, 127);
 
                         line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2);
+                        m_Factory.IsSkippedLine(line, DltTestData.Time2, d);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);
@@ -193,7 +193,7 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
-                m_Factory.Generate(writer, DltTestData.Time3, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 3").Append(24);
+                int l2 = m_Factory.Generate(writer, DltTestData.Time3, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 3").Append(24);
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPartialDataAtEnd));
 
                 using (Stream stream = writer.Stream())
@@ -204,7 +204,7 @@
                         m_Factory.IsLine2(line, 0, 127);
 
                         line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2);
+                        m_Factory.IsSkippedLine(line, DltTestData.Time2, l2);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);

@@ -57,6 +57,7 @@
     <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
     <Compile Include="DltFileTraceReaderFactory.cs" />
     <Compile Include="DltSerialTraceReaderFactory.cs" />
+    <Compile Include="DltSkippedTraceLine.cs" />
     <Compile Include="DltTraceLine.cs" />
     <Compile Include="DltTraceReaderFactory.cs" />
     <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />

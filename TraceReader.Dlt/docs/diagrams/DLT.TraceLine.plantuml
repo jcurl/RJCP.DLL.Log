@@ -11,7 +11,11 @@ DltTraceLineBase <|-- DltControlTraceLine
 interface IDltLineBuilder
 class DltLineBuilder
 
+class DltSkippedTraceLine
+DltTraceLine <|-- DltSkippedTraceLine
+
 IDltLineBuilder <|.. DltLineBuilder
 DltLineBuilder --> DltTraceLine : <<creates>>
 DltLineBuilder --> DltControlTraceLine : <<creates>>
+DltLineBuilder --> DltSkippedTraceLine : <<creates>>
 @enduml

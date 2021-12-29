@@ -156,8 +156,6 @@
         /// <value>The number of skipped bytes.</value>
         public long SkippedBytes { get; private set; }
 
-        private static readonly DltLineFeatures SkippedLineFeatures = DltLineFeatures.VerboseFeature;
-
         /// <summary>
         /// Creates and returns the DLT trace line instance expressing skipped data.
         /// </summary>
@@ -167,24 +165,11 @@
         /// </returns>
         public DltTraceLineBase GetSkippedResult()
         {
-            // TODO: When we can create lines with arguments, update this method to have constant strings and the
-            // reason/bytes as separate arguments.
-
             if (m_Online) TimeStamp = DateTime.Now;
-            DltTraceLine line = new DltTraceLine() {
+            DltSkippedTraceLine line = new DltSkippedTraceLine(SkippedBytes, m_SkippedReason) {
                 Line = m_Line,
                 Position = Position,
-                TimeStamp = m_LastValidTimeStamp,
-                EcuId = string.Empty,
-                ApplicationId = string.Empty,
-                ContextId = string.Empty,
-                Count = DltTraceLineBase.InvalidCounter,
-                DeviceTimeStamp = new TimeSpan(0),
-                Type = DltType.LOG_WARN,
-                Features = SkippedLineFeatures,
-                Text = m_SkippedReason == null ?
-                    $"Skipped: {SkippedBytes}" :
-                    $"Skipped: {SkippedBytes} bytes; {m_SkippedReason}"
+                TimeStamp = m_LastValidTimeStamp
             };
 
             if (m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks)
@@ -192,7 +177,6 @@
 
             SkippedBytes = 0;
             m_Line++;
-
             return line;
         }
 

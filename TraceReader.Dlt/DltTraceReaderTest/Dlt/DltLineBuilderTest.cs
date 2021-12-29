@@ -664,11 +664,13 @@
             IDltLineBuilder builder = new DltLineBuilder();
 
             builder.AddSkippedBytes(25, "header");
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
+            DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; header"));
+            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; Reason: header"));
+            Assert.That(line.BytesSkipped, Is.EqualTo(25));
+            Assert.That(line.Reason, Is.EqualTo("header"));
             Assert.That(line.Features.IsVerbose, Is.True);
             Assert.That(line.Features.TimeStamp, Is.False);
             Assert.That(line.Features.DeviceTimeStamp, Is.False);
@@ -681,11 +683,13 @@
             builder.SetTimeStamp(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456));
 
             builder.AddSkippedBytes(25, "header");
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
+            DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456)));
-            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; header"));
+            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; Reason: header"));
+            Assert.That(line.BytesSkipped, Is.EqualTo(25));
+            Assert.That(line.Reason, Is.EqualTo("header"));
             Assert.That(line.Features.IsVerbose, Is.True);
             Assert.That(line.Features.TimeStamp, Is.True);        // Use last set time stamp, as otherwise not available
             Assert.That(line.Features.DeviceTimeStamp, Is.False);
@@ -712,7 +716,7 @@
             builder.Reset();
 
             builder.AddSkippedBytes(25, "header");
-            DltTraceLine line = (DltTraceLine)builder.GetSkippedResult();
+            DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(1));
             Assert.That(line.Position, Is.EqualTo(0));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
@@ -723,7 +727,9 @@
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));
             Assert.That(line.ContextId, Is.EqualTo(string.Empty));
-            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; header"));
+            Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; Reason: header"));
+            Assert.That(line.BytesSkipped, Is.EqualTo(25));
+            Assert.That(line.Reason, Is.EqualTo("header"));
             Assert.That(line.Features.TimeStamp, Is.True);    // Use last set time stamp, as otherwise not available
             Assert.That(line.Features.EcuId, Is.False);
             Assert.That(line.Features.SessionId, Is.False);
