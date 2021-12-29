@@ -319,7 +319,7 @@
             if ((headerType & DltConstants.HeaderType.WithTimeStamp) != 0) minLength += 4;
             if ((headerType & DltConstants.HeaderType.UseExtendedHeader) != 0) minLength += 10;
 
-            length = BitOperations.To16ShiftBigEndian(standardHeader[2..4]);
+            length = unchecked((ushort)BitOperations.To16ShiftBigEndian(standardHeader[2..4]));
             if (length < minLength) {
                 Log.Dlt.TraceEvent(TraceEventType.Warning,
                     "Packet with length {0} found, expected minimum {1}", length, minLength);
