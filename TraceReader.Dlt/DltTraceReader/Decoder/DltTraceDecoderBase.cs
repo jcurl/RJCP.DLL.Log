@@ -191,8 +191,10 @@
                 // data wasn't cached, then dltPacket already points to the start of the DLT packet.
                 if (m_Cache.Length != 0) {
                     int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.Length;
-                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..restLength]), "Cache overflow");
-                    decodeBuffer = decodeBuffer[restLength..];
+                    if (restLength > 0) {
+                        m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..restLength]), "Cache overflow");
+                        decodeBuffer = decodeBuffer[restLength..];
+                    }
                     dltPacket = m_Cache.GetCache();
                 }
 

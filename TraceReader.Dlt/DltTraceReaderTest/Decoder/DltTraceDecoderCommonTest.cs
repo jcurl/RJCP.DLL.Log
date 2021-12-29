@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Decoder
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -27,6 +28,7 @@
         // marker at the start of the packet or not.
 
         private static readonly int[] ReadChunks = new[] { 0, 1, 2, 3, 5, 10, 100 };
+        private static readonly int[] ReadChunksMin = new[] { 0, 100 };
         private readonly DltFactory m_Factory;
 
         public DltTraceDecoderCommonTest(DltFactoryType factoryType)
@@ -209,6 +211,27 @@
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);
                     }
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunksMin))]
+        public async Task RandomData(int maxBytes)
+        {
+            // 512kB of random data. The serial and file will pass this very quickly as it only needs to look for a
+            // marker. The TCP based encoding must treat every single byte as a valid input, which can be very slow.
+            byte[] data = new byte[512 * 1024];
+            new Random().NextBytes(data);
+
+            using (Stream readStream = new ReadLimitStream(data, maxBytes)) {
+                DltTraceLineBase line;
+                using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
+                    line = await reader.GetLineAsync();
+                    Assert.That(line.Line, Is.EqualTo(0));
+                    m_Factory.IsSkippedLine(line, DltTime.Default, data.Length);
+
+                    line = await reader.GetLineAsync();
+                    Assert.That(line, Is.Null);
                 }
             }
         }
