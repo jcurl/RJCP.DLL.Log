@@ -81,7 +81,6 @@
             // Remove all features, except the BigEndianFeature if it still remains
             Features -= ResetMask;
 
-            m_LastEcuId = EcuId;
             EcuId = null;
             ApplicationId = null;
             ContextId = null;
@@ -134,8 +133,6 @@
 
         private string m_SkippedReason;
         private DateTime m_LastValidTimeStamp = DltConstants.DefaultTimeStamp;
-        private TimeSpan m_LastValidDeviceTimeStamp = new TimeSpan(0);
-        private string m_LastEcuId;
 
         /// <summary>
         /// Indicates that bytes were skipped. Take a snapshot of the time stamps.
@@ -149,7 +146,6 @@
             if (SkippedBytes == 0) {
                 m_SkippedReason = reason;
                 m_LastValidTimeStamp = m_Online ? DateTime.Now : TimeStamp;
-                m_LastValidDeviceTimeStamp = DeviceTimeStamp;
             }
             SkippedBytes += bytes;
         }
@@ -179,11 +175,11 @@
                 Line = m_Line,
                 Position = Position,
                 TimeStamp = m_LastValidTimeStamp,
-                EcuId = m_LastEcuId ?? string.Empty,
+                EcuId = string.Empty,
                 ApplicationId = string.Empty,
                 ContextId = string.Empty,
                 Count = DltTraceLineBase.InvalidCounter,
-                DeviceTimeStamp = m_LastValidDeviceTimeStamp,
+                DeviceTimeStamp = new TimeSpan(0),
                 Type = DltType.LOG_WARN,
                 Features = SkippedLineFeatures,
                 Text = m_SkippedReason == null ?
@@ -191,8 +187,6 @@
                     $"Skipped: {SkippedBytes} bytes; {m_SkippedReason}"
             };
 
-            if (m_LastValidDeviceTimeStamp.Ticks != 0)
-                line.Features += DltLineFeatures.DevTimeStampFeature;
             if (m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks)
                 line.Features += DltLineFeatures.LogTimeStampFeature;
 

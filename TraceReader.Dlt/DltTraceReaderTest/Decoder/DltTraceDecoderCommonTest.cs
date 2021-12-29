@@ -1,6 +1,5 @@
 ﻿namespace RJCP.Diagnostics.Log.Decoder
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -154,7 +153,7 @@
                         // decoding this packet is almost hopeless and that decoding packets after this one is
                         // implementation defined.
 
-                        m_Factory.IsSkippedLine(line, DltTime.Default, new TimeSpan(0), string.Empty);
+                        m_Factory.IsSkippedLine(line, DltTime.Default);
                     }
                 }
             }
@@ -178,7 +177,7 @@
                         m_Factory.IsLine2(line, 0, 127);
 
                         line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time2);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);
@@ -205,7 +204,7 @@
                         m_Factory.IsLine2(line, 0, 127);
 
                         line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time2);
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);

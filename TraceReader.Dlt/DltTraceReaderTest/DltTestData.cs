@@ -12,15 +12,15 @@
         public static readonly DateTime Time4 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.556);
         public static readonly DateTime Time5 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.5767);
 
-        public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time, TimeSpan deviceTime, string ecuId)
+        public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time)
         {
             DateTime expectedTime = factory.ExpectedTimeStamp(time);
 
             Assert.That(line.TimeStamp, Is.EqualTo(expectedTime));
             Assert.That(line.Count, Is.EqualTo(-1));
-            Assert.That(line.EcuId, Is.EqualTo(ecuId));
+            Assert.That(line.EcuId, Is.EqualTo(string.Empty));
             Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.DeviceTimeStamp, Is.EqualTo(deviceTime));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));
             Assert.That(line.ContextId, Is.EqualTo(string.Empty));
@@ -28,7 +28,7 @@
             Assert.That(line.Features.TimeStamp, Is.EqualTo(expectedTime != DltTime.Default));
             Assert.That(line.Features.EcuId, Is.False);
             Assert.That(line.Features.SessionId, Is.False);
-            Assert.That(line.Features.DeviceTimeStamp, Is.EqualTo(deviceTime.Ticks != 0));
+            Assert.That(line.Features.DeviceTimeStamp, Is.False);
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
             Assert.That(line.Features.MessageType, Is.False);

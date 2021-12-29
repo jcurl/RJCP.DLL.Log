@@ -54,7 +54,7 @@
                         // Corrupted data, should be a line indicated data is skipped as a new marker is identified
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(1));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time1, DltTime.DeviceTime(1.231), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time1);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine3(line, 2, 129);
@@ -84,7 +84,7 @@
                         // Corrupted data, should be a line indicated data is skipped as a new marker is identified
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(1));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time1, DltTime.DeviceTime(1.231), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time1);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine3(line, 2, 128);
@@ -113,7 +113,7 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
-                        m_Factory.IsSkippedLine(line, DltTime.Default, new TimeSpan(0), string.Empty);
+                        m_Factory.IsSkippedLine(line, DltTime.Default);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine5(line, 1, 128);
@@ -145,7 +145,7 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time4, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time4);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine5(line, 1, 128);
@@ -172,7 +172,7 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time1, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time1);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine5(line, 1, 128);
@@ -250,7 +250,7 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time1, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time1);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine5(line, 1, 128);
@@ -298,7 +298,7 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         Assert.That(line.Line, Is.EqualTo(0));
-                        m_Factory.IsSkippedLine(line, DltTestData.Time1, DltTime.DeviceTime(1.232), "ECU1");
+                        m_Factory.IsSkippedLine(line, DltTestData.Time1);
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine5(line, 1, 128);
