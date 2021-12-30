@@ -6,7 +6,7 @@
     /// DLT integer argument type in hexadecimal format.
     /// </summary>
     /// <remarks>This argument type is only capable to hold a 64-bit long integer.</remarks>
-    public class HexIntDltArg : DltArgBase<long>
+    public class HexIntDltArg : IntDltArg
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HexIntDltArg"/> class.

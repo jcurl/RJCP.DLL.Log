@@ -177,6 +177,7 @@
             int length = decoder.Decode(buffer, msbf, out IDltArg arg);
             Assert.That(length, Is.EqualTo(buffer.Length));
             Assert.That(arg, Is.TypeOf<SignedIntDltArg>());
+            Assert.That(arg, Is.InstanceOf<IntDltArg>());
             Assert.That(((SignedIntDltArg)arg).Data, Is.EqualTo(result));
         }
 

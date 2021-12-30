@@ -321,6 +321,7 @@
             int length = decoder.Decode(buffer, msbf, out IDltArg arg);
             Assert.That(length, Is.EqualTo(buffer.Length));
             Assert.That(arg, Is.TypeOf<UnsignedIntDltArg>());
+            Assert.That(arg, Is.InstanceOf<IntDltArg>());
             Assert.That(((UnsignedIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
             Assert.That(((UnsignedIntDltArg)arg).DataUnsigned, Is.EqualTo(result));
         }
@@ -331,6 +332,7 @@
             int length = decoder.Decode(buffer, msbf, out IDltArg arg);
             Assert.That(length, Is.EqualTo(buffer.Length));
             Assert.That(arg, Is.TypeOf<HexIntDltArg>());
+            Assert.That(arg, Is.InstanceOf<IntDltArg>());
             Assert.That(((HexIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
         }
 
@@ -340,6 +342,7 @@
             int length = decoder.Decode(buffer, msbf, out IDltArg arg);
             Assert.That(length, Is.EqualTo(buffer.Length));
             Assert.That(arg, Is.TypeOf<BinaryIntDltArg>());
+            Assert.That(arg, Is.InstanceOf<IntDltArg>());
             Assert.That(((BinaryIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
         }
 

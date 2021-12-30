@@ -6,7 +6,7 @@
     /// DLT integer argument type in binary format.
     /// </summary>
     /// <remarks>This argument type is only capable to hold a 64-bit long integer.</remarks>
-    public class BinaryIntDltArg : DltArgBase<long>
+    public class BinaryIntDltArg : IntDltArg
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryIntDltArg"/> class.
@@ -37,7 +37,7 @@
             return Append(sb).ToString();
         }
 
-        private readonly string[][] Nibble = new[] {
+        private static readonly string[][] Nibble = new[] {
             new string[] {
                 "0b0000", "0b0001", "0b0010", "0b0011", "0b0100", "0b0101", "0b0110", "0b0111",
                 "0b1000", "0b1001", "0b1010", "0b1011", "0b1100", "0b1101", "0b1110", "0b1111"

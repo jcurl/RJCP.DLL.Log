@@ -7,7 +7,7 @@
     /// DLT unsigned integer argument type.
     /// </summary>
     /// <remarks>This argument type is only capable to hold a 64-bit long integer.</remarks>
-    public class UnsignedIntDltArg : DltArgBase<long>
+    public class UnsignedIntDltArg : IntDltArg
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnsignedIntDltArg"/> class with the given long integer value.

@@ -6,7 +6,7 @@
     /// DLT signed integer argument type.
     /// </summary>
     /// <remarks>This argument type is only capable to hold a 64-bit long integer.</remarks>
-    public class SignedIntDltArg : DltArgBase<long>
+    public class SignedIntDltArg : IntDltArg
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SignedIntDltArg"/> class with the given signed integer value.
