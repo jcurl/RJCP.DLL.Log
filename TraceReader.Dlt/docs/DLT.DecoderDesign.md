@@ -31,7 +31,14 @@ The decoder is based on the [DLT Format](DLT.Format.md).
     - [2.4.1. Decoding String Types](#241-decoding-string-types)
     - [2.4.2. Decoding Integer Types](#242-decoding-integer-types)
   - [2.5. Unsupported DLT Argument Types](#25-unsupported-dlt-argument-types)
-- [3. Trace Lines](#3-trace-lines)
+- [3. Decoding Control Lines](#3-decoding-control-lines)
+  - [3.1. The Control Packet Structure](#31-the-control-packet-structure)
+  - [3.2. Decoding with IControlArgDecoder](#32-decoding-with-icontrolargdecoder)
+    - [3.2.1. The Control Services](#321-the-control-services)
+    - [3.2.2. Constructing the DltControlTraceLine directly](#322-constructing-the-dltcontroltraceline-directly)
+    - [3.2.3. Constructing the DltControlTraceLine via the DltLineBuilder](#323-constructing-the-dltcontroltraceline-via-the-dltlinebuilder)
+  - [3.3. Control Services](#33-control-services)
+- [4. Trace Lines](#4-trace-lines)
 
 ## 1. DLT Trace Decoder
 
@@ -300,12 +307,12 @@ methods instead of relying on exceptions when parsing.
 
 To keep code small and lean, the initial implementation of decoding shall rely
 on underlying .NET checks for `Span<byte>` boundary ranges, instead of checking
-span ranges explicitly before access. If the checks introduce minor perfomance
+span ranges explicitly before access. If the checks introduce minor performance
 impacts then these can be introduced to check boundary lengths before access.
 
 ### 1.6. Position within the Stream
 
-It is important that the position of each decoded packet is made avaialble with
+It is important that the position of each decoded packet is made available with
 the decoded `DltBaseTraceLine`. This will help debug corrupted packets, that a
 user can easily refer to the packet with a hex-editor.
 
@@ -375,7 +382,7 @@ decoded and the argument that was decoded.
 
 If the argument is unknown, it is no longer possible to decode the remainder
 arguments, thus rendering effectively the entire packet unknown. The length
-information is implicity part of the verbose DLT argument and is not encoded in
+information is implicitly part of the verbose DLT argument and is not encoded in
 a consistent manner across all arguments.
 
 When the packet is completely decoded, the length of the payload by summing the
@@ -462,9 +469,172 @@ The following verbose types are not supported.
 To extend support for new types, provide a new implementation of
 `VerboseArgDecoder`.
 
-## 3. Trace Lines
+## 3. Decoding Control Lines
 
-All DLT trace lines are derived from the `DltTraceLineBase`.
+A control line can either be a control request (typically received from a device
+external to the application logging) or a control response, which is a response
+to a control request, or an unsolicited message (such as version information,
+logging level or a timing response). The timer response is a special purpose
+message implemented by the Genivi DLT Daemon, but not explicitly specified in
+the AutoSAR PRS (it defines a timing message differently).
+
+The parts of a DLT message that make up a control message are:
+
+* The standard header includes the extended header
+* The extended header has the message info field MSTP which is the value of 3
+  * `1` is a control request
+  * `2` is a control response
+  * `3` is a time message
+  * All other values are considered an error and result in a corrupted packet.
+* The argument count (NOAR) in the extended header is expected to be zero and is
+  ignored.
+* The verbose flag (VERB) in the extended header is expected to be zero and is
+  ignored.
+* The payload immediately after is the control message. The contents of the
+  control message are specified by the AutoSAR PRS. In use implementations do
+  not implement precisely to the AutoSAR standards, and so some messages contain
+  more data than is specified. In these specific cases, the data will be parsed,
+  the extra data is ignored, where there are concrete examples in the field that
+  warrant this (this may be due to changes in the standard, or implementations
+  before the standard was ratified). Packets that are shorter, or cannot be
+  decoded are considered corrupted.
+
+The design for decoding control messages shall be extensible. A user should be
+able to inherit from the decoder and add/remove their own implementations of
+control message decoding. This allows extensions for non-standard ECUs,
+implementation of custom message controls, or other changes over time, without
+necessarily having to fork this implementation.
+
+### 3.1. The Control Packet Structure
+
+The general structure of a control payload is given as follows:
+
+![DLT Control Packet Structure](out/diagrams/DLT.FormatControlPayload/DLT.FormatControlPayload.svg)
+
+For each `ServiceId`, there are two data-structures: the request; and the
+response. The `DLT_CONTROL_TIME` is a special case and has no payload.
+
+### 3.2. Decoding with IControlArgDecoder
+
+The DLT decode loop in `DltTraceDecoderBase` will check the `DltType` and
+determine this is a control message as given above. It then calls an instance of
+an object implementing `IControlDltDecoder` (e.g. the `ControlDltDecoder`).
+
+![DLT Control Decoder](out/diagrams/DLT.ControlArgDecoder/DLT.ControlArgDecoder.svg)
+
+The `IControlDltDecoder.Decode` method is given the buffer at the start of the
+Control Payload. It extracts the service identifier, and knows the type of
+control message from the `IDltLineBuilder` which was decoded by the
+`DltTraceDecoderBase` prior, and from this it can look up how to interpret the
+contents of the control payload.
+
+To make the implementation extendable, the `ControlDltDecoder` uses two
+dictionaries (`ControlRequestDecoder` and `ControlResponseDecoder`) to find the
+mapping from the service identifier to the code that knows how to interpret and
+construct a `IControlDltArg` message. A user can construct their own
+`ControlDltDecoder`, register new mappings, and inject this into the
+`DltTraceDecoderBase` themselves with their own factory method.
+
+On exit of the `IControlDltDecoder.Decode` method, the length of the argument
+decoded is returned, along with the control argument payload, which an
+application can interpret as required.
+
+#### 3.2.1. The Control Services
+
+The `IControlDltDecoder` has references to many different types of
+`IControlArgDecoder` objects, each one is responsible for creating a single
+control request or a control response object derived from an `IControlArg`.
+
+![DLT Control Arg](out/diagrams/Dlt.ControlArg/DLT.ControlArg.svg)
+
+To simplify the construction of the many control argument objects, there are two
+base objects: `ControlRequest` and `ControlResponse`. It's not necessary that
+objects derive from these two base classes, but it makes it easier. If a class
+wishes to know if an object is a request or a response, they should look at the
+`IControlArg.DefaultType` property, which is copied to the
+`DltControlTraceLine.Type` property, and not the runtime type of the object.
+
+The main purpose of each `IControlArg` is to specify the service identifier, any
+extra information associated with each control message and a mechanism to print
+the contents of the control message with the `ToString()` method.
+
+#### 3.2.2. Constructing the DltControlTraceLine directly
+
+The `DltControlTraceLine` object should be given the control message in the
+constructor. The `DefaultType` property will be used to automatically choose the
+correct type during construction.
+
+#### 3.2.3. Constructing the DltControlTraceLine via the DltLineBuilder
+
+The `IControlArg` is assigned to the `IDltLineBuilder` while being decoded. The
+`IDltLineBuilder` can either have a set of arguments, or a control payload. It
+cannot have both as this cannot occur with the DLT protocol.
+
+### 3.3. Control Services
+
+The following Service Identifiers are defined (`X` is for implemented):
+
+| Service Id            | Name                       | Request | Response | Standard  |
+| --------------------- | -------------------------- | ------- | -------- | --------- |
+| `0x01`                | SetLogLevel                |         |          | PRS 1.4.0 |
+| `0x02`                | SetTraceStatus             |         |          | PRS 1.4.0 |
+| `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
+| `0x04`                | GetDefaultLogLevel         |         |          | PRS 1.4.0 |
+| `0x05`                | StoreConfiguration         |         |          | PRS 1.4.0 |
+| `0x06`                | ResetToFactoryDefault      |         |          | PRS 1.4.0 |
+| `0x0A`                | SetMessageFiltering        |         |          | PRS 1.4.0 |
+| `0x11`                | SetDefaultLogLevel         |         |          | PRS 1.4.0 |
+| `0x12`                | SetDefaultTraceStatus      |         |          | PRS 1.4.0 |
+| `0x13`                | GetSoftwareVersion         |         |          | PRS 1.4.0 |
+| `0x15`                | GetDefaultTraceStatus      |         |          | PRS 1.4.0 |
+| `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0 |
+| `0x1F`                | GetTraceStatus             |         |          | PRS 1.4.0 |
+| `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
+| `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0 |
+| `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0 |
+| `0x23`                | BufferOverflowNotification | N/A     |          | PRS 1.4.0 |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          | -       | -        | PRS 1.4.0 |
+
+The following are not listed in the current standard, or marked as deprecated:
+
+| Service Id | Name                         | Request | Response | Standard  |
+| ---------- | ---------------------------- | ------- | -------- | --------- |
+| `0x07`     | SetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
+| `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
+| `0x09`     | SetVerboseMode¹              |         |          | SWS 4.2.2 |
+| `0x0B`     | SetTimingPackets             |         |          | SWS 4.2.2 |
+| `0x0C`     | GetLocalTime¹                |         |          | SWS 4.2.2 |
+| `0x0D`     | SetUseECUID¹                 |         |          | SWS 4.2.2 |
+| `0x0E`     | SetUseSessionId¹             |         |          | SWS 4.2.2 |
+| `0x0F`     | UseTimestamp¹                |         |          | SWS 4.2.2 |
+| `0x10`     | UseExtendedHeader¹           |         |          | SWS 4.2.2 |
+| `0x14`     | MessageBufferOverflow¹       |         |          | SWS 4.2.2 |
+| `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
+| `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
+| `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
+| `0x19`     | GetVerboseModeStatus¹        |         |          | SWS 4.2.2 |
+| `0x1A`     | GetMessageFilteringStatus¹   |         |          | SWS 4.2.2 |
+| `0x1B`     | GetUseECUID¹                 |         |          | SWS 4.2.2 |
+| `0x1C`     | GetUseSessionID¹             |         |          | SWS 4.2.2 |
+| `0x1D`     | GetUseTimestamp¹             |         |          | SWS 4.2.2 |
+| `0x1E`     | GetUseExtendedHeader¹        |         |          | SWS 4.2.2 |
+
+The following are observed implementations that are implemented in Genivi DLT,
+but not documented in the AutoSAR PRS.
+
+| Service Id | Name               | Request | Response | Standard |
+| ---------- | ------------------ | ------- | -------- | -------- |
+| `0xF01`    | Unregister Context |         |          | N/A      |
+| `0xF02`    | Connection Info    |         |          | N/A      |
+| `0xF04`    | Marker             |         |          | N/A      |
+
+* ¹: This is made obsolete in PRS 1.3.0 and later
+* ²: Was renamed in later version of the standard, but the message structure
+  remains the same.
+* ³: This will not be implemented - software will need to provide their own
+  decoder.All DLT trace lines are derived from the `DltTraceLineBase`.
+
+## 4. Trace Lines
 
 ![DLT Trace Lines](out/diagrams/DLT.TraceLine/DLT.TraceLine.svg)
 
@@ -480,5 +650,5 @@ line are different.
 
 The `DltTraceDecoder` uses provides the data it parses to its `IDltLineBuilder`
 to construct the trace line it will return later. This allows the base
-implementation `DltBaseTraceDecoder` to be extended to create other types of
+implementation `DltTraceDecoderBase` to be extended to create other types of
 trace lines, without having to encapsulate (wrap) or create temporary copies.

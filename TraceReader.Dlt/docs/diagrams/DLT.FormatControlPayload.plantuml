@@ -1,0 +1,45 @@
+@startuml DLT.FormatControlPayload
+map "Extended Header" as ExtendedHeader {
+    0 => Message Info (MSIN)
+    1 => Argument Count (NOAR)
+    2..5 => Application ID (APID)
+    6..9 => Context ID (CTID)
+}
+
+map "Message Info (1 byte)" as MessageInfo {
+    b0 => Verbose (VERB)
+    b1..b3 => Message Type (MSTP)
+    b4..b7 => Message Type Info (MTIN)
+}
+
+map "MTIN DLT_TYPE_CONTROL (MSTP=3)" as DLT_TYPE_CONTROL {
+    1 => DLT_CONTROL_REQUEST
+    2 => DLT_CONTROL_RESPONSE
+    3 => DLT_CONTROL_TIME
+}
+
+map "Control Payload" as ControlPayload {
+    0..3 => Service ID
+    4.. => Payload
+}
+
+ExtendedHeader -- MessageInfo
+ExtendedHeader - ControlPayload
+MessageInfo -- DLT_TYPE_CONTROL
+
+map SetLogLevel {
+    ServiceId => 0x01
+}
+
+map SetTraceStatus {
+    ServiceId => 0x02
+}
+
+map OtherService {
+    ServiceId => 0xNN
+}
+
+ControlPayload -- SetLogLevel
+ControlPayload -- SetTraceStatus
+ControlPayload -- OtherService
+@enduml

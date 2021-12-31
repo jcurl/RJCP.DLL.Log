@@ -1,0 +1,51 @@
+@startuml DLT.ControlArgDecoder
+interface IControlDltDecoder {
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+}
+note right
+    Defines the general interface on how
+    to decode all control responses and
+    requests. The buffer is where the
+    control payload starts.
+end note
+
+class DltTraceDecoderBase
+class ControlDltDecoder
+note left
+    Checks the `lineBuilder` to know the type of
+    Dlt Message, which is then used to know if
+    this is a request or a response. It gets the
+    control payload `IControlArg` and sets this
+    to `lineBuilder` that it knows how to return
+    the entire line.
+end note
+
+DltTraceDecoderBase -r-> IControlDltDecoder : <<uses>>
+ControlDltDecoder .u.|> IControlDltDecoder
+
+interface IControlArg {
+    DefaultType : DltType
+}
+
+interface IControlArgDecoder {
+    Decode(serviceId: int, buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder, [out] service: IControlArg*): int
+}
+note left
+    Each instance knows how to decode a single control
+    message. The <i>serviceId</i> is already known to find this
+    instance. On return it provides a new control message.
+    The input <i>buffer</i> points to the payload of the control
+    message.
+end note
+
+class ControlRequestDecoder
+class ControlResponseDecoder
+
+ControlRequestDecoder "1" *-d- "1..*" IControlArgDecoder
+ControlResponseDecoder "1" *-d- "1..*" IControlArgDecoder
+
+ControlDltDecoder *-d- ControlRequestDecoder
+ControlDltDecoder *-d- ControlResponseDecoder
+
+IControlArgDecoder .r.> IControlArg : <<creates>>
+@enduml

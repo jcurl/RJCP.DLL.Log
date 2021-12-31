@@ -1,0 +1,31 @@
+@startuml DLT.ControlArg
+interface IControlArgDecoder
+
+interface IControlArg {
+    DefaultType: DltType
+    ServiceId: int
+}
+
+class ControlRequest {
+    DltType: DltType = CONTROL_REQUEST
+}
+
+class ControlResponse {
+    StatusOk: const int = 0
+    StatusNotSupported: const int = 1
+    StatusError: const int = 2
+    ---
+    DltType: DltType = CONTROL_RESPONSE
+}
+
+IControlArgDecoder -r-> IControlArg : <<creates>>
+
+IControlArg <|.d. ControlRequest
+IControlArg <|.d. ControlResponse
+
+class GetSoftwareVersionRequest
+ControlRequest <|-d- GetSoftwareVersionRequest
+
+class GetSoftwareVersionResponse
+ControlResponse <|-d- GetSoftwareVersionResponse
+@enduml

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="375px" preserveAspectRatio="none" style="width:651px;height:375px;background:#FFFFFF;" version="1.1" viewBox="0 0 651 375" width="651px" zoomAndPan="magnify"><defs><filter height="300%" id="f18sqesvdoir74" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="85.4063" style="stroke:#A80036;stroke-width:1.5;" width="153" x="46.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="95" x="75.5" y="21.457">Extended Header</text><line style="stroke:#A80036;stroke-width:1.0;" x1="46.5" x2="199.5" y1="26.0938" y2="26.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="6" x="57.5" y="38.4746">0</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="97" x="79.5" y="38.4746">Message Info (MSIN)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74.5" x2="74.5" y1="26.0938" y2="42.6719"/><line style="stroke:#A80036;stroke-width:1.0;" x1="46.5" x2="199.5" y1="42.6719" y2="42.6719"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="6" x="57.5" y="55.0527">1</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="115" x="79.5" y="55.0527">Argument Count (NOAR)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74.5" x2="74.5" y1="42.6719" y2="59.25"/><line style="stroke:#A80036;stroke-width:1.0;" x1="46.5" x2="199.5" y1="59.25" y2="59.25"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="18" x="51.5" y="71.6309">2..5</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="101" x="79.5" y="71.6309">Application ID (APID)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74.5" x2="74.5" y1="59.25" y2="75.8281"/><line style="stroke:#A80036;stroke-width:1.0;" x1="46.5" x2="199.5" y1="75.8281" y2="75.8281"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="18" x="51.5" y="88.209">6..9</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="82" x="79.5" y="88.209">Context ID (CTID)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74.5" x2="74.5" y1="75.8281" y2="92.4063"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="68.8281" style="stroke:#A80036;stroke-width:1.5;" width="174" x="34" y="158"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="117" x="62.5" y="172.457">Message Info (1 byte)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="34" x2="208" y1="177.0938" y2="177.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="12" x="48" y="189.4746">b0</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="75" x="79" y="189.4746">Verbose (VERB)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74" x2="74" y1="177.0938" y2="193.6719"/><line style="stroke:#A80036;stroke-width:1.0;" x1="34" x2="208" y1="193.6719" y2="193.6719"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="30" x="39" y="206.0527">b1..b3</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="107" x="79" y="206.0527">Message Type (MSTP)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74" x2="74" y1="193.6719" y2="210.25"/><line style="stroke:#A80036;stroke-width:1.0;" x1="34" x2="208" y1="210.25" y2="210.25"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="30" x="39" y="222.6309">b4..b7</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="124" x="79" y="222.6309">Message Type Info (MTIN)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="74" x2="74" y1="210.25" y2="226.8281"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="68.8281" style="stroke:#A80036;stroke-width:1.5;" width="228" x="7" y="293"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="214" x="14" y="307.457">MTIN DLT_TYPE_CONTROL (MSTP=3)</text><line style="stroke:#A80036;stroke-width:1.0;" x1="7" x2="235" y1="312.0938" y2="312.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="6" x="12" y="324.4746">1</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="132" x="28" y="324.4746">DLT_CONTROL_REQUEST</text><line style="stroke:#A80036;stroke-width:1.0;" x1="23" x2="23" y1="312.0938" y2="328.6719"/><line style="stroke:#A80036;stroke-width:1.0;" x1="7" x2="235" y1="328.6719" y2="328.6719"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="6" x="12" y="341.0527">2</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="139" x="28" y="341.0527">DLT_CONTROL_RESPONSE</text><line style="stroke:#A80036;stroke-width:1.0;" x1="23" x2="23" y1="328.6719" y2="345.25"/><line style="stroke:#A80036;stroke-width:1.0;" x1="7" x2="235" y1="345.25" y2="345.25"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="6" x="12" y="357.6309">3</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="108" x="28" y="357.6309">DLT_CONTROL_TIME</text><line style="stroke:#A80036;stroke-width:1.0;" x1="23" x2="23" y1="345.25" y2="361.8281"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="52.25" style="stroke:#A80036;stroke-width:1.5;" width="101" x="324.5" y="23"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="87" x="331.5" y="37.457">Control Payload</text><line style="stroke:#A80036;stroke-width:1.0;" x1="324.5" x2="425.5" y1="42.0938" y2="42.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="18" x="329.5" y="54.4746">0..3</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="49" x="357.5" y="54.4746">Service ID</text><line style="stroke:#A80036;stroke-width:1.0;" x1="352.5" x2="352.5" y1="42.0938" y2="58.6719"/><line style="stroke:#A80036;stroke-width:1.0;" x1="324.5" x2="425.5" y1="58.6719" y2="58.6719"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="12" x="332.5" y="71.0527">4..</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="39" x="357.5" y="71.0527">Payload</text><line style="stroke:#A80036;stroke-width:1.0;" x1="352.5" x2="352.5" y1="58.6719" y2="75.25"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="35.6719" style="stroke:#A80036;stroke-width:1.5;" width="88" x="259" y="174"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="68" x="269" y="188.457">SetLogLevel</text><line style="stroke:#A80036;stroke-width:1.0;" x1="259" x2="347" y1="193.0938" y2="193.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="45" x="264" y="205.4746">ServiceId</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="23" x="319" y="205.4746">0x01</text><line style="stroke:#A80036;stroke-width:1.0;" x1="314" x2="314" y1="193.0938" y2="209.6719"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="35.6719" style="stroke:#A80036;stroke-width:1.5;" width="98" x="398" y="174"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="84" x="405" y="188.457">SetTraceStatus</text><line style="stroke:#A80036;stroke-width:1.0;" x1="398" x2="496" y1="193.0938" y2="193.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="45" x="403" y="205.4746">ServiceId</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="23" x="458" y="205.4746">0x02</text><line style="stroke:#A80036;stroke-width:1.0;" x1="453" x2="453" y1="193.0938" y2="209.6719"/><rect fill="#FEFECE" filter="url(#f18sqesvdoir74)" height="35.6719" style="stroke:#A80036;stroke-width:1.5;" width="90" x="547" y="174"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="70" x="557" y="188.457">OtherService</text><line style="stroke:#A80036;stroke-width:1.0;" x1="547" x2="637" y1="193.0938" y2="193.0938"/><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="45" x="552" y="205.4746">ServiceId</text><text fill="#000000" font-family="sans-serif" font-size="10" lengthAdjust="spacing" textLength="25" x="607" y="205.4746">0xNN</text><line style="stroke:#A80036;stroke-width:1.0;" x1="602" x2="602" y1="193.0938" y2="209.6719"/><!--MD5=[1cb48a6ba141b6943c39212defec070e]
+link ExtendedHeader to MessageInfo--><path codeLine="25" d="M122.37,94.11 C122.09,113.32 121.78,135.49 121.52,153.73 " fill="none" id="ExtendedHeader-MessageInfo" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[a1aad83084db231b0fd9d640bd6308e9]
+link ExtendedHeader to ControlPayload--><path codeLine="26" d="M207.66,48.5 C243.94,48.5 280.22,48.5 316.5,48.5 " fill="none" id="ExtendedHeader-ControlPayload" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[e08af1cac5d47a97673d29f649bfe9b3]
+link MessageInfo to DLT_TYPE_CONTROL--><path codeLine="27" d="M121,229.19 C121,247.8 121,270.33 121,288.92 " fill="none" id="MessageInfo-DLT_TYPE_CONTROL" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f9dba0af8283dbff92b479b3bb950a58]
+link ControlPayload to SetLogLevel--><path codeLine="41" d="M360.43,78.03 C346.54,105.23 325.96,145.53 313.58,169.78 " fill="none" id="ControlPayload-SetLogLevel" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[361fa643733eef59a0f26d8b162a9ef4]
+link ControlPayload to SetTraceStatus--><path codeLine="42" d="M389.57,78.03 C403.46,105.23 424.04,145.53 436.42,169.78 " fill="none" id="ControlPayload-SetTraceStatus" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[cabce617462f2532bd88ae3ee05de83b]
+link ControlPayload to OtherService--><path codeLine="43" d="M418.91,78.03 C460.9,105.31 523.16,145.77 560.45,170 " fill="none" id="ControlPayload-OtherService" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[869911b548b187aed1f63e3027e48687]
+@startuml DLT.FormatControlPayload
+map "Extended Header" as ExtendedHeader {
+    0 => Message Info (MSIN)
+    1 => Argument Count (NOAR)
+    2..5 => Application ID (APID)
+    6..9 => Context ID (CTID)
+}
+
+map "Message Info (1 byte)" as MessageInfo {
+    b0 => Verbose (VERB)
+    b1..b3 => Message Type (MSTP)
+    b4..b7 => Message Type Info (MTIN)
+}
+
+map "MTIN DLT_TYPE_CONTROL (MSTP=3)" as DLT_TYPE_CONTROL {
+    1 => DLT_CONTROL_REQUEST
+    2 => DLT_CONTROL_RESPONSE
+    3 => DLT_CONTROL_TIME
+}
+
+map "Control Payload" as ControlPayload {
+    0..3 => Service ID
+    4.. => Payload
+}
+
+ExtendedHeader - - MessageInfo
+ExtendedHeader - ControlPayload
+MessageInfo - - DLT_TYPE_CONTROL
+
+map SetLogLevel {
+    ServiceId => 0x01
+}
+
+map SetTraceStatus {
+    ServiceId => 0x02
+}
+
+map OtherService {
+    ServiceId => 0xNN
+}
+
+ControlPayload - - SetLogLevel
+ControlPayload - - SetTraceStatus
+ControlPayload - - OtherService
+@enduml
+
+PlantUML version 1.2021.14(Fri Nov 12 17:46:50 CET 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>
