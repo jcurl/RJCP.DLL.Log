@@ -11,7 +11,6 @@
     public class StringArgDecoder : IVerboseArgDecoder
     {
         private readonly Decoder m_Utf8Decoder = Encoding.UTF8.GetDecoder();
-        private readonly Decoder m_ArgumentDecoder = Encoding.GetEncoding("ISO-8859-15").GetDecoder();
         private readonly char[] m_CharResult = new char[ushort.MaxValue];
 
         /// <summary>
@@ -44,7 +43,7 @@
                 int cu;
                 switch (coding) {
                 case StringEncodingType.Ascii:
-                    m_ArgumentDecoder.Convert(buffer[6..(6 + strLength)], m_CharResult.AsSpan(), true, out _, out cu, out _);
+                    cu = Iso8859_15(buffer[6..(6 + strLength)], m_CharResult);
                     break;
                 default:
                     m_Utf8Decoder.Convert(buffer[6..(6 + strLength)], m_CharResult.AsSpan(), true, out _, out cu, out _);
@@ -54,6 +53,34 @@
             }
             arg = new StringDltArg(data, coding);
             return DltConstants.TypeInfo.TypeInfoSize + 2 + payloadLength;
+        }
+
+        private static readonly char[] Iso8859_15Map = new char[256] {
+            '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',   /* 00-0F */
+            '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',   /* 10-1F */
+            ' ', '!', '\"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', /* 20-2F */
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',   /* 30-3F */
+            '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',   /* 40-4F */
+            'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_',  /* 50-5F */
+            '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',   /* 60-6F */
+            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', '.',   /* 70-7F */
+            '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',   /* 80-8F */
+            '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',   /* 90-9F */
+            ' ', '¡', '¢', '£', '€', '¥', 'Š', '§', 'š', '©', 'ª', '«', '¬', '­', '®', '¯',    /* A0-AF; AD=Soft Hyphen */
+            '°', '±', '²', '³', 'Ž', 'µ', '¶', '·', 'ž', '¹', 'º', '»', 'Œ', 'œ', 'Ÿ', '¿',   /* B0-BF */
+            'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',   /* C0-CF */
+            'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', '×', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'Þ', 'ß',   /* D0-DF */
+            'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï',   /* E0-EF */
+            'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ',   /* F0-FF */
+        };
+
+        private static int Iso8859_15(ReadOnlySpan<byte> bytes, char[] chars)
+        {
+            int cu = bytes.Length < chars.Length ? bytes.Length : chars.Length;
+            for (int i = 0; i < cu; i++) {
+                chars[i] = Iso8859_15Map[bytes[i]];
+            }
+            return cu;
         }
     }
 }

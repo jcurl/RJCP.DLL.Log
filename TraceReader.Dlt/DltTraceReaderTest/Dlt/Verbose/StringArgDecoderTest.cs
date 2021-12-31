@@ -9,14 +9,6 @@
     [TestFixture(typeof(VerboseArgDecoder))]
     public class StringArgDecoderTest<T> where T : IVerboseArgDecoder
     {
-        [SetUp]
-        public void InitializeTestCase()
-        {
-            // Required to decode ISO-8859-15 when encoded as ASCII.
-            var instance = CodePagesEncodingProvider.Instance;
-            Encoding.RegisterProvider(instance);
-        }
-
         [Test]
         public void DecodeUtf8StringLE()
         {

@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
     using System;
-    using System.Text;
     using Args;
     using NUnit.Framework;
 
@@ -9,16 +8,6 @@
     [TestFixture(typeof(VerboseArgDecoder))]
     public class BoolArgDecoderTest<T> where T : IVerboseArgDecoder
     {
-        [SetUp]
-        public void InitializeTestCase()
-        {
-            if (typeof(T).Equals(typeof(VerboseArgDecoder))) {
-                // Required to decode ISO-8859-15 when encoded as ASCII.
-                var instance = CodePagesEncodingProvider.Instance;
-                Encoding.RegisterProvider(instance);
-            }
-        }
-
         [Test]
         public void DecodeBoolFalse8bit()
         {

@@ -42,7 +42,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
     <ProjectReference Include="..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
     <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />

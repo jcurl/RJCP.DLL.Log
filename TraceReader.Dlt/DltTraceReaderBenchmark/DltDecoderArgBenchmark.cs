@@ -1,19 +1,10 @@
 ﻿namespace RJCP.Diagnostics.Log
 {
-    using System.Text;
     using BenchmarkDotNet.Attributes;
     using Dlt.Verbose;
 
     public class DltDecoderArgBenchmark
     {
-        [GlobalSetup]
-        public void InitializeCodePages()
-        {
-            // Required to decode ISO-8859-15 when encoded as ASCII.
-            var instance = CodePagesEncodingProvider.Instance;
-            Encoding.RegisterProvider(instance);
-        }
-
         private static readonly SignedIntArgDecoder SignedIntArgDecoder = new SignedIntArgDecoder();
         private static readonly byte[] SignedInt32 = new byte[] { 0x23, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78 };
 

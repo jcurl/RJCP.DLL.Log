@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Dlt;
     using Dlt.Packet;
@@ -15,14 +14,6 @@
     [TestFixture(DltFactoryType.Serial)]
     public class DltTraceDecoderCommonTest
     {
-        [SetUp]
-        public void InitializeTestCase()
-        {
-            // Required to decode ISO-8859-15 when encoded as ASCII.
-            var instance = CodePagesEncodingProvider.Instance;
-            Encoding.RegisterProvider(instance);
-        }
-
         // Tests decoding the same types of messages with different headers. Because of the nature of DLT, we can't test
         // error conditions here as it is implementation defined, and therefore it makes a difference if there is a
         // marker at the start of the packet or not.

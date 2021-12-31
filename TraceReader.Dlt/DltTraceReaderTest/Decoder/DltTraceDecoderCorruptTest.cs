@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Dlt;
     using Dlt.Packet;
@@ -13,14 +12,6 @@
     [TestFixture(DltFactoryType.Serial)]
     public class DltTraceDecoderCorruptTest
     {
-        [SetUp]
-        public void InitializeTestCase()
-        {
-            // Required to decode ISO-8859-15 when encoded as ASCII.
-            var instance = CodePagesEncodingProvider.Instance;
-            Encoding.RegisterProvider(instance);
-        }
-
         // Corrupted packet testing is done on DLT packets with a marker (DLS\1 or DLT\1), as these are more predictable
         // to test (the marker is used to find the next packet, instead of the content of a packet potentially being
         // interpreted as the start of a new packet).
