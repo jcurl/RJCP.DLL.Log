@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Collections\ReadOnlyArrayList.cs" />
     <Compile Include="Decoder\DltFileTraceDecoder.cs" />
     <Compile Include="Decoder\DltSerialTraceDecoder.cs" />
     <Compile Include="Decoder\DltTraceDecoder.cs" />

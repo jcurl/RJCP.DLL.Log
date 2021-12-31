@@ -333,17 +333,17 @@ A summary of the verbose argument is given in the following diagram:
 
 A summary of the bits, as copied from the AutoSAR PRS
 
-| Variable Type | TYLE | VARI | FIXP | SCOD |
-| ------------- | :--: | :--: | :--: | :--: |
-| BOOL          |  X   |  O   |      |      |
-| SINT          |  X   |  O   |  O   |      |
-| UINT          |  X   |  O   |  O   |      |
-| FLOA          |  X   |  O   |      |      |
-| ARAY          |      |  O   |      |      |
-| STRG          |      |  O   |      |  X   |
-| RAWD          |      |  O   |      |      |
-| TRAI          |      |      |      |  X   |
-| STRU          |      |  O   |      |      |
+| Variable Type | TYLE  | VARI  | FIXP  | SCOD  |
+| ------------- | :---: | :---: | :---: | :---: |
+| BOOL          |   X   |   O   |       |       |
+| SINT          |   X   |   O   |   O   |       |
+| UINT          |   X   |   O   |   O   |       |
+| FLOA          |   X   |   O   |       |       |
+| ARAY          |       |   O   |       |       |
+| STRG          |       |   O   |       |   X   |
+| RAWD          |       |   O   |       |       |
+| TRAI          |       |       |       |   X   |
+| STRU          |       |   O   |       |       |
 
 * `X` - Mandatory to set
 * `O` - Optional to set
@@ -432,27 +432,9 @@ The float formats are:
 #### 2.4.1. Decoding String Types
 
 Strings can be encoded using ASCII or UTF8. The implementation uses ISO-8859-15
-as the coding type for interpreting ASCII data. For .NET Core, this requires
-some preparation in client software before usage:
-
-Include the following package in the project:
-
-* `System.Text.Coding.Provider` version 4.7.0 or later.
-
-  ```xml
-  <ItemGroup>
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
-  </ItemGroup>
-  ```
-
-Somewhere in the initialization of your code, add the provider:
-
-```csharp
-using System.Text;
-
-var instance = CodePagesEncodingProvider.Instance;
-Encoding.RegisterProvider(instance);
-```
+as the coding type for interpreting ASCII data. No additional package is needed
+for the ISO encoding, as this is implemented directly in the library in an
+optimized way.
 
 #### 2.4.2. Decoding Integer Types
 

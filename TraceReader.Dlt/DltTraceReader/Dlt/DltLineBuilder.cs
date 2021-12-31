@@ -113,7 +113,7 @@
             }
 
             if (m_Online) TimeStamp = DateTime.Now;
-            DltTraceLine line = new DltTraceLine(m_Arguments) {
+            DltTraceLine line = new DltTraceLine(m_Arguments.ToArray()) {
                 Line = m_Line,
                 Position = Position,
                 TimeStamp = TimeStamp,

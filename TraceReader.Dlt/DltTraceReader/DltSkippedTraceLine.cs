@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log
 {
     using System;
-    using System.Collections.Generic;
+    using Collections;
     using Dlt;
     using Dlt.Args;
 
@@ -17,6 +17,9 @@
         /// </summary>
         /// <param name="bytes">The number of bytes that were skipped.</param>
         /// <param name="reason">The reason why data was skipped.</param>
+        /// <remarks>
+        /// The argument list is read-only.
+        /// </remarks>
         public DltSkippedTraceLine(long bytes, string reason)
         {
             EcuId = string.Empty;
@@ -29,7 +32,7 @@
             BytesSkipped = bytes;
 
             if (reason != null) {
-                Arguments = new List<IDltArg>(new IDltArg[] {
+                Arguments = new ReadOnlyArrayList<IDltArg>(new IDltArg[] {
                     new StringDltArg("Skipped:"),
                     new SignedIntDltArg(bytes),
                     new StringDltArg("bytes; Reason:"),
@@ -37,7 +40,7 @@
                 });
                 Reason = reason;
             } else {
-                Arguments = new List<IDltArg>(new IDltArg[] {
+                Arguments = new ReadOnlyArrayList<IDltArg>(new IDltArg[] {
                     new StringDltArg("Skipped:"),
                     new SignedIntDltArg(bytes),
                     new StringDltArg("bytes")

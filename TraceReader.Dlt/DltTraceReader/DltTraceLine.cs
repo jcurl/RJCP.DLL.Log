@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using Collections;
     using Dlt;
     using Dlt.Args;
 
@@ -17,6 +18,21 @@
         public DltTraceLine()
         {
             Arguments = new List<IDltArg>();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceLine"/> class with a read only argument list.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="arguments"/> is <see langword="null"/>.</exception>
+        /// <remarks>
+        /// To make this method as fast as possible, the underlying array is only referenced, not copied. After using
+        /// this constructor, the original array should be discarded (or never modified).
+        /// </remarks>
+        public DltTraceLine(IDltArg[] arguments)
+        {
+            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
+            Arguments = new ReadOnlyArrayList<IDltArg>(arguments);
         }
 
         /// <summary>
