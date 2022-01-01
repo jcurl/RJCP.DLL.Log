@@ -38,6 +38,7 @@ The decoder is based on the [DLT Format](DLT.Format.md).
     - [3.2.2. Constructing the DltControlTraceLine directly](#322-constructing-the-dltcontroltraceline-directly)
     - [3.2.3. Constructing the DltControlTraceLine via the DltLineBuilder](#323-constructing-the-dltcontroltraceline-via-the-dltlinebuilder)
   - [3.3. Control Services](#33-control-services)
+    - [3.3.1. Variations to DLT Viewer 2.19.0 STABLE](#331-variations-to-dlt-viewer-2190-stable)
 - [4. Trace Lines](#4-trace-lines)
 
 ## 1. DLT Trace Decoder
@@ -580,7 +581,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 
 | Service Id            | Name                       | Request | Response | Standard  |
 | --------------------- | -------------------------- | :-----: | :------: | --------- |
-| `0x01`                | SetLogLevel                |         |          | PRS 1.4.0 |
+| `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0 |
 | `0x02`                | SetTraceStatus             |         |          | PRS 1.4.0 |
 | `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
 | `0x04`                | GetDefaultLogLevel         |         |          | PRS 1.4.0 |
@@ -637,6 +638,16 @@ but not documented in the AutoSAR PRS.
   remains the same.
 * ³: This will not be implemented - software will need to provide their own
   decoder.All DLT trace lines are derived from the `DltTraceLineBase`.
+
+#### 3.3.1. Variations to DLT Viewer 2.19.0 STABLE
+
+This section highlights some of the output differences between the request and
+response objects implemented by this library compared to the Genivi DLT Viewer
+2.19.0, 19th August 2019.
+
+| Service | Type    | Genivi DLT                | TraceReader.DLT                            |
+| ------- | ------- | ------------------------- | ------------------------------------------ |
+| `0x01`  | Request | `[set_log_level] <bytes>` | `[set_log_level] <level> APP1 (CTX1) COM1` |
 
 ## 4. Trace Lines
 

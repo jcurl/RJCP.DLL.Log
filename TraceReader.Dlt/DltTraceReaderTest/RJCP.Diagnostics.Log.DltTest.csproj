@@ -75,8 +75,10 @@
     <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionTest.cs" />
+    <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionDecoderTest.cs" />
+    <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />
