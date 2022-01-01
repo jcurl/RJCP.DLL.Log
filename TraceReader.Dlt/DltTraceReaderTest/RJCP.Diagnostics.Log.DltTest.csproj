@@ -54,6 +54,7 @@
     <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
     <Compile Include="Decoder\LineCacheAccessor.cs" />
     <Compile Include="Decoder\LineCacheTest.cs" />
+    <Compile Include="DltControlTraceLineTest.cs" />
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />
     <Compile Include="DltSkippedTraceLineTest.cs" />
@@ -71,6 +72,8 @@
     <Compile Include="Dlt\Args\StringDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnknownVerboseDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />

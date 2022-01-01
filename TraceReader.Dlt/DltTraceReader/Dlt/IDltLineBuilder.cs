@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Args;
+    using ControlArgs;
 
     /// <summary>
     /// DLT trace line builder interface.
@@ -285,5 +286,18 @@
         /// <param name="arguments">The argument to be added to the payload.</param>
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments);
+
+        /// <summary>
+        /// Gets the control payload.
+        /// </summary>
+        /// <value>The control payload.</value>
+        IControlArg ControlPayload { get; }
+
+        /// <summary>
+        /// Sets the control payload.
+        /// </summary>
+        /// <param name="service">The control payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder SetControlPayload(IControlArg service);
     }
 }

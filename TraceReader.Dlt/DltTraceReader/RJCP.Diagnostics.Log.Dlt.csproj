@@ -55,6 +55,7 @@
     <Compile Include="Decoder\DltTraceDecoder.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
+    <Compile Include="DltControlTraceLine.cs" />
     <Compile Include="DltFileTraceReaderFactory.cs" />
     <Compile Include="DltSerialTraceReaderFactory.cs" />
     <Compile Include="DltSkippedTraceLine.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Dlt\Args\UnknownDltArg.cs" />
     <Compile Include="Dlt\Args\UnknownVerboseDltArg.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
+    <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />

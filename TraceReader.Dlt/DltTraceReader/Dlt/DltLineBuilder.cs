@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Args;
+    using ControlArgs;
 
     /// <summary>
     /// DLT trace line builder.
@@ -90,6 +91,7 @@
             Position = 0;
             NumberOfArgs = 0;
             m_Arguments.Clear();
+            ControlPayload = null;
             return this;
         }
 
@@ -97,6 +99,12 @@
         /// Creates and returns the DLT trace line instance.
         /// </summary>
         /// <returns>The DLT trace line instance.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Unknown message type when <see cref="DltType"/> is <see cref="DltType.UNKNOWN"/>.
+        /// <para>- or -</para>
+        /// Undefined control payload when <see cref="DltType"/> is <see cref="DltType.CONTROL_REQUEST"/> or
+        /// <see cref="DltType.CONTROL_RESPONSE"/> and <see cref="ControlPayload"/> is <see langword="null"/>.
+        /// </exception>
         /// <remarks>
         /// This method should be used after all DLT trace line fields have been populated, otherwise the resulting
         /// trace line instance shall be incomplete.
@@ -107,25 +115,42 @@
         /// </remarks>
         public DltTraceLineBase GetResult()
         {
-            // We don't support creating Control Messages as of yet.
-            if (DltType != DltType.UNKNOWN && ((int)DltType & DltConstants.MessageType.DltTypeControl) != 0) {
-                throw new InvalidOperationException("Cannot create standard line from a control type");
+            if (DltType == DltType.UNKNOWN) {
+                throw new InvalidOperationException("Unknown message type");
             }
 
+            DltTraceLineBase line;
             if (m_Online) TimeStamp = DateTime.Now;
-            DltTraceLine line = new DltTraceLine(m_Arguments.ToArray()) {
-                Line = m_Line,
-                Position = Position,
-                TimeStamp = TimeStamp,
-                EcuId = EcuId ?? string.Empty,
-                ApplicationId = ApplicationId ?? string.Empty,
-                ContextId = ContextId ?? string.Empty,
-                SessionId = SessionId,
-                Count = Count,
-                DeviceTimeStamp = DeviceTimeStamp,
-                Type = DltType,
-                Features = Features
-            };
+            if (((int)DltType & DltConstants.MessageType.DltTypeControl) != 0) {
+                if (ControlPayload == null) throw new InvalidOperationException("Undefined control payload");
+                line = new DltControlTraceLine(ControlPayload) {
+                    Line = m_Line,
+                    Position = Position,
+                    TimeStamp = TimeStamp,
+                    EcuId = EcuId ?? string.Empty,
+                    ApplicationId = ApplicationId ?? string.Empty,
+                    ContextId = ContextId ?? string.Empty,
+                    SessionId = SessionId,
+                    Count = Count,
+                    DeviceTimeStamp = DeviceTimeStamp,
+                    Type = DltType,
+                };
+                line.Features += Features;
+            } else {
+                line = new DltTraceLine(m_Arguments.ToArray()) {
+                    Line = m_Line,
+                    Position = Position,
+                    TimeStamp = TimeStamp,
+                    EcuId = EcuId ?? string.Empty,
+                    ApplicationId = ApplicationId ?? string.Empty,
+                    ContextId = ContextId ?? string.Empty,
+                    SessionId = SessionId,
+                    Count = Count,
+                    DeviceTimeStamp = DeviceTimeStamp,
+                    Type = DltType,
+                    Features = Features
+                };
+            }
             m_Line++;
 
             return line;
@@ -496,6 +521,24 @@
                 foreach (IDltArg argument in arguments)
                     AddArgument(argument);
             }
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the control payload.
+        /// </summary>
+        /// <value>The control payload.</value>
+        public IControlArg ControlPayload { get; private set; }
+
+        /// <summary>
+        /// Sets the control payload.
+        /// </summary>
+        /// <param name="service">The control payload.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder SetControlPayload(IControlArg service)
+        {
+            if (service == null) throw new ArgumentNullException(nameof(service));
+            ControlPayload = service;
             return this;
         }
     }
