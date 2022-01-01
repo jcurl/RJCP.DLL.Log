@@ -118,7 +118,32 @@
             /// <summary>
             /// A mask for the message type, mapping to <see cref="DltType"/>.
             /// </summary>
-            public const int MessageTypeMask = 0xFE;
+            public const int MessageTypeInfoMask = 0xFE;
+
+            /// <summary>
+            /// The message type mask (MSTP).
+            /// </summary>
+            public const int MessageTypeMask = 0x0E;
+
+            /// <summary>
+            /// The message DLT_TYPE_LOG.
+            /// </summary>
+            public const int MessageTypeLog = 0x00;
+
+            /// <summary>
+            /// The message type DLT_TYPE_APP_TRACE.
+            /// </summary>
+            public const int MessageTypeAppTrace = 0x02;
+
+            /// <summary>
+            /// The message type DLT_TYPE_NW_TRACE.
+            /// </summary>
+            public const int MessageTypeNwTrace = 0x04;
+
+            /// <summary>
+            /// The message type DLT_TYPE_CONTROL.
+            /// </summary>
+            public const int MessageTypeControl = 0x06;
         }
 
         /// <summary>

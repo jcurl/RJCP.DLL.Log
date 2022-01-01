@@ -33,7 +33,7 @@ The decoder is based on the [DLT Format](DLT.Format.md).
   - [2.5. Unsupported DLT Argument Types](#25-unsupported-dlt-argument-types)
 - [3. Decoding Control Lines](#3-decoding-control-lines)
   - [3.1. The Control Packet Structure](#31-the-control-packet-structure)
-  - [3.2. Decoding with IControlArgDecoder](#32-decoding-with-icontrolargdecoder)
+  - [3.2. Decoding with IControlDltDecoder and IControlArgDecoder](#32-decoding-with-icontroldltdecoder-and-icontrolargdecoder)
     - [3.2.1. The Control Services](#321-the-control-services)
     - [3.2.2. Constructing the DltControlTraceLine directly](#322-constructing-the-dltcontroltraceline-directly)
     - [3.2.3. Constructing the DltControlTraceLine via the DltLineBuilder](#323-constructing-the-dltcontroltraceline-via-the-dltlinebuilder)
@@ -514,7 +514,7 @@ The general structure of a control payload is given as follows:
 For each `ServiceId`, there are two data-structures: the request; and the
 response. The `DLT_CONTROL_TIME` is a special case and has no payload.
 
-### 3.2. Decoding with IControlArgDecoder
+### 3.2. Decoding with IControlDltDecoder and IControlArgDecoder
 
 The DLT decode loop in `DltTraceDecoderBase` will check the `DltType` and
 determine this is a control message as given above. It then calls an instance of
@@ -523,27 +523,31 @@ an object implementing `IControlDltDecoder` (e.g. the `ControlDltDecoder`).
 ![DLT Control Decoder](out/diagrams/DLT.ControlArgDecoder/DLT.ControlArgDecoder.svg)
 
 The `IControlDltDecoder.Decode` method is given the buffer at the start of the
-Control Payload. It extracts the service identifier, and knows the type of
-control message from the `IDltLineBuilder` which was decoded by the
-`DltTraceDecoderBase` prior, and from this it can look up how to interpret the
-contents of the control payload.
+Control Payload which includes the service identifier. It extracts the service
+identifier, and knows the type of control message from the `IDltLineBuilder`
+which was decoded by the `DltTraceDecoderBase` prior, and from this it can look
+up how to interpret the contents of the control payload.
 
 To make the implementation extendable, the `ControlDltDecoder` uses two
 dictionaries (`ControlRequestDecoder` and `ControlResponseDecoder`) to find the
 mapping from the service identifier to the code that knows how to interpret and
 construct a `IControlDltArg` message. A user can construct their own
-`ControlDltDecoder`, register new mappings, and inject this into the
-`DltTraceDecoderBase` themselves with their own factory method.
+`ControlDltDecoder`, register new mappings by registering a new
+`IControlArgDecoder`, and inject this into the `DltTraceDecoderBase` themselves
+with their own factory method.
 
 On exit of the `IControlDltDecoder.Decode` method, the length of the argument
-decoded is returned, along with the control argument payload, which an
-application can interpret as required.
+decoded as given by the `IControlArgDecoder` is returned, with the `IControlArg`
+set to the provided `IDltLineBuilder`.
 
 #### 3.2.1. The Control Services
 
 The `IControlDltDecoder` has references to many different types of
 `IControlArgDecoder` objects, each one is responsible for creating a single
 control request or a control response object derived from an `IControlArg`.
+
+The `IControlArgDecoder.Decode` method returns the length of the payload, also
+including the first 4 bytes of the service identifier.
 
 ![DLT Control Arg](out/diagrams/Dlt.ControlArg/DLT.ControlArg.svg)
 
@@ -575,7 +579,7 @@ cannot have both as this cannot occur with the DLT protocol.
 The following Service Identifiers are defined (`X` is for implemented):
 
 | Service Id            | Name                       | Request | Response | Standard  |
-| --------------------- | -------------------------- | ------- | -------- | --------- |
+| --------------------- | -------------------------- | :-----: | :------: | --------- |
 | `0x01`                | SetLogLevel                |         |          | PRS 1.4.0 |
 | `0x02`                | SetTraceStatus             |         |          | PRS 1.4.0 |
 | `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
@@ -585,15 +589,15 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x0A`                | SetMessageFiltering        |         |          | PRS 1.4.0 |
 | `0x11`                | SetDefaultLogLevel         |         |          | PRS 1.4.0 |
 | `0x12`                | SetDefaultTraceStatus      |         |          | PRS 1.4.0 |
-| `0x13`                | GetSoftwareVersion         |         |          | PRS 1.4.0 |
+| `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0 |
 | `0x15`                | GetDefaultTraceStatus      |         |          | PRS 1.4.0 |
 | `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0 |
 | `0x1F`                | GetTraceStatus             |         |          | PRS 1.4.0 |
 | `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
 | `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0 |
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0 |
-| `0x23`                | BufferOverflowNotification | N/A     |          | PRS 1.4.0 |
-| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          | -       | -        | PRS 1.4.0 |
+| `0x23`                | BufferOverflowNotification |   N/A   |          | PRS 1.4.0 |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          |    -    |    -     | PRS 1.4.0 |
 
 The following are not listed in the current standard, or marked as deprecated:
 

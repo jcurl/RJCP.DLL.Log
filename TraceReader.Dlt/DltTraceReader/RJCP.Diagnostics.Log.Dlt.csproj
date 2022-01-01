@@ -78,7 +78,16 @@
     <Compile Include="Dlt\Args\UnknownDltArg.cs" />
     <Compile Include="Dlt\Args\UnknownVerboseDltArg.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
+    <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\GetSoftwareVersionRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
+    <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
+    <Compile Include="Dlt\Control\GetSoftwareVersionRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\GetSoftwareVersionResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\IControlArgDecoder.cs" />
+    <Compile Include="Dlt\Control\IControlDltDecoder.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />
@@ -102,6 +111,8 @@
     <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Text\Iso8859_1.cs" />
+    <Compile Include="Text\Iso8859_15.cs" />
   </ItemGroup>
 
   <ItemGroup>

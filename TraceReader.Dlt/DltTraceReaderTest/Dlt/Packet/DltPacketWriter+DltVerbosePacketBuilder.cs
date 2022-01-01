@@ -52,6 +52,21 @@
             }
 
             /// <summary>
+            /// Adds a payload for a control message
+            /// </summary>
+            /// <param name="time">The device time stamp.</param>
+            /// <param name="msgType">The type of the message.</param>
+            /// <param name="payload">The raw control payload data.</param>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder Control(TimeSpan time, DltType msgType, byte[] payload)
+            {
+                m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
+                m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
+                if (payload != null) m_Packet.AddPayload(0, payload);
+                return this;
+            }
+
+            /// <summary>
             /// Writes the specified version into the standard header.
             /// </summary>
             /// <param name="version">The version in the range 0 to 7.</param>

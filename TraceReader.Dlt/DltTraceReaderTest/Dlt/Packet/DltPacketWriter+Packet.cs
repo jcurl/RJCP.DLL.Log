@@ -87,12 +87,18 @@
 
             public void CreateExtendedHeader(DltType msgType, string appId, string ctxId)
             {
+                CreateExtendedHeader(msgType, appId, ctxId, true);
+            }
+
+            public void CreateExtendedHeader(DltType msgType, string appId, string ctxId, bool verbose)
+            {
                 if (!m_HasStandardHeader) throw new InvalidOperationException("Standard Header not yet constructed");
                 if (m_HasExtendedHeader) throw new InvalidOperationException("Extended Header already constructed");
 
                 m_ExtendedHeaderPos = m_PacketLength;
                 m_Packet[0] |= 0x01;  // UEH
-                m_Packet[m_ExtendedHeaderPos] = (byte)((byte)msgType | 0x01);
+                m_Packet[m_ExtendedHeaderPos] = (byte)msgType;
+                if (verbose) m_Packet[m_ExtendedHeaderPos] |= 0x01;
                 m_Packet[m_ExtendedHeaderPos + 1] = 0;
                 WriteId(m_Packet, m_ExtendedHeaderPos + 2, appId);
                 WriteId(m_Packet, m_ExtendedHeaderPos + 6, ctxId);

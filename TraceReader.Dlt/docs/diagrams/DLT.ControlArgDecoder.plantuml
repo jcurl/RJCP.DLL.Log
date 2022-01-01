@@ -28,7 +28,7 @@ interface IControlArg {
 }
 
 interface IControlArgDecoder {
-    Decode(serviceId: int, buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder, [out] service: IControlArg*): int
+    Decode(serviceId: int, buffer: ReadOnlySpan<byte>, [out] service: IControlArg*): int
 }
 note left
     Each instance knows how to decode a single control

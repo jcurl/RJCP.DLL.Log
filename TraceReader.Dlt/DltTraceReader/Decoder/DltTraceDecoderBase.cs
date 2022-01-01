@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using Dlt;
+    using Dlt.Control;
     using Dlt.Verbose;
     using RJCP.Core;
 
@@ -18,6 +19,7 @@
         private readonly LineCache m_Cache = new LineCache();
 #endif
         private readonly IVerboseDltDecoder m_VerboseDecoder;
+        private readonly IControlDltDecoder m_ControlDecoder;
         private readonly IDltLineBuilder m_DltLineBuilder;
 
         private bool m_ValidHeaderFound = false;
@@ -40,20 +42,23 @@
         /// find the start of a frame, and the size of data that can be skipped when searching for a frame.
         /// </remarks>
         protected DltTraceDecoderBase()
-            : this(GetVerboseDecoder(), new DltLineBuilder()) { }
+            : this(GetVerboseDecoder(), new ControlDltDecoder(), new DltLineBuilder()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
         /// </summary>
         /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
+        /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>
         /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
         /// <exception cref="ArgumentNullException"><paramref name="lineBuilder"/> is <see langword="null"/>.</exception>
-        protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, IDltLineBuilder lineBuilder)
+        protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
         {
             if (verboseDecoder == null) throw new ArgumentNullException(nameof(verboseDecoder));
+            if (controlDecoder == null) throw new ArgumentNullException(nameof(controlDecoder));
             if (lineBuilder == null) throw new ArgumentNullException(nameof(lineBuilder));
 
             m_VerboseDecoder = verboseDecoder;
+            m_ControlDecoder = controlDecoder;
             m_DltLineBuilder = lineBuilder;
         }
 
@@ -373,8 +378,8 @@
 
                 m_DltLineBuilder.SetIsVerbose((messageInfo & DltConstants.MessageInfo.Verbose) != 0);
 
-                DltType messageType = (DltType)(messageInfo & DltConstants.MessageInfo.MessageTypeMask);
-                m_DltLineBuilder.SetDltType(messageType);
+                int messageType = messageInfo & DltConstants.MessageInfo.MessageTypeInfoMask;
+                m_DltLineBuilder.SetDltType((DltType)messageType);
 
                 byte noar = standardHeader[offset + 1];
                 m_DltLineBuilder.SetNumberOfArgs(noar);
@@ -386,6 +391,21 @@
                 m_DltLineBuilder.SetContextId(IdHashList.Instance.ParseId(ctxid));
 
                 offset += 10;
+
+                // A control message can only be present when there's an extended header.
+                if ((messageType & DltConstants.MessageInfo.MessageTypeMask) == DltConstants.MessageInfo.MessageTypeControl) {
+                    int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                    if (controlLength == -1) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control payload cannot be decoded");
+                        return false;
+                    }
+                    if (m_ExpectedLength < offset + controlLength || m_ExpectedLength > offset + controlLength + 32) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control payload length {0} found, expected {1}",
+                            controlLength, m_ExpectedLength - offset);
+                        return false;
+                    }
+                    return true;
+                }
             }
 
             if (m_DltLineBuilder.IsVerbose) {

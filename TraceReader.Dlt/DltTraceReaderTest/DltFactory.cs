@@ -58,6 +58,20 @@
             }
         }
 
+        public DltPacketWriter.DltVerbosePacketBuilder Control(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, DltType msgType, byte[] payload)
+        {
+            switch (FactoryType) {
+            case DltFactoryType.Standard:
+                return writer.Verbose().Control(deviceTime, msgType, payload);
+            case DltFactoryType.File:
+                return writer.Verbose().Control(deviceTime, msgType, payload).StorageHeader(storageTime);
+            case DltFactoryType.Serial:
+                return writer.Verbose().Control(deviceTime, msgType, payload).SerialMarker();
+            default:
+                throw new InvalidOperationException($"Unknown Factory {FactoryType}");
+            }
+        }
+
         public DateTime ExpectedTimeStamp(DateTime storageTime)
         {
             switch (FactoryType) {

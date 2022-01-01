@@ -2,6 +2,7 @@
 {
     using System;
     using Dlt;
+    using Dlt.Control;
 
     /// <summary>
     /// Decodes a DLT frame that has in addition a serial marker "DLS\1".
@@ -19,7 +20,7 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltSerialTraceDecoder(bool online) : base(GetVerboseDecoder(), new DltLineBuilder(online)) { }
+        public DltSerialTraceDecoder(bool online) : base(GetVerboseDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
 
         private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
 
