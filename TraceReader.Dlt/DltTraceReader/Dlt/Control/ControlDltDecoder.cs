@@ -31,12 +31,14 @@
         private void InitializeRequestDecoders()
         {
             m_RequestDecoders.Add(0x01, new SetLogLevelRequestDecoder());
+            m_RequestDecoders.Add(0x02, new SetTraceStatusRequestDecoder());
             m_RequestDecoders.Add(0x13, new GetSoftwareVersionRequestDecoder());
         }
 
         private void InitializeResponseDecoders()
         {
             m_ResponseDecoders.Add(0x01, new SetLogLevelResponseDecoder());
+            m_ResponseDecoders.Add(0x02, new SetTraceStatusResponseDecoder());
             m_ResponseDecoders.Add(0x13, new GetSoftwareVersionResponseDecoder());
         }
 
