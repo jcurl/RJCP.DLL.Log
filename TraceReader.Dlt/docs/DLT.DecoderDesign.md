@@ -584,7 +584,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0 |
 | `0x02`                | SetTraceStatus             |    X    |    X     | PRS 1.4.0 |
 | `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
-| `0x04`                | GetDefaultLogLevel         |         |          | PRS 1.4.0 |
+| `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
 | `0x05`                | StoreConfiguration         |         |          | PRS 1.4.0 |
 | `0x06`                | ResetToFactoryDefault      |         |          | PRS 1.4.0 |
 | `0x0A`                | SetMessageFiltering        |         |          | PRS 1.4.0 |
@@ -645,10 +645,11 @@ This section highlights some of the output differences between the request and
 response objects implemented by this library compared to the Genivi DLT Viewer
 2.19.0, 19th August 2019.
 
-| Service | Type    | Genivi DLT                   | TraceReader.DLT                                |
-| ------- | ------- | ---------------------------- | ---------------------------------------------- |
-| `0x01`  | Request | `[set_log_level] <bytes>`    | `[set_log_level] <level> APP1 (CTX1) COM1`     |
-| `0x02`  | Request | `[set_trace_status] <bytes>` | `[set_trace_status] <status> APP1 (CTX1) COM1` |
+| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                |
+| ------- | -------- | ------------------------------------------ | ---------------------------------------------- |
+| `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`     |
+| `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1` |
+| `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`     |
 
 ## 4. Trace Lines
 

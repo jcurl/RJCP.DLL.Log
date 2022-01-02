@@ -80,6 +80,8 @@
     <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionRequest.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
@@ -89,6 +91,8 @@
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusResponse.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
+    <Compile Include="Dlt\Control\GetDefaultLogLevelRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\GetDefaultLogLevelResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionRequestDecoder.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionResponseDecoder.cs" />
     <Compile Include="Dlt\Control\IControlArgDecoder.cs" />

@@ -74,10 +74,12 @@
     <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
+    <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusDecoderTest.cs" />

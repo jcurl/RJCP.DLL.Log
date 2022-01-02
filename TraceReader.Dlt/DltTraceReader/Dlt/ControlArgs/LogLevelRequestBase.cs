@@ -62,6 +62,16 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         protected virtual string ToString(int logLevel)
         {
+            return LogLevelString(logLevel);
+        }
+
+        /// <summary>
+        /// Logs the level string.
+        /// </summary>
+        /// <param name="logLevel">The log level.</param>
+        /// <returns>The string representation of the log level.</returns>
+        public static string LogLevelString(int logLevel)
+        {
             switch (logLevel) {
             case LogLevelBlock:
                 return "block_all";
