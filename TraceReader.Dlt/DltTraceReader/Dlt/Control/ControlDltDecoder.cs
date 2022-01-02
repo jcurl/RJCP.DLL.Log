@@ -36,6 +36,7 @@
             m_RequestDecoders.Add(0x05, new StoreConfigurationRequestDecoder());
             m_RequestDecoders.Add(0x06, new ResetFactoryDefaultRequestDecoder());
             m_RequestDecoders.Add(0x09, new SetVerboseModeRequestDecoder());
+            m_RequestDecoders.Add(0x11, new SetDefaultLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x13, new GetSoftwareVersionRequestDecoder());
         }
 
@@ -47,6 +48,7 @@
             m_ResponseDecoders.Add(0x05, new StoreConfigurationResponseDecoder());
             m_ResponseDecoders.Add(0x06, new ResetFactoryDefaultResponseDecoder());
             m_ResponseDecoders.Add(0x09, new SetVerboseModeResponseDecoder());
+            m_ResponseDecoders.Add(0x11, new SetDefaultLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x13, new GetSoftwareVersionResponseDecoder());
         }
 

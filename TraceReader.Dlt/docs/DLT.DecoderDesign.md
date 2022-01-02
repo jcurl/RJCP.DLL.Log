@@ -588,7 +588,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0 |
 | `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0 |
 | `0x0A`                | SetMessageFiltering        |         |          | PRS 1.4.0 |
-| `0x11`                | SetDefaultLogLevel         |         |          | PRS 1.4.0 |
+| `0x11`                | SetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
 | `0x12`                | SetDefaultTraceStatus      |         |          | PRS 1.4.0 |
 | `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0 |
 | `0x15`                | GetDefaultTraceStatus      |         |          | PRS 1.4.0 |
@@ -651,6 +651,7 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1` |
 | `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`     |
 | `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                    |
+| `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`         |
 
 ## 4. Trace Lines
 
