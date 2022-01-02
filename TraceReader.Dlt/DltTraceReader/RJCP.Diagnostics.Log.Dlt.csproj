@@ -86,6 +86,8 @@
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
     <Compile Include="Dlt\ControlArgs\LogLevelRequestBase.cs" />
+    <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
@@ -99,6 +101,8 @@
     <Compile Include="Dlt\Control\GetSoftwareVersionResponseDecoder.cs" />
     <Compile Include="Dlt\Control\IControlArgDecoder.cs" />
     <Compile Include="Dlt\Control\IControlDltDecoder.cs" />
+    <Compile Include="Dlt\Control\ResetFactoryDefaultRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\ResetFactoryDefaultResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetLogLevelResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusRequestDecoder.cs" />

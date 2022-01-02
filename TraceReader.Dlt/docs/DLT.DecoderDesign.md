@@ -586,7 +586,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
 | `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
 | `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0 |
-| `0x06`                | ResetToFactoryDefault      |         |          | PRS 1.4.0 |
+| `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0 |
 | `0x0A`                | SetMessageFiltering        |         |          | PRS 1.4.0 |
 | `0x11`                | SetDefaultLogLevel         |         |          | PRS 1.4.0 |
 | `0x12`                | SetDefaultTraceStatus      |         |          | PRS 1.4.0 |
