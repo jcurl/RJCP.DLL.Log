@@ -86,6 +86,8 @@
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
     <Compile Include="Dlt\ControlArgs\LogLevelRequestBase.cs" />
+    <Compile Include="Dlt\ControlArgs\MessageBufferOverflowRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\MessageBufferOverflowResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelRequest.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Dlt\Control\GetSoftwareVersionResponseDecoder.cs" />
     <Compile Include="Dlt\Control\IControlArgDecoder.cs" />
     <Compile Include="Dlt\Control\IControlDltDecoder.cs" />
+    <Compile Include="Dlt\Control\MessageBufferOverflowRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\MessageBufferOverflowResponseDecoder.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultRequestDecoder.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetDefaultLogLevelRequestDecoder.cs" />

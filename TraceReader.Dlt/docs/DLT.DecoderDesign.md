@@ -613,7 +613,7 @@ The following are not listed in the current standard, or marked as deprecated:
 | `0x0E`     | SetUseSessionId¹             |         |          | SWS 4.2.2 |
 | `0x0F`     | UseTimestamp¹                |         |          | SWS 4.2.2 |
 | `0x10`     | UseExtendedHeader¹           |         |          | SWS 4.2.2 |
-| `0x14`     | MessageBufferOverflow¹       |         |          | SWS 4.2.2 |
+| `0x14`     | MessageBufferOverflow¹       |    X    |    X     | SWS 4.2.2 |
 | `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
 | `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
@@ -645,14 +645,15 @@ This section highlights some of the output differences between the request and
 response objects implemented by this library compared to the Genivi DLT Viewer
 2.19.0, 19th August 2019.
 
-| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                |
-| ------- | -------- | ------------------------------------------ | ---------------------------------------------- |
-| `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`     |
-| `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1` |
-| `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`     |
-| `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                    |
-| `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`         |
-| `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`     |
+| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                 |
+| ------- | -------- | ------------------------------------------ | ----------------------------------------------- |
+| `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`      |
+| `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1`  |
+| `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`      |
+| `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                     |
+| `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`          |
+| `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`      |
+| `0x14`  | Response | `[message_buffer_overflow <status>] bytes` | `[message_buffer_overflow <status>] <overflow>` |
 
 ## 4. Trace Lines
 

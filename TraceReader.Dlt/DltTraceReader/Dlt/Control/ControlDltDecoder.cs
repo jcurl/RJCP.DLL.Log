@@ -39,6 +39,7 @@
             m_RequestDecoders.Add(0x11, new SetDefaultLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x12, new SetDefaultTraceStatusRequestDecoder());
             m_RequestDecoders.Add(0x13, new GetSoftwareVersionRequestDecoder());
+            m_RequestDecoders.Add(0x14, new MessageBufferOverflowRequestDecoder());
         }
 
         private void InitializeResponseDecoders()
@@ -52,6 +53,7 @@
             m_ResponseDecoders.Add(0x11, new SetDefaultLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x12, new SetDefaultTraceStatusResponseDecoder());
             m_ResponseDecoders.Add(0x13, new GetSoftwareVersionResponseDecoder());
+            m_ResponseDecoders.Add(0x14, new MessageBufferOverflowResponseDecoder());
         }
 
         /// <summary>
