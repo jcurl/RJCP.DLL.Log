@@ -78,11 +78,13 @@
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusTest.cs" />
+    <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusDecoderTest.cs" />
+    <Compile Include="Dlt\Control\StoreConfigurationDecoderTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />

@@ -90,6 +90,8 @@
     <Compile Include="Dlt\ControlArgs\SetLogLevelResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\StoreConfigurationRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\StoreConfigurationResponse.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelResponseDecoder.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Dlt\Control\SetLogLevelResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\StoreConfigurationRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\StoreConfigurationResponseDecoder.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />
