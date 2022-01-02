@@ -92,6 +92,8 @@
     <Compile Include="Dlt\ControlArgs\SetLogLevelResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\SetVerboseModeRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\SetVerboseModeResponse.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationRequest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationResponse.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Dlt\Control\SetLogLevelResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\SetVerboseModeRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\SetVerboseModeResponseDecoder.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationResponseDecoder.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
