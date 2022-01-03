@@ -38,6 +38,7 @@
             m_RequestDecoders.Add(0x09, new SetVerboseModeRequestDecoder());
             m_RequestDecoders.Add(0x0A, new SetMessageFilteringRequestDecoder());
             m_RequestDecoders.Add(0x0B, new SetTimingPacketsRequestDecoder());
+            m_RequestDecoders.Add(0x0C, new GetLocalTimeRequestDecoder());
             m_RequestDecoders.Add(0x11, new SetDefaultLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x12, new SetDefaultTraceStatusRequestDecoder());
             m_RequestDecoders.Add(0x13, new GetSoftwareVersionRequestDecoder());
@@ -54,6 +55,7 @@
             m_ResponseDecoders.Add(0x09, new SetVerboseModeResponseDecoder());
             m_ResponseDecoders.Add(0x0A, new SetMessageFilteringResponseDecoder());
             m_ResponseDecoders.Add(0x0B, new SetTimingPacketsResponseDecoder());
+            m_ResponseDecoders.Add(0x0C, new GetLocalTimeResponseDecoder());
             m_ResponseDecoders.Add(0x11, new SetDefaultLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x12, new SetDefaultTraceStatusResponseDecoder());
             m_ResponseDecoders.Add(0x13, new GetSoftwareVersionResponseDecoder());

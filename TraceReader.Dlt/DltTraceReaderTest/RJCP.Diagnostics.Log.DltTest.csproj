@@ -77,6 +77,7 @@
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionTest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowTest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetLocalTimeTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionDecoderTest.cs" />
     <Compile Include="Dlt\Control\MessageBufferOverflowDecoderTest.cs" />
+    <Compile Include="Dlt\Control\GetLocalTimeDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetDefaultTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />

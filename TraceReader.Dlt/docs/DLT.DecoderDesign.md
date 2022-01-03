@@ -608,7 +608,7 @@ The following are not listed in the current standard, or marked as deprecated:
 | `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
 | `0x09`     | SetVerboseMode¹              |    X    |    X     | SWS 4.2.2 |
 | `0x0B`     | SetTimingPackets             |    X    |    X     | SWS 4.2.2 |
-| `0x0C`     | GetLocalTime¹                |         |          | SWS 4.2.2 |
+| `0x0C`     | GetLocalTime¹                |    X    |    X     | SWS 4.2.2 |
 | `0x0D`     | SetUseECUID¹                 |         |          | SWS 4.2.2 |
 | `0x0E`     | SetUseSessionId¹             |         |          | SWS 4.2.2 |
 | `0x0F`     | UseTimestamp¹                |         |          | SWS 4.2.2 |

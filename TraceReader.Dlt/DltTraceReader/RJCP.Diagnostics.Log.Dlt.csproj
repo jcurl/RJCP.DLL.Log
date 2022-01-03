@@ -86,9 +86,11 @@
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
     <Compile Include="Dlt\ControlArgs\LogLevelRequestBase.cs" />
+    <Compile Include="Dlt\ControlArgs\GetLocalTimeRequest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowRequest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetLocalTimeResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelResponse.cs" />
@@ -115,7 +117,9 @@
     <Compile Include="Dlt\Control\IControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\MessageBufferOverflowRequestDecoder.cs" />
     <Compile Include="Dlt\Control\MessageBufferOverflowResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\GetLocalTimeRequestDecoder.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\GetLocalTimeResponseDecoder.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetDefaultLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetDefaultLogLevelResponseDecoder.cs" />
