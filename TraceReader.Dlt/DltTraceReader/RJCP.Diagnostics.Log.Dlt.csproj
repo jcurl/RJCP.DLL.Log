@@ -96,6 +96,8 @@
     <Compile Include="Dlt\ControlArgs\SetDefaultTraceStatusResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\SetMessageFilteringRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\SetMessageFilteringResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetVerboseModeRequest.cs" />
@@ -119,6 +121,8 @@
     <Compile Include="Dlt\Control\SetDefaultTraceStatusResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetLogLevelResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\SetMessageFilteringRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\SetMessageFilteringResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusResponseDecoder.cs" />
     <Compile Include="Dlt\Control\SetVerboseModeRequestDecoder.cs" />

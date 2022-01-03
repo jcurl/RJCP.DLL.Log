@@ -80,6 +80,7 @@
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
+    <Compile Include="Dlt\ControlArgs\SetMessageFilteringTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetVerboseModeTest.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Dlt\Control\SetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetDefaultTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />
+    <Compile Include="Dlt\Control\SetMessageFilteringDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultsDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetVerboseModeDecoderTest.cs" />
