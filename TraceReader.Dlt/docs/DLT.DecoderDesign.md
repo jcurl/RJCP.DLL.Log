@@ -583,7 +583,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | --------------------- | -------------------------- | :-----: | :------: | --------- |
 | `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0 |
 | `0x02`                | SetTraceStatus             |    X    |    X     | PRS 1.4.0 |
-| `0x03`                | GetLogInfo                 |         |          | PRS 1.4.0 |
+| `0x03`                | GetLogInfo                 |    X    |    X     | PRS 1.4.0 |
 | `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
 | `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0 |
 | `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0 |
@@ -645,17 +645,19 @@ This section highlights some of the output differences between the request and
 response objects implemented by this library compared to the Genivi DLT Viewer
 2.19.0, 19th August 2019.
 
-| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                 |
-| ------- | -------- | ------------------------------------------ | ----------------------------------------------- |
-| `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`      |
-| `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1`  |
-| `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`      |
-| `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                     |
-| `0x0A`  | Request  | `[set_message_filtering] <bytes>`          | `[set_message_filtering] <mode>`                |
-| `0x0B`  | Request  | `[set_timing_packets] <bytes>`             | `[set_timing_packets] <mode>`                   |
-| `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`          |
-| `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`      |
-| `0x14`  | Response | `[message_buffer_overflow <status>] bytes` | `[message_buffer_overflow <status>] <overflow>` |
+| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                                   |
+| ------- | -------- | ------------------------------------------ | ----------------------------------------------------------------- |
+| `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`                        |
+| `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1`                    |
+| `0x03`  | Request  | `[get_log_info] <bytes>`                   | `[get_log_info options=<options>] APP1 (CTX1) COM1`               |
+| `0x03`  | Response | `[get_log_info <status>] <bytes>`          | `[get_log_info <status>] APP1 (CTX1 <level> <status>); ...; COM1` |
+| `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`                        |
+| `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                                       |
+| `0x0A`  | Request  | `[set_message_filtering] <bytes>`          | `[set_message_filtering] <mode>`                                  |
+| `0x0B`  | Request  | `[set_timing_packets] <bytes>`             | `[set_timing_packets] <mode>`                                     |
+| `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`                            |
+| `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`                        |
+| `0x14`  | Response | `[message_buffer_overflow <status>] bytes` | `[message_buffer_overflow <status>] <overflow>`                   |
 
 ## 4. Trace Lines
 

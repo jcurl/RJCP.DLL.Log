@@ -75,6 +75,7 @@
     <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetLogInfoTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionTest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetLocalTimeTest.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
+    <Compile Include="Dlt\Control\GetLogInfoDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetSoftwareVersionDecoderTest.cs" />
     <Compile Include="Dlt\Control\MessageBufferOverflowDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetLocalTimeDecoderTest.cs" />

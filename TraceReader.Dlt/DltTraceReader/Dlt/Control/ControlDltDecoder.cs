@@ -32,6 +32,7 @@
         {
             m_RequestDecoders.Add(0x01, new SetLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x02, new SetTraceStatusRequestDecoder());
+            m_RequestDecoders.Add(0x03, new GetLogInfoRequestDecoder());
             m_RequestDecoders.Add(0x04, new GetDefaultLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x05, new StoreConfigurationRequestDecoder());
             m_RequestDecoders.Add(0x06, new ResetFactoryDefaultRequestDecoder());
@@ -49,6 +50,7 @@
         {
             m_ResponseDecoders.Add(0x01, new SetLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x02, new SetTraceStatusResponseDecoder());
+            m_ResponseDecoders.Add(0x03, new GetLogInfoResponseDecoder());
             m_ResponseDecoders.Add(0x04, new GetDefaultLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x05, new StoreConfigurationResponseDecoder());
             m_ResponseDecoders.Add(0x06, new ResetFactoryDefaultResponseDecoder());
