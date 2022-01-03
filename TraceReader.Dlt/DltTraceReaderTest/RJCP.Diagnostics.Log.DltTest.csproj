@@ -83,6 +83,7 @@
     <Compile Include="Dlt\ControlArgs\SetMessageFilteringTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\ResetFactoryDefaultTest.cs" />
+    <Compile Include="Dlt\ControlArgs\SetTimingPacketsTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetVerboseModeTest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Dlt\Control\SetMessageFilteringDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\ResetFactoryDefaultsDecoderTest.cs" />
+    <Compile Include="Dlt\Control\SetTimingPacketsDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetVerboseModeDecoderTest.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationDecoderTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />

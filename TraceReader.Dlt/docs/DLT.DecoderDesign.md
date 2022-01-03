@@ -607,7 +607,7 @@ The following are not listed in the current standard, or marked as deprecated:
 | `0x07`     | SetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
 | `0x09`     | SetVerboseMode¹              |    X    |    X     | SWS 4.2.2 |
-| `0x0B`     | SetTimingPackets             |         |          | SWS 4.2.2 |
+| `0x0B`     | SetTimingPackets             |    X    |    X     | SWS 4.2.2 |
 | `0x0C`     | GetLocalTime¹                |         |          | SWS 4.2.2 |
 | `0x0D`     | SetUseECUID¹                 |         |          | SWS 4.2.2 |
 | `0x0E`     | SetUseSessionId¹             |         |          | SWS 4.2.2 |
@@ -652,6 +652,7 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x04`  | Response | `[get_default_log_level <status>] <bytes>` | `[get_default_log_level <status>] <level>`      |
 | `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                     |
 | `0x0A`  | Request  | `[set_message_filtering] <bytes>`          | `[set_message_filtering] <mode>`                |
+| `0x0B`  | Request  | `[set_timing_packets] <bytes>`             | `[set_timing_packets] <mode>`                   |
 | `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`          |
 | `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`      |
 | `0x14`  | Response | `[message_buffer_overflow <status>] bytes` | `[message_buffer_overflow <status>] <overflow>` |
