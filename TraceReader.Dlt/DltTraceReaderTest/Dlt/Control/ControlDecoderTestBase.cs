@@ -95,6 +95,10 @@
                 Assert.That(service, Is.TypeOf(m_ResponseType));
                 Assert.That(service.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
                 break;
+            case DltType.CONTROL_TIME:
+                Assert.That(service, Is.TypeOf(m_ResponseType));
+                Assert.That(service.DefaultType, Is.EqualTo(DltType.CONTROL_TIME));
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(dltType), "Invalid DltType requested for this test case");
             }

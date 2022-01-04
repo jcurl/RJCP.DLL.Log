@@ -866,5 +866,54 @@
             Assert.That(controlLine.Service.ServiceId, Is.EqualTo(0x1000));
             Assert.That(controlLine.Service.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
         }
+
+        [Test]
+        public void BuildControlDltTimeMarker()
+        {
+            DateTime time = DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634);
+
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetStorageHeaderEcuId("FCU1");
+            builder.SetTimeStamp(time);
+            builder.SetCount(127);
+            builder.SetBigEndian(false);
+            builder.SetEcuId("ECU1");
+            builder.SetSessionId(1435);
+            builder.SetDeviceTimeStamp(DltTime.DeviceTime(5.5352).Ticks);
+            builder.SetApplicationId("APP1");
+            builder.SetContextId("CTX1");
+            builder.SetDltType(DltType.CONTROL_TIME);
+            builder.SetIsVerbose(false);
+            builder.SetPosition(10);
+            builder.SetControlPayload(new DltTimeMarker());
+
+            DltTraceLineBase line = builder.GetResult();
+            Assert.That(line, Is.TypeOf<DltControlTraceLine>());
+
+            DltControlTraceLine controlLine = (DltControlTraceLine)line;
+            Assert.That(controlLine.Line, Is.EqualTo(0));
+            Assert.That(controlLine.Position, Is.EqualTo(10));
+            Assert.That(controlLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 control time non-verbose []"));
+            Assert.That(controlLine.Text, Is.EqualTo("[]"));
+            Assert.That(controlLine.Features.EcuId, Is.True);
+            Assert.That(controlLine.EcuId, Is.EqualTo("ECU1"));
+            Assert.That(controlLine.Features.ApplicationId, Is.True);
+            Assert.That(controlLine.ApplicationId, Is.EqualTo("APP1"));
+            Assert.That(controlLine.Features.ContextId, Is.True);
+            Assert.That(controlLine.ContextId, Is.EqualTo("CTX1"));
+            Assert.That(controlLine.Count, Is.EqualTo(127));
+            Assert.That(controlLine.Features.MessageType, Is.True);
+            Assert.That(controlLine.Type, Is.EqualTo(DltType.CONTROL_TIME));
+            Assert.That(controlLine.Features.SessionId, Is.True);
+            Assert.That(controlLine.SessionId, Is.EqualTo(1435));
+            Assert.That(controlLine.Features.DeviceTimeStamp, Is.True);
+            Assert.That(controlLine.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(5.5352)));
+            Assert.That(controlLine.Features.TimeStamp, Is.True);
+            Assert.That(controlLine.TimeStamp, Is.EqualTo(time));
+            Assert.That(controlLine.Features.BigEndian, Is.False);
+            Assert.That(controlLine.Features.IsVerbose, Is.False);
+            Assert.That(controlLine.Service.ServiceId, Is.EqualTo(-1));
+            Assert.That(controlLine.Service.DefaultType, Is.EqualTo(DltType.CONTROL_TIME));
+        }
     }
 }

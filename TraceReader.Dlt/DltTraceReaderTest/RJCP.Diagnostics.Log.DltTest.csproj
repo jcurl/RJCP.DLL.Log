@@ -101,6 +101,7 @@
     <Compile Include="Dlt\ControlArgs\SetVerboseModeTest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
+    <Compile Include="Dlt\Control\DltTimeDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseExtendedHeaderDecoderTest.cs" />

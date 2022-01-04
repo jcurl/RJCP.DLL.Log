@@ -187,6 +187,8 @@
                     }
                     break;
                 case DltType.CONTROL_TIME:
+                    lineBuilder.SetControlPayload(new DltTimeMarker());
+                    return 0;
                 default:
                     if (Log.Dlt.ShouldTrace(TraceEventType.Warning)) {
                         Log.Dlt.TraceEvent(TraceEventType.Warning, "Invalid control message {0}", lineBuilder.DltType.ToString());

@@ -82,6 +82,7 @@
     <Compile Include="Dlt\ControlArgs\ContextId.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\DltTimeMarker.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetTraceStatusRequest.cs" />
