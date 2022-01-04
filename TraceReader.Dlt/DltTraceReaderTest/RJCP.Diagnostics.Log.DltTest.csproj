@@ -75,6 +75,7 @@
     <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetMessageFilteringStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseExtendedHeaderTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseTimeStampTest.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
+    <Compile Include="Dlt\Control\GetTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseExtendedHeaderDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseTimeStampDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseSessionIdDecoderTest.cs" />

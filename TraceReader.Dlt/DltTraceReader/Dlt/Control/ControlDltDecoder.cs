@@ -55,6 +55,7 @@
             m_RequestDecoders.Add(0x1C, new GetUseSessionIdRequestDecoder());
             m_RequestDecoders.Add(0x1D, new GetUseTimeStampRequestDecoder());
             m_RequestDecoders.Add(0x1E, new GetUseExtendedHeaderRequestDecoder());
+            m_RequestDecoders.Add(0x1F, new GetTraceStatusRequestDecoder());
         }
 
         private void InitializeResponseDecoders()
@@ -84,6 +85,7 @@
             m_ResponseDecoders.Add(0x1C, new GetUseSessionIdResponseDecoder());
             m_ResponseDecoders.Add(0x1D, new GetUseTimeStampResponseDecoder());
             m_ResponseDecoders.Add(0x1E, new GetUseExtendedHeaderResponseDecoder());
+            m_ResponseDecoders.Add(0x1F, new GetTraceStatusResponseDecoder());
         }
 
         /// <summary>

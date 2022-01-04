@@ -84,6 +84,8 @@
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\GetTraceStatusRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\GetTraceStatusResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseExtendedHeaderResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseTimeStampResponse.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseSessionIdResponse.cs" />
@@ -138,6 +140,8 @@
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\GetTraceStatusRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\GetTraceStatusResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetUseExtendedHeaderResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetUseTimeStampResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetUseSessionIdResponseDecoder.cs" />

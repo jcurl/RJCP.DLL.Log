@@ -593,7 +593,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0 |
 | `0x15`                | GetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0 |
 | `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0 |
-| `0x1F`                | GetTraceStatus             |         |          | PRS 1.4.0 |
+| `0x1F`                | GetTraceStatus             |    X    |    X     | PRS 1.4.0 |
 | `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
 | `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0 |
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0 |
@@ -676,6 +676,8 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x1D`  | Response | `[ <status>] <bytes>`                      | `[get_use_timestamp <status>] <enabled>`                          |
 | `0x1E`  | Request  | `[]`                                       | `[get_use_extended_header]`                                       |
 | `0x1E`  | Response | `[ <status>] <bytes>`                      | `[get_use_extended_header <status>] <enabled>`                    |
+| `0x1F`  | Request  | `[]`                                       | `[get_trace_status]`                                              |
+| `0x1F`  | Response | `[ <status>] <bytes>`                      | `[get_trace_status <status>] <enabled>`                           |
 
 ## 4. Trace Lines
 
