@@ -1,7 +1,5 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ControlArgs
 {
-    using ControlArgs;
-
     /// <summary>
     /// Response for the actual default log level.
     /// </summary>

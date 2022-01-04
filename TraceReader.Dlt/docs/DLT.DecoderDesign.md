@@ -591,7 +591,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x11`                | SetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
 | `0x12`                | SetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0 |
 | `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0 |
-| `0x15`                | GetDefaultTraceStatus      |         |          | PRS 1.4.0 |
+| `0x15`                | GetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0 |
 | `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0 |
 | `0x1F`                | GetTraceStatus             |         |          | PRS 1.4.0 |
 | `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
@@ -609,20 +609,20 @@ The following are not listed in the current standard, or marked as deprecated:
 | `0x09`     | SetVerboseMode¹              |    X    |    X     | SWS 4.2.2 |
 | `0x0B`     | SetTimingPackets             |    X    |    X     | SWS 4.2.2 |
 | `0x0C`     | GetLocalTime¹                |    X    |    X     | SWS 4.2.2 |
-| `0x0D`     | SetUseECUID¹                 |         |          | SWS 4.2.2 |
-| `0x0E`     | SetUseSessionId¹             |         |          | SWS 4.2.2 |
-| `0x0F`     | UseTimestamp¹                |         |          | SWS 4.2.2 |
-| `0x10`     | UseExtendedHeader¹           |         |          | SWS 4.2.2 |
+| `0x0D`     | SetUseECUID¹                 |    X    |    X     | SWS 4.2.2 |
+| `0x0E`     | SetUseSessionId¹             |    X    |    X     | SWS 4.2.2 |
+| `0x0F`     | UseTimestamp¹                |    X    |    X     | SWS 4.2.2 |
+| `0x10`     | UseExtendedHeader¹           |    X    |    X     | SWS 4.2.2 |
 | `0x14`     | MessageBufferOverflow¹       |    X    |    X     | SWS 4.2.2 |
 | `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
 | `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
-| `0x19`     | GetVerboseModeStatus¹        |         |          | SWS 4.2.2 |
-| `0x1A`     | GetMessageFilteringStatus¹   |         |          | SWS 4.2.2 |
-| `0x1B`     | GetUseECUID¹                 |         |          | SWS 4.2.2 |
-| `0x1C`     | GetUseSessionID¹             |         |          | SWS 4.2.2 |
-| `0x1D`     | GetUseTimestamp¹             |         |          | SWS 4.2.2 |
-| `0x1E`     | GetUseExtendedHeader¹        |         |          | SWS 4.2.2 |
+| `0x19`     | GetVerboseModeStatus¹        |    X    |    X     | SWS 4.2.2 |
+| `0x1A`     | GetMessageFilteringStatus¹   |    X    |    X     | SWS 4.2.2 |
+| `0x1B`     | GetUseECUID¹                 |    X    |    X     | SWS 4.2.2 |
+| `0x1C`     | GetUseSessionID¹             |    X    |    X     | SWS 4.2.2 |
+| `0x1D`     | GetUseTimestamp¹             |    X    |    X     | SWS 4.2.2 |
+| `0x1E`     | GetUseExtendedHeader¹        |    X    |    X     | SWS 4.2.2 |
 
 The following are observed implementations that are implemented in Genivi DLT,
 but not documented in the AutoSAR PRS.
@@ -645,7 +645,7 @@ This section highlights some of the output differences between the request and
 response objects implemented by this library compared to the Genivi DLT Viewer
 2.19.0, 19th August 2019.
 
-| Service | Type     | Genivi DLT                                 | TraceReader.DLT                                                   |
+| Service | Type     | Genivi DLT-Viewer                          | TraceReader.DLT                                                   |
 | ------- | -------- | ------------------------------------------ | ----------------------------------------------------------------- |
 | `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`                        |
 | `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1`                    |
@@ -655,9 +655,27 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x09`  | Request  | `[set_verbose_mode] <bytes>`               | `[set_verbose_mode] <mode>`                                       |
 | `0x0A`  | Request  | `[set_message_filtering] <bytes>`          | `[set_message_filtering] <mode>`                                  |
 | `0x0B`  | Request  | `[set_timing_packets] <bytes>`             | `[set_timing_packets] <mode>`                                     |
+| `0x0D`  | Request  | `[use_ecu_id] <bytes>`                     | `[use_ecu_id] <enabled>`                                          |
+| `0x0E`  | Request  | `[use_session_id] <bytes>`                 | `[use_session_id] <enabled>`                                      |
+| `0x0F`  | Request  | `[use_timestamp] <bytes>`                  | `[use_timestamp] <enabled>`                                       |
+| `0x10`  | Request  | `[use_extended_header] <bytes>`            | `[use_extended_header] <enabled>`                                 |
 | `0x11`  | Request  | `[set_default_log_level] <bytes>`          | `[set_default_log_level] <level> COM1`                            |
 | `0x12`  | Request  | `[set_default_trace_status] <bytes>`       | `[set_default_trace_status] <status> COM1`                        |
 | `0x14`  | Response | `[message_buffer_overflow <status>] bytes` | `[message_buffer_overflow <status>] <overflow>`                   |
+| `0x15`  | Request  | `[]`                                       | `[get_default_trace_status]`                                      |
+| `0x15`  | Response | `[ <status>] <bytes>`                      | `[get_default_trace_status <status>] <enabled>`                   |
+| `0x19`  | Request  | `[]`                                       | `[get_verbose_mode]`                                              |
+| `0x19`  | Response | `[ <status>] <bytes>`                      | `[get_verbose_mode <status>] <enabled>`                           |
+| `0x1A`  | Request  | `[]`                                       | `[get_message_filtering]`                                         |
+| `0x1A`  | Response | `[ <status>] <bytes>`                      | `[get_message_filtering <status>] <enabled>`                      |
+| `0x1B`  | Request  | `[]`                                       | `[get_use_ecu_id]`                                                |
+| `0x1B`  | Response | `[ <status>] <bytes>`                      | `[get_use_ecu_id <status>] <enabled>`                             |
+| `0x1C`  | Request  | `[]`                                       | `[get_use_session_id]`                                            |
+| `0x1C`  | Response | `[ <status>] <bytes>`                      | `[get_use_session_id <status>] <enabled>`                         |
+| `0x1D`  | Request  | `[]`                                       | `[get_use_timestamp]`                                             |
+| `0x1D`  | Response | `[ <status>] <bytes>`                      | `[get_use_timestamp <status>] <enabled>`                          |
+| `0x1E`  | Request  | `[]`                                       | `[get_use_extended_header]`                                       |
+| `0x1E`  | Response | `[ <status>] <bytes>`                      | `[get_use_extended_header <status>] <enabled>`                    |
 
 ## 4. Trace Lines
 

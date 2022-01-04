@@ -40,10 +40,21 @@
             m_RequestDecoders.Add(0x0A, new SetMessageFilteringRequestDecoder());
             m_RequestDecoders.Add(0x0B, new SetTimingPacketsRequestDecoder());
             m_RequestDecoders.Add(0x0C, new GetLocalTimeRequestDecoder());
+            m_RequestDecoders.Add(0x0D, new SetUseEcuIdRequestDecoder());
+            m_RequestDecoders.Add(0x0E, new SetUseSessionIdRequestDecoder());
+            m_RequestDecoders.Add(0x0F, new SetUseTimeStampRequestDecoder());
+            m_RequestDecoders.Add(0x10, new SetUseExtendedHeaderRequestDecoder());
             m_RequestDecoders.Add(0x11, new SetDefaultLogLevelRequestDecoder());
             m_RequestDecoders.Add(0x12, new SetDefaultTraceStatusRequestDecoder());
             m_RequestDecoders.Add(0x13, new GetSoftwareVersionRequestDecoder());
             m_RequestDecoders.Add(0x14, new MessageBufferOverflowRequestDecoder());
+            m_RequestDecoders.Add(0x15, new GetDefaultTraceStatusRequestDecoder());
+            m_RequestDecoders.Add(0x19, new GetVerboseModeStatusRequestDecoder());
+            m_RequestDecoders.Add(0x1A, new GetMessageFilteringStatusRequestDecoder());
+            m_RequestDecoders.Add(0x1B, new GetUseEcuIdRequestDecoder());
+            m_RequestDecoders.Add(0x1C, new GetUseSessionIdRequestDecoder());
+            m_RequestDecoders.Add(0x1D, new GetUseTimeStampRequestDecoder());
+            m_RequestDecoders.Add(0x1E, new GetUseExtendedHeaderRequestDecoder());
         }
 
         private void InitializeResponseDecoders()
@@ -58,10 +69,21 @@
             m_ResponseDecoders.Add(0x0A, new SetMessageFilteringResponseDecoder());
             m_ResponseDecoders.Add(0x0B, new SetTimingPacketsResponseDecoder());
             m_ResponseDecoders.Add(0x0C, new GetLocalTimeResponseDecoder());
+            m_ResponseDecoders.Add(0x0D, new SetUseEcuIdResponseDecoder());
+            m_ResponseDecoders.Add(0x0E, new SetUseSessionIdResponseDecoder());
+            m_ResponseDecoders.Add(0x0F, new SetUseTimeStampResponseDecoder());
+            m_ResponseDecoders.Add(0x10, new SetUseExtendedHeaderResponseDecoder());
             m_ResponseDecoders.Add(0x11, new SetDefaultLogLevelResponseDecoder());
             m_ResponseDecoders.Add(0x12, new SetDefaultTraceStatusResponseDecoder());
             m_ResponseDecoders.Add(0x13, new GetSoftwareVersionResponseDecoder());
             m_ResponseDecoders.Add(0x14, new MessageBufferOverflowResponseDecoder());
+            m_ResponseDecoders.Add(0x15, new GetDefaultTraceStatusResponseDecoder());
+            m_ResponseDecoders.Add(0x19, new GetVerboseModeStatusResponseDecoder());
+            m_ResponseDecoders.Add(0x1A, new GetMessageFilteringStatusResponseDecoder());
+            m_ResponseDecoders.Add(0x1B, new GetUseEcuIdResponseDecoder());
+            m_ResponseDecoders.Add(0x1C, new GetUseSessionIdResponseDecoder());
+            m_ResponseDecoders.Add(0x1D, new GetUseTimeStampResponseDecoder());
+            m_ResponseDecoders.Add(0x1E, new GetUseExtendedHeaderResponseDecoder());
         }
 
         /// <summary>
