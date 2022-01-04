@@ -14,7 +14,7 @@
 
         [TestCase(0x00, "[set_default_log_level] block_all")]
         [TestCase(0x01, "[set_default_log_level] fatal")]
-        [TestCase(0xFF, "[set_default_log_level] log_level=-1")]
+        [TestCase(0xFF, "[set_default_log_level] default")]
         public void DecodeRequestNoComId(byte logLevel, string result)
         {
             byte[] payload = new byte[] {
@@ -28,7 +28,7 @@
 
         [TestCase(0x00, "[set_default_log_level] block_all eth0")]
         [TestCase(0x01, "[set_default_log_level] fatal eth0")]
-        [TestCase(0xFF, "[set_default_log_level] log_level=-1 eth0")]
+        [TestCase(0xFF, "[set_default_log_level] default eth0")]
         public void DecodeRequest(byte logLevel, string result)
         {
             byte[] payload = new byte[] {
@@ -42,7 +42,7 @@
 
         [TestCase(0x00, "[set_default_log_level] block_all eth")]
         [TestCase(0x01, "[set_default_log_level] fatal eth")]
-        [TestCase(0xFF, "[set_default_log_level] log_level=-1 eth")]
+        [TestCase(0xFF, "[set_default_log_level] default eth")]
         public void DecodeRequest3Char(byte logLevel, string result)
         {
             byte[] payload = new byte[] {

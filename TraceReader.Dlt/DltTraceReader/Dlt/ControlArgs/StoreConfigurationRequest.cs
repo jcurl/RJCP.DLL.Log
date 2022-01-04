@@ -4,7 +4,7 @@
     /// Request to store the actual configuration of Dlt to NVRAM.
     /// </summary>
     /// <remarks>Based on the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification.</remarks>
-    public class StoreConfigurationRequest : ControlRequest
+    public sealed class StoreConfigurationRequest : ControlRequest
     {
         /// <summary>
         /// Gets the service identifier of the control message.

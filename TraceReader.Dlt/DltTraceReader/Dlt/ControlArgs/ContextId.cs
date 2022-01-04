@@ -15,7 +15,7 @@
     /// log level and trace status being set for the context ID it represents.
     /// </para>
     /// </remarks>
-    public class ContextId
+    public sealed class ContextId
     {
         /// <summary>
         /// The trace status is undefined.
@@ -38,55 +38,10 @@
         public const int StatusOn = 1;
 
         /// <summary>
-        /// The log level is undefined.
-        /// </summary>
-        public const int LogLevelUndefined = sbyte.MinValue;
-
-        /// <summary>
-        /// The log level is unspecified.
-        /// </summary>
-        public const int LogLevelUnspecified = -1;
-
-        /// <summary>
-        /// All messages are blocked.
-        /// </summary>
-        public const int LogLevelBlock = LogLevelRequestBase.LogLevelBlock;
-
-        /// <summary>
-        /// Fatal log level.
-        /// </summary>
-        public const int LogLevelFatal = LogLevelRequestBase.LogLevelFatal;
-
-        /// <summary>
-        /// Error log level.
-        /// </summary>
-        public const int LogLevelError = LogLevelRequestBase.LogLevelError;
-
-        /// <summary>
-        /// Warning log level.
-        /// </summary>
-        public const int LogLevelWarn = LogLevelRequestBase.LogLevelWarn;
-
-        /// <summary>
-        /// Info log level.
-        /// </summary>
-        public const int LogLevelInfo = LogLevelRequestBase.LogLevelInfo;
-
-        /// <summary>
-        /// Debug log level.
-        /// </summary>
-        public const int LogLevelDebug = LogLevelRequestBase.LogLevelDebug;
-
-        /// <summary>
-        /// Verbose log level.
-        /// </summary>
-        public const int LogLevelVerbose = LogLevelRequestBase.LogLevelVerbose;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ContextId"/> class.
         /// </summary>
         /// <param name="name">The name of the context.</param>
-        public ContextId(string name) : this(name, LogLevelBlock, StatusUndefined, string.Empty) { }
+        public ContextId(string name) : this(name, LogLevel.Block, StatusUndefined, string.Empty) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextId"/> class.
@@ -96,7 +51,7 @@
         /// <param name="traceStatus">
         /// The trace status of the context identified by the given <paramref name="name"/>.
         /// </param>
-        public ContextId(string name, int logLevel, int traceStatus) : this(name, logLevel, traceStatus, string.Empty) { }
+        public ContextId(string name, LogLevel logLevel, int traceStatus) : this(name, logLevel, traceStatus, string.Empty) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextId"/> class.
@@ -109,7 +64,7 @@
         /// <param name="description">
         /// The description of the context identified by the given <paramref name="name"/>.
         /// </param>
-        public ContextId(string name, int logLevel, int traceStatus, string description)
+        public ContextId(string name, LogLevel logLevel, int traceStatus, string description)
         {
             Name = name ?? string.Empty;
             LogLevel = logLevel;
@@ -135,29 +90,29 @@
         /// According to the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification, the possible log levels are:
         /// <list type="bullet">
         /// <item>
-        /// <term>DLT_LOG_FATAL ( <see cref="LogLevelFatal"/>)</term>
+        /// <term>DLT_LOG_FATAL ( <see cref="LogLevel.Fatal"/>)</term>
         /// <description>Fatal system errors, should be very rare.</description>
         /// </item>
         /// <item>
-        /// <term>DLT_LOG_ERROR ( <see cref="LogLevelError"/>)</term>
+        /// <term>DLT_LOG_ERROR ( <see cref="LogLevel.Error"/>)</term>
         /// <description>Errors occurring in a SW-C with impact to correct functionality.</description>
         /// </item>
         /// <item>
-        /// <term>DLT_LOG_WARN ( <see cref="LogLevelWarn"/>)</term>
+        /// <term>DLT_LOG_WARN ( <see cref="LogLevel.Warn"/>)</term>
         /// <description>Log messages where a incorrect behavior can not be ensured.</description>
         /// </item>
         /// <item>
-        /// <term>DLT_LOG_INFO ( <see cref="LogLevelInfo"/>)</term>
+        /// <term>DLT_LOG_INFO ( <see cref="LogLevel.Info"/>)</term>
         /// <description>
         /// Log messages providing information for better understanding the internal behavior of a software.
         /// </description>
         /// </item>
         /// <item>
-        /// <term>DLT_LOG_DEBUG ( <see cref="LogLevelDebug"/>)</term>
+        /// <term>DLT_LOG_DEBUG ( <see cref="LogLevel.Debug"/>)</term>
         /// <description>Should be used for messages which are only for debugging of a software usable.</description>
         /// </item>
         /// <item>
-        /// <term>DLT_LOG_VERBOSE ( <see cref="LogLevelVerbose"/>)</term>
+        /// <term>DLT_LOG_VERBOSE ( <see cref="LogLevel.Verbose"/>)</term>
         /// <description>
         /// Log messages with the highest communicative level, here all possible states, information and everything else
         /// can be logged.
@@ -165,7 +120,7 @@
         /// </item>
         /// </list>
         /// </remarks>
-        public int LogLevel { get; }
+        public LogLevel LogLevel { get; }
 
         /// <summary>
         /// Gets the trace status of this context ID.
@@ -218,10 +173,8 @@
             if (strBuilder == null) throw new ArgumentNullException(nameof(strBuilder));
 
             strBuilder.Append(Name);
-            if (LogLevel == LogLevelUnspecified) {
-                strBuilder.Append(" default");
-            } else if (LogLevel != LogLevelUndefined) {
-                strBuilder.Append(' ').Append(LogLevelRequestBase.LogLevelString(LogLevel));
+            if (LogLevel != LogLevel.Undefined) {
+                strBuilder.Append(' ').Append(LogLevel.GetDescription());
             }
 
             switch (TraceStatus) {

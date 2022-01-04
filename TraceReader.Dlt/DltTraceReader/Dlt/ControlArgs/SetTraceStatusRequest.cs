@@ -38,13 +38,7 @@
         /// </summary>
         /// <param name="appId">The application identifier.</param>
         /// <param name="contextId">The context identifier.</param>
-        /// <param name="logLevel">
-        /// The new log level which is expected to have a value of <see cref="LogLevelDefault"/>,
-        /// <see cref="LogLevelRequestBase.LogLevelBlock"/>, <see cref="LogLevelRequestBase.LogLevelFatal"/>,
-        /// <see cref="LogLevelRequestBase.LogLevelError"/>, <see cref="LogLevelRequestBase.LogLevelWarn"/>,
-        /// <see cref="LogLevelRequestBase.LogLevelInfo"/>, <see cref="LogLevelRequestBase.LogLevelDebug"/> or
-        /// <see cref="LogLevelRequestBase.LogLevelVerbose"/>.
-        /// </param>
+        /// <param name="logLevel">The new log level.</param>
         /// <param name="comInterface">The communication interface.</param>
         public SetTraceStatusRequest(string appId, string contextId, int logLevel, string comInterface)
         {

@@ -37,7 +37,7 @@
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x04_GetDefaultLogLevelResponse_{logLevel:x2}_{status:x2}", out IControlArg service);
 
             GetDefaultLogLevelResponse response = (GetDefaultLogLevelResponse)service;
-            Assert.That(response.LogLevel, Is.EqualTo(logLevel));
+            Assert.That(response.LogLevel, Is.EqualTo((LogLevel)logLevel));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

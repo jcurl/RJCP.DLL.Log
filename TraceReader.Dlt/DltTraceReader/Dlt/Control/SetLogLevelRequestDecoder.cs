@@ -26,7 +26,7 @@
             string appIdStr = appId == 0 ? string.Empty : IdHashList.Instance.ParseId(appId);
             string ctxIdStr = ctxId == 0 ? string.Empty : IdHashList.Instance.ParseId(ctxId);
             string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);
-            service = new SetLogLevelRequest(appIdStr, ctxIdStr, logLevel, comIdStr);
+            service = new SetLogLevelRequest(appIdStr, ctxIdStr, (LogLevel)logLevel, comIdStr);
             return 17;
         }
     }

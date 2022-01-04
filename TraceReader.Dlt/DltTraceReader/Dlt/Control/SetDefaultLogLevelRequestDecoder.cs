@@ -22,7 +22,7 @@
             int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);
 
             string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);
-            service = new SetDefaultLogLevelRequest(logLevel, comIdStr);
+            service = new SetDefaultLogLevelRequest((LogLevel)logLevel, comIdStr);
             return 9;
         }
     }

@@ -4,7 +4,7 @@
     /// Response to store the actual configuration of Dlt to NVRAM.
     /// </summary>
     /// <remarks>Based on the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification.</remarks>
-    public class StoreConfigurationResponse : ControlResponse
+    public sealed class StoreConfigurationResponse : ControlResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StoreConfigurationResponse"/> class.

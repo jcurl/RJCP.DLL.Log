@@ -1,5 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ControlArgs
 {
+    using ControlArgs;
+
     /// <summary>
     /// Response for the actual default log level.
     /// </summary>
@@ -11,7 +13,7 @@
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="logLevel">The log level.</param>
-        public GetDefaultLogLevelResponse(int status, int logLevel) : base(status)
+        public GetDefaultLogLevelResponse(int status, LogLevel logLevel) : base(status)
         {
             LogLevel = logLevel;
         }
@@ -26,7 +28,7 @@
         /// Gets the log level.
         /// </summary>
         /// <value>The log level.</value>
-        public int LogLevel { get; }
+        public LogLevel LogLevel { get; }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.
@@ -35,7 +37,7 @@
         public override string ToString()
         {
             return string.Format("[get_default_log_level {0}] {1}",
-                ToString(Status), LogLevelRequestBase.LogLevelString(LogLevel));
+                ToString(Status), LogLevelExtension.GetDescription(LogLevel));
         }
     }
 }

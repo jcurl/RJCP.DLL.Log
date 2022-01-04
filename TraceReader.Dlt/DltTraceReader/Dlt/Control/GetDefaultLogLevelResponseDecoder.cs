@@ -19,7 +19,7 @@
         {
             int status = buffer[4];
             int logLevel = buffer[5];
-            service = new GetDefaultLogLevelResponse(status, logLevel);
+            service = new GetDefaultLogLevelResponse(status, (LogLevel)logLevel);
             return 6;
         }
     }

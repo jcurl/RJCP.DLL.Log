@@ -4,7 +4,7 @@
     /// Response to set the configuration of DLT to factory defaults.
     /// </summary>
     /// <remarks>Based on the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification.</remarks>
-    public class ResetFactoryDefaultResponse : ControlResponse
+    public sealed class ResetFactoryDefaultResponse : ControlResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ResetFactoryDefaultResponse"/> class.

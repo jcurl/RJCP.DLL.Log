@@ -4,7 +4,7 @@
     /// Request to set the configuration of DLT to factory defaults.
     /// </summary>
     /// <remarks>Based on the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification.</remarks>
-    public class ResetFactoryDefaultRequest : ControlRequest
+    public sealed class ResetFactoryDefaultRequest : ControlRequest
     {
         /// <summary>
         /// Gets the service identifier of the control message.

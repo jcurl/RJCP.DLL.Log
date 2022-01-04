@@ -5,16 +5,16 @@
     [TestFixture]
     public class SetLogLevelTest
     {
-        [TestCase(SetLogLevelRequest.LogLevelDefault, "[set_log_level] default")]
-        [TestCase(SetLogLevelRequest.LogLevelBlock, "[set_log_level] block_all")]
-        [TestCase(SetLogLevelRequest.LogLevelFatal, "[set_log_level] fatal")]
-        [TestCase(SetLogLevelRequest.LogLevelError, "[set_log_level] error")]
-        [TestCase(SetLogLevelRequest.LogLevelWarn, "[set_log_level] warning")]
-        [TestCase(SetLogLevelRequest.LogLevelInfo, "[set_log_level] info")]
-        [TestCase(SetLogLevelRequest.LogLevelDebug, "[set_log_level] debug")]
-        [TestCase(SetLogLevelRequest.LogLevelVerbose, "[set_log_level] verbose")]
+        [TestCase(LogLevel.Default, "[set_log_level] default")]
+        [TestCase(LogLevel.Block, "[set_log_level] block_all")]
+        [TestCase(LogLevel.Fatal, "[set_log_level] fatal")]
+        [TestCase(LogLevel.Error, "[set_log_level] error")]
+        [TestCase(LogLevel.Warn, "[set_log_level] warning")]
+        [TestCase(LogLevel.Info, "[set_log_level] info")]
+        [TestCase(LogLevel.Debug, "[set_log_level] debug")]
+        [TestCase(LogLevel.Verbose, "[set_log_level] verbose")]
         [TestCase(100, "[set_log_level] log_level=100")]
-        public void SetLogLevelReqAllNull(int logLevel, string result)
+        public void SetLogLevelReqAllNull(LogLevel logLevel, string result)
         {
             SetLogLevelRequest arg = new SetLogLevelRequest(null, null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
@@ -26,16 +26,16 @@
             Assert.That(arg.LogLevel, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetLogLevelRequest.LogLevelDefault, "[set_log_level] default APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelBlock, "[set_log_level] block_all APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelFatal, "[set_log_level] fatal APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelError, "[set_log_level] error APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelWarn, "[set_log_level] warning APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelInfo, "[set_log_level] info APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelDebug, "[set_log_level] debug APP1 ()")]
-        [TestCase(SetLogLevelRequest.LogLevelVerbose, "[set_log_level] verbose APP1 ()")]
+        [TestCase(LogLevel.Default, "[set_log_level] default APP1 ()")]
+        [TestCase(LogLevel.Block, "[set_log_level] block_all APP1 ()")]
+        [TestCase(LogLevel.Fatal, "[set_log_level] fatal APP1 ()")]
+        [TestCase(LogLevel.Error, "[set_log_level] error APP1 ()")]
+        [TestCase(LogLevel.Warn, "[set_log_level] warning APP1 ()")]
+        [TestCase(LogLevel.Info, "[set_log_level] info APP1 ()")]
+        [TestCase(LogLevel.Debug, "[set_log_level] debug APP1 ()")]
+        [TestCase(LogLevel.Verbose, "[set_log_level] verbose APP1 ()")]
         [TestCase(100, "[set_log_level] log_level=100 APP1 ()")]
-        public void SetLogLevelReqAppId(int logLevel, string result)
+        public void SetLogLevelReqAppId(LogLevel logLevel, string result)
         {
             SetLogLevelRequest arg = new SetLogLevelRequest("APP1", null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
@@ -47,16 +47,16 @@
             Assert.That(arg.LogLevel, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetLogLevelRequest.LogLevelDefault, "[set_log_level] default")]
-        [TestCase(SetLogLevelRequest.LogLevelBlock, "[set_log_level] block_all")]
-        [TestCase(SetLogLevelRequest.LogLevelFatal, "[set_log_level] fatal")]
-        [TestCase(SetLogLevelRequest.LogLevelError, "[set_log_level] error")]
-        [TestCase(SetLogLevelRequest.LogLevelWarn, "[set_log_level] warning")]
-        [TestCase(SetLogLevelRequest.LogLevelInfo, "[set_log_level] info")]
-        [TestCase(SetLogLevelRequest.LogLevelDebug, "[set_log_level] debug")]
-        [TestCase(SetLogLevelRequest.LogLevelVerbose, "[set_log_level] verbose")]
+        [TestCase(LogLevel.Default, "[set_log_level] default")]
+        [TestCase(LogLevel.Block, "[set_log_level] block_all")]
+        [TestCase(LogLevel.Fatal, "[set_log_level] fatal")]
+        [TestCase(LogLevel.Error, "[set_log_level] error")]
+        [TestCase(LogLevel.Warn, "[set_log_level] warning")]
+        [TestCase(LogLevel.Info, "[set_log_level] info")]
+        [TestCase(LogLevel.Debug, "[set_log_level] debug")]
+        [TestCase(LogLevel.Verbose, "[set_log_level] verbose")]
         [TestCase(100, "[set_log_level] log_level=100")]
-        public void SetLogLevelReqAll(int logLevel, string result)
+        public void SetLogLevelReqAll(LogLevel logLevel, string result)
         {
             SetLogLevelRequest arg = new SetLogLevelRequest("", "", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
@@ -68,16 +68,16 @@
             Assert.That(arg.LogLevel, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetLogLevelRequest.LogLevelDefault, "[set_log_level] default APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelBlock, "[set_log_level] block_all APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelFatal, "[set_log_level] fatal APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelError, "[set_log_level] error APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelWarn, "[set_log_level] warning APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelInfo, "[set_log_level] info APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelDebug, "[set_log_level] debug APP1 (CTX1)")]
-        [TestCase(SetLogLevelRequest.LogLevelVerbose, "[set_log_level] verbose APP1 (CTX1)")]
+        [TestCase(LogLevel.Default, "[set_log_level] default APP1 (CTX1)")]
+        [TestCase(LogLevel.Block, "[set_log_level] block_all APP1 (CTX1)")]
+        [TestCase(LogLevel.Fatal, "[set_log_level] fatal APP1 (CTX1)")]
+        [TestCase(LogLevel.Error, "[set_log_level] error APP1 (CTX1)")]
+        [TestCase(LogLevel.Warn, "[set_log_level] warning APP1 (CTX1)")]
+        [TestCase(LogLevel.Info, "[set_log_level] info APP1 (CTX1)")]
+        [TestCase(LogLevel.Debug, "[set_log_level] debug APP1 (CTX1)")]
+        [TestCase(LogLevel.Verbose, "[set_log_level] verbose APP1 (CTX1)")]
         [TestCase(100, "[set_log_level] log_level=100 APP1 (CTX1)")]
-        public void SetLogLevelReq(int logLevel, string result)
+        public void SetLogLevelReq(LogLevel logLevel, string result)
         {
             SetLogLevelRequest arg = new SetLogLevelRequest("APP1", "CTX1", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
@@ -89,16 +89,16 @@
             Assert.That(arg.LogLevel, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetLogLevelRequest.LogLevelDefault, "[set_log_level] default APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelBlock, "[set_log_level] block_all APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelFatal, "[set_log_level] fatal APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelError, "[set_log_level] error APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelWarn, "[set_log_level] warning APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelInfo, "[set_log_level] info APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelDebug, "[set_log_level] debug APP1 (CTX1) SERB")]
-        [TestCase(SetLogLevelRequest.LogLevelVerbose, "[set_log_level] verbose APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Default, "[set_log_level] default APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Block, "[set_log_level] block_all APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Fatal, "[set_log_level] fatal APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Error, "[set_log_level] error APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Warn, "[set_log_level] warning APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Info, "[set_log_level] info APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Debug, "[set_log_level] debug APP1 (CTX1) SERB")]
+        [TestCase(LogLevel.Verbose, "[set_log_level] verbose APP1 (CTX1) SERB")]
         [TestCase(100, "[set_log_level] log_level=100 APP1 (CTX1) SERB")]
-        public void SetLogLevelReqComIntf(int logLevel, string result)
+        public void SetLogLevelReqComIntf(LogLevel logLevel, string result)
         {
             SetLogLevelRequest arg = new SetLogLevelRequest("APP1", "CTX1", logLevel, "SERB");
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));

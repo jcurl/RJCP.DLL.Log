@@ -177,19 +177,19 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUndefined));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Undefined));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusUndefined));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusNoLogNoTrace));
         }
 
-        [TestCase(ContextId.LogLevelBlock, "[get_log_info 4] APP1 (CTX1 block_all); eth0")]
-        [TestCase(ContextId.LogLevelFatal, "[get_log_info 4] APP1 (CTX1 fatal); eth0")]
-        [TestCase(ContextId.LogLevelError, "[get_log_info 4] APP1 (CTX1 error); eth0")]
-        [TestCase(ContextId.LogLevelWarn, "[get_log_info 4] APP1 (CTX1 warning); eth0")]
-        [TestCase(ContextId.LogLevelInfo, "[get_log_info 4] APP1 (CTX1 info); eth0")]
-        [TestCase(ContextId.LogLevelVerbose, "[get_log_info 4] APP1 (CTX1 verbose); eth0")]
-        [TestCase(ContextId.LogLevelDebug, "[get_log_info 4] APP1 (CTX1 debug); eth0")]
+        [TestCase(0x00, "[get_log_info 4] APP1 (CTX1 block_all); eth0")]
+        [TestCase(0x01, "[get_log_info 4] APP1 (CTX1 fatal); eth0")]
+        [TestCase(0x02, "[get_log_info 4] APP1 (CTX1 error); eth0")]
+        [TestCase(0x03, "[get_log_info 4] APP1 (CTX1 warning); eth0")]
+        [TestCase(0x04, "[get_log_info 4] APP1 (CTX1 info); eth0")]
+        [TestCase(0x05, "[get_log_info 4] APP1 (CTX1 debug); eth0")]
+        [TestCase(0x06, "[get_log_info 4] APP1 (CTX1 verbose); eth0")]
         [TestCase(0xFF, "[get_log_info 4] APP1 (CTX1 default); eth0")]
         public void DecodeResponseLevelNoTrace_4(byte logLevel, string result)
         {
@@ -208,7 +208,7 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((sbyte)logLevel));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)((sbyte)logLevel)));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusUndefined));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusWithLogNoTrace));
@@ -234,26 +234,26 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUndefined));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Undefined));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo((sbyte)traceStatus));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusNoLogWithTrace));
         }
 
-        [TestCase(ContextId.LogLevelBlock, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 block_all off); eth0")]
-        [TestCase(ContextId.LogLevelFatal, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 fatal off); eth0")]
-        [TestCase(ContextId.LogLevelError, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 error off); eth0")]
-        [TestCase(ContextId.LogLevelWarn, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 warning off); eth0")]
-        [TestCase(ContextId.LogLevelInfo, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 info off); eth0")]
-        [TestCase(ContextId.LogLevelVerbose, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 verbose off); eth0")]
-        [TestCase(ContextId.LogLevelDebug, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 debug off); eth0")]
-        [TestCase(ContextId.LogLevelBlock, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 block_all on); eth0")]
-        [TestCase(ContextId.LogLevelFatal, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 fatal on); eth0")]
-        [TestCase(ContextId.LogLevelError, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 error on); eth0")]
-        [TestCase(ContextId.LogLevelWarn, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 warning on); eth0")]
-        [TestCase(ContextId.LogLevelInfo, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 info on); eth0")]
-        [TestCase(ContextId.LogLevelVerbose, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 verbose on); eth0")]
-        [TestCase(ContextId.LogLevelDebug, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 debug on); eth0")]
+        [TestCase(0x00, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 block_all off); eth0")]
+        [TestCase(0x01, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 fatal off); eth0")]
+        [TestCase(0x02, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 error off); eth0")]
+        [TestCase(0x03, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 warning off); eth0")]
+        [TestCase(0x04, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 info off); eth0")]
+        [TestCase(0x05, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 debug off); eth0")]
+        [TestCase(0x06, ContextId.StatusOff, "[get_log_info 6] APP1 (CTX1 verbose off); eth0")]
+        [TestCase(0x00, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 block_all on); eth0")]
+        [TestCase(0x01, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 fatal on); eth0")]
+        [TestCase(0x02, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 error on); eth0")]
+        [TestCase(0x03, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 warning on); eth0")]
+        [TestCase(0x04, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 info on); eth0")]
+        [TestCase(0x05, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 debug on); eth0")]
+        [TestCase(0x06, ContextId.StatusOn, "[get_log_info 6] APP1 (CTX1 verbose on); eth0")]
         [TestCase(0xFF, 0xFE, "[get_log_info 6] APP1 (CTX1 default -2); eth0")]
         public void DecodeResponseLevelTrace_6(byte logLevel, byte traceStatus, string result)
         {
@@ -272,7 +272,7 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((sbyte)logLevel));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)((sbyte)logLevel)));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo((sbyte)traceStatus));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusWithLogWithTrace));
@@ -298,7 +298,7 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo("stdin adaptor context"));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
@@ -370,45 +370,45 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(3));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo("Test1"));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[0].ContextIds[1].Name, Is.EqualTo("CTX2"));
             Assert.That(response.AppIds[0].ContextIds[1].Description, Is.EqualTo("Test2"));
-            Assert.That(response.AppIds[0].ContextIds[1].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[0].ContextIds[1].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[0].ContextIds[1].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[0].ContextIds[2].Name, Is.EqualTo("CTX3"));
             Assert.That(response.AppIds[0].ContextIds[2].Description, Is.EqualTo("Test3"));
-            Assert.That(response.AppIds[0].ContextIds[2].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[0].ContextIds[2].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[0].ContextIds[2].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[1].Name, Is.EqualTo("APP2"));
             Assert.That(response.AppIds[1].Description, Is.EqualTo("ADesc2"));
             Assert.That(response.AppIds[1].ContextIds.Count, Is.EqualTo(2));
             Assert.That(response.AppIds[1].ContextIds[0].Name, Is.EqualTo("CTX4"));
             Assert.That(response.AppIds[1].ContextIds[0].Description, Is.EqualTo("Test4"));
-            Assert.That(response.AppIds[1].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[1].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[1].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[1].ContextIds[1].Name, Is.EqualTo("CTX5"));
             Assert.That(response.AppIds[1].ContextIds[1].Description, Is.EqualTo("Test5"));
-            Assert.That(response.AppIds[1].ContextIds[1].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[1].ContextIds[1].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[1].ContextIds[1].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[2].Name, Is.EqualTo("APP3"));
             Assert.That(response.AppIds[2].Description, Is.EqualTo("ADesc3"));
             Assert.That(response.AppIds[2].ContextIds.Count, Is.EqualTo(4));
             Assert.That(response.AppIds[2].ContextIds[0].Name, Is.EqualTo("CTX6"));
             Assert.That(response.AppIds[2].ContextIds[0].Description, Is.EqualTo("Test6"));
-            Assert.That(response.AppIds[2].ContextIds[0].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[2].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[2].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[2].ContextIds[1].Name, Is.EqualTo("CTX7"));
             Assert.That(response.AppIds[2].ContextIds[1].Description, Is.EqualTo("Test7"));
-            Assert.That(response.AppIds[2].ContextIds[1].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[2].ContextIds[1].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[2].ContextIds[1].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[2].ContextIds[2].Name, Is.EqualTo("CTX8"));
             Assert.That(response.AppIds[2].ContextIds[2].Description, Is.EqualTo("Test8"));
-            Assert.That(response.AppIds[2].ContextIds[2].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[2].ContextIds[2].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[2].ContextIds[2].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[2].ContextIds[3].Name, Is.EqualTo("CTX9"));
             Assert.That(response.AppIds[2].ContextIds[3].Description, Is.EqualTo("Test9"));
-            Assert.That(response.AppIds[2].ContextIds[3].LogLevel, Is.EqualTo(ContextId.LogLevelUnspecified));
+            Assert.That(response.AppIds[2].ContextIds[3].LogLevel, Is.EqualTo(LogLevel.Default));
             Assert.That(response.AppIds[2].ContextIds[3].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));

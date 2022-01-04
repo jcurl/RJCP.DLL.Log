@@ -194,7 +194,7 @@
         {
             GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
             AppId app1 = new AppId("APP1", "Application");
-            app1.ContextIds.Add(new ContextId("CTX1", ContextId.LogLevelInfo, traceStatus, "Context"));
+            app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, traceStatus, "Context"));
             arg.AppIds.Add(app1);
 
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
@@ -211,8 +211,8 @@
         {
             GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
             AppId app1 = new AppId("APP1", "Application");
-            app1.ContextIds.Add(new ContextId("CTX1", ContextId.LogLevelInfo, ContextId.StatusOn, "Context"));
-            app1.ContextIds.Add(new ContextId("CTX2", ContextId.LogLevelFatal, ContextId.StatusOn, "Context2"));
+            app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
+            app1.ContextIds.Add(new ContextId("CTX2", LogLevel.Fatal, ContextId.StatusOn, "Context2"));
             arg.AppIds.Add(app1);
 
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
@@ -229,10 +229,10 @@
         {
             GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
             AppId app1 = new AppId("APP1", "Application");
-            app1.ContextIds.Add(new ContextId("CTX1", ContextId.LogLevelInfo, ContextId.StatusOn, "Context"));
+            app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
             arg.AppIds.Add(app1);
             AppId app2 = new AppId("APP2", "Application 2");
-            app2.ContextIds.Add(new ContextId("VSIP", ContextId.LogLevelInfo, ContextId.StatusOn, "Context"));
+            app2.ContextIds.Add(new ContextId("VSIP", LogLevel.Info, ContextId.StatusOn, "Context"));
             arg.AppIds.Add(app2);
 
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
@@ -250,12 +250,12 @@
         {
             GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
             AppId app1 = new AppId("APP1", "Application");
-            app1.ContextIds.Add(new ContextId("CTX1", ContextId.LogLevelInfo, ContextId.StatusOn, "Context"));
-            app1.ContextIds.Add(new ContextId("CTX2", ContextId.LogLevelFatal, ContextId.StatusOn, "Context2"));
+            app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
+            app1.ContextIds.Add(new ContextId("CTX2", LogLevel.Fatal, ContextId.StatusOn, "Context2"));
             arg.AppIds.Add(app1);
             AppId app2 = new AppId("APP2", "Application 2");
-            app2.ContextIds.Add(new ContextId("CTX3", ContextId.LogLevelInfo, ContextId.StatusOff, "Context3"));
-            app2.ContextIds.Add(new ContextId("CTX4", ContextId.LogLevelFatal, ContextId.StatusOn, "Context4"));
+            app2.ContextIds.Add(new ContextId("CTX3", LogLevel.Info, ContextId.StatusOff, "Context3"));
+            app2.ContextIds.Add(new ContextId("CTX4", LogLevel.Fatal, ContextId.StatusOn, "Context4"));
             arg.AppIds.Add(app2);
 
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));

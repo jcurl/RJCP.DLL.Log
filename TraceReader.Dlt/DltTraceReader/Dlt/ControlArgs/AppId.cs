@@ -16,7 +16,7 @@
     /// the associated context IDs.
     /// </para>
     /// </remarks>
-    public class AppId
+    public sealed class AppId
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AppId"/> class.

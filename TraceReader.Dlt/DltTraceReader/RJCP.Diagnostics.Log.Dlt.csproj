@@ -89,7 +89,8 @@
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionRequest.cs" />
     <Compile Include="Dlt\ControlArgs\GetSoftwareVersionResponse.cs" />
     <Compile Include="Dlt\ControlArgs\IControlArg.cs" />
-    <Compile Include="Dlt\ControlArgs\LogLevelRequestBase.cs" />
+    <Compile Include="Dlt\ControlArgs\LogLevel.cs" />
+    <Compile Include="Dlt\ControlArgs\LogLevelExtension.cs" />
     <Compile Include="Dlt\ControlArgs\GetLocalTimeRequest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowRequest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowResponse.cs" />

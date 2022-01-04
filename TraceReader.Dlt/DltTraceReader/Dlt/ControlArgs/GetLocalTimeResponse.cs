@@ -4,7 +4,7 @@
     /// Response to get a single packet with timestamp (TMSP).
     /// </summary>
     /// <remarks>Based on the Diagnostic Log and Trace AUTOSAR Release 4.2.2 specification.</remarks>
-    public class GetLocalTimeResponse : ControlResponse
+    public sealed class GetLocalTimeResponse : ControlResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GetLocalTimeResponse"/> class.
