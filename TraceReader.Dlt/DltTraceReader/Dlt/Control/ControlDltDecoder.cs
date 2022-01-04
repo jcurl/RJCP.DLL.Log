@@ -86,6 +86,10 @@
             m_ResponseDecoders.Add(0x1D, new GetUseTimeStampResponseDecoder());
             m_ResponseDecoders.Add(0x1E, new GetUseExtendedHeaderResponseDecoder());
             m_ResponseDecoders.Add(0x1F, new GetTraceStatusResponseDecoder());
+            m_ResponseDecoders.Add(0xF01, new CustomUnregisterContextResponseDecoder());
+            m_ResponseDecoders.Add(0xF02, new CustomConnectionInfoResponseDecoder());
+            m_ResponseDecoders.Add(0xF03, new CustomTimeZoneResponseDecoder());
+            m_ResponseDecoders.Add(0xF04, new CustomMarkerResponseDecoder());
         }
 
         /// <summary>

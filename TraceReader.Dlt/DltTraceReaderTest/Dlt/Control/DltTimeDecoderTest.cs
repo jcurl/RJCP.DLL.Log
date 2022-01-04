@@ -5,7 +5,7 @@
     using NUnit.Framework;
 
     [TestFixture(DecoderType.Line)]
-    public class DltTimeMarkerDecoderTest : ControlDecoderTestBase<IControlArgDecoder, IControlArgDecoder>
+    public class DltTimeMarkerDecoderTest : ControlDecoderTestBase<NoDecoder, NoDecoder>
     {
         public DltTimeMarkerDecoderTest(DecoderType decoderType)
             : base(decoderType, -1, null, typeof(DltTimeMarker))

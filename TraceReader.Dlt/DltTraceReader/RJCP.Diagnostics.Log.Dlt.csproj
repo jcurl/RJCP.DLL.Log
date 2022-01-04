@@ -82,6 +82,10 @@
     <Compile Include="Dlt\ControlArgs\ContextId.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomConnectionInfoResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomMarkerResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomTimeZoneResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomUnregisterContextResponse.cs" />
     <Compile Include="Dlt\ControlArgs\DltTimeMarker.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelRequest.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelResponse.cs" />
@@ -139,6 +143,10 @@
     <Compile Include="Dlt\ControlArgs\StoreConfigurationRequest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationResponse.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
+    <Compile Include="Dlt\Control\CustomConnectionInfoResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\CustomMarkerResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\CustomTimeZoneResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\CustomUnregisterContextResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelRequestDecoder.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelResponseDecoder.cs" />
     <Compile Include="Dlt\Control\GetTraceStatusRequestDecoder.cs" />

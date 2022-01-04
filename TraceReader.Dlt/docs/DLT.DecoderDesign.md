@@ -341,17 +341,17 @@ A summary of the verbose argument is given in the following diagram:
 
 A summary of the bits, as copied from the AutoSAR PRS
 
-| Variable Type | TYLE  | VARI  | FIXP  | SCOD  |
-| ------------- | :---: | :---: | :---: | :---: |
-| BOOL          |   X   |   O   |       |       |
-| SINT          |   X   |   O   |   O   |       |
-| UINT          |   X   |   O   |   O   |       |
-| FLOA          |   X   |   O   |       |       |
-| ARAY          |       |   O   |       |       |
-| STRG          |       |   O   |       |   X   |
-| RAWD          |       |   O   |       |       |
-| TRAI          |       |       |       |   X   |
-| STRU          |       |   O   |       |       |
+| Variable Type | TYLE | VARI | FIXP | SCOD |
+| ------------- | :--: | :--: | :--: | :--: |
+| BOOL          |  X   |  O   |      |      |
+| SINT          |  X   |  O   |  O   |      |
+| UINT          |  X   |  O   |  O   |      |
+| FLOA          |  X   |  O   |      |      |
+| ARAY          |      |  O   |      |      |
+| STRG          |      |  O   |      |  X   |
+| RAWD          |      |  O   |      |      |
+| TRAI          |      |      |      |  X   |
+| STRU          |      |  O   |      |      |
 
 * `X` - Mandatory to set
 * `O` - Optional to set
@@ -627,17 +627,18 @@ The following are not listed in the current standard, or marked as deprecated:
 The following are observed implementations that are implemented in Genivi DLT,
 but not documented in the AutoSAR PRS.
 
-| Service Id | Name               | Request | Response | Standard |
-| ---------- | ------------------ | ------- | -------- | -------- |
-| `0xF01`    | Unregister Context |         |          | N/A      |
-| `0xF02`    | Connection Info    |         |          | N/A      |
-| `0xF04`    | Marker             |         |          | N/A      |
-
 * ¹: This is made obsolete in PRS 1.3.0 and later
 * ²: Was renamed in later version of the standard, but the message structure
   remains the same.
 * ³: This will not be implemented - software will need to provide their own
   decoder.All DLT trace lines are derived from the `DltTraceLineBase`.
+
+| Service Id | Name               | Request | Response |
+| ---------- | ------------------ | :-----: | :------: |
+| `0xF01`    | Unregister Context |   N/A   |    X     |
+| `0xF02`    | Connection Info    |   N/A   |    X     |
+| `0xF03`    | TimeZone Info      |   N/A   |    X     |
+| `0xF04`    | Marker             |   N/A   |    X     |
 
 #### 3.3.1. Variations to DLT Viewer 2.19.0 STABLE
 
@@ -678,6 +679,9 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x1E`  | Response | `[ <status>] <bytes>`                      | `[get_use_extended_header <status>] <enabled>`                    |
 | `0x1F`  | Request  | `[]`                                       | `[get_trace_status]`                                              |
 | `0x1F`  | Response | `[ <status>] <bytes>`                      | `[get_trace_status <status>] <enabled>`                           |
+| `0xF01` | Response | `[unregister_context <status>] <bytes>`    | `[unregister_context <status>] APP1 (CTX1) COM1`                  |
+| `0xF02` | Response | `[connection_info <status>] <bytes>`       | `[connection_info <status>] <state> COM1`                         |
+| `0xF03` | Response | `[timezone <status>] <bytes>`              | `[timezone <status>] TZ <DST>`                                    |
 
 ## 4. Trace Lines
 

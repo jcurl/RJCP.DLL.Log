@@ -72,8 +72,12 @@
     <Compile Include="Dlt\Args\StringDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnknownVerboseDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomConnectionInfoTest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomControlResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomMarkerTest.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomTimeZoneTest.cs" />
+    <Compile Include="Dlt\ControlArgs\CustomUnregisterContextTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetMessageFilteringStatusTest.cs" />
@@ -101,8 +105,12 @@
     <Compile Include="Dlt\ControlArgs\SetVerboseModeTest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
+    <Compile Include="Dlt\Control\CustomMarkerDecoderTest.cs" />
+    <Compile Include="Dlt\Control\CustomTimeZoneDecoderTest.cs" />
+    <Compile Include="Dlt\Control\CustomConnectionInfoDecoderTest.cs" />
     <Compile Include="Dlt\Control\DltTimeDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetDefaultLogLevelDecoderTest.cs" />
+    <Compile Include="Dlt\Control\CustomUnregisterContextDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseExtendedHeaderDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetUseTimeStampDecoderTest.cs" />
@@ -115,6 +123,7 @@
     <Compile Include="Dlt\Control\GetDefaultTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\MessageBufferOverflowDecoderTest.cs" />
     <Compile Include="Dlt\Control\GetLocalTimeDecoderTest.cs" />
+    <Compile Include="Dlt\Control\NoDecoder.cs" />
     <Compile Include="Dlt\Control\SetDefaultLogLevelDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetDefaultTraceStatusDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetLogLevelDecoderTest.cs" />
