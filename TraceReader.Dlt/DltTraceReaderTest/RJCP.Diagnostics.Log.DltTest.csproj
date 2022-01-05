@@ -91,6 +91,7 @@
     <Compile Include="Dlt\ControlArgs\GetDefaultTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\MessageBufferOverflowTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetLocalTimeTest.cs" />
+    <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultLogLevelTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetDefaultTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetLogLevelTest.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Dlt\ControlArgs\SetUseEcuIdTest.cs" />
     <Compile Include="Dlt\ControlArgs\SetVerboseModeTest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationTest.cs" />
+    <Compile Include="Dlt\Control\BufferOverflowNotificationDecoderTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
     <Compile Include="Dlt\Control\CustomMarkerDecoderTest.cs" />
     <Compile Include="Dlt\Control\CustomTimeZoneDecoderTest.cs" />

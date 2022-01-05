@@ -341,17 +341,17 @@ A summary of the verbose argument is given in the following diagram:
 
 A summary of the bits, as copied from the AutoSAR PRS
 
-| Variable Type | TYLE | VARI | FIXP | SCOD |
-| ------------- | :--: | :--: | :--: | :--: |
-| BOOL          |  X   |  O   |      |      |
-| SINT          |  X   |  O   |  O   |      |
-| UINT          |  X   |  O   |  O   |      |
-| FLOA          |  X   |  O   |      |      |
-| ARAY          |      |  O   |      |      |
-| STRG          |      |  O   |      |  X   |
-| RAWD          |      |  O   |      |      |
-| TRAI          |      |      |      |  X   |
-| STRU          |      |  O   |      |      |
+| Variable Type | TYLE  | VARI  | FIXP  | SCOD  |
+| ------------- | :---: | :---: | :---: | :---: |
+| BOOL          |   X   |   O   |       |       |
+| SINT          |   X   |   O   |   O   |       |
+| UINT          |   X   |   O   |   O   |       |
+| FLOA          |   X   |   O   |       |       |
+| ARAY          |       |   O   |       |       |
+| STRG          |       |   O   |       |   X   |
+| RAWD          |       |   O   |       |       |
+| TRAI          |       |       |       |   X   |
+| STRU          |       |   O   |       |       |
 
 * `X` - Mandatory to set
 * `O` - Optional to set
@@ -597,7 +597,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
 | `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0 |
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0 |
-| `0x23`                | BufferOverflowNotification |   N/A   |          | PRS 1.4.0 |
+| `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0 |
 | `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          |    -    |    -     | PRS 1.4.0 |
 
 The following are not listed in the current standard, or marked as deprecated:
@@ -679,6 +679,8 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x1E`  | Response | `[ <status>] <bytes>`                      | `[get_use_extended_header <status>] <enabled>`                    |
 | `0x1F`  | Request  | `[]`                                       | `[get_trace_status]`                                              |
 | `0x1F`  | Response | `[ <status>] <bytes>`                      | `[get_trace_status <status>] <enabled>`                           |
+| `0x23`  | Request  | `[]`                                       | `[buffer_overflow]`                                               |
+| `0x23`  | Response | `[ <status>] <bytes>`                      | `[buffer_overflow <status>] <enabled>`                            |
 | `0xF01` | Response | `[unregister_context <status>] <bytes>`    | `[unregister_context <status>] APP1 (CTX1) COM1`                  |
 | `0xF02` | Response | `[connection_info <status>] <bytes>`       | `[connection_info <status>] <state> COM1`                         |
 | `0xF03` | Response | `[timezone <status>] <bytes>`              | `[timezone <status>] TZ <DST>`                                    |

@@ -79,6 +79,8 @@
     <Compile Include="Dlt\Args\UnknownVerboseDltArg.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArg.cs" />
     <Compile Include="Dlt\ControlArgs\AppId.cs" />
+    <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ContextId.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
@@ -142,6 +144,8 @@
     <Compile Include="Dlt\ControlArgs\SetVerboseModeResponse.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationRequest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationResponse.cs" />
+    <Compile Include="Dlt\Control\BufferOverflowNotificationRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\BufferOverflowNotificationResponseDecoder.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\CustomConnectionInfoResponseDecoder.cs" />
     <Compile Include="Dlt\Control\CustomMarkerResponseDecoder.cs" />
