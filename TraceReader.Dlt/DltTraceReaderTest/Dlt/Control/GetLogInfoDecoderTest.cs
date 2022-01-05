@@ -208,7 +208,7 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)((sbyte)logLevel)));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)unchecked((sbyte)logLevel)));
             Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(ContextId.StatusUndefined));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusWithLogNoTrace));
@@ -235,7 +235,7 @@
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Undefined));
-            Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo((sbyte)traceStatus));
+            Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(unchecked((sbyte)traceStatus)));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusNoLogWithTrace));
         }
@@ -272,8 +272,8 @@
             Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)((sbyte)logLevel)));
-            Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo((sbyte)traceStatus));
+            Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)unchecked((sbyte)logLevel)));
+            Assert.That(response.AppIds[0].ContextIds[0].TraceStatus, Is.EqualTo(unchecked((sbyte)traceStatus)));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusWithLogWithTrace));
         }

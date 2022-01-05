@@ -18,7 +18,7 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public int Decode(int serviceId, ReadOnlySpan<byte> buffer, out IControlArg service)
         {
-            int logLevel = (sbyte)buffer[4];
+            int logLevel = unchecked((sbyte)buffer[4]);
             int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);
 
             string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);

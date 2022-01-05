@@ -20,7 +20,7 @@
         {
             int appId = BitOperations.To32ShiftBigEndian(buffer[4..8]);
             int ctxId = BitOperations.To32ShiftBigEndian(buffer[8..12]);
-            int logLevel = (sbyte)buffer[12];
+            int logLevel = unchecked((sbyte)buffer[12]);
             int comId = BitOperations.To32ShiftBigEndian(buffer[13..17]);
 
             string appIdStr = appId == 0 ? string.Empty : IdHashList.Instance.ParseId(appId);

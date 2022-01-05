@@ -24,7 +24,7 @@
             Decode(DltType.CONTROL_REQUEST, payload, $"0x02_SetTraceStatusRequest_NoComId_{logLevel:x2}", out IControlArg service);
 
             SetTraceStatusRequest request = (SetTraceStatusRequest)service;
-            Assert.That(request.TraceStatus, Is.EqualTo((sbyte)logLevel));
+            Assert.That(request.TraceStatus, Is.EqualTo(unchecked((sbyte)logLevel)));
             Assert.That(request.ToString(), Is.EqualTo(result));
         }
 
@@ -40,7 +40,7 @@
             Decode(DltType.CONTROL_REQUEST, payload, $"0x02_SetTraceStatusRequest_{logLevel:x2}", out IControlArg service);
 
             SetTraceStatusRequest request = (SetTraceStatusRequest)service;
-            Assert.That(request.TraceStatus, Is.EqualTo((sbyte)logLevel));
+            Assert.That(request.TraceStatus, Is.EqualTo(unchecked((sbyte)logLevel)));
             Assert.That(request.ToString(), Is.EqualTo(result));
         }
 
@@ -56,7 +56,7 @@
             Decode(DltType.CONTROL_REQUEST, payload, $"0x02_SetTraceStatusRequest_ComIdOnly_{logLevel:x2}", out IControlArg service);
 
             SetTraceStatusRequest request = (SetTraceStatusRequest)service;
-            Assert.That(request.TraceStatus, Is.EqualTo((sbyte)logLevel));
+            Assert.That(request.TraceStatus, Is.EqualTo(unchecked((sbyte)logLevel)));
             Assert.That(request.ToString(), Is.EqualTo(result));
         }
 
@@ -72,7 +72,7 @@
             Decode(DltType.CONTROL_REQUEST, payload, $"0x02_SetTraceStatusRequest_3Char_{logLevel:x2}", out IControlArg service);
 
             SetTraceStatusRequest request = (SetTraceStatusRequest)service;
-            Assert.That(request.TraceStatus, Is.EqualTo((sbyte)logLevel));
+            Assert.That(request.TraceStatus, Is.EqualTo(unchecked((sbyte)logLevel)));
             Assert.That(request.ToString(), Is.EqualTo(result));
         }
 
@@ -88,7 +88,7 @@
             Decode(DltType.CONTROL_REQUEST, payload, $"0x02_SetTraceStatusRequest_NoAppId_{logLevel:x2}", out IControlArg service);
 
             SetTraceStatusRequest request = (SetTraceStatusRequest)service;
-            Assert.That(request.TraceStatus, Is.EqualTo((sbyte)logLevel));
+            Assert.That(request.TraceStatus, Is.EqualTo(unchecked((sbyte)logLevel)));
             Assert.That(request.ToString(), Is.EqualTo(result));
         }
 

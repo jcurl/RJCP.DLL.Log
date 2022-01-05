@@ -101,23 +101,28 @@
                 ctxId = new ContextId(ctxIdName, LogLevel.Undefined, ContextId.StatusUndefined);
                 return 4;
             case GetLogInfoResponse.StatusWithLogNoTrace:
-                ctxId = new ContextId(ctxIdName, (LogLevel)(sbyte)buffer[4], ContextId.StatusUndefined);
+                ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), ContextId.StatusUndefined);
                 return 5;
             case GetLogInfoResponse.StatusNoLogWithTrace:
-                ctxId = new ContextId(ctxIdName, LogLevel.Undefined, (sbyte)buffer[4]);
+                ctxId = new ContextId(ctxIdName, LogLevel.Undefined, unchecked((sbyte)buffer[4]));
                 return 5;
             case GetLogInfoResponse.StatusWithLogWithTrace:
-                ctxId = new ContextId(ctxIdName, (LogLevel)(sbyte)buffer[4], (sbyte)buffer[5]);
+                ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]));
                 return 6;
             case GetLogInfoResponse.StatusFullInfo:
                 int ctxIdLen = BitOperations.To16ShiftLittleEndian(buffer[6..]);
                 string description = GetDescription(buffer[8..(8 + ctxIdLen)]);
-                ctxId = new ContextId(ctxIdName, (LogLevel)(sbyte)buffer[4], (sbyte)buffer[5], description);
+                ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]), description);
                 return 8 + ctxIdLen;
             default:
                 string msg = string.Format("Unrecognized status value {0}", status);
                 throw new InvalidOperationException(msg);
             }
+        }
+
+        private static LogLevel GetLogLevel(byte value)
+        {
+            return (LogLevel)unchecked((sbyte)value);
         }
 
         private readonly Decoder m_Utf8Decoder = Encoding.UTF8.GetDecoder();

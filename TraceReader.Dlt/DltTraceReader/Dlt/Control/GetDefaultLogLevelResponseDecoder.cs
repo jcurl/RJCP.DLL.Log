@@ -18,7 +18,7 @@
         public int Decode(int serviceId, ReadOnlySpan<byte> buffer, out IControlArg service)
         {
             int status = buffer[4];
-            int logLevel = buffer[5];
+            int logLevel = unchecked((sbyte)buffer[5]);
             service = new GetDefaultLogLevelResponse(status, (LogLevel)logLevel);
             return 6;
         }
