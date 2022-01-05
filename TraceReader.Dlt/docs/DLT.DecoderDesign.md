@@ -644,7 +644,7 @@ but not documented in the AutoSAR PRS.
 
 This section highlights some of the output differences between the request and
 response objects implemented by this library compared to the Genivi DLT Viewer
-2.19.0, 19th August 2019.
+2.21.3, 15th December 2021 (commit a3c77c3d9bd7523d8dc4f6401109d29f973b01ba).
 
 | Service | Type     | Genivi DLT-Viewer                          | TraceReader.DLT                                                   |
 | ------- | -------- | ------------------------------------------ | ----------------------------------------------------------------- |
@@ -684,8 +684,8 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x24`  | Request  | `[]`                                       | `[sync_timestamp]`                                                |
 | `0x24`  | Response | `[ <status>] <bytes>`                      | `[sync_timestamp <status>] <timestamp>`                           |
 | `0xF01` | Response | `[unregister_context <status>] <bytes>`    | `[unregister_context <status>] APP1 (CTX1) COM1`                  |
-| `0xF02` | Response | `[connection_info <status>] <bytes>`       | `[connection_info <status>] <state> COM1`                         |
-| `0xF03` | Response | `[timezone <status>] <bytes>`              | `[timezone <status>] TZ <DST>`                                    |
+| `0xF02` | Response | `[connection_info <status>] <state> COM1`  | `[connection_info <status>] <state> COM1`                         |
+| `0xF03` | Response | `[timezone <status>] <seconds> s <DST>`    | `[timezone <status>] TZ <DST>`                                    |
 
 ### 3.4. Extending the Control Decoders
 
