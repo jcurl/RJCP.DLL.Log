@@ -599,7 +599,7 @@ The following Service Identifiers are defined (`X` is for implemented):
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0  |
 | `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0  |
 | `0x24`                | SyncTimeStamp              |    X    |    X     | PRS R19-11 |
-| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          |    -    |    -     | PRS 1.4.0  |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection           |    X    |    X     | PRS 1.4.0  |
 
 The following are not listed in the current standard, or marked as deprecated:
 
@@ -631,8 +631,6 @@ but not documented in the AutoSAR PRS.
 * ¹: This is made obsolete in PRS 1.3.0 and later
 * ²: Was renamed in later version of the standard, but the message structure
   remains the same.
-* ³: This will not be implemented - software will need to provide their own
-  decoder.All DLT trace lines are derived from the `DltTraceLineBase`.
 
 | Service Id | Name               | Request | Response |
 | ---------- | ------------------ | :-----: | :------: |

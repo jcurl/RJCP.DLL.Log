@@ -12,6 +12,11 @@
         public static readonly DateTime Time4 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.556);
         public static readonly DateTime Time5 = DltTime.FileTime(2021, 12, 16, 20, 59, 35.5767);
 
+        public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time)
+        {
+            IsSkippedLine(factory, line, time, -1);
+        }
+
         public static void IsSkippedLine(this DltFactory factory, DltTraceLineBase line, DateTime time, long bytes)
         {
             Assert.That(line, Is.TypeOf<DltSkippedTraceLine>());
@@ -28,7 +33,7 @@
             Assert.That(skipLine.ContextId, Is.EqualTo(string.Empty));
             Assert.That(skipLine.Arguments.Count, Is.EqualTo(4));
             Assert.That(skipLine.Reason, Is.Not.Null);
-            Assert.That(skipLine.BytesSkipped, Is.EqualTo(bytes));
+            if (bytes > 0) Assert.That(skipLine.BytesSkipped, Is.EqualTo(bytes));
             Assert.That(skipLine.Text, Is.EqualTo($"Skipped: {skipLine.BytesSkipped} bytes; Reason: {skipLine.Reason}"));
             Assert.That(skipLine.Features.TimeStamp, Is.EqualTo(expectedTime != DltTime.Default));
             Assert.That(skipLine.Features.EcuId, Is.False);

@@ -166,6 +166,9 @@
             return decoders.Remove(serviceId);
         }
 
+        private readonly IControlArgDecoder m_SwInjectionRequestDecoder = new SwInjectionRequestDecoder();
+        private readonly IControlArgDecoder m_SwInjectionResponseDecoder = new SwInjectionResponseDecoder();
+
         /// <summary>
         /// Decodes the DLT control message payload.
         /// </summary>
@@ -183,15 +186,21 @@
                 case DltType.CONTROL_REQUEST:
                     serviceId = BitOperations.To32ShiftLittleEndian(buffer);
                     if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control request message service 0x{0:x}", serviceId);
-                        return -1;
+                        if (serviceId >= 0 && serviceId < 0xFFF) {
+                            Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control request message service 0x{0:x}", serviceId);
+                            return -1;
+                        }
+                        decoder = m_SwInjectionRequestDecoder;
                     }
                     break;
                 case DltType.CONTROL_RESPONSE:
                     serviceId = BitOperations.To32ShiftLittleEndian(buffer);
                     if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control response message service 0x{0:x}", serviceId);
-                        return -1;
+                        if (serviceId >= 0 && serviceId < 0xFFF) {
+                            Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control response message service 0x{0:x}", serviceId);
+                            return -1;
+                        }
+                        decoder = m_SwInjectionResponseDecoder;
                     }
                     break;
                 case DltType.CONTROL_TIME:
