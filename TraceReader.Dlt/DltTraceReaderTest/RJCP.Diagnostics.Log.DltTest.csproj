@@ -79,6 +79,7 @@
     <Compile Include="Dlt\ControlArgs\CustomTimeZoneTest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomUnregisterContextTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetDefaultLogLevelTest.cs" />
+    <Compile Include="Dlt\ControlArgs\SyncTimeStampTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetTraceStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetMessageFilteringStatusTest.cs" />
     <Compile Include="Dlt\ControlArgs\GetUseExtendedHeaderTest.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Dlt\Control\SetUseEcuIdDecoderTest.cs" />
     <Compile Include="Dlt\Control\SetVerboseModeDecoderTest.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationDecoderTest.cs" />
+    <Compile Include="Dlt\Control\SyncTimeStampDecoderTest.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />

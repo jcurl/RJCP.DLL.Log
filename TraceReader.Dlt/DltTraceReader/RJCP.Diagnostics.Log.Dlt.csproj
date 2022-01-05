@@ -144,6 +144,8 @@
     <Compile Include="Dlt\ControlArgs\SetVerboseModeResponse.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationRequest.cs" />
     <Compile Include="Dlt\ControlArgs\StoreConfigurationResponse.cs" />
+    <Compile Include="Dlt\ControlArgs\SyncTimeStampRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\SyncTimeStampResponse.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationResponseDecoder.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
@@ -205,6 +207,8 @@
     <Compile Include="Dlt\Control\SetVerboseModeResponseDecoder.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\StoreConfigurationResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\SyncTimeStampRequestDecoder.cs" />
+    <Compile Include="Dlt\Control\SyncTimeStampResponseDecoder.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />

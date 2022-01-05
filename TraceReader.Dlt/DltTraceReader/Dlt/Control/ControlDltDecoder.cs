@@ -57,6 +57,7 @@
             m_RequestDecoders.Add(0x1E, new GetUseExtendedHeaderRequestDecoder());
             m_RequestDecoders.Add(0x1F, new GetTraceStatusRequestDecoder());
             m_RequestDecoders.Add(0x23, new BufferOverflowNotificationRequestDecoder());
+            m_RequestDecoders.Add(0x24, new SyncTimeStampRequestDecoder());
         }
 
         private void InitializeResponseDecoders()
@@ -88,6 +89,7 @@
             m_ResponseDecoders.Add(0x1E, new GetUseExtendedHeaderResponseDecoder());
             m_ResponseDecoders.Add(0x1F, new GetTraceStatusResponseDecoder());
             m_ResponseDecoders.Add(0x23, new BufferOverflowNotificationResponseDecoder());
+            m_ResponseDecoders.Add(0x24, new SyncTimeStampResponseDecoder());
             m_ResponseDecoders.Add(0xF01, new CustomUnregisterContextResponseDecoder());
             m_ResponseDecoders.Add(0xF02, new CustomConnectionInfoResponseDecoder());
             m_ResponseDecoders.Add(0xF03, new CustomTimeZoneResponseDecoder());

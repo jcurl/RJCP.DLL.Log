@@ -579,26 +579,27 @@ cannot have both as this cannot occur with the DLT protocol.
 
 The following Service Identifiers are defined (`X` is for implemented):
 
-| Service Id            | Name                       | Request | Response | Standard  |
-| --------------------- | -------------------------- | :-----: | :------: | --------- |
-| `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0 |
-| `0x02`                | SetTraceStatus             |    X    |    X     | PRS 1.4.0 |
-| `0x03`                | GetLogInfo                 |    X    |    X     | PRS 1.4.0 |
-| `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
-| `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0 |
-| `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0 |
-| `0x0A`                | SetMessageFiltering        |    X    |    X     | PRS 1.4.0 |
-| `0x11`                | SetDefaultLogLevel         |    X    |    X     | PRS 1.4.0 |
-| `0x12`                | SetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0 |
-| `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0 |
-| `0x15`                | GetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0 |
-| `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0 |
-| `0x1F`                | GetTraceStatus             |    X    |    X     | PRS 1.4.0 |
-| `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0 |
-| `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0 |
-| `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0 |
-| `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0 |
-| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          |    -    |    -     | PRS 1.4.0 |
+| Service Id            | Name                       | Request | Response | Standard   |
+| --------------------- | -------------------------- | :-----: | :------: | ---------- |
+| `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0  |
+| `0x02`                | SetTraceStatus             |    X    |    X     | PRS 1.4.0  |
+| `0x03`                | GetLogInfo                 |    X    |    X     | PRS 1.4.0  |
+| `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0  |
+| `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0  |
+| `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0  |
+| `0x0A`                | SetMessageFiltering        |    X    |    X     | PRS 1.4.0  |
+| `0x11`                | SetDefaultLogLevel         |    X    |    X     | PRS 1.4.0  |
+| `0x12`                | SetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0  |
+| `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0  |
+| `0x15`                | GetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0  |
+| `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0  |
+| `0x1F`                | GetTraceStatus             |    X    |    X     | PRS 1.4.0  |
+| `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0  |
+| `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0  |
+| `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0  |
+| `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0  |
+| `0x24`                | SyncTimeStamp              |    X    |    X     | PRS R19-11 |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection³          |    -    |    -     | PRS 1.4.0  |
 
 The following are not listed in the current standard, or marked as deprecated:
 
@@ -681,6 +682,8 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0x1F`  | Response | `[ <status>] <bytes>`                      | `[get_trace_status <status>] <enabled>`                           |
 | `0x23`  | Request  | `[]`                                       | `[buffer_overflow]`                                               |
 | `0x23`  | Response | `[ <status>] <bytes>`                      | `[buffer_overflow <status>] <enabled>`                            |
+| `0x24`  | Request  | `[]`                                       | `[sync_timestamp]`                                                |
+| `0x24`  | Response | `[ <status>] <bytes>`                      | `[sync_timestamp <status>] <timestamp>`                           |
 | `0xF01` | Response | `[unregister_context <status>] <bytes>`    | `[unregister_context <status>] APP1 (CTX1) COM1`                  |
 | `0xF02` | Response | `[connection_info <status>] <bytes>`       | `[connection_info <status>] <state> COM1`                         |
 | `0xF03` | Response | `[timezone <status>] <bytes>`              | `[timezone <status>] TZ <DST>`                                    |
