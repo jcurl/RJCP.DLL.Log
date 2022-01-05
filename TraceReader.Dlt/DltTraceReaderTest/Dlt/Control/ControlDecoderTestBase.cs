@@ -57,12 +57,49 @@
             m_ResponseType = responseType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
+        /// </summary>
+        /// <param name="decoderType">The decoder that should be used to test the byte sequence.</param>
+        /// <param name="serviceId">The service identifier that is expected to be generated.</param>
+        /// <param name="requestType">Type of the request that is expected to be generated.</param>
+        /// <param name="responseType">Type of the response that is expected to be generated.</param>
+        /// <param name="factory">The custom factory to test lines.</param>
+        /// <remarks>
+        /// The <paramref name="decoderType"/> defines the type of decoder that is used to decode the control payload.
+        /// <list type="bullet">
+        /// <item>
+        /// <see cref="DecoderType.Line"/>: The payload is put in a proper DLT packet with storage header, and the main
+        /// decoder is used.
+        /// </item>
+        /// <item>
+        /// <see cref="DecoderType.Packet"/>: The <see cref="ControlDltDecoder"/> is used to decode the payload.
+        /// </item>
+        /// <item>
+        /// <see cref="DecoderType.Specialized"/>: The <see cref="TReqDecoder"/> or <see cref="TResDecoder"/> is used to
+        /// decode the payload.
+        /// </item>
+        /// </list>
+        /// </remarks>
+        protected ControlDecoderTestBase(DecoderType decoderType, int serviceId, Type requestType, Type responseType,
+            DltFactory factory, IControlDltDecoder ctlDecoder)
+        {
+            Type = decoderType;
+            ServiceId = serviceId;
+            m_RequestType = requestType;
+            m_ResponseType = responseType;
+            m_CustomFactory = factory;
+            m_CustomDecoder = ctlDecoder;
+        }
+
         protected DecoderType Type { get; }
 
         protected int ServiceId { get; }
 
         private readonly Type m_RequestType;
         private readonly Type m_ResponseType;
+        private readonly DltFactory m_CustomFactory;
+        private readonly IControlDltDecoder m_CustomDecoder;
 
         /// <summary>
         /// Decodes the specified decoder type.
@@ -106,9 +143,14 @@
             Assert.That(service.ServiceId, Is.EqualTo(ServiceId));
         }
 
-        private static void DecodeLine(DltType dltType, byte[] data, string fileName, out IControlArg service)
+        private void DecodeLine(DltType dltType, byte[] data, string fileName, out IControlArg service)
         {
-            DltFactory factory = new DltFactory(DltFactoryType.File);
+            DltFactory factory;
+            if (m_CustomFactory != null) {
+                factory = m_CustomFactory;
+            } else {
+                factory = new DltFactory(DltFactoryType.File);
+            }
 
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
@@ -146,12 +188,18 @@
             }
         }
 
-        private static void DecodePacket(DltType dltType, byte[] data, out IControlArg service)
+        private void DecodePacket(DltType dltType, byte[] data, out IControlArg service)
         {
             IDltLineBuilder lineBuilder = new DltLineBuilder();
             lineBuilder.SetDltType(dltType);
 
-            IControlDltDecoder dltDecoder = new ControlDltDecoder();
+            IControlDltDecoder dltDecoder;
+            if (m_CustomDecoder != null) {
+                dltDecoder = m_CustomDecoder;
+            } else {
+                dltDecoder = new ControlDltDecoder();
+            }
+
             int length = dltDecoder.Decode(data, lineBuilder);
             service = lineBuilder.ControlPayload;
             Assert.That(length, Is.EqualTo(data.Length));

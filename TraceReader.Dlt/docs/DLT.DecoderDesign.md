@@ -39,6 +39,7 @@ The decoder is based on the [DLT Format](DLT.Format.md).
     - [3.2.3. Constructing the DltControlTraceLine via the DltLineBuilder](#323-constructing-the-dltcontroltraceline-via-the-dltlinebuilder)
   - [3.3. Control Services](#33-control-services)
     - [3.3.1. Variations to DLT Viewer 2.19.0 STABLE](#331-variations-to-dlt-viewer-2190-stable)
+  - [3.4. Extending the Control Decoders](#34-extending-the-control-decoders)
 - [4. Trace Lines](#4-trace-lines)
 
 ## 1. DLT Trace Decoder
@@ -685,6 +686,75 @@ response objects implemented by this library compared to the Genivi DLT Viewer
 | `0xF01` | Response | `[unregister_context <status>] <bytes>`    | `[unregister_context <status>] APP1 (CTX1) COM1`                  |
 | `0xF02` | Response | `[connection_info <status>] <bytes>`       | `[connection_info <status>] <state> COM1`                         |
 | `0xF03` | Response | `[timezone <status>] <bytes>`              | `[timezone <status>] TZ <DST>`                                    |
+
+### 3.4. Extending the Control Decoders
+
+The object oriented design of the module makes it possible to extend the
+functionality of the decoder with new control decoders, be them from a new
+standard against the current DLT protocol (version 1), or a custom software
+injection response.
+
+Let us take the example of providing a custom software injection request
+decoder. The structure of the new classes to create which subclass existing
+functionality are:
+
+![DLT Custom Decoder Subclassing](out/diagrams/DLT.ControlArgCustomDecoder/DLT.ControlArgCustomDecoder.svg)
+
+While it looks relatively complex, the template code for this action could be
+summarized in the test case `SwInjectionCustomClassTest.cs`.
+
+```csharp
+using RJCP.Diagnostics.Log;
+using RJCP.Diagnostics.Log.Control;
+using RJCP.Diagnostics.Log.ControlArgs;
+using RJCP.Diagnostics.Log.Decoder;
+using RJCP.Diagnostics.Log.Dlt;
+
+// Customize this to contain the fields you want. It doesn't necessary even
+// have to have the byte array, but can have native .NET types, as it's the
+// actual control message decoupled from the byte protocol. It can also
+// derive directly from `ControlRequest`.
+public class class MyCustomSwInjectionRequest : SwInjectionRequest {
+  public MyCustomSwInjectionRequest(int serviceId, byte[] payLoad)
+    : base(serviceId, payLoad)
+  { }
+}
+
+public class MyCustomSwInjectionRequestDecoder : SwInjectionRequestDecoder {
+  protected override int Decode(int serviceId, int length,
+   ReadOnlySpan<byte> buffer, out IControlArg service) {
+    // This is where the interpretation of the `buffer` is done, and the custom
+    // control message is instantiate. There's no reason we have to give the
+    // request object the buffer, the decoding of the buffer can be done here
+    // to completely decode the data to native .NET types.
+    service = new MyCustomSwInjectionRequest(serviceId, buffer.ToArray());
+    return buffer.Length;
+  }
+}
+
+public class MyCustomControlDltDecoder : ControlDltDecoder {
+  public MyCustomControlDltDecoder() {
+    // The constructor is what registers the ServiceID for the decoder we want
+    // to inject. It is done through object inheritance.
+    RegisterRequest(0x1011, new MyCustomSwInjectionRequestDecoder());
+  }
+}
+
+// Now we bind the custom control DLT decoder to the main decoder, and reuse
+// the already existing decoders and functionality. This is how one could also
+// replace the decoders for verbose arguments.
+public class MyCustomDltFileTraceDecoder : DltFileTraceDecoder {
+  public CustomDltFileTraceDecoder()
+    : base(GetVerboseDecoder(), new MyCustomControlDltDecoder(), new DltLineBuilder()) { }
+}
+
+// Finally, this is optional, a factory for creating our new decoder
+public class CustomDltFileTraceReaderFactory : TraceReaderFactory<DltTraceLineBase> {
+  protected override ITraceDecoder<DltTraceLineBase> GetDecoder() {
+    return new CustomDltFileTraceDecoder();
+  }
+}
+```
 
 ## 4. Trace Lines
 

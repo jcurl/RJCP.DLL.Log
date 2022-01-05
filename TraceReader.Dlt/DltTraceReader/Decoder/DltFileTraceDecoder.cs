@@ -2,6 +2,8 @@
 {
     using System;
     using Dlt;
+    using Dlt.Control;
+    using Dlt.Verbose;
     using RJCP.Core;
 
     /// <summary>
@@ -13,6 +15,16 @@
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
         /// </summary>
         public DltFileTraceDecoder() : base() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
+        /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>
+        /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="lineBuilder"/> is <see langword="null"/>.</exception>
+        public DltFileTraceDecoder(IVerboseDltDecoder verboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
+            : base(verboseDecoder, controlDecoder, lineBuilder) { }
 
         private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x54, 0x01 };
 

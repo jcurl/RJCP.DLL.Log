@@ -7,17 +7,29 @@
     using Dlt.Packet;
     using RJCP.CodeQuality.NUnitExtensions;
 
-    internal class DltFactory
+    public class DltFactory
     {
         public DltFactory(DltFactoryType factoryType)
         {
             FactoryType = factoryType;
         }
 
-        public DltFactoryType FactoryType { get; private set; }
+        public DltFactory(DltFactoryType factoryType, TraceReaderFactory<DltTraceLineBase> factory)
+        {
+            FactoryType = factoryType;
+            Factory = factory;
+        }
+
+        public DltFactoryType FactoryType { get; }
+
+        private TraceReaderFactory<DltTraceLineBase> Factory { get; }
 
         public Task<ITraceReader<DltTraceLineBase>> DltReaderFactory(Stream stream)
         {
+            if (Factory != null) {
+                return Factory.CreateAsync(stream);
+            }
+
             switch (FactoryType) {
             case DltFactoryType.Standard:
                 return new DltTraceReaderFactory().CreateAsync(stream);

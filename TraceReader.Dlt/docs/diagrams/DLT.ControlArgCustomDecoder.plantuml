@@ -1,0 +1,56 @@
+@startuml DLT.ControlArgCustomDecoder
+interface IControlArg
+class ControlRequest
+
+class SwInjectionRequest {
+    .ctor(serviceId: int, payLoad: data[])
+}
+class MyCustomSwInjectionRequest {
+    .ctor(serviceId: int, payLoad: data[])
+}
+
+IControlArg <|.d. ControlRequest
+ControlRequest <|-d- SwInjectionRequest
+SwInjectionRequest <|-d- MyCustomSwInjectionRequest
+
+interface IControlArgDecoder
+
+class SwInjectionRequestDecoder {
+    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, service: IControlArg*): int
+}
+
+class MyCustomSwInjectionRequestDecoder {
+    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, service: IControlArg*): int
+}
+
+IControlArgDecoder <|.d. SwInjectionRequestDecoder
+SwInjectionRequestDecoder <|-d- MyCustomSwInjectionRequestDecoder
+MyCustomSwInjectionRequestDecoder -r-> MyCustomSwInjectionRequest : <<creates>>
+
+interface IControlDltDecoder
+class ControlDltDecoder {
+    #RegisterRequest(serviceId: int, \n decoder: IControlArgDecoder): void
+}
+class MyCustomControlDltDecoder
+IControlDltDecoder <|.d. ControlDltDecoder
+ControlDltDecoder <|-d- MyCustomControlDltDecoder
+
+interface ITraceDecoder<DltTraceLineBase>
+class DltTraceDecoderBase
+class DltFileTraceDecoder
+class MyCustomDltFileTraceDecoder
+ITraceDecoder <|.d. DltTraceDecoderBase
+DltTraceDecoderBase <|-d- DltFileTraceDecoder
+DltFileTraceDecoder <|-d- MyCustomDltFileTraceDecoder
+
+MyCustomDltFileTraceDecoder *-r- MyCustomControlDltDecoder
+MyCustomControlDltDecoder *-r- MyCustomSwInjectionRequestDecoder
+
+interface ITraceReaderFactory<DltTraceLineBase>
+abstract class TraceReaderFactory<DltTraceLineBase>
+class MyCustomDltFileTraceReaderFactory
+
+ITraceReaderFactory <|.d. TraceReaderFactory
+TraceReaderFactory <|-d- MyCustomDltFileTraceReaderFactory
+MyCustomDltFileTraceReaderFactory -r-> MyCustomDltFileTraceDecoder : <<creates>>
+@enduml
