@@ -16,9 +16,13 @@
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="buffer">The buffer where the DLT control message encoded payload can be found.</param>
+        /// <param name="msbf">
+        /// Sets the endianness, if <see langword="false"/> then little endian, else if <see langword="true"/> sets big
+        /// endian.
+        /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, out IControlArg service)
+        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             int status = buffer[4];
 
@@ -37,7 +41,7 @@
             case GetLogInfoResponse.StatusNoLogWithTrace:
             case GetLogInfoResponse.StatusWithLogWithTrace:
             case GetLogInfoResponse.StatusFullInfo:
-                int payloadLength = DecodeLogInfo(buffer[4..], status, out GetLogInfoResponse response);
+                int payloadLength = DecodeLogInfo(buffer[4..], msbf, status, out GetLogInfoResponse response);
                 service = response;
                 return 4 + payloadLength;
             default:
@@ -46,20 +50,20 @@
             }
         }
 
-        private int DecodeLogInfo(ReadOnlySpan<byte> buffer, int status, out GetLogInfoResponse response)
+        private int DecodeLogInfo(ReadOnlySpan<byte> buffer, bool msbf, int status, out GetLogInfoResponse response)
         {
             List<AppId> appIds = new List<AppId>();
             List<ContextId> ctxIds = new List<ContextId>();
 
-            int appIdCount = BitOperations.To16ShiftLittleEndian(buffer[1..]);
+            int appIdCount = BitOperations.To16Shift(buffer[1..], !msbf);
             int appIdOffset = 3;
             for (int i = 0; i < appIdCount; i++) {
                 string appIdName = IdHashList.Instance.ParseId(BitOperations.To32ShiftBigEndian(buffer[appIdOffset..]));
 
-                int ctxIdCount = BitOperations.To16ShiftLittleEndian(buffer[(appIdOffset + 4)..]);
+                int ctxIdCount = BitOperations.To16Shift(buffer[(appIdOffset + 4)..], !msbf);
                 int ctxIdOffset = appIdOffset + 6;
                 for (int j = 0; j < ctxIdCount; j++) {
-                    int ctxIdLength = DecodeContextId(buffer[ctxIdOffset..], status, out ContextId ctxId);
+                    int ctxIdLength = DecodeContextId(buffer[ctxIdOffset..], msbf, status, out ContextId ctxId);
                     ctxIdOffset += ctxIdLength;
                     ctxIds.Add(ctxId);
                 }
@@ -69,7 +73,7 @@
                 if (status != GetLogInfoResponse.StatusFullInfo) {
                     appId = new AppId(appIdName);
                 } else {
-                    int appIdLen = BitOperations.To16ShiftLittleEndian(buffer[appIdOffset..]);
+                    int appIdLen = BitOperations.To16Shift(buffer[appIdOffset..], !msbf);
                     string description = GetDescription(buffer[(appIdOffset + 2)..(appIdOffset + 2 + appIdLen)]);
                     appIdOffset += 2 + appIdLen;
                     appId = new AppId(appIdName, description);
@@ -92,7 +96,7 @@
             return appIdOffset + 4;
         }
 
-        private int DecodeContextId(ReadOnlySpan<byte> buffer, int status, out ContextId ctxId)
+        private int DecodeContextId(ReadOnlySpan<byte> buffer, bool msbf, int status, out ContextId ctxId)
         {
             string ctxIdName = IdHashList.Instance.ParseId(BitOperations.To32ShiftBigEndian(buffer));
 
@@ -110,7 +114,7 @@
                 ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]));
                 return 6;
             case GetLogInfoResponse.StatusFullInfo:
-                int ctxIdLen = BitOperations.To16ShiftLittleEndian(buffer[6..]);
+                int ctxIdLen = BitOperations.To16Shift(buffer[6..], !msbf);
                 string description = GetDescription(buffer[8..(8 + ctxIdLen)]);
                 ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]), description);
                 return 8 + ctxIdLen;

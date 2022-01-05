@@ -722,7 +722,7 @@ public class class MyCustomSwInjectionRequest : SwInjectionRequest {
 
 public class MyCustomSwInjectionRequestDecoder : SwInjectionRequestDecoder {
   protected override int Decode(int serviceId, int length,
-   ReadOnlySpan<byte> buffer, out IControlArg service) {
+   ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service) {
     // This is where the interpretation of the `buffer` is done, and the custom
     // control message is instantiate. There's no reason we have to give the
     // request object the buffer, the decoding of the buffer can be done here

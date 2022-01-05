@@ -4,11 +4,12 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
     public class DltTimeMarkerDecoderTest : ControlDecoderTestBase<NoDecoder, NoDecoder>
     {
-        public DltTimeMarkerDecoderTest(DecoderType decoderType)
-            : base(decoderType, -1, null, typeof(DltTimeMarker))
+        public DltTimeMarkerDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, -1, null, typeof(DltTimeMarker))
         { }
 
         [Test]

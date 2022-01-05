@@ -3,19 +3,24 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class GetDefaultLogLevelDecoderTest : ControlDecoderTestBase<GetDefaultLogLevelRequestDecoder, GetDefaultLogLevelResponseDecoder>
     {
-        public GetDefaultLogLevelDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x04, typeof(GetDefaultLogLevelRequest), typeof(GetDefaultLogLevelResponse))
+        public GetDefaultLogLevelDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x04, typeof(GetDefaultLogLevelRequest), typeof(GetDefaultLogLevelResponse))
         { }
 
         [Test]
         public void DecodeRequest()
         {
-            byte[] payload = new byte[] { 0x04, 0x00, 0x00, 0x00 };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x04, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x04 };
             Decode(DltType.CONTROL_REQUEST, payload, "0x04_GetDefaultLogLevelRequest", out IControlArg service);
 
             GetDefaultLogLevelRequest request = (GetDefaultLogLevelRequest)service;
@@ -33,7 +38,9 @@
         [TestCase(0x02, 0xFF, "[get_default_log_level error] default")]
         public void DecodeResponse(byte status, byte logLevel, string result)
         {
-            byte[] payload = new byte[] { 0x04, 0x00, 0x00, 0x00, status, logLevel };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x04, 0x00, 0x00, 0x00, status, logLevel } :
+                new byte[] { 0x00, 0x00, 0x00, 0x04, status, logLevel };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x04_GetDefaultLogLevelResponse_{logLevel:x2}_{status:x2}", out IControlArg service);
 
             GetDefaultLogLevelResponse response = (GetDefaultLogLevelResponse)service;

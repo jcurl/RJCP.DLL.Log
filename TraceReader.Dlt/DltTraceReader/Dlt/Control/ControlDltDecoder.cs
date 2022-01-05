@@ -184,7 +184,7 @@
 
                 switch (lineBuilder.DltType) {
                 case DltType.CONTROL_REQUEST:
-                    serviceId = BitOperations.To32ShiftLittleEndian(buffer);
+                    serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
                         if (serviceId >= 0 && serviceId < 0xFFF) {
                             Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control request message service 0x{0:x}", serviceId);
@@ -194,7 +194,7 @@
                     }
                     break;
                 case DltType.CONTROL_RESPONSE:
-                    serviceId = BitOperations.To32ShiftLittleEndian(buffer);
+                    serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
                         if (serviceId >= 0 && serviceId < 0xFFF) {
                             Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control response message service 0x{0:x}", serviceId);
@@ -213,7 +213,7 @@
                     return -1;
                 }
 
-                int decoded = decoder.Decode(serviceId, buffer, out IControlArg service);
+                int decoded = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
                 if (decoded == -1 || service == null) {
                     if (Log.Dlt.ShouldTrace(TraceEventType.Warning)) {
                         Log.Dlt.TraceEvent(TraceEventType.Warning, "Failed decoding {0} message service 0x{1:x}",

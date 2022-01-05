@@ -18,11 +18,15 @@
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="buffer">The buffer where the DLT control message encoded payload can be found.</param>
+        /// <param name="msbf">
+        /// Sets the endianness, if <see langword="false"/> then little endian, else if <see langword="true"/> sets big
+        /// endian.
+        /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, out IControlArg service)
+        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            uint payloadLength = unchecked((uint)BitOperations.To32ShiftLittleEndian(buffer[5..9]));
+            uint payloadLength = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             if (payloadLength > ushort.MaxValue) {
                 service = null;
                 return -1;

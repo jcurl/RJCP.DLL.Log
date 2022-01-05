@@ -18,12 +18,17 @@
         where TReqDecoder : IControlArgDecoder
         where TResDecoder : IControlArgDecoder
     {
-        [Flags]
         public enum DecoderType
         {
-            Line = 1,
-            Packet = 2,
-            Specialized = 4,
+            Line,
+            Packet,
+            Specialized,
+        }
+
+        public enum Endianness
+        {
+            Little = 1,
+            Big = 2
         }
 
         /// <summary>
@@ -50,21 +55,16 @@
         /// </list>
         /// </remarks>
         protected ControlDecoderTestBase(DecoderType decoderType, int serviceId, Type requestType, Type responseType)
-        {
-            Type = decoderType;
-            ServiceId = serviceId;
-            m_RequestType = requestType;
-            m_ResponseType = responseType;
-        }
+            : this(decoderType, Endianness.Little, serviceId, requestType, responseType, null, null) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
         /// </summary>
         /// <param name="decoderType">The decoder that should be used to test the byte sequence.</param>
+        /// <param name="endian">Indicates the endianness flag to set in the standard header.</param>
         /// <param name="serviceId">The service identifier that is expected to be generated.</param>
         /// <param name="requestType">Type of the request that is expected to be generated.</param>
         /// <param name="responseType">Type of the response that is expected to be generated.</param>
-        /// <param name="factory">The custom factory to test lines.</param>
         /// <remarks>
         /// The <paramref name="decoderType"/> defines the type of decoder that is used to decode the control payload.
         /// <list type="bullet">
@@ -81,10 +81,40 @@
         /// </item>
         /// </list>
         /// </remarks>
-        protected ControlDecoderTestBase(DecoderType decoderType, int serviceId, Type requestType, Type responseType,
+        protected ControlDecoderTestBase(DecoderType decoderType, Endianness endian, int serviceId, Type requestType, Type responseType)
+            : this(decoderType, endian, serviceId, requestType, responseType, null, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
+        /// </summary>
+        /// <param name="decoderType">The decoder that should be used to test the byte sequence.</param>
+        /// <param name="endian">Indicates the endianness flag to set in the standard header.</param>
+        /// <param name="serviceId">The service identifier that is expected to be generated.</param>
+        /// <param name="requestType">Type of the request that is expected to be generated.</param>
+        /// <param name="responseType">Type of the response that is expected to be generated.</param>
+        /// <param name="factory">The custom factory to test lines.</param>
+        /// <param name="ctlDecoder">The control decoder to use.</param>
+        /// <remarks>
+        /// The <paramref name="decoderType"/> defines the type of decoder that is used to decode the control payload.
+        /// <list type="bullet">
+        /// <item>
+        /// <see cref="DecoderType.Line"/>: The payload is put in a proper DLT packet with storage header, and the main
+        /// decoder is used.
+        /// </item>
+        /// <item>
+        /// <see cref="DecoderType.Packet"/>: The <see cref="ControlDltDecoder"/> is used to decode the payload.
+        /// </item>
+        /// <item>
+        /// <see cref="DecoderType.Specialized"/>: The <see cref="TReqDecoder"/> or <see cref="TResDecoder"/> is used to
+        /// decode the payload.
+        /// </item>
+        /// </list>
+        /// </remarks>
+        protected ControlDecoderTestBase(DecoderType decoderType, Endianness endian, int serviceId, Type requestType, Type responseType,
             DltFactory factory, IControlDltDecoder ctlDecoder)
         {
             Type = decoderType;
+            Endian = endian;
             ServiceId = serviceId;
             m_RequestType = requestType;
             m_ResponseType = responseType;
@@ -93,6 +123,7 @@
         }
 
         protected DecoderType Type { get; }
+        protected Endianness Endian { get; }
 
         protected int ServiceId { get; }
 
@@ -113,13 +144,17 @@
         /// </exception>
         protected void Decode(DltType dltType, byte[] data, string fileName, out IControlArg service)
         {
-            if (Type.HasFlag(DecoderType.Line)) {
+            switch (Type) {
+            case DecoderType.Line:
                 DecodeLine(dltType, data, fileName, out service);
-            } else if (Type.HasFlag(DecoderType.Packet)) {
+                break;
+            case DecoderType.Packet:
                 DecodePacket(dltType, data, out service);
-            } else if (Type.HasFlag(DecoderType.Specialized)) {
+                break;
+            case DecoderType.Specialized:
                 DecodeSpecialized(dltType, data, out service);
-            } else {
+                break;
+            default:
                 throw new NotImplementedException();
             }
 
@@ -155,7 +190,8 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                factory.Control(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), dltType, data).Append();
+                bool isBig = Endian == Endianness.Big;
+                factory.Control(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), dltType, data).BigEndian(isBig).Append();
                 using (Stream stream = writer.Stream()) {
                     Task<DltTraceLineBase> lineTask = WriteDltPacket(factory, stream);
                     DltTraceLineBase line = lineTask.GetAwaiter().GetResult();
@@ -164,7 +200,7 @@
                     service = control.Service;
 
                     if (!string.IsNullOrEmpty(fileName)) {
-                        string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "control");
+                        string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "control", isBig ? "big" : "little");
                         string outPath = Path.Combine(dir, $"{fileName}.dlt");
                         if (!Directory.Exists(dir)) {
                             Directory.CreateDirectory(dir);
@@ -192,6 +228,7 @@
         {
             IDltLineBuilder lineBuilder = new DltLineBuilder();
             lineBuilder.SetDltType(dltType);
+            lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
             IControlDltDecoder dltDecoder;
             if (m_CustomDecoder != null) {
@@ -205,7 +242,7 @@
             Assert.That(length, Is.EqualTo(data.Length));
         }
 
-        private static void DecodeSpecialized(DltType dltType, byte[] data, out IControlArg service)
+        private void DecodeSpecialized(DltType dltType, byte[] data, out IControlArg service)
         {
             IControlArgDecoder argDecoder;
             switch (dltType) {
@@ -219,8 +256,9 @@
                 throw new ArgumentOutOfRangeException(nameof(dltType), "Invalid DltType requested for this test case");
             }
 
-            int serviceId = BitOperations.To32ShiftLittleEndian(data);
-            int length = argDecoder.Decode(serviceId, data, out service);
+            bool isBig = Endian == Endianness.Big;
+            int serviceId = BitOperations.To32Shift(data, !isBig);
+            int length = argDecoder.Decode(serviceId, data, isBig, out service);
             Assert.That(length, Is.EqualTo(data.Length));
         }
     }

@@ -3,19 +3,24 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class MessageBufferOverflowDecoderTest : ControlDecoderTestBase<MessageBufferOverflowRequestDecoder, MessageBufferOverflowResponseDecoder>
     {
-        public MessageBufferOverflowDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x14, typeof(MessageBufferOverflowRequest), typeof(MessageBufferOverflowResponse))
+        public MessageBufferOverflowDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x14, typeof(MessageBufferOverflowRequest), typeof(MessageBufferOverflowResponse))
         { }
 
         [Test]
         public void DecodeRequest()
         {
-            byte[] payload = new byte[] { 0x14, 0x00, 0x00, 0x00 };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x14, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x14 };
             Decode(DltType.CONTROL_REQUEST, payload, "0x14_MessageBufferOverflowRequest", out IControlArg service);
 
             MessageBufferOverflowRequest request = (MessageBufferOverflowRequest)service;
@@ -33,7 +38,9 @@
         [TestCase(0x02, 0xFF, "[message_buffer_overflow error]")]
         public void DecodeResponse(byte status, byte overflow, string result)
         {
-            byte[] payload = new byte[] { 0x14, 0x00, 0x00, 0x00, status, overflow };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x14, 0x00, 0x00, 0x00, status, overflow } :
+                new byte[] { 0x00, 0x00, 0x00, 0x14, status, overflow };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x14_MessageBufferOverflowResponse_{status:x2}_{overflow:x2}", out IControlArg service);
 
             MessageBufferOverflowResponse response = (MessageBufferOverflowResponse)service;

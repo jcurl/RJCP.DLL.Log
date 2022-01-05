@@ -3,13 +3,16 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class CustomConnectionInfoDecoderTest : ControlDecoderTestBase<NoDecoder, CustomConnectionInfoResponseDecoder>
     {
-        public CustomConnectionInfoDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x0F02, null, typeof(CustomConnectionInfoResponse))
+        public CustomConnectionInfoDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x0F02, null, typeof(CustomConnectionInfoResponse))
         { }
 
         [TestCase(0x00, 0x00, "[connection_info ok] unknown eth0")]
@@ -23,9 +26,9 @@
         [TestCase(0x02, 0x02, "[connection_info error] connected eth0")]
         public void DecodeResponse(byte status, byte state, string result)
         {
-            byte[] payload = new byte[] {
-                0x02, 0x0F, 0x00, 0x00, status, state, 0x65, 0x74, 0x68, 0x30
-            };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x02, 0x0F, 0x00, 0x00, status, state, 0x65, 0x74, 0x68, 0x30 } :
+                new byte[] { 0x00, 0x00, 0x0F, 0x02, status, state, 0x65, 0x74, 0x68, 0x30 };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0xF02_CustomConnectionInfoResponse_{status:x2}_{state:x2}", out IControlArg service);
 
             CustomConnectionInfoResponse response = (CustomConnectionInfoResponse)service;
@@ -46,9 +49,9 @@
         [TestCase(0x02, 0x02, "[connection_info error] connected")]
         public void DecodeResponseNoComId(byte status, byte state, string result)
         {
-            byte[] payload = new byte[] {
-                0x02, 0x0F, 0x00, 0x00, status, state, 0x00, 0x00, 0x00, 0x00
-            };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x02, 0x0F, 0x00, 0x00, status, state, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x0F, 0x02, status, state, 0x00, 0x00, 0x00, 0x00 };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0xF02_CustomConnectionInfoResponse_NoComId_{status:x2}_{state:x2}", out IControlArg service);
 
             CustomConnectionInfoResponse response = (CustomConnectionInfoResponse)service;

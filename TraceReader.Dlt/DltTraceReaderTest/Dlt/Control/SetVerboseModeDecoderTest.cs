@@ -3,13 +3,16 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class SetVerboseModeDecoderTest : ControlDecoderTestBase<SetVerboseModeRequestDecoder, SetVerboseModeResponseDecoder>
     {
-        public SetVerboseModeDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x09, typeof(SetVerboseModeRequest), typeof(SetVerboseModeResponse))
+        public SetVerboseModeDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x09, typeof(SetVerboseModeRequest), typeof(SetVerboseModeResponse))
         { }
 
         [TestCase(0x00, "[set_verbose_mode] off")]
@@ -17,7 +20,9 @@
         [TestCase(0xFF, "[set_verbose_mode] on")]
         public void DecodeRequest(byte status, string result)
         {
-            byte[] payload = new byte[] { 0x09, 0x00, 0x00, 0x00, status };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x09, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x09, status };
             Decode(DltType.CONTROL_REQUEST, payload, $"0x09_SetVerboseModeRequest_{status:x2}", out IControlArg service);
 
             SetVerboseModeRequest request = (SetVerboseModeRequest)service;
@@ -29,7 +34,9 @@
         [TestCase(0x02, "[set_verbose_mode error]")]
         public void DecodeResponse(byte status, string result)
         {
-            byte[] payload = new byte[] { 0x09, 0x00, 0x00, 0x00, status };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x09, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x09, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x09_SetVerboseModeResponse_{status:x2}", out IControlArg service);
 
             SetVerboseModeResponse response = (SetVerboseModeResponse)service;

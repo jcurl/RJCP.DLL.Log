@@ -67,6 +67,28 @@
             }
 
             /// <summary>
+            /// Marks this packet as big endian. Only the flag is set.
+            /// </summary>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder BigEndian()
+            {
+                return BigEndian(true);
+            }
+
+            /// <summary>
+            /// Marks this packet as big endian or little endian. Only the flag is set.
+            /// </summary>
+            /// <param name="bigEndian">
+            /// Sets to Big Endian if <see langword="true"/>, else is set to Little Endian when <see langword="false"/>.
+            /// </param>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder BigEndian(bool bigEndian)
+            {
+                m_Packet.BigEndian(bigEndian);
+                return this;
+            }
+
+            /// <summary>
             /// Writes the specified version into the standard header.
             /// </summary>
             /// <param name="version">The version in the range 0 to 7.</param>

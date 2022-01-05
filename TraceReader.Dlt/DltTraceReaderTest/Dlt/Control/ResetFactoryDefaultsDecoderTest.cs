@@ -3,19 +3,24 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class ResetFactoryDefaultsDecoderTest : ControlDecoderTestBase<ResetFactoryDefaultRequestDecoder, ResetFactoryDefaultResponseDecoder>
     {
-        public ResetFactoryDefaultsDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x06, typeof(ResetFactoryDefaultRequest), typeof(ResetFactoryDefaultResponse))
+        public ResetFactoryDefaultsDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x06, typeof(ResetFactoryDefaultRequest), typeof(ResetFactoryDefaultResponse))
         { }
 
         [Test]
         public void DecodeRequest()
         {
-            byte[] payload = new byte[] { 0x06, 0x00, 0x00, 0x00 };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x06, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x06 };
             Decode(DltType.CONTROL_REQUEST, payload, "0x06_ResetFactoryDefaultsRequest", out IControlArg service);
 
             ResetFactoryDefaultRequest request = (ResetFactoryDefaultRequest)service;
@@ -27,7 +32,9 @@
         [TestCase(0x02, "[reset_to_factory_default error]")]
         public void DecodeResponse(byte status, string result)
         {
-            byte[] payload = new byte[] { 0x06, 0x00, 0x00, 0x00, status };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x06, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x06, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x06_ResetFactoryDefaultsResponse_{status:x2}", out IControlArg service);
 
             ResetFactoryDefaultResponse response = (ResetFactoryDefaultResponse)service;

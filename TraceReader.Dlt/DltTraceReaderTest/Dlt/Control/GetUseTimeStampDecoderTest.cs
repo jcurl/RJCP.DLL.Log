@@ -3,19 +3,24 @@
     using ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(DecoderType.Line)]
-    [TestFixture(DecoderType.Packet)]
-    [TestFixture(DecoderType.Specialized)]
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
     public class GetUseTimeStampDecoderTest : ControlDecoderTestBase<GetUseTimeStampRequestDecoder, GetUseTimeStampResponseDecoder>
     {
-        public GetUseTimeStampDecoderTest(DecoderType decoderType)
-            : base(decoderType, 0x1D, typeof(GetUseTimeStampRequest), typeof(GetUseTimeStampResponse))
+        public GetUseTimeStampDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian, 0x1D, typeof(GetUseTimeStampRequest), typeof(GetUseTimeStampResponse))
         { }
 
         [Test]
         public void DecodeRequest()
         {
-            byte[] payload = new byte[] { 0x1D, 0x00, 0x00, 0x00 };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x1D, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x1D };
             Decode(DltType.CONTROL_REQUEST, payload, "0x1D_GetUseTimeStampRequest", out IControlArg service);
 
             GetUseTimeStampRequest request = (GetUseTimeStampRequest)service;
@@ -33,7 +38,9 @@
         [TestCase(0x02, 0xFF, "[get_use_timestamp error]")]
         public void DecodeResponse(byte status, byte enabled, string result)
         {
-            byte[] payload = new byte[] { 0x1D, 0x00, 0x00, 0x00, status, enabled };
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x1D, 0x00, 0x00, 0x00, status, enabled } :
+                new byte[] { 0x00, 0x00, 0x00, 0x1D, status, enabled };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x1D_GetUseTimeStampResponse_{status:x2}_{enabled:x2}", out IControlArg service);
 
             GetUseTimeStampResponse response = (GetUseTimeStampResponse)service;
