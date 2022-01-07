@@ -71,6 +71,7 @@
     <Compile Include="Dlt\Args\HexIntDltArg.cs" />
     <Compile Include="Dlt\Args\IDltArg.cs" />
     <Compile Include="Dlt\Args\IntDltArg.cs" />
+    <Compile Include="Dlt\Args\NonVerboseDltArg.cs" />
     <Compile Include="Dlt\Args\RawDltArg.cs" />
     <Compile Include="Dlt\Args\SignedIntDltArg.cs" />
     <Compile Include="Dlt\Args\StringDltArg.cs" />
@@ -221,6 +222,8 @@
     <Compile Include="Dlt\DltTypeExtension.cs" />
     <Compile Include="Dlt\IdHashList.cs" />
     <Compile Include="Dlt\IDltLineBuilder.cs" />
+    <Compile Include="Dlt\NonVerbose\INonVerboseDltDecoder.cs" />
+    <Compile Include="Dlt\NonVerbose\NonVerboseByteDecoder.cs" />
     <Compile Include="Dlt\Verbose\BoolArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\FloatArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\IntegerArgDecoder.cs" />

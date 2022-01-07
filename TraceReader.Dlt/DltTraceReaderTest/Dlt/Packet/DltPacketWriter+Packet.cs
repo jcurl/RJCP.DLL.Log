@@ -75,6 +75,7 @@
 
                 m_PacketLength = length;
                 m_HasStandardHeader = true;
+                m_PayLoadPos = m_PacketLength;
             }
 
             public void WriteStandardHeaderVersion(int version)
@@ -135,6 +136,15 @@
                 m_PacketLength = m_PayLoadPos;
             }
 
+            public void AddPayload(byte[] data)
+            {
+                if (m_HasExtendedHeader) throw new InvalidOperationException("Raw data must not have an extended header");
+
+                data.CopyTo(m_Packet, m_PayLoadPos);
+                m_PayLoadPos += data.Length;
+                m_PacketLength = m_PayLoadPos;
+            }
+
             public void AddPayload(int noar, byte[] data)
             {
                 if (!m_HasExtendedHeader) throw new InvalidOperationException("Arguments must have an extended header");
@@ -157,8 +167,6 @@
 
             public byte[] GetPacket()
             {
-                if (!m_HasExtendedHeader) throw new InvalidOperationException("Incomplete packet, missing extended header");
-
                 if (m_OverrideLength >= 0) {
                     BitOperations.Copy16ShiftBigEndian(m_OverrideLength, m_Packet, 2);
                 } else {

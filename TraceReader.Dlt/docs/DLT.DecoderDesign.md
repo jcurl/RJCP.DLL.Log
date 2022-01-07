@@ -40,7 +40,13 @@ The decoder is based on the [DLT Format](DLT.Format.md).
   - [3.3. Control Services](#33-control-services)
     - [3.3.1. Variations to DLT Viewer 2.19.0 STABLE](#331-variations-to-dlt-viewer-2190-stable)
   - [3.4. Extending the Control Decoders](#34-extending-the-control-decoders)
-- [4. Trace Lines](#4-trace-lines)
+- [4. Decoding Non-Verbose Messages](#4-decoding-non-verbose-messages)
+  - [4.1. Byte-based Non-Verbose Decoder (Default Implementation)](#41-byte-based-non-verbose-decoder-default-implementation)
+  - [4.2. Considerations for a Non-Verbose DLT Decoder](#42-considerations-for-a-non-verbose-dlt-decoder)
+    - [4.2.1. Software Version Notifications](#421-software-version-notifications)
+    - [4.2.2. Multiple ECUs](#422-multiple-ecus)
+    - [4.2.3. Consistency Checking via Heuristics](#423-consistency-checking-via-heuristics)
+- [5. Trace Lines](#5-trace-lines)
 
 ## 1. DLT Trace Decoder
 
@@ -745,7 +751,8 @@ public class MyCustomControlDltDecoder : ControlDltDecoder {
 // replace the decoders for verbose arguments.
 public class MyCustomDltFileTraceDecoder : DltFileTraceDecoder {
   public CustomDltFileTraceDecoder()
-    : base(GetVerboseDecoder(), new MyCustomControlDltDecoder(), new DltLineBuilder()) { }
+    : base(GetVerboseDecoder(), new NonVerboseByteDecoder(),
+        new MyCustomControlDltDecoder(), new DltLineBuilder()) { }
 }
 
 // Finally, this is optional, a factory for creating our new decoder
@@ -756,7 +763,59 @@ public class CustomDltFileTraceReaderFactory : TraceReaderFactory<DltTraceLineBa
 }
 ```
 
-## 4. Trace Lines
+## 4. Decoding Non-Verbose Messages
+
+This implementation has no non-verbose DLT decoder. It provides a default
+implementation by the `NonVerboseByteDecoder()` that understands the message
+identifier at the start, followed by an arbitrary payload.
+
+### 4.1. Byte-based Non-Verbose Decoder (Default Implementation)
+
+When a non-verbose message is seen, the `DltTraceDecoderBase` creates a new
+message of type `DltType.DLT_TYPE_UNKNOWN` (which cannot be set by any input
+stream by interpreting the message type).
+
+The software design is reasonably generic enough to be allow an implementation
+for a full-featured non-verbose converter, that can read an external file and
+create trace lines based on an input payload.
+
+![Dlt Non-Verbose Byte Decoder](out/diagrams/DLT.DecoderNonVerboseByteOnly/DLT.DecoderNonVerboseByteOnly.svg)
+
+### 4.2. Considerations for a Non-Verbose DLT Decoder
+
+#### 4.2.1. Software Version Notifications
+
+The Non-Verbose decoder, which derives from `INonVerboseDltDecoder` should have
+a mechanism that it can be told to load any arbitrary external file at any time
+while decoding, to support the requirement (AutoSAR SWS Diagnostics Log and
+Trace 4.2.2, but has been removed in later versions of the PRS specification):
+
+> Service Name: `GetSoftwareVersion`
+>
+> In Non Verbose Mode this string shall be used to associate and identify a
+> correct description file to the transmitted data. Because Message IDs and its
+> associated arguments can vary on different SW versions a correct mapping of
+> SW-version and description file is very important. In the associated
+> description file this string for SW-version shall also be enclosed.
+
+The software would need to be modified so that on creation of a
+`GetSoftwareVersionResponse` message, the non-verbose decoder can be notified of
+a new FIBEX file to load data from.
+
+#### 4.2.2. Multiple ECUs
+
+The Non-Verbose decoder should support one FIBEX file per ECU identifier. A
+single device may have multiple ECU Identifiers, one per processor, which have
+their own external FIBEX file. A log file may have more than one ECU present.
+
+#### 4.2.3. Consistency Checking via Heuristics
+
+Similar to verbose files, when a valid FIBEX file is provided, this can provide
+information about the expected length of each payload message. If the FIBEX file
+expects more or less data than is actually transmitted, this can be used as a
+heuristic to determine a valid DLT packet.
+
+## 5. Trace Lines
 
 ![DLT Trace Lines](out/diagrams/DLT.TraceLine/DLT.TraceLine.svg)
 

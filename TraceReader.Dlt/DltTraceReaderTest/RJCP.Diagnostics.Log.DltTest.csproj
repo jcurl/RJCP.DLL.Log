@@ -67,6 +67,7 @@
     <Compile Include="Dlt\Args\Float32DltArgTest.cs" />
     <Compile Include="Dlt\Args\Float64DltArgTest.cs" />
     <Compile Include="Dlt\Args\HexIntDltArgTest.cs" />
+    <Compile Include="Dlt\Args\NonVerboseArgTest.cs" />
     <Compile Include="Dlt\Args\RawDltArgTest.cs" />
     <Compile Include="Dlt\Args\SignedIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\StringDltArgTest.cs" />
@@ -144,7 +145,10 @@
     <Compile Include="Dlt\Control\SwInjectionCustomClassTest.cs" />
     <Compile Include="Dlt\Control\SwInjectionDecoderTest.cs" />
     <Compile Include="Dlt\Control\SyncTimeStampDecoderTest.cs" />
+    <Compile Include="Dlt\DecoderTestBase.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
+    <Compile Include="Dlt\NonVerbose\NonVerboseByteDecoderTest.cs" />
+    <Compile Include="Dlt\NonVerbose\NonVerboseByteDecoderTestBase.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter.cs" />

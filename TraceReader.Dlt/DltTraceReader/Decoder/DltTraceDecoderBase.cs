@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using Dlt;
     using Dlt.Control;
+    using Dlt.NonVerbose;
     using Dlt.Verbose;
     using RJCP.Core;
 
@@ -19,6 +20,7 @@
         private readonly LineCache m_Cache = new LineCache();
 #endif
         private readonly IVerboseDltDecoder m_VerboseDecoder;
+        private readonly INonVerboseDltDecoder m_NonVerboseDecoder;
         private readonly IControlDltDecoder m_ControlDecoder;
         private readonly IDltLineBuilder m_DltLineBuilder;
 
@@ -42,22 +44,33 @@
         /// find the start of a frame, and the size of data that can be skipped when searching for a frame.
         /// </remarks>
         protected DltTraceDecoderBase()
-            : this(GetVerboseDecoder(), new ControlDltDecoder(), new DltLineBuilder()) { }
+            : this(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
         /// </summary>
         /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
+        /// <param name="nonVerboseDecoder">The object that knows how to decode non-verbose payloads.</param>
         /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>
         /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="lineBuilder"/> is <see langword="null"/>.</exception>
-        protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="verboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="nonVerboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="controlDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="lineBuilder"/> is <see langword="null"/>
+        /// </exception>
+        protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
         {
             if (verboseDecoder == null) throw new ArgumentNullException(nameof(verboseDecoder));
+            if (nonVerboseDecoder == null) throw new ArgumentNullException(nameof(nonVerboseDecoder));
             if (controlDecoder == null) throw new ArgumentNullException(nameof(controlDecoder));
             if (lineBuilder == null) throw new ArgumentNullException(nameof(lineBuilder));
 
             m_VerboseDecoder = verboseDecoder;
+            m_NonVerboseDecoder = nonVerboseDecoder;
             m_ControlDecoder = controlDecoder;
             m_DltLineBuilder = lineBuilder;
         }
@@ -420,8 +433,16 @@
                     return false;
                 }
             } else {
-                // TODO: Support non-verbose as simple raw data.
-                return false;
+                int payloadLength = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (payloadLength == -1) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose payload cannot be decoded");
+                    return false;
+                }
+                if (m_ExpectedLength != offset + payloadLength) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose payload length {0} found, expected {1}",
+                        payloadLength, m_ExpectedLength - offset);
+                    return false;
+                }
             }
 
             return true;

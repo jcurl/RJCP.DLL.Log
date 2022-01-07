@@ -33,7 +33,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPacket));
 
                 using (Stream stream = writer.Stream())
@@ -55,7 +55,7 @@
                 //  - offset 26 bytes where the first argument starts
                 //  - offset 30 bytes payload starts
 
-                m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, new int[] { 4, 12, 10, 4, 2, 1, 1, 5, 1, 1, 1, 1 })) {
                     await WriteDltPacket(readStream);
@@ -78,8 +78,8 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
-                m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
+                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPackets));
 
                 using (Stream stream = writer.Stream())
@@ -102,8 +102,8 @@
                 //  - offset 30 bytes payload starts
 
                 List<int> plen = new List<int> {
-                    m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append(),
-                    m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append()
+                    m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append(),
+                    m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append()
                 };
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, plen.ToArray())) {
@@ -131,7 +131,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                int l1 = m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Version(2).Append();
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Version(2).Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPacketVersion2));
 
                 using (Stream stream = writer.Stream())
@@ -158,7 +158,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
                 int d = writer.Data(new byte[] { 0x41, 0x41, 0x41, 0x41 });
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltInvalidDataAtEnd));
 
@@ -185,8 +185,8 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
-                int l2 = m_Factory.Generate(writer, DltTestData.Time3, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 3").Append(24);
+                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                int l2 = m_Factory.Verbose(writer, DltTestData.Time3, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 3").Append(24);
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPartialDataAtEnd));
 
                 using (Stream stream = writer.Stream())
@@ -207,11 +207,12 @@
         }
 
         [TestCaseSource(nameof(ReadChunksMin))]
+        [Repeat(5)]
         public async Task RandomData(int maxBytes)
         {
-            // 512kB of random data. The serial and file will pass this very quickly as it only needs to look for a
+            // 16MB of random data. The serial and file will pass this very quickly as it only needs to look for a
             // marker. The TCP based encoding must treat every single byte as a valid input, which can be very slow.
-            byte[] data = new byte[512 * 1024];
+            byte[] data = new byte[16 * 1024 * 1024];
             new Random().NextBytes(data);
 
             using (Stream readStream = new ReadLimitStream(data, maxBytes)) {

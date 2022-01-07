@@ -3,6 +3,7 @@
     using System;
     using Dlt;
     using Dlt.Control;
+    using Dlt.NonVerbose;
 
     /// <summary>
     /// Decodes a DLT frame from the definition of a standard header.
@@ -20,7 +21,7 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltTraceDecoder(bool online) : base(GetVerboseDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+        public DltTraceDecoder(bool online) : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
 
         /// <summary>
         /// Searches for the start of the DLT frame.

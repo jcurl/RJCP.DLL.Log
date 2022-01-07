@@ -115,10 +115,6 @@
         /// </remarks>
         public DltTraceLineBase GetResult()
         {
-            if (DltType == DltType.UNKNOWN) {
-                throw new InvalidOperationException("Unknown message type");
-            }
-
             DltTraceLineBase line;
             if (m_Online) TimeStamp = DateTime.Now;
             if (((int)DltType & DltConstants.MessageType.DltTypeMask) == DltConstants.MessageType.DltTypeControl) {
@@ -137,6 +133,13 @@
                 };
                 line.Features += Features;
             } else {
+#if DEBUG
+                // This should never occur, as the DltType.UNKNOWN is never settable after masking the verbose flag.
+                // Thus, check only in debug mode where performance is not an issue.
+                if (Features.MessageType && DltType == DltType.UNKNOWN) {
+                    throw new InvalidOperationException("Unknown message type");
+                }
+#endif
                 line = new DltTraceLine(m_Arguments.ToArray()) {
                     Line = m_Line,
                     Position = Position,

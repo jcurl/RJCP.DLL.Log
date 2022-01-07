@@ -16,7 +16,7 @@
     /// <see cref="SessionId"/>.
     /// </para>
     /// <para>
-    /// Start building the packet with the <see cref="Verbose()"/> method, and there define the contents of the line.
+    /// Start building the packet with the <see cref="NewPacket()"/> method, and there define the contents of the line.
     /// </para>
     /// <para>
     /// Each individual packet can be built, or it can be appended to an internal list, which can then be used as a
@@ -65,7 +65,7 @@
         /// Constructs a new verbose DLT packet.
         /// </summary>
         /// <returns>The object to build a verbose DLT packet.</returns>
-        public DltVerbosePacketBuilder Verbose()
+        public DltVerbosePacketBuilder NewPacket()
         {
             return new DltVerbosePacketBuilder(this);
         }

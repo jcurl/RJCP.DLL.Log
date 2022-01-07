@@ -1,0 +1,14 @@
+@startuml DLT.DecoderNonVerboseByteOnly
+class DltTraceDecoderBase
+DltTraceDecoderBase -r-> INonVerboseDltDecoder : <<uses>>
+
+interface INonVerboseDltDecoder {
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+}
+
+class NonVerboseByteDecoder
+INonVerboseDltDecoder <|.d. NonVerboseByteDecoder
+class NonVerboseArg
+
+NonVerboseByteDecoder -r-> NonVerboseArg : <<creates>>
+@enduml

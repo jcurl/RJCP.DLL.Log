@@ -29,16 +29,6 @@
         }
 
         [Test]
-        public void UndefinedDltType()
-        {
-            IDltLineBuilder builder = new DltLineBuilder();
-
-            Assert.That(() => {
-                _ = builder.GetResult();
-            }, Throws.TypeOf<InvalidOperationException>());
-        }
-
-        [Test]
         public void DefaultLine()
         {
             IDltLineBuilder builder = new DltLineBuilder();

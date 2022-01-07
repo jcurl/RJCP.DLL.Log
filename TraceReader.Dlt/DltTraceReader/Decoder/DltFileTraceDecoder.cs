@@ -3,6 +3,7 @@
     using System;
     using Dlt;
     using Dlt.Control;
+    using Dlt.NonVerbose;
     using Dlt.Verbose;
     using RJCP.Core;
 
@@ -20,11 +21,20 @@
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
         /// </summary>
         /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
+        /// <param name="nonVerboseDecoder">The object that knows how to decode non-verbose payloads.</param>
         /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>
         /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="lineBuilder"/> is <see langword="null"/>.</exception>
-        public DltFileTraceDecoder(IVerboseDltDecoder verboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
-            : base(verboseDecoder, controlDecoder, lineBuilder) { }
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="verboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="nonVerboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="controlDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="lineBuilder"/> is <see langword="null"/>
+        /// </exception>
+        public DltFileTraceDecoder(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
+            : base(verboseDecoder, nonVerboseDecoder, controlDecoder, lineBuilder) { }
 
         private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x54, 0x01 };
 

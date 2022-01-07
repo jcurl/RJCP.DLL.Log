@@ -3,6 +3,7 @@
     using System;
     using ControlArgs;
     using Decoder;
+    using NonVerbose;
     using NUnit.Framework;
 
     public class CustomSwInjectionRequest : SwInjectionRequest
@@ -32,7 +33,7 @@
     public class CustomDltFileTraceDecoder : DltFileTraceDecoder
     {
         public CustomDltFileTraceDecoder()
-            : base(GetVerboseDecoder(), new CustomDltDecoder(), new DltLineBuilder()) { }
+            : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new CustomDltDecoder(), new DltLineBuilder()) { }
     }
 
     public class CustomDltFileTraceReaderFactory : TraceReaderFactory<DltTraceLineBase>

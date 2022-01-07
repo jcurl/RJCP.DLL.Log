@@ -42,29 +42,29 @@
             }
         }
 
-        public DltPacketWriter.DltVerbosePacketBuilder Generate(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, DltType msgType, string text)
+        public DltPacketWriter.DltVerbosePacketBuilder Verbose(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, DltType msgType, string text)
         {
             switch (FactoryType) {
             case DltFactoryType.Standard:
-                return writer.Verbose().Line(deviceTime, msgType, text);
+                return writer.NewPacket().Line(deviceTime, msgType, text);
             case DltFactoryType.File:
-                return writer.Verbose().Line(deviceTime, msgType, text).StorageHeader(storageTime);
+                return writer.NewPacket().Line(deviceTime, msgType, text).StorageHeader(storageTime);
             case DltFactoryType.Serial:
-                return writer.Verbose().Line(deviceTime, msgType, text).SerialMarker();
+                return writer.NewPacket().Line(deviceTime, msgType, text).SerialMarker();
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }
         }
 
-        public DltPacketWriter.DltVerbosePacketBuilder Generate(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, DltType msgType, int noar, byte[] payload)
+        public DltPacketWriter.DltVerbosePacketBuilder Verbose(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, DltType msgType, int noar, byte[] payload)
         {
             switch (FactoryType) {
             case DltFactoryType.Standard:
-                return writer.Verbose().Line(deviceTime, msgType, noar, payload);
+                return writer.NewPacket().Line(deviceTime, msgType, noar, payload);
             case DltFactoryType.File:
-                return writer.Verbose().Line(deviceTime, msgType, noar, payload).StorageHeader(storageTime);
+                return writer.NewPacket().Line(deviceTime, msgType, noar, payload).StorageHeader(storageTime);
             case DltFactoryType.Serial:
-                return writer.Verbose().Line(deviceTime, msgType, noar, payload).SerialMarker();
+                return writer.NewPacket().Line(deviceTime, msgType, noar, payload).SerialMarker();
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }
@@ -74,11 +74,25 @@
         {
             switch (FactoryType) {
             case DltFactoryType.Standard:
-                return writer.Verbose().Control(deviceTime, msgType, payload);
+                return writer.NewPacket().Control(deviceTime, msgType, payload);
             case DltFactoryType.File:
-                return writer.Verbose().Control(deviceTime, msgType, payload).StorageHeader(storageTime);
+                return writer.NewPacket().Control(deviceTime, msgType, payload).StorageHeader(storageTime);
             case DltFactoryType.Serial:
-                return writer.Verbose().Control(deviceTime, msgType, payload).SerialMarker();
+                return writer.NewPacket().Control(deviceTime, msgType, payload).SerialMarker();
+            default:
+                throw new InvalidOperationException($"Unknown Factory {FactoryType}");
+            }
+        }
+
+        public DltPacketWriter.DltVerbosePacketBuilder NonVerbose(DltPacketWriter writer, DateTime storageTime, TimeSpan deviceTime, byte[] payload)
+        {
+            switch (FactoryType) {
+            case DltFactoryType.Standard:
+                return writer.NewPacket().NonVerbose(deviceTime, payload);
+            case DltFactoryType.File:
+                return writer.NewPacket().NonVerbose(deviceTime, payload).StorageHeader(storageTime);
+            case DltFactoryType.Serial:
+                return writer.NewPacket().NonVerbose(deviceTime, payload).SerialMarker();
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }

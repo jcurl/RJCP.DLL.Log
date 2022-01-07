@@ -67,6 +67,19 @@
             }
 
             /// <summary>
+            /// Adds a payload for a non-verbose message
+            /// </summary>
+            /// <param name="time">The device time stamp.</param>
+            /// <param name="payload">The non-verbose payload.</param>
+            /// <returns>This object.</returns>
+            public DltVerbosePacketBuilder NonVerbose(TimeSpan time, byte[] payload)
+            {
+                m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
+                if (payload != null) m_Packet.AddPayload(payload);
+                return this;
+            }
+
+            /// <summary>
             /// Marks this packet as big endian. Only the flag is set.
             /// </summary>
             /// <returns>This object.</returns>

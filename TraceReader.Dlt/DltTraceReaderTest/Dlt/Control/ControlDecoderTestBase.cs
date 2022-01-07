@@ -1,12 +1,9 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.IO;
-    using System.Threading.Tasks;
     using ControlArgs;
     using Dlt.Packet;
     using NUnit.Framework;
-    using RJCP.CodeQuality.NUnitExtensions;
     using RJCP.Core;
 
     /// <summary>
@@ -14,53 +11,10 @@
     /// </summary>
     /// <typeparam name="TReqDecoder">The type of the request decoder for instantiation.</typeparam>
     /// <typeparam name="TResDecoder">The type of the response decoder for instantiation.</typeparam>
-    /// <remarks>
-    /// The implementation of this base class is similar (but not identical to)
-    /// <see cref="Verbose.VerboseDecoderTestBase{TArgDecoder}"/>. It is kept separate as decoders are different.
-    /// </remarks>
-    public abstract class ControlDecoderTestBase<TReqDecoder, TResDecoder>
+    public abstract class ControlDecoderTestBase<TReqDecoder, TResDecoder> : DecoderTestBase
         where TReqDecoder : IControlArgDecoder
         where TResDecoder : IControlArgDecoder
     {
-        public enum DecoderType
-        {
-            Line,
-            Packet,
-            Specialized,
-        }
-
-        public enum Endianness
-        {
-            Little = 1,
-            Big = 2
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
-        /// </summary>
-        /// <param name="decoderType">The decoder that should be used to test the byte sequence.</param>
-        /// <param name="serviceId">The service identifier that is expected to be generated.</param>
-        /// <param name="requestType">Type of the request that is expected to be generated.</param>
-        /// <param name="responseType">Type of the response that is expected to be generated.</param>
-        /// <remarks>
-        /// The <paramref name="decoderType"/> defines the type of decoder that is used to decode the control payload.
-        /// <list type="bullet">
-        /// <item>
-        /// <see cref="DecoderType.Line"/>: The payload is put in a proper DLT packet with storage header, and the main
-        /// decoder is used.
-        /// </item>
-        /// <item>
-        /// <see cref="DecoderType.Packet"/>: The <see cref="ControlDltDecoder"/> is used to decode the payload.
-        /// </item>
-        /// <item>
-        /// <see cref="DecoderType.Specialized"/>: The <see cref="TReqDecoder"/> or <see cref="TResDecoder"/> is used to
-        /// decode the payload.
-        /// </item>
-        /// </list>
-        /// </remarks>
-        protected ControlDecoderTestBase(DecoderType decoderType, int serviceId, Type requestType, Type responseType)
-            : this(decoderType, Endianness.Little, serviceId, requestType, responseType, null, null) { }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
         /// </summary>
@@ -115,19 +69,14 @@
         /// </list>
         /// </remarks>
         protected ControlDecoderTestBase(DecoderType decoderType, Endianness endian, int serviceId, Type requestType, Type responseType,
-            DltFactory factory, IControlDltDecoder ctlDecoder)
+            DltFactory factory, IControlDltDecoder ctlDecoder) : base(decoderType, endian)
         {
-            Type = decoderType;
-            Endian = endian;
             ServiceId = serviceId;
             m_RequestType = requestType;
             m_ResponseType = responseType;
             m_CustomFactory = factory;
             m_CustomDecoder = ctlDecoder;
         }
-
-        protected DecoderType Type { get; }
-        protected Endianness Endian { get; }
 
         protected int ServiceId { get; }
 
@@ -184,48 +133,15 @@
 
         private void DecodeLine(DltType dltType, byte[] data, string fileName, out IControlArg service)
         {
-            DltFactory factory;
-            if (m_CustomFactory != null) {
-                factory = m_CustomFactory;
-            } else {
-                factory = new DltFactory(DltFactoryType.File);
-            }
-
-            using (DltPacketWriter writer = new DltPacketWriter() {
-                EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
-            }) {
-                bool isBig = Endian == Endianness.Big;
-                factory.Control(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), dltType, data).BigEndian(isBig).Append();
-                using (Stream stream = writer.Stream()) {
-                    if (!string.IsNullOrEmpty(fileName)) {
-                        string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "control", isBig ? "big" : "little");
-                        string outPath = Path.Combine(dir, $"{fileName}.dlt");
-                        if (!Directory.Exists(dir)) {
-                            Directory.CreateDirectory(dir);
-                        }
-                        writer.Write(outPath);
-                    }
-
-                    Task<DltTraceLineBase> lineTask = WriteDltPacket(factory, stream);
-                    DltTraceLineBase line = lineTask.GetAwaiter().GetResult();
-                    Assert.That(line, Is.TypeOf<DltControlTraceLine>());
-                    DltControlTraceLine control = (DltControlTraceLine)line;
-                    service = control.Service;
-                }
-            }
+            DltTraceLineBase line = DecodeLine(m_CustomFactory, dltType, data, fileName);
+            Assert.That(line, Is.TypeOf<DltControlTraceLine>());
+            DltControlTraceLine control = (DltControlTraceLine)line;
+            service = control.Service;
         }
 
-        private static async Task<DltTraceLineBase> WriteDltPacket(DltFactory factory, Stream stream)
+        protected override void CreateLine(DltFactory factory, DltPacketWriter writer, DltType dltType, byte[] data, bool msbf)
         {
-            DltTraceLineBase line;
-            using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
-                line = await reader.GetLineAsync();
-
-                // This is the only way to check the length, that this was the only packet decoded.
-                DltTraceLineBase lastLine = await reader.GetLineAsync();
-                Assert.That(lastLine, Is.Null);
-                return line;
-            }
+            factory.Control(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), dltType, data).BigEndian(msbf).Append();
         }
 
         private void DecodePacket(DltType dltType, byte[] data, out IControlArg service)

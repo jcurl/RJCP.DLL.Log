@@ -30,9 +30,9 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
-                int l2 = m_Factory.Generate(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message 2").Version(2).Append();
-                m_Factory.Generate(writer, DltTestData.Time3, DltTime.DeviceTime(1.233), DltType.LOG_INFO, "Message 3").Append();
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
+                int l2 = m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message 2").Version(2).Append();
+                m_Factory.Verbose(writer, DltTestData.Time3, DltTime.DeviceTime(1.233), DltType.LOG_INFO, "Message 3").Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(CorruptedVersionPacketReSync));
 
                 using (Stream stream = writer.Stream())
@@ -60,9 +60,9 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
                 int r = writer.Random(100);
-                m_Factory.Generate(writer, DltTestData.Time3, DltTime.DeviceTime(1.233), DltType.LOG_INFO, "Message 3").Append();
+                m_Factory.Verbose(writer, DltTestData.Time3, DltTime.DeviceTime(1.233), DltType.LOG_INFO, "Message 3").Append();
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(RandomDataPacketReSync));
 
                 using (Stream stream = writer.Stream())
@@ -93,9 +93,9 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                int l1 = m_Factory.Generate(writer, DltTestData.Time4, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Length(25).Append();
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time4, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Length(25).Append();
                 int r = writer.Random(256);
-                m_Factory.Generate(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
+                m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
                 await m_Factory.WriteAsync(writer, nameof(InvalidLengthTooShort));
 
                 using (Stream stream = writer.Stream())
@@ -125,9 +125,9 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                int l1 = m_Factory.Generate(writer, DltTestData.Time4, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Length(46).Append();
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time4, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Length(46).Append();
                 int r = writer.Random(256);
-                m_Factory.Generate(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
+                m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
                 await m_Factory.WriteAsync(writer, nameof(InvalidLengthTooLong));
 
                 using (Stream stream = writer.Stream())
@@ -155,8 +155,8 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
-                int l1 = m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1, Array.Empty<byte>()).Append();
-                m_Factory.Generate(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1, Array.Empty<byte>()).Append();
+                m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     DltTraceLineBase line;
@@ -232,9 +232,9 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
-                int l1 = m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
                     new byte[] { typeInfo, 0x00, 0x00, 0x00, 0x33, 0x33, 0xF3, 0x3F }).Append();
-                m_Factory.Generate(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
+                m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     DltTraceLineBase line;
@@ -280,9 +280,9 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
-                int l1 = m_Factory.Generate(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
                     new byte[] { 0x00, typeInfo, 0x00, 0x00, length, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 }).Append();
-                m_Factory.Generate(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
+                m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2").Append();
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     DltTraceLineBase line;

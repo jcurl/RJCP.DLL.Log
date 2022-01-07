@@ -39,21 +39,21 @@ Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical co
 
 | Project 'dlt' Type     | Method                        | mean (netcore31) | stderr |
 |:-----------------------|:------------------------------|-----------------:|-------:|
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 10.53            | 0.03   |
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 10.93            | 0.02   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 10.78            | 0.03   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 11.20            | 0.04   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 11.31            | 0.02   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 11.87            | 0.02   |
-| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 9.06             | 0.03   |
-| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 9.47             | 0.02   |
-| DltDecoderArgBenchmark | DecodeBool                    | 7.03             | 0.05   |
-| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 54.68            | 0.14   |
-| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 54.33            | 0.14   |
-| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 43.87            | 0.09   |
-| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 42.90            | 0.07   |
-| DltDecoderBenchmark    | DecodeStringFilePackets       | 3569.30          | 4.02   |
-| DltDecoderBenchmark    | DecodeIntFilePackets          | 3136.45          | 9.48   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 10.61            | 0.03   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 10.96            | 0.02   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 10.82            | 0.03   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 10.62            | 0.02   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 11.67            | 0.01   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 11.68            | 0.02   |
+| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 9.13             | 0.02   |
+| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 10.68            | 0.02   |
+| DltDecoderArgBenchmark | DecodeBool                    | 6.88             | 0.03   |
+| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 54.98            | 0.13   |
+| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 54.37            | 0.07   |
+| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 43.83            | 0.12   |
+| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 43.18            | 0.07   |
+| DltDecoderBenchmark    | DecodeStringFilePackets       | 3558.41          | 2.58   |
+| DltDecoderBenchmark    | DecodeIntFilePackets          | 3177.38          | 7.41   |
 
 Description of the test results:
 
