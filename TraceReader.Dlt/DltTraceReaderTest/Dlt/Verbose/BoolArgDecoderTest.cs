@@ -1,90 +1,171 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
-    using System;
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(BoolArgDecoder))]
-    [TestFixture(typeof(VerboseArgDecoder))]
-    public class BoolArgDecoderTest<T> where T : IVerboseArgDecoder
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
+    public class BoolArgDecoderTest : VerboseDecoderTestBase<BoolArgDecoder>
     {
+        public BoolArgDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian)
+        { }
+
         [Test]
         public void DecodeBoolFalse8bit()
         {
-            DecodeBool(new byte[] { 0x11, 0x00, 0x00, 0x00, 0x00 }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x11, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x11, 0x00 };
+
+            Decode(payload, "Bool_False8bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("false"));
+            Assert.That(arg.Data, Is.False);
         }
 
         [Test]
         public void DecodeBoolFalse16bit()
         {
-            DecodeBool(new byte[] { 0x12, 0x00, 0x00, 0x00, 0x00, 0x00 }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x12, 0x00, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x12, 0x00, 0x00 };
+
+            Decode(payload, "Bool_False16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("false"));
+            Assert.That(arg.Data, Is.False);
         }
 
         [Test]
         public void DecodeBoolFalse32bit()
         {
-            DecodeBool(new byte[] { 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x13, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x13, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Bool_False32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("false"));
+            Assert.That(arg.Data, Is.False);
         }
 
         [Test]
         public void DecodeBoolFalse64bit()
         {
-            DecodeBool(new byte[] { 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Bool_False64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("false"));
+            Assert.That(arg.Data, Is.False);
         }
 
         [Test]
         public void DecodeBoolFalse128bit()
         {
-            DecodeBool(new byte[] { 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x15, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Bool_False128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("false"));
+            Assert.That(arg.Data, Is.False);
         }
 
         [Test]
         public void DecodeBoolTrue8bit()
         {
-            DecodeBool(new byte[] { 0x11, 0x00, 0x00, 0x00, 0xFF }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x11, 0x00, 0x00, 0x00, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x11, 0xFF };
+
+            Decode(payload, "Bool_True8bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("true"));
+            Assert.That(arg.Data, Is.True);
         }
 
         [Test]
         public void DecodeBoolTrue16bit()
         {
-            DecodeBool(new byte[] { 0x12, 0x00, 0x00, 0x00, 0xFF, 0xFF }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x12, 0x00, 0x00, 0x00, 0xFF, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x12, 0xFF, 0xFF };
+
+            Decode(payload, "Bool_True16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("true"));
+            Assert.That(arg.Data, Is.True);
         }
 
         [Test]
         public void DecodeBoolTrue32bit()
         {
-            DecodeBool(new byte[] { 0x13, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x13, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x13, 0xFF, 0xFF, 0xFF, 0xFF };
+
+            Decode(payload, "Bool_True32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("true"));
+            Assert.That(arg.Data, Is.True);
         }
 
         [Test]
         public void DecodeBoolTrue64bit()
         {
-            DecodeBool(new byte[] { 0x14, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x14, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x14, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+            Decode(payload, "Bool_True64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("true"));
+            Assert.That(arg.Data, Is.True);
         }
 
         [Test]
         public void DecodeBoolTrue128bit()
         {
-            DecodeBool(new byte[] { 0x15, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x15, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x15, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+            Decode(payload, "Bool_True128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BoolDltArg>());
+            BoolDltArg arg = (BoolDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("true"));
+            Assert.That(arg.Data, Is.True);
         }
 
-        [TestCase(0x10, TestName = "DecodeBoolUnknown")]
-        [TestCase(0x17, TestName = "DecodeBoolUndefined")]
-        public void DecodeBool(byte typeInfo)
+        [TestCase(0x10, 0x00, TestName = "DecodeBoolZeroLength")]
+        [TestCase(0x17, 0x00, TestName = "DecodeBoolUnknownLength")]
+        [TestCase(0x10, 0x08, TestName = "DecodeBoolZeroLengthVarInfo")]
+        [TestCase(0x17, 0x08, TestName = "DecodeBoolUnknownLengthVarInfo")]
+        public void DecodeBoolInvalid(byte typeInfo, byte cod1)
         {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(new byte[] { typeInfo, 0x00, 0x00, 0x00 }, false, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(-1));
-            Assert.That(arg, Is.Null);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { typeInfo, cod1, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, cod1, typeInfo };
 
-        private static void DecodeBool(byte[] buffer, bool result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, false, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<BoolDltArg>());
-            Assert.That(((BoolDltArg)arg).Data, Is.EqualTo(result));
+            DecodeIsInvalid(payload, $"Bool_Invalid_{typeInfo:x2}");
         }
     }
 }

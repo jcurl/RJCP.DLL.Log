@@ -4,77 +4,73 @@
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(RawArgDecoder))]
-    [TestFixture(typeof(VerboseArgDecoder))]
-    public class RawArgDecoderTest<T> where T : IVerboseArgDecoder
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
+    public class RawArgDecoderTest : VerboseDecoderTestBase<RawArgDecoder>
     {
+        public RawArgDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian)
+        { }
+
         [Test]
-        public void RawArgLE()
+        public void RawArg()
         {
-            DecodeRaw(new byte[] {
-                0x00, 0x04, 0x00, 0x00,
-                0x08, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88
-            }, false);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x04, 0x00, 0x00, 0x08, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 } :
+                new byte[] { 0x00, 0x00, 0x04, 0x00, 0x00, 0x08, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88 };
+
+            Decode(payload, "RawArg", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<RawDltArg>());
+            RawDltArg arg = (RawDltArg)verboseArg;
+            Assert.That(arg.Data, Is.EqualTo(payload[6..]));
         }
 
         [Test]
-        public void RawArgBE()
+        public void RawArgEmpty()
         {
-            DecodeRaw(new byte[] {
-                0x00, 0x04, 0x00, 0x00,
-                0x00, 0x08, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88
-            }, true);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x04, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "RawArgEmpty", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<RawDltArg>());
+            RawDltArg arg = (RawDltArg)verboseArg;
+            Assert.That(arg.Data.Length, Is.EqualTo(0));
         }
 
         [Test]
-        public void RawArgEmptyLE()
+        public void RawArgLarge()
         {
-            DecodeRaw(new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 }, false);
-        }
+            byte[] payload = new byte[65000];
+            Random r = new Random();
+            if (Endian == Endianness.Little) {
+                payload[0] = 0x00;
+                payload[1] = 0x04;
+                payload[2] = 0x00;
+                payload[3] = 0x00;
+                payload[4] = (byte)((payload.Length - 6) & 0xFF);
+                payload[5] = (byte)((payload.Length - 6) >> 8);
+            } else {
+                payload[0] = 0x00;
+                payload[1] = 0x00;
+                payload[2] = 0x04;
+                payload[3] = 0x00;
+                payload[4] = (byte)((payload.Length - 6) >> 8);
+                payload[5] = (byte)((payload.Length - 6) & 0xFF);
+            }
 
-        [Test]
-        public void RawArgEmptyBE()
-        {
-            DecodeRaw(new byte[] { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00 }, true);
-        }
+            for (int i = 6; i < payload.Length; i++) {
+                payload[i] = (byte)r.Next(0, 255);
+            }
 
-        [Test]
-        public void RawArgLargePayloadLE()
-        {
-            byte[] data = new byte[65000];
-            new Random().NextBytes(data);
-            data[0] = 0x00;
-            data[1] = 0x04;
-            data[2] = 0x00;
-            data[3] = 0x00;
-            data[4] = (byte)((data.Length - 6) & 0xFF);
-            data[5] = (byte)((data.Length - 6) >> 8);
-
-            DecodeRaw(data, false);
-        }
-
-        [Test]
-        public void RawArgLargePayloadBE()
-        {
-            byte[] data = new byte[65000];
-            new Random().NextBytes(data);
-            data[0] = 0x00;
-            data[1] = 0x04;
-            data[2] = 0x00;
-            data[3] = 0x00;
-            data[4] = (byte)((data.Length - 6) >> 8);
-            data[5] = (byte)((data.Length - 6) & 0xFF);
-
-            DecodeRaw(data, true);
-        }
-
-        private static void DecodeRaw(byte[] buffer, bool msbf)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<RawDltArg>());
-            Assert.That(((RawDltArg)arg).Data, Is.EqualTo(buffer[6..]));
+            Decode(payload, "RawArgLarge", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<RawDltArg>());
+            RawDltArg arg = (RawDltArg)verboseArg;
+            Assert.That(arg.Data, Is.EqualTo(payload[6..]));
         }
     }
 }

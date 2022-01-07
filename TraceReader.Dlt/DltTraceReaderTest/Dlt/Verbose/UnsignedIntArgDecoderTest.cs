@@ -1,293 +1,303 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
-    using System;
+    using System.Globalization;
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(UnsignedIntArgDecoder))]
-    [TestFixture(typeof(VerboseArgDecoder))]
-    public class UnsignedIntArgDecoderTest<T> where T : IVerboseArgDecoder
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
+    public class UnsignedIntArgDecoderTest : VerboseDecoderTestBase<UnsignedIntArgDecoder>
     {
-        private const int UnsignedArgType = 0x80;
+        public UnsignedIntArgDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian)
+        { }
 
         [TestCase(0x40, 64U)]
         [TestCase(0x80, 128U)]
         [TestCase(0xFF, 255U)]
-        public void DecodeUint8bitLE(byte value, uint result)
+        public void DecodeUInt8bit(byte value, uint result)
         {
-            DecodeUint(new byte[] { 0x41, 0x00, 0x00, 0x00, value }, false, result);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x41, 0x00, 0x00, 0x00, value } :
+                new byte[] { 0x00, 0x00, 0x00, 0x41, value };
 
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeUint8bitBE(byte value, uint result)
-        {
-            DecodeUint(new byte[] { 0x41, 0x00, 0x00, 0x00, value }, true, result);
-        }
-
-        [Test]
-        public void DecodeUint16bitLE()
-        {
-            DecodeUint(new byte[] { 0x42, 0x00, 0x00, 0x00, 0x12, 0x34 }, false, 0x3412);
+            Decode(payload, $"UnsignedInt_8bit_{value:x2}", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(result.ToString(CultureInfo.InvariantCulture)));
+            Assert.That(arg.Data, Is.EqualTo(result));
+            Assert.That(arg.DataUnsigned, Is.EqualTo(result));
         }
 
         [Test]
-        public void DecodeUint16bitBE()
+        public void DecodeUInt16bit()
         {
-            DecodeUint(new byte[] { 0x42, 0x00, 0x00, 0x00, 0x12, 0x34 }, true, 0x1234);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x42, 0x00, 0x00, 0x00, 0x34, 0x12 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x42, 0x12, 0x34 };
+
+            Decode(payload, "UnsignedInt_16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("4660"));
+            Assert.That(arg.Data, Is.EqualTo(0x1234));
+            Assert.That(arg.DataUnsigned, Is.EqualTo(0x1234));
         }
 
         [Test]
-        public void DecodeUint32bitLE()
+        public void DecodeUInt32bit()
         {
-            DecodeUint(new byte[] { 0x43, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78 }, false, 0x78563412);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x43, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x43, 0x78, 0x56, 0x34, 0x12 };
+
+            Decode(payload, "UnsignedInt_32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("2018915346"));
+            Assert.That(arg.Data, Is.EqualTo(0x78563412));
+            Assert.That(arg.DataUnsigned, Is.EqualTo(0x78563412));
         }
 
         [Test]
-        public void DecodeUint32bitBE()
+        public void DecodeUInt64bit()
         {
-            DecodeUint(new byte[] { 0x43, 0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 0x78 }, true, 0x12345678);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x44, 0x00, 0x00, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x44, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB };
+
+            Decode(payload, "UnsignedInt_64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("9900958322455989675"));
+            Assert.That(arg.Data, Is.EqualTo(unchecked((long)0x8967452301EFCDAB)));
+            Assert.That(arg.DataUnsigned, Is.EqualTo(0x8967452301EFCDAB));
         }
 
         [Test]
-        public void DecodeUint64bitLE()
+        public void DecodeUInt128bit()
         {
-            DecodeUint(new byte[] { 0x44, 0x00, 0x00, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, false, 0x8967452301EFCDAB);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x45, 0x00, 0x00, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x45, 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x00, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11 };
 
-        [Test]
-        public void DecodeUint64bitBE()
-        {
-            DecodeUint(new byte[] { 0x44, 0x00, 0x00, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, true, 0xABCDEF0123456789);
-        }
-
-        [Test]
-        public void DecodeUint128bitLE()
-        {
-            DecodeUint128(new byte[] {
-                0x45, 0x00, 0x00, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, false, 0);
-        }
-
-        [Test]
-        public void DecodeUint128bitBE()
-        {
-            DecodeUint128(new byte[] {
-                0x45, 0x00, 0x00, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, true, 0);
-        }
-
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeUintUnknownCoding8bitLE(byte value, uint result)
-        {
-            DecodeUint(new byte[] { 0x41, 0x80, 0x03, 0x00, value }, false, result);
-        }
-
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeUintUnknownCoding8bitBE(byte value, uint result)
-        {
-            DecodeUint(new byte[] { 0x41, 0x80, 0x03, 0x00, value }, true, result);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding16bitLE()
-        {
-            DecodeUint(new byte[] { 0x42, 0x80, 0x03, 0x00, 0x12, 0x34 }, false, 0x3412);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding16bitBE()
-        {
-            DecodeUint(new byte[] { 0x42, 0x80, 0x03, 0x00, 0x12, 0x34 }, true, 0x1234);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding32bitLE()
-        {
-            DecodeUint(new byte[] { 0x43, 0x80, 0x03, 0x00, 0x12, 0x34, 0x56, 0x78 }, false, 0x78563412);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding32bitBE()
-        {
-            DecodeUint(new byte[] { 0x43, 0x80, 0x03, 0x00, 0x12, 0x34, 0x56, 0x78 }, true, 0x12345678);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding64bitLE()
-        {
-            DecodeUint(new byte[] { 0x44, 0x80, 0x03, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, false, 0x8967452301EFCDAB);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding64bitBE()
-        {
-            DecodeUint(new byte[] { 0x44, 0x80, 0x03, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, true, 0xABCDEF0123456789);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding128bitLE()
-        {
-            DecodeUint128(new byte[] {
-                0x45, 0x80, 0x03, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, false, 7);
-        }
-
-        [Test]
-        public void DecodeUintUnknownCoding128bitBE()
-        {
-            DecodeUint128(new byte[] {
-                0x45, 0x80, 0x03, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, true, 7);
+            Decode(payload, "UnsignedInt_128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [TestCase(0x40, 64U)]
         [TestCase(0x80, 128U)]
         [TestCase(0xFF, 255U)]
-        public void DecodeHexInt8bitLE(byte value, uint result)
+        public void DecodeUIntHex8bit(byte value, uint result)
         {
-            DecodeHexUint(new byte[] { 0x41, 0x00, 0x01, 0x00, value }, false, result);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x41, 0x00, 0x01, 0x00, value } :
+                new byte[] { 0x00, 0x01, 0x00, 0x41, value };
 
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeHexInt8bitBE(byte value, uint result)
-        {
-            DecodeHexUint(new byte[] { 0x41, 0x00, 0x01, 0x00, value }, true, result);
-        }
-
-        [Test]
-        public void DecodeHexInt16bitLE()
-        {
-            DecodeHexUint(new byte[] { 0x42, 0x00, 0x01, 0x00, 0x12, 0x34 }, false, 0x3412);
+            Decode(payload, $"UnsignedIntHex_8bit_{value:x2}", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<HexIntDltArg>());
+            HexIntDltArg arg = (HexIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo($"0x{value:x02}"));
+            Assert.That(arg.Data, Is.EqualTo(result));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(1));
         }
 
         [Test]
-        public void DecodeHexInt16bitBE()
+        public void DecodeUIntHex16bit()
         {
-            DecodeHexUint(new byte[] { 0x42, 0x00, 0x01, 0x00, 0x12, 0x34 }, true, 0x1234);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x42, 0x00, 0x01, 0x00, 0x34, 0x12 } :
+                new byte[] { 0x00, 0x01, 0x00, 0x42, 0x12, 0x34 };
+
+            Decode(payload, "UnsignedIntHex_16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<HexIntDltArg>());
+            HexIntDltArg arg = (HexIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0x1234"));
+            Assert.That(arg.Data, Is.EqualTo(0x1234));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(2));
         }
 
         [Test]
-        public void DecodeHexInt32bitLE()
+        public void DecodeUIntHex32bit()
         {
-            DecodeHexUint(new byte[] { 0x43, 0x00, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 }, false, 0x78563412);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x43, 0x00, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 } :
+                new byte[] { 0x00, 0x01, 0x00, 0x43, 0x78, 0x56, 0x34, 0x12 };
+
+            Decode(payload, "UnsignedIntHex_32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<HexIntDltArg>());
+            HexIntDltArg arg = (HexIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0x78563412"));
+            Assert.That(arg.Data, Is.EqualTo(0x78563412));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(4));
         }
 
         [Test]
-        public void DecodeHexInt32bitBE()
+        public void DecodeUIntHex64bit()
         {
-            DecodeHexUint(new byte[] { 0x43, 0x00, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 }, true, 0x12345678);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x44, 0x00, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 } :
+                new byte[] { 0x00, 0x01, 0x00, 0x44, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB };
+
+            Decode(payload, "UnsignedIntHex_64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<HexIntDltArg>());
+            HexIntDltArg arg = (HexIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0x8967452301efcdab"));
+            Assert.That(arg.Data, Is.EqualTo(unchecked((long)0x8967452301EFCDAB)));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(8));
         }
 
         [Test]
-        public void DecodeHexInt64bitLE()
+        public void DecodeUIntHex128bit()
         {
-            DecodeHexUint(new byte[] { 0x44, 0x00, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, false, 0x8967452301EFCDAB);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x45, 0x00, 0x01, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } :
+                new byte[] { 0x00, 0x01, 0x00, 0x45, 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x00, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11 };
+
+            Decode(payload, "UnsignedIntHex_128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeHexInt64bitBE()
+        public void DecodeUIntBin8bit()
         {
-            DecodeHexUint(new byte[] { 0x44, 0x00, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, true, 0xABCDEF0123456789);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x41, 0x80, 0x01, 0x00, 0x40 } :
+                new byte[] { 0x00, 0x01, 0x80, 0x41, 0x40 };
+
+            Decode(payload, "UnsignedIntBin_8bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BinaryIntDltArg>());
+            BinaryIntDltArg arg = (BinaryIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0b0100 0000"));
+            Assert.That(arg.Data, Is.EqualTo(64));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(1));
         }
 
         [Test]
-        public void DecodeHexInt128bitLE()
+        public void DecodeUIntBin16bit()
         {
-            DecodeUint128(new byte[] {
-                0x45, 0x00, 0x01, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, false, 2);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x42, 0x80, 0x01, 0x00, 0x34, 0x12 } :
+                new byte[] { 0x00, 0x01, 0x80, 0x42, 0x12, 0x34 };
+
+            Decode(payload, "UnsignedIntBin_16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BinaryIntDltArg>());
+            BinaryIntDltArg arg = (BinaryIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0b0001 0010 0011 0100"));
+            Assert.That(arg.Data, Is.EqualTo(0x1234));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(2));
         }
 
         [Test]
-        public void DecodeHexInt128bitBE()
+        public void DecodeUIntBin32bit()
         {
-            DecodeUint128(new byte[] {
-                0x45, 0x00, 0x01, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, true, 2);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x43, 0x80, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 } :
+                new byte[] { 0x00, 0x01, 0x80, 0x43, 0x78, 0x56, 0x34, 0x12 };
 
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeBinInt8bitLE(byte value, uint result)
-        {
-            DecodeBinUint(new byte[] { 0x41, 0x80, 0x01, 0x00, value }, false, result);
-        }
-
-        [TestCase(0x40, 64U)]
-        [TestCase(0x80, 128U)]
-        [TestCase(0xFF, 255U)]
-        public void DecodeBinInt8bitBE(byte value, uint result)
-        {
-            DecodeBinUint(new byte[] { 0x41, 0x80, 0x01, 0x00, value }, true, result);
+            Decode(payload, "UnsignedIntBin_32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BinaryIntDltArg>());
+            BinaryIntDltArg arg = (BinaryIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0b0111 1000 0101 0110 0011 0100 0001 0010"));
+            Assert.That(arg.Data, Is.EqualTo(0x78563412));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(4));
         }
 
         [Test]
-        public void DecodeBinInt16bitLE()
+        public void DecodeUIntBin64bit()
         {
-            DecodeBinUint(new byte[] { 0x42, 0x80, 0x01, 0x00, 0x12, 0x34 }, false, 0x3412);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x44, 0x80, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 } :
+                new byte[] { 0x00, 0x01, 0x80, 0x44, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB };
+
+            Decode(payload, "UnsignedIntBin_64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<BinaryIntDltArg>());
+            BinaryIntDltArg arg = (BinaryIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("0b1000 1001 0110 0111 0100 0101 0010 0011 0000 0001 1110 1111 1100 1101 1010 1011"));
+            Assert.That(arg.Data, Is.EqualTo(unchecked((long)0x8967452301EFCDAB)));
+            Assert.That(arg.DataBytesLength, Is.EqualTo(8));
         }
 
         [Test]
-        public void DecodeBinInt16bitBE()
+        public void DecodeUIntBin128bit()
         {
-            DecodeBinUint(new byte[] { 0x42, 0x80, 0x01, 0x00, 0x12, 0x34 }, true, 0x1234);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x45, 0x80, 0x01, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } :
+                new byte[] { 0x00, 0x01, 0x80, 0x45, 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x00, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11 };
+
+            Decode(payload, "UnsignedIntBin_128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeBinInt32bitLE()
+        public void DecodeUIntUnknownCoding8bit()
         {
-            DecodeBinUint(new byte[] { 0x43, 0x80, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 }, false, 0x78563412);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x41, 0x80, 0x03, 0x00, 0x40 } :
+                new byte[] { 0x00, 0x03, 0x80, 0x41, 0x40 };
+
+            Decode(payload, "UnsignedIntUnknownCoding_8bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("64"));
+            Assert.That(arg.Data, Is.EqualTo(64));
         }
 
         [Test]
-        public void DecodeBinInt32bitBE()
+        public void DecodeUIntUnknownCoding16bit()
         {
-            DecodeBinUint(new byte[] { 0x43, 0x80, 0x01, 0x00, 0x12, 0x34, 0x56, 0x78 }, true, 0x12345678);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x42, 0x80, 0x03, 0x00, 0x34, 0x12 } :
+                new byte[] { 0x00, 0x03, 0x80, 0x42, 0x12, 0x34 };
+
+            Decode(payload, "UnsignedIntUnknownCoding_16bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("4660"));
+            Assert.That(arg.Data, Is.EqualTo(0x1234));
         }
 
         [Test]
-        public void DecodeBinInt64bitLE()
+        public void DecodeUIntUnknownCoding32bit()
         {
-            DecodeBinUint(new byte[] { 0x44, 0x80, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, false, 0x8967452301EFCDAB);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x43, 0x80, 0x03, 0x00, 0x12, 0x34, 0x56, 0x78 } :
+                new byte[] { 0x00, 0x03, 0x80, 0x43, 0x78, 0x56, 0x34, 0x12 };
+
+            Decode(payload, "UnsignedIntUnknownCoding_32bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("2018915346"));
+            Assert.That(arg.Data, Is.EqualTo(0x78563412));
         }
 
         [Test]
-        public void DecodeBinInt64bitBE()
+        public void DecodeUIntUnknownCoding64bit()
         {
-            DecodeBinUint(new byte[] { 0x44, 0x80, 0x01, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 }, true, 0xABCDEF0123456789);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x44, 0x80, 0x03, 0x00, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89 } :
+                new byte[] { 0x00, 0x03, 0x80, 0x44, 0x89, 0x67, 0x45, 0x23, 0x01, 0xEF, 0xCD, 0xAB };
+
+            Decode(payload, "UnsignedIntUnknownCoding_64bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnsignedIntDltArg>());
+            UnsignedIntDltArg arg = (UnsignedIntDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("9900958322455989675"));
+            Assert.That(arg.Data, Is.EqualTo(unchecked((long)0x8967452301EFCDAB)));
         }
 
         [Test]
-        public void DecodeBinInt128bitLE()
+        public void DecodeUIntUnknownCoding128bit()
         {
-            DecodeUint128(new byte[] {
-                0x45, 0x80, 0x01, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, false, 3);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x45, 0x80, 0x03, 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF } :
+                new byte[] { 0x00, 0x03, 0x80, 0x45, 0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x00, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11 };
 
-        [Test]
-        public void DecodeBinInt128bitBE()
-        {
-            DecodeUint128(new byte[] {
-                0x45, 0x80, 0x01, 0x00,
-                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x00, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF
-            }, true, 3);
+            Decode(payload, "UnsignedIntUnknownCoding_128bit", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [TestCase(0x40, 0x00, 0x00, TestName = "DecodeUintUnknown")]
@@ -296,48 +306,13 @@
         [TestCase(0x47, 0x80, 0x01, TestName = "DecodeBinIntUndefined")]
         [TestCase(0x40, 0x00, 0x01, TestName = "DecodeHexIntUnknown")]
         [TestCase(0x47, 0x00, 0x01, TestName = "DecodeHexIntUndefined")]
-        public void DecodeUint(byte typeInfo, byte cod1, byte cod2)
+        public void DecodeSignedIntInvalid(byte typeInfo, byte cod1, byte cod2)
         {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(new byte[] { typeInfo, cod1, cod2, 0x00 }, false, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(-1));
-            Assert.That(arg, Is.Null);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { typeInfo, cod1, cod2, 0x00 } :
+                new byte[] { 0x00, cod2, cod1, typeInfo };
 
-        private static void DecodeUint(byte[] buffer, bool msbf, ulong result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<UnsignedIntDltArg>());
-            Assert.That(arg, Is.InstanceOf<IntDltArg>());
-            Assert.That(((UnsignedIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
-            Assert.That(((UnsignedIntDltArg)arg).DataUnsigned, Is.EqualTo(result));
-        }
-
-        private static void DecodeHexUint(byte[] buffer, bool msbf, ulong result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<HexIntDltArg>());
-            Assert.That(arg, Is.InstanceOf<IntDltArg>());
-            Assert.That(((HexIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
-        }
-
-        private static void DecodeBinUint(byte[] buffer, bool msbf, ulong result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<BinaryIntDltArg>());
-            Assert.That(arg, Is.InstanceOf<IntDltArg>());
-            Assert.That(((BinaryIntDltArg)arg).Data, Is.EqualTo(unchecked((long)result)));
-        }
-
-        private static void DecodeUint128(byte[] buffer, bool msbf, int encoding)
-        {
-            ArgDecoderTest.DecodeUnknown<T>(buffer, msbf, encoding, UnsignedArgType);
+            DecodeIsInvalid(payload, $"UnsignedInt_Invalid_{typeInfo:x2}_{cod1:x2}_{cod2:x2}");
         }
     }
 }

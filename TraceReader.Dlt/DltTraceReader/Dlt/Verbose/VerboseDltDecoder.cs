@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// The <see cref="VerboseDltDecoder"/> is responsible for decoding all arguments in a verbose payload.
@@ -43,19 +44,25 @@
         /// </remarks>
         public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
-            int argCount = 0;
-            int payloadLength = 0;
+            try {
+                int argCount = 0;
+                int payloadLength = 0;
 
-            do {
-                int argLength = m_ArgDecoder.Decode(buffer, lineBuilder.BigEndian, out IDltArg argument);
-                if (argLength < 0) return -1;
+                do {
+                    int typeInfo = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
+                    int argLength = m_ArgDecoder.Decode(typeInfo, buffer, lineBuilder.BigEndian, out IDltArg argument);
+                    if (argLength < 0) return -1;
 
-                lineBuilder.AddArgument(argument);
-                buffer = buffer[argLength..];
-                argCount++;
-                payloadLength += argLength;
-            } while (argCount < lineBuilder.NumberOfArgs);
-            return payloadLength;
+                    lineBuilder.AddArgument(argument);
+                    buffer = buffer[argLength..];
+                    argCount++;
+                    payloadLength += argLength;
+                } while (argCount < lineBuilder.NumberOfArgs);
+                return payloadLength;
+            } catch (Exception ex) {
+                Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding");
+                return -1;
+            }
         }
     }
 }

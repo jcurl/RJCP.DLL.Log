@@ -21,7 +21,7 @@ end note
 IVerboseDltDecoder <|.d. VerboseDltDecoder
 
 interface IVerboseArgDecoder {
-    +Decode(buffer: ReadOnlySpan<byte>, msbf: bool, [out] IDltArg *arg): int
+    +Decode(typeInfo: int, buffer: ReadOnlySpan<byte>, \n msbf: bool, [out] IDltArg *arg): int
 }
 
 class BoolArgDecoder

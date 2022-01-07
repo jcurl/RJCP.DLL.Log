@@ -45,6 +45,7 @@
         /// <summary>
         /// Decodes a verbose DLT message payload signed integer argument.
         /// </summary>
+        /// <param name="typeInfo">The decoded Type Info for the specific argument decoded correctly.</param>
         /// <param name="buffer">The buffer where the argument to be decoded can be found.</param>
         /// <param name="msbf">
         /// Sets the endianness, if <see langword="false"/> then little endian, else if <see langword="true"/> sets big
@@ -54,23 +55,17 @@
         /// <returns>
         /// The number of decoded bytes, which represent the encoded argument, or -1 if decoding fails.
         /// </returns>
-        /// <remarks>
-        /// This decoder cannot decode fields with the VARI bit or FIXP bit set.
-        /// </remarks>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        /// <remarks>This decoder cannot decode fields with the VARI bit or FIXP bit set.</remarks>
+        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
-            if (TypeInfo.IsVariSet(buffer)) {
+            if ((typeInfo & (DltConstants.TypeInfo.VariableInfo | DltConstants.TypeInfo.FixedPoint)) != 0) {
                 arg = null;
                 return -1;
             }
 
-            if (IsFixedPoint(buffer)) {
-                arg = null;
-                return -1;
-            }
-
-            IntegerEncodingType coding = (IntegerEncodingType)TypeInfo.GetCoding(buffer);
-            int argLength = buffer[0] & DltConstants.TypeInfo.TypeLengthMask;
+            IntegerEncodingType coding =
+                (IntegerEncodingType)((typeInfo & DltConstants.TypeInfo.CodingMask) >> DltConstants.TypeInfo.CodingBitShift);
+            int argLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
             switch (argLength) {
             case DltConstants.TypeInfo.TypeLength128bit:
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 16)], msbf);
@@ -110,11 +105,6 @@
         {
             short data = BitOperations.To16Shift(buffer, !msbf);
             return Create16BitArgument(data, coding);
-        }
-
-        private static bool IsFixedPoint(ReadOnlySpan<byte> buffer)
-        {
-            return (buffer[1] & (DltConstants.TypeInfo.FixedPoint >> 8)) != 0;
         }
     }
 }

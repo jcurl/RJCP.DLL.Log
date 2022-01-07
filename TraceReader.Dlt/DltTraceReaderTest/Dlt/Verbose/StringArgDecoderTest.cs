@@ -5,174 +5,190 @@
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(StringArgDecoder))]
-    [TestFixture(typeof(VerboseArgDecoder))]
-    public class StringArgDecoderTest<T> where T : IVerboseArgDecoder
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
+    public class StringArgDecoderTest : VerboseDecoderTestBase<StringArgDecoder>
     {
+        public StringArgDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian)
+        { }
+
         [Test]
-        public void DecodeUtf8StringLE()
+        public void DecodeUtf8String()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x09, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, false, StringEncodingType.Utf8, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x82, 0x00, 0x00, 0x09, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x82, 0x00, 0x00, 0x09, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 };
+
+            Decode(payload, "StringUtf8", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("München"));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Utf8));
         }
 
         [Test]
-        public void DecodeUtf8StringBE()
+        public void DecodeUtf8StringNoNul()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x00, 0x09, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, true, StringEncodingType.Utf8, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x82, 0x00, 0x00, 0x08, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E } :
+                new byte[] { 0x00, 0x00, 0x82, 0x00, 0x00, 0x08, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E };
+
+            Decode(payload, "StringUtf8_NoNul", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("München"));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Utf8));
         }
 
         [Test]
-        public void DecodeUtf8StringNoNulLE()
+        public void DecodeAsciiString()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x08, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E
-            }, false, StringEncodingType.Utf8, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x02, 0x00, 0x00, 0x09, 0x00, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x02, 0x00, 0x00, 0x09, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 };
+
+            Decode(payload, "StringAscii", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("Muenchen"));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
 
         [Test]
-        public void DecodeUtf8StringNoNulBE()
+        public void DecodeAsciiStringNoNul()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x00, 0x08, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E
-            }, true, StringEncodingType.Utf8, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x02, 0x00, 0x00, 0x08, 0x00, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E } :
+                new byte[] { 0x00, 0x00, 0x02, 0x00, 0x00, 0x08, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E };
+
+            Decode(payload, "StringAscii_NoNul", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("Muenchen"));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
 
         [Test]
-        public void DecodeAsciiStringLE()
+        public void DecodeAsciiStringAsIso()
         {
-            DecodeString(new byte[] {
-                0x00, 0x02, 0x00, 0x00, 0x09, 0x00, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, false, StringEncodingType.Ascii, "Muenchen");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x02, 0x00, 0x00, 0x08, 0x00, 0x4D, 0xFC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x02, 0x00, 0x00, 0x08, 0x4D, 0xFC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 };
+
+            Decode(payload, "StringAsciiAsIso", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("München"));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
 
         [Test]
-        public void DecodeAsciiStringBE()
+        public void DecodeAsciiEmptyString()
         {
-            DecodeString(new byte[] {
-                0x00, 0x02, 0x00, 0x00, 0x00, 0x09, 0x4D, 0x75, 0x65, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, true, StringEncodingType.Ascii, "Muenchen");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x02, 0x00, 0x00, 0x01, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x02, 0x00, 0x00, 0x01, 0x00 };
+
+            Decode(payload, "StringAsciiEmpty", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(string.Empty));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
 
         [Test]
-        public void DecodeAsciiStringAsIsoLE()
+        public void DecodeUtf8EmptyString()
         {
-            DecodeString(new byte[] {
-                0x00, 0x02, 0x00, 0x00, 0x08, 0x00, 0x4D, 0xFC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, false, StringEncodingType.Ascii, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x82, 0x00, 0x00, 0x01, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x82, 0x00, 0x00, 0x01, 0x00 };
+
+            Decode(payload, "StringUtf8Empty", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(string.Empty));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Utf8));
         }
 
         [Test]
-        public void DecodeAsciiStringAsIsoBE()
+        public void DecodeAsciiEmptyStringNoNul()
         {
-            DecodeString(new byte[] {
-                0x00, 0x02, 0x00, 0x00, 0x00, 0x08, 0x4D, 0xFC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, true, StringEncodingType.Ascii, "München");
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x02, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "StringAsciiEmptyNoNul", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(string.Empty));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
 
         [Test]
-        public void DecodeEmptyStringLE()
+        public void DecodeUtf8EmptyStringNoNul()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x01, 0x00, 0x00
-            }, false, StringEncodingType.Utf8, string.Empty);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x82, 0x00, 0x00, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x82, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "StringUtf8EmptyNoNul", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(string.Empty));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Utf8));
         }
 
         [Test]
-        public void DecodeEmptyStringBE()
+        public void DecodeUnknownCodingString()
         {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x00, 0x01, 0x00
-            }, true, StringEncodingType.Utf8, string.Empty);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x00, 0x82, 0x03, 0x00, 0x09, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 } :
+                new byte[] { 0x00, 0x03, 0x82, 0x00, 0x00, 0x09, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00 };
 
-        [Test]
-        public void DecodeEmptyStringNoNulLE()
-        {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x00, 0x00
-            }, false, StringEncodingType.Utf8, string.Empty);
-        }
-
-        [Test]
-        public void DecodeEmptyStringNoNulBE()
-        {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x00, 0x00, 0x00, 0x00
-            }, true, StringEncodingType.Utf8, string.Empty);
-        }
-
-        [Test]
-        public void DecodeUnknownCodingAsUtf8StringLE()
-        {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x03, 0x00, 0x09, 0x00, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, false, (StringEncodingType)7, "München");
-        }
-
-        [Test]
-        public void DecodeUnknownCodingAsUtf8StringBE()
-        {
-            DecodeString(new byte[] {
-                0x00, 0x82, 0x03, 0x00, 0x00, 0x09, 0x4D, 0xC3, 0xBC, 0x6E, 0x63, 0x68, 0x65, 0x6E, 0x00
-            }, true, (StringEncodingType)7, "München");
+            Decode(payload, "StringUtf8", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("München"));
+            Assert.That(arg.Coding, Is.EqualTo((StringEncodingType)7));
         }
 
         [Test]
         public void DecodeAsciiLargePayloadLE()
         {
-            byte[] data = new byte[65000];
+            byte[] payload = new byte[65000];
             Random r = new Random();
-
-            data[0] = 0x00;
-            data[1] = 0x02;
-            data[2] = 0x00;
-            data[3] = 0x00;
-            data[4] = (byte)((data.Length - 6) & 0xFF);
-            data[5] = (byte)((data.Length - 6) >> 8);
-
-            StringBuilder strBuilder = new StringBuilder();
-            for (int i = 6; i < data.Length; i++) {
-                data[i] = (byte)r.Next(32, 126);
-                strBuilder.Append((char)data[i]);
+            if (Endian == Endianness.Little) {
+                payload[0] = 0x00;
+                payload[1] = 0x02;
+                payload[2] = 0x00;
+                payload[3] = 0x00;
+                payload[4] = (byte)((payload.Length - 6) & 0xFF);
+                payload[5] = (byte)((payload.Length - 6) >> 8);
+            } else {
+                payload[0] = 0x00;
+                payload[1] = 0x00;
+                payload[2] = 0x02;
+                payload[3] = 0x00;
+                payload[4] = (byte)((payload.Length - 6) >> 8);
+                payload[5] = (byte)((payload.Length - 6) & 0xFF);
             }
 
-            DecodeString(data, false, StringEncodingType.Ascii, strBuilder.ToString());
-        }
-
-        [Test]
-        public void DecodeAsciiLargePayloadBE()
-        {
-            byte[] data = new byte[65000];
-            Random r = new Random();
-
-            data[0] = 0x00;
-            data[1] = 0x02;
-            data[2] = 0x00;
-            data[3] = 0x00;
-            data[4] = (byte)((data.Length - 6) >> 8);
-            data[5] = (byte)((data.Length - 6) & 0xFF);
-
             StringBuilder strBuilder = new StringBuilder();
-            for (int i = 6; i < data.Length; i++) {
-                data[i] = (byte)r.Next(32, 126);
-                strBuilder.Append((char)data[i]);
+            for (int i = 6; i < payload.Length; i++) {
+                payload[i] = (byte)r.Next(32, 126);
+                strBuilder.Append((char)payload[i]);
             }
 
-            DecodeString(data, true, StringEncodingType.Ascii, strBuilder.ToString());
-        }
-
-        private static void DecodeString(byte[] buffer, bool msbf, StringEncodingType coding, string result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<StringDltArg>());
-            Assert.That(((StringDltArg)arg).Data, Is.EqualTo(result));
-            Assert.That(((StringDltArg)arg).Coding, Is.EqualTo(coding));
+            Decode(payload, "StringAsciiLarge", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<StringDltArg>());
+            StringDltArg arg = (StringDltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo(strBuilder.ToString()));
+            Assert.That(arg.Coding, Is.EqualTo(StringEncodingType.Ascii));
         }
     }
 }

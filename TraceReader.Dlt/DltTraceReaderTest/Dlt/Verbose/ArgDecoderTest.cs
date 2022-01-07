@@ -3,6 +3,7 @@
     using System;
     using Args;
     using NUnit.Framework;
+    using RJCP.Core;
 
     internal static class ArgDecoderTest
     {
@@ -12,7 +13,8 @@
             // Important is, even though .NET doesn't have a 128-bit integer type, we know how to decode it and present
             // it to the user.
             T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
+            int typeInfo = BitOperations.To32Shift(buffer, !msbf);
+            int length = decoder.Decode(typeInfo, buffer, msbf, out IDltArg arg);
             Assert.That(length, Is.EqualTo(buffer.Length));
             Assert.That(arg, Is.TypeOf<UnknownVerboseDltArg>());
 

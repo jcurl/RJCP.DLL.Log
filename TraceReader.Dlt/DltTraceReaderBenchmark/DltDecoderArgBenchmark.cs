@@ -27,42 +27,42 @@
         private static readonly byte[] StringASciiArgBE = new byte[] { 0x00, 0x02, 0x00, 0x00, 0x00, 0x0B, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00 };
 
         [Benchmark]
-        public void DecodeSignedInteger32bitLE() => SignedIntArgDecoder.Decode(SignedInt32, false, out _);
+        public void DecodeSignedInteger32bitLE() => SignedIntArgDecoder.Decode(0x23, SignedInt32, false, out _);
 
         [Benchmark]
-        public void DecodeSignedInteger32bitBE() => SignedIntArgDecoder.Decode(SignedInt32, true, out _);
+        public void DecodeSignedInteger32bitBE() => SignedIntArgDecoder.Decode(0x23, SignedInt32, true, out _);
 
         [Benchmark]
-        public void DecodeUnsignedInteger32bitLE() => UnsignedIntArgDecoder.Decode(UnsignedInt32, false, out _);
+        public void DecodeUnsignedInteger32bitLE() => UnsignedIntArgDecoder.Decode(0x43, UnsignedInt32, false, out _);
 
         [Benchmark]
-        public void DecodeUnsignedInteger32bitBE() => UnsignedIntArgDecoder.Decode(UnsignedInt32, true, out _);
+        public void DecodeUnsignedInteger32bitBE() => UnsignedIntArgDecoder.Decode(0x43, UnsignedInt32, true, out _);
 
         [Benchmark]
-        public void DecodeUnsignedInteger32bitHex() => UnsignedIntArgDecoder.Decode(UnsignedInt32Hex, false, out _);
+        public void DecodeUnsignedInteger32bitHex() => UnsignedIntArgDecoder.Decode(0x010043, UnsignedInt32Hex, false, out _);
 
         [Benchmark]
-        public void DecodeUnsignedInteger32bitBin() => UnsignedIntArgDecoder.Decode(UnsignedInt32Bin, false, out _);
+        public void DecodeUnsignedInteger32bitBin() => UnsignedIntArgDecoder.Decode(0x018043, UnsignedInt32Bin, false, out _);
 
         [Benchmark]
-        public void DecodeFloat32bitLE() => FloatArgDecoder.Decode(Float32LE, false, out _);
+        public void DecodeFloat32bitLE() => FloatArgDecoder.Decode(0x83, Float32LE, false, out _);
 
         [Benchmark]
-        public void DecodeFloat32bitBE() => FloatArgDecoder.Decode(Float32BE, true, out _);
+        public void DecodeFloat32bitBE() => FloatArgDecoder.Decode(0x83, Float32BE, true, out _);
 
         [Benchmark]
-        public void DecodeBool() => BoolArgDecoder.Decode(Bool, false, out _);
+        public void DecodeBool() => BoolArgDecoder.Decode(0x11, Bool, false, out _);
 
         [Benchmark]
-        public void DecodeStringUtf8LE() => StringArgDecoder.Decode(StringUtf8ArgLE, false, out _);
+        public void DecodeStringUtf8LE() => StringArgDecoder.Decode(0x8200, StringUtf8ArgLE, false, out _);
 
         [Benchmark]
-        public void DecodeStringUtf8BE() => StringArgDecoder.Decode(StringUtf8ArgBE, true, out _);
+        public void DecodeStringUtf8BE() => StringArgDecoder.Decode(0x8200, StringUtf8ArgBE, true, out _);
 
         [Benchmark]
-        public void DecodeStringAsciiLE() => StringArgDecoder.Decode(StringAsciiArgLE, false, out _);
+        public void DecodeStringAsciiLE() => StringArgDecoder.Decode(0x0200, StringAsciiArgLE, false, out _);
 
         [Benchmark]
-        public void DecodeStringAsciiBE() => StringArgDecoder.Decode(StringASciiArgBE, true, out _);
+        public void DecodeStringAsciiBE() => StringArgDecoder.Decode(0x0200, StringASciiArgBE, true, out _);
     }
 }

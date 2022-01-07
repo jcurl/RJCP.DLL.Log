@@ -14,6 +14,10 @@
     /// </summary>
     /// <typeparam name="TReqDecoder">The type of the request decoder for instantiation.</typeparam>
     /// <typeparam name="TResDecoder">The type of the response decoder for instantiation.</typeparam>
+    /// <remarks>
+    /// The implementation of this base class is similar (but not identical to)
+    /// <see cref="Verbose.VerboseDecoderTestBase{TArgDecoder}"/>. It is kept separate as decoders are different.
+    /// </remarks>
     public abstract class ControlDecoderTestBase<TReqDecoder, TResDecoder>
         where TReqDecoder : IControlArgDecoder
         where TResDecoder : IControlArgDecoder
@@ -193,12 +197,6 @@
                 bool isBig = Endian == Endianness.Big;
                 factory.Control(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), dltType, data).BigEndian(isBig).Append();
                 using (Stream stream = writer.Stream()) {
-                    Task<DltTraceLineBase> lineTask = WriteDltPacket(factory, stream);
-                    DltTraceLineBase line = lineTask.GetAwaiter().GetResult();
-                    Assert.That(line, Is.TypeOf<DltControlTraceLine>());
-                    DltControlTraceLine control = (DltControlTraceLine)line;
-                    service = control.Service;
-
                     if (!string.IsNullOrEmpty(fileName)) {
                         string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "control", isBig ? "big" : "little");
                         string outPath = Path.Combine(dir, $"{fileName}.dlt");
@@ -207,6 +205,12 @@
                         }
                         writer.Write(outPath);
                     }
+
+                    Task<DltTraceLineBase> lineTask = WriteDltPacket(factory, stream);
+                    DltTraceLineBase line = lineTask.GetAwaiter().GetResult();
+                    Assert.That(line, Is.TypeOf<DltControlTraceLine>());
+                    DltControlTraceLine control = (DltControlTraceLine)line;
+                    service = control.Service;
                 }
             }
         }

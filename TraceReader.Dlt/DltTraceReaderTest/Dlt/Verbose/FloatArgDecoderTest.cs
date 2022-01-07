@@ -1,352 +1,345 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
-    using System;
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(FloatArgDecoder))]
-    [TestFixture(typeof(VerboseArgDecoder))]
-    public class FloatArgDecoderTest<T> where T : IVerboseArgDecoder
+    [TestFixture(DecoderType.Line, Endianness.Little)]
+    [TestFixture(DecoderType.Packet, Endianness.Little)]
+    [TestFixture(DecoderType.Specialized, Endianness.Little)]
+    [TestFixture(DecoderType.Line, Endianness.Big)]
+    [TestFixture(DecoderType.Packet, Endianness.Big)]
+    [TestFixture(DecoderType.Specialized, Endianness.Big)]
+    public class Float32ArgDecoderTest : VerboseDecoderTestBase<FloatArgDecoder>
     {
-        private const int FloatArgType = 0x100;
+        public Float32ArgDecoderTest(DecoderType decoderType, Endianness endian)
+            : base(decoderType, endian)
+        { }
 
         [Test]
-        public void DecodeFloat32NegativeLE()
+        public void DecodeFloat32Negative()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x33, 0x33, 0xF3, 0xBF }, false, -1.89999998f);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0x33, 0x33, 0xF3, 0xBF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0xBF, 0xF3, 0x33, 0x33 };
 
-        [Test]
-        public void DecodeFloat32NegativeBE()
-        {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0xBF, 0xF3, 0x33, 0x33 }, true, -1.89999998f);
-        }
-
-        [Test]
-        public void DecodeFloat32PositiveLE()
-        {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x33, 0x33, 0xF3, 0x3F }, false, 1.89999998f);
+            Decode(payload, "Float32_Negative", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-1.9"));
+            Assert.That(arg.Data, Is.EqualTo(-1.89999998f));
         }
 
         [Test]
-        public void DecodeFloat32PositiveBE()
+        public void DecodeFloat32Positive()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x3F, 0xF3, 0x33, 0x33 }, true, 1.89999998f);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0x33, 0x33, 0xF3, 0x3F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0x3F, 0xF3, 0x33, 0x33 };
+
+            Decode(payload, "Float32_Positive", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("1.9"));
+            Assert.That(arg.Data, Is.EqualTo(1.89999998f));
         }
 
         [Test]
-        public void DecodeFloat32MinValueLE()
+        public void DecodeFloat32MinValue()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x7F, 0xFF }, false, float.MinValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x7F, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0xFF, 0x7F, 0xFF, 0xFF };
+
+            Decode(payload, "Float32_MinValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-3.40282e+38"));
+            Assert.That(arg.Data, Is.EqualTo(float.MinValue));
         }
 
         [Test]
-        public void DecodeFloat32MinValueBE()
+        public void DecodeFloat32MaxValue()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0x7F, 0xFF, 0xFF }, true, float.MinValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x7F, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0x7F, 0x7F, 0xFF, 0xFF };
+
+            Decode(payload, "Float32_MaxValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("3.40282e+38"));
+            Assert.That(arg.Data, Is.EqualTo(float.MaxValue));
         }
 
         [Test]
-        public void DecodeFloat32MaxValueLE()
+        public void DecodeFloat32PositiveInfinity()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x7F, 0x7F }, false, float.MaxValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0x7F, 0x80, 0x00, 0x00 };
+
+            Decode(payload, "Float32_PositiveInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("inf"));
+            Assert.That(arg.Data, Is.EqualTo(float.PositiveInfinity));
         }
 
         [Test]
-        public void DecodeFloat32MaxValueBE()
+        public void DecodeFloat32NegativeInfinity()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x7F, 0x7F, 0xFF, 0xFF }, true, float.MaxValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0xFF, 0x80, 0x00, 0x00 };
+
+            Decode(payload, "Float32_NegativeInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-inf"));
+            Assert.That(arg.Data, Is.EqualTo(float.NegativeInfinity));
         }
 
         [Test]
-        public void DecodeFloat32PositiveInfinityLE()
+        public void DecodeFloat32NaN()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x7F }, false, float.PositiveInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x83, 0x7F, 0xC0, 0x00, 0x00 };
+
+            Decode(payload, "Float32_NaN", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float32DltArg>());
+            Float32DltArg arg = (Float32DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("nan"));
+            Assert.That(arg.Data, Is.EqualTo(float.NaN));
         }
 
         [Test]
-        public void DecodeFloat32PositiveInfinityBE()
+        public void DecodeFloat64Negative()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x7F, 0x80, 0x00, 0x00 }, true, float.PositiveInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0xF3, 0xBF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0xBF, 0xF3, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 };
+
+            Decode(payload, "Float64_Negative", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-1.2"));
+            Assert.That(arg.Data, Is.EqualTo(-1.2d));
         }
 
         [Test]
-        public void DecodeFloat32NegativeInfinityLE()
+        public void DecodeFloat64Positive()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xFF }, false, float.NegativeInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0xF3, 0x3F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0x3F, 0xF3, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 };
+
+            Decode(payload, "Float64_Positive", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("1.2"));
+            Assert.That(arg.Data, Is.EqualTo(1.2d));
         }
 
         [Test]
-        public void DecodeFloat32NegativeInfinityBE()
+        public void DecodeFloat64MinValue()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0xFF, 0x80, 0x00, 0x00 }, true, float.NegativeInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xEF, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0xFF, 0xEF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+            Decode(payload, "Float64_MinValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-1.79769e+308"));
+            Assert.That(arg.Data, Is.EqualTo(double.MinValue));
         }
 
         [Test]
-        public void DecodeFloat32NaNLE()
+        public void DecodeFloat64MaxValue()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC0, 0x7F }, false, float.NaN);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xEF, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0x7F, 0xEF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
+            Decode(payload, "Float64_MaxValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("1.79769e+308"));
+            Assert.That(arg.Data, Is.EqualTo(double.MaxValue));
         }
 
         [Test]
-        public void DecodeFloat32NaNBE()
+        public void DecodeFloat64PositiveInfinity()
         {
-            DecodeFloat32(new byte[] { 0x83, 0x00, 0x00, 0x00, 0x7F, 0xC0, 0x00, 0x00 }, true, float.NaN);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0x7F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Float64_PositiveInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("inf"));
+            Assert.That(arg.Data, Is.EqualTo(double.PositiveInfinity));
         }
 
         [Test]
-        public void DecodeFloat64NegativeLE()
+        public void DecodeFloat64NegativeInfinity()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0xF3, 0xBF }, false, -1.2d);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xFF } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0xFF, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Float64_NegativeInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("-inf"));
+            Assert.That(arg.Data, Is.EqualTo(double.NegativeInfinity));
         }
 
         [Test]
-        public void DecodeFloat64NegativeBE()
+        public void DecodeFloat64NaN()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0xBF, 0xF3, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 }, true, -1.2d);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x84, 0x7F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Float64_NaN", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<Float64DltArg>());
+            Float64DltArg arg = (Float64DltArg)verboseArg;
+            Assert.That(arg.ToString(), Is.EqualTo("nan"));
+            Assert.That(arg.Data, Is.EqualTo(double.NaN));
         }
 
         [Test]
-        public void DecodeFloat64PositiveLE()
+        public void DecodeFloat16Negative()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33, 0xF3, 0x3F }, false, 1.2d);
+            byte[] payload = Endian == Endianness.Little ?            // -3.141
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x48, 0xC2 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0xC2, 0x48 };
+
+            Decode(payload, "Float16_Negative", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64PositiveBE()
+        public void DecodeFloat16Positive()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x3F, 0xF3, 0x33, 0x33, 0x33, 0x33, 0x33, 0x33 }, true, 1.2d);
+            byte[] payload = Endian == Endianness.Little ?            // 3.141
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x48, 0x42 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0x42, 0x48 };
+
+            Decode(payload, "Float16_Positive", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64MinValueLE()
+        public void DecodeFloat16MinValue()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xEF, 0xFF }, false, double.MinValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFF, 0xFB } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0xFB, 0xFF };
+
+            Decode(payload, "Float16_MinValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64MinValueBE()
+        public void DecodeFloat16MaxValue()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xEF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }, true, double.MinValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFF, 0x7B } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0x7B, 0xFF };
+
+            Decode(payload, "Float16_MaxValue", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64MaxValueLE()
+        public void DecodeFloat16Epsilon()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xEF, 0x7F }, false, double.MaxValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x01, 0x00 } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0x00, 0x01 };
+
+            Decode(payload, "Float16_Epsilon", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64MaxValueBE()
+        public void DecodeFloat16PositiveInfinity()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x7F, 0xEF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF }, true, double.MaxValue);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0x7C } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0x7C, 0x00 };
+
+            Decode(payload, "Float16_PositiveInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64PositiveInfinityLE()
+        public void DecodeFloat16NegativeInfinity()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0x7F }, false, double.PositiveInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0xFC } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0xFC, 0x00 };
+
+            Decode(payload, "Float16_NegativeInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64PositiveInfinityBE()
+        public void DecodeFloat16NaN()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x7F, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, true, double.PositiveInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0xFE } :
+                new byte[] { 0x00, 0x00, 0x00, 0x82, 0xFE, 0x00 };
+
+            Decode(payload, "Float16_NaN", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64NegativeInfinityLE()
+        public void DecodeFloat128PositiveInfinity()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF0, 0xFF }, false, double.NegativeInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x85, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x85, 0x7F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Float128_PositiveInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64NegativeInfinityBE()
+        public void DecodeFloat128NegativeInfinity()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0xFF, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, true, double.NegativeInfinity);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x85, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x85, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+            Decode(payload, "Float128_NegativeInfinity", out IDltArg verboseArg);
+            Assert.That(verboseArg, Is.TypeOf<UnknownVerboseDltArg>());
         }
 
         [Test]
-        public void DecodeFloat64NaNLE()
+        public void DecodeFloat8()
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x7F }, false, double.NaN);
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x81, 0x00, 0x00, 0x00, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x81, 0x7F };
+
+            DecodeIsInvalid(payload, "Float8_Invalid");
         }
 
-        [Test]
-        public void DecodeFloat64NaNBE()
+        [TestCase(0x80, TestName = "DecodeFloatUnknownLength")]
+        [TestCase(0x87, TestName = "DecodeFloatInvalidLength")]
+        public void DecodeFloatInvalid(byte typeInfo)
         {
-            DecodeFloat64(new byte[] { 0x84, 0x00, 0x00, 0x00, 0x7F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, true, double.NaN);
-        }
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x81, 0x00, 0x00, 0x00, 0x7F } :
+                new byte[] { 0x00, 0x00, 0x00, 0x81, 0x7F };
 
-        [Test]
-        public void DecodeFloat16NegativeLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x48, 0xC2 }, false); // -3.141
-        }
-
-        [Test]
-        public void DecodeFloat16NegativeBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xC2, 0x48 }, true); // -3.141
-        }
-
-        [Test]
-        public void DecodeFloat16PositiveLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x48, 0x42 }, false); // 3.141
-        }
-
-        [Test]
-        public void DecodeFloat16PositiveBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x42, 0x48 }, true); // 3.141
-        }
-
-        [Test]
-        public void DecodeFloat16MinValueLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFF, 0xFB }, false); // Half.MinValue
-        }
-
-        [Test]
-        public void DecodeFloat16MinValueBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFB, 0xFF }, true); // Half.MinValue
-        }
-
-        [Test]
-        public void DecodeFloat16EpsilonLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x01, 0x00 }, false); // Half.Epsilon
-        }
-
-        [Test]
-        public void DecodeFloat16EpsilonBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0x01 }, true); // Half.Epsilon
-        }
-
-        [Test]
-        public void DecodeFloat16MaxValueLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFF, 0x7B }, false); // Half.MaxValue
-        }
-
-        [Test]
-        public void DecodeFloat16MaxValueBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x7B, 0xFF }, true); // Half.MaxValue
-        }
-
-        [Test]
-        public void DecodeFloat16PositiveInfinityLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0x7C }, false); // Half.PositiveInfinity
-        }
-
-        [Test]
-        public void DecodeFloat16PositiveInfinityBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x7C, 0x00 }, true); // Half.PositiveInfinity
-        }
-
-        [Test]
-        public void DecodeFloat16NegativeInfinityLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0xFC }, false); // Half.NegativeInfinity
-        }
-
-        [Test]
-        public void DecodeFloat16NegativeInfinityBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFC, 0x00 }, true); // Half.NegativeInfinity
-        }
-
-        [Test]
-        public void DecodeFloat16NaNLE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0x00, 0xFE }, false); // Half.NaN
-        }
-
-        [Test]
-        public void DecodeFloat16NaNBE()
-        {
-            DecodeFloat16(new byte[] { 0x82, 0x00, 0x00, 0x00, 0xFE, 0x00 }, true); // Half.NaN
-        }
-
-        [Test]
-        public void DecodeFloat128PositiveInfinityLE()
-        {
-            DecodeFloat128(new byte[] {
-                0x85, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x7F
-            }, false); // QFloat.PositiveInfinity
-        }
-
-        [Test]
-        public void DecodeFloat128PositiveInfinityBE()
-        {
-            DecodeFloat128(new byte[] {
-                0x85, 0x00, 0x00, 0x00,
-                0x7F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            }, true); // QFloat.PositiveInfinity
-        }
-
-        [Test]
-        public void DecodeFloat128NegativeInfinityLE()
-        {
-            DecodeFloat128(new byte[] {
-                0x85, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x7F
-            }, false); // QFloat.PositiveInfinity
-        }
-
-        [Test]
-        public void DecodeFloat128NegativeInfinityBE()
-        {
-            DecodeFloat128(new byte[] {
-                0x85, 0x00, 0x00, 0x00,
-                0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            }, true); // QFloat.PositiveInfinity
-        }
-
-        [TestCase(0x81, TestName = "DecodeFloat8")]
-        [TestCase(0x80, TestName = "DecodeFloatUnknown")]
-        [TestCase(0x87, TestName = "DecodeFloatUndefined")]
-        public void DecodeFloat(byte typeInfo)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(new byte[] { typeInfo, 0x00, 0x00, 0x00, 0x01 }, false, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(-1));
-            Assert.That(arg, Is.Null);
-        }
-
-        private static void DecodeFloat16(byte[] buffer, bool msbf)
-        {
-            ArgDecoderTest.DecodeUnknown<T>(buffer, msbf, 0, FloatArgType);
-        }
-
-        private static void DecodeFloat32(byte[] buffer, bool msbf, float result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<Float32DltArg>());
-            Assert.That(((Float32DltArg)arg).Data, Is.EqualTo(result));
-        }
-
-        private static void DecodeFloat64(byte[] buffer, bool msbf, double result)
-        {
-            T decoder = Activator.CreateInstance<T>();
-            int length = decoder.Decode(buffer, msbf, out IDltArg arg);
-            Assert.That(length, Is.EqualTo(buffer.Length));
-            Assert.That(arg, Is.TypeOf<Float64DltArg>());
-            Assert.That(((Float64DltArg)arg).Data, Is.EqualTo(result));
-        }
-
-        private static void DecodeFloat128(byte[] buffer, bool msbf)
-        {
-            ArgDecoderTest.DecodeUnknown<T>(buffer, msbf, 0, FloatArgType);
+            DecodeIsInvalid(payload, $"Float_Invalid_{typeInfo:x2}");
         }
     }
 }
