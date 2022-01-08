@@ -121,7 +121,7 @@
 
             DltTraceLineBase line;
             if (m_Online) TimeStamp = DateTime.Now;
-            if (((int)DltType & DltConstants.MessageType.DltTypeControl) != 0) {
+            if (((int)DltType & DltConstants.MessageType.DltTypeMask) == DltConstants.MessageType.DltTypeControl) {
                 if (ControlPayload == null) throw new InvalidOperationException("Undefined control payload");
                 line = new DltControlTraceLine(ControlPayload) {
                     Line = m_Line,
