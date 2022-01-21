@@ -27,7 +27,7 @@
             uint secLow = unchecked((uint)BitOperations.To32Shift(buffer[9..13], !msbf));
             uint secHigh = unchecked((ushort)BitOperations.To16Shift(buffer[13..15], !msbf));
 
-            long sec = (secHigh << 32) | secLow;  // Number of seconds since 1/1/1970
+            long sec = ((long)secHigh << 32) | secLow;  // Number of seconds since 1/1/1970
             long nsTicks = ns / 100;         // TicksPerMillisecond = 10000. i.e. 100ns per tick.
                                              // Manual calculation to avoid int overflow.
             DateTimeOffset timeStamp = DateTimeOffset.FromUnixTimeSeconds(sec).AddTicks(nsTicks);
