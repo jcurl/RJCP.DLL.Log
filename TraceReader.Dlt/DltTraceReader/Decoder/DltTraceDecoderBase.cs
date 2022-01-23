@@ -466,6 +466,8 @@
             if (!m_Cache.IsCached) {
                 if (m_DltLineBuilder.SkippedBytes == 0)
                     return Array.Empty<DltTraceLineBase>();
+
+                m_Lines.Clear();
                 m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                 return m_Lines;
             }
