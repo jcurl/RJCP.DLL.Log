@@ -127,7 +127,9 @@
                     if (!flush && m_Cache.IsCached) {
                         // Put the smallest amount of data into the cache, that if we find the start marker, and it
                         // happens to be at the start, we already have the packet.
-                        decodeBuffer = CacheMinimumPacket(decodeBuffer, out _);
+                        decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool success);
+                        if (!success) return m_Lines;
+
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
                             bytes -= m_Cache.Consume(skip);
@@ -147,7 +149,7 @@
                                 // check at the beginning of the loop, and if there isn't enough remaining, we exit.
                                 continue;
                             } else {
-                                decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool success);
+                                decodeBuffer = CacheMinimumPacket(decodeBuffer, out success);
                                 if (!success) return m_Lines;
                             }
                         }
