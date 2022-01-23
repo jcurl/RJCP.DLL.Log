@@ -53,6 +53,7 @@
     <Compile Include="Decoder\DltFileTraceDecoder.cs" />
     <Compile Include="Decoder\DltSerialTraceDecoder.cs" />
     <Compile Include="Decoder\DltTraceDecoder.cs" />
+    <Compile Include="Decoder\DltTraceDecoderBase+PosMap.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
     <Compile Include="DltControlTraceLine.cs" />

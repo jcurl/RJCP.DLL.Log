@@ -54,6 +54,8 @@
     <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
     <Compile Include="Decoder\LineCacheAccessor.cs" />
     <Compile Include="Decoder\LineCacheTest.cs" />
+    <Compile Include="Decoder\PosMapAccessor.cs" />
+    <Compile Include="Decoder\PosMapTest.cs" />
     <Compile Include="DltControlTraceLineTest.cs" />
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />

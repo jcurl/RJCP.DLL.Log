@@ -15,6 +15,7 @@
     public abstract partial class DltTraceDecoderBase : ITraceDecoder<DltTraceLineBase>
     {
         private readonly LineCache m_Cache = new LineCache();
+        private readonly PosMap m_PosMap = new PosMap();
         private readonly IVerboseDltDecoder m_VerboseDecoder;
         private readonly INonVerboseDltDecoder m_NonVerboseDecoder;
         private readonly IControlDltDecoder m_ControlDecoder;
@@ -103,6 +104,7 @@
 
             int bytes = buffer.Length;
             if (!flush) {
+                m_PosMap.Append(position, bytes);
                 bytes += m_Cache.CacheLength;
                 m_Cache.Write();
             }
@@ -112,12 +114,13 @@
                 if (!m_ValidHeaderFound) {
                     if (bytes < StandardHeaderOffset + 4) {
                         if (flush) {
-                            m_DltLineBuilder.AddSkippedBytes(bytes, "End of stream");
+                            m_DltLineBuilder.AddSkippedBytes(bytes, m_PosMap.Position, "End of stream");
+                            m_PosMap.Consume(bytes);
                             if (m_DltLineBuilder.SkippedBytes > 0)
                                 m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                             return m_Lines;
                         }
-                        m_Cache.Append(decodeBuffer);
+                        AppendFinal(decodeBuffer);
                         return m_Lines;
                     }
 
@@ -132,8 +135,9 @@
 
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
+                            m_PosMap.Consume(skip);
                             bytes -= m_Cache.Consume(skip);
-                            m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
+                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             if (m_Cache.CacheWriteOffset >= 0) {
                                 // We've consumed enough data from the cache, that, even though there might still be
                                 // data in the cache, it's a subset of the original buffer, and we should use that
@@ -157,18 +161,19 @@
                         found = ScanStartFrame(decodeBuffer, out int skip);
                         if (skip > 0) {
                             bytes -= skip;
-                            m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
+                            m_PosMap.Consume(skip);
+                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             decodeBuffer = decodeBuffer[skip..];
 
                             // We need the standard header before we know what is happening.
                             if (bytes < StandardHeaderOffset + 4) {
                                 if (flush) {
-                                    m_DltLineBuilder.AddSkippedBytes(bytes, "End of stream");
+                                    m_DltLineBuilder.AddSkippedBytes(bytes, m_PosMap.Position, "End of stream");
                                     if (m_DltLineBuilder.SkippedBytes > 0)
                                         m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                                     return m_Lines;
                                 }
-                                m_Cache.Append(decodeBuffer);
+                                AppendFinal(decodeBuffer);
                                 return m_Lines;
                             }
                         }
@@ -202,7 +207,7 @@
                         decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Incomplete packet at end of stream");
                         continue;
                     }
-                    m_Cache.Append(decodeBuffer);
+                    AppendFinal(decodeBuffer);
                     return m_Lines;
                 }
 
@@ -226,9 +231,9 @@
                     continue;
                 }
 
-                if (m_DltLineBuilder.SkippedBytes > 0) {
+                if (m_DltLineBuilder.SkippedBytes > 0)
                     m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
-                }
+                m_DltLineBuilder.SetPosition(m_PosMap.Position);
                 m_Lines.Add(m_DltLineBuilder.GetResult());
                 m_DltLineBuilder.Reset();
 
@@ -240,6 +245,21 @@
             if (flush && m_DltLineBuilder.SkippedBytes > 0)
                 m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
             return m_Lines;
+        }
+
+        private void AppendFinal(ReadOnlySpan<byte> decodeBuffer)
+        {
+            m_Cache.Append(decodeBuffer);
+
+#if DEBUG
+            // This method appends all remaining data into the cache. It is expected that the PosMap contains the same
+            // length of data as the cache.
+            if (m_PosMap.Length != m_Cache.CacheLength) {
+                string message = string.Format("Internal error, position map length {0} doesn't match cached length {1}",
+                    m_PosMap.Length, m_Cache.CacheLength);
+                throw new InvalidOperationException(message);
+            }
+#endif
         }
 
         private ReadOnlySpan<byte> CacheMinimumPacket(ReadOnlySpan<byte> decodeBuffer, out bool success)
@@ -268,16 +288,22 @@
         private ReadOnlySpan<byte> SkipBytes(int skip, ReadOnlySpan<byte> decodeBuffer, bool flush, string reason)
         {
             if (skip == 0) return decodeBuffer;
-            m_DltLineBuilder.AddSkippedBytes(skip, reason);
+            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, reason);
 
-            if (flush) return decodeBuffer[skip..];
+            if (flush) {
+                m_PosMap.Consume(skip);
+                return decodeBuffer[skip..];
+            }
             return Consume(skip, decodeBuffer);
         }
 
         private ReadOnlySpan<byte> Consume(int bytes, ReadOnlySpan<byte> decodeBuffer)
         {
             if (bytes == 0) return decodeBuffer;
+
+            m_PosMap.Consume(bytes);
             bytes -= m_Cache.Consume(bytes);
+
             if (bytes > 0) return decodeBuffer[bytes..];
             return decodeBuffer;
         }
@@ -323,15 +349,15 @@
         /// </remarks>
         protected abstract int MinimumDiscard { get; }
 
-        private static bool IsValidPacket(ReadOnlySpan<byte> standardHeader, out int length)
+        private bool IsValidPacket(ReadOnlySpan<byte> standardHeader, out int length)
         {
             int headerType = standardHeader[0];
 
             int version = headerType & DltConstants.HeaderType.VersionIdentifierMask;
             if (version != DltConstants.HeaderType.Version1) {
                 length = 0;
-                Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet version {0} found, expected {1}",
-                    version >> DltConstants.HeaderType.VersionBitShift,
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet offset 0x{0:x} with version {1} found, expected {2}",
+                    m_PosMap.Position, version >> DltConstants.HeaderType.VersionBitShift,
                     DltConstants.HeaderType.Version1 >> DltConstants.HeaderType.VersionBitShift);
                 return false;
             }
@@ -345,7 +371,8 @@
             length = unchecked((ushort)BitOperations.To16ShiftBigEndian(standardHeader[2..4]));
             if (length < minLength) {
                 Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Packet with length {0} found, expected minimum {1}", length, minLength);
+                    "Packet offset 0x{0:x} found with length {1}, expected minimum {2}",
+                    m_PosMap.Position, length, minLength);
                 return false;
             }
             return true;
@@ -414,12 +441,13 @@
                 if ((messageType & DltConstants.MessageInfo.MessageTypeMask) == DltConstants.MessageInfo.MessageTypeControl) {
                     int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                     if (controlLength == -1) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control payload cannot be decoded");
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",
+                            m_PosMap.Position);
                         return false;
                     }
                     if (m_ExpectedLength < offset + controlLength || m_ExpectedLength > offset + controlLength + 32) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control payload length {0} found, expected {1}",
-                            controlLength, m_ExpectedLength - offset);
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                            m_PosMap.Position, m_ExpectedLength - offset, controlLength);
                         return false;
                     }
                     return true;
@@ -429,23 +457,25 @@
             if (m_DltLineBuilder.IsVerbose) {
                 int payloadLength = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (payloadLength == -1) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose payload cannot be decoded");
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",
+                        m_PosMap.Position);
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose payload length {0} found, expected {1}",
-                        payloadLength, m_ExpectedLength - offset);
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                        m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     return false;
                 }
             } else {
                 int payloadLength = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (payloadLength == -1) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose payload cannot be decoded");
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded",
+                        m_PosMap.Position);
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose payload length {0} found, expected {1}",
-                        payloadLength, m_ExpectedLength - offset);
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                        m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     return false;
                 }
             }

@@ -69,6 +69,7 @@
             using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
                 line = await reader.GetLineAsync();
                 m_Factory.IsLine1(line, 0, 127);
+                Assert.That(line.Position, Is.EqualTo(0));
             }
         }
 
@@ -78,13 +79,15 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
-                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                List<int> plen = new List<int> {
+                    m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append(),
+                    m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append()
+                };
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPackets));
 
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
-                    await WriteDltPackets(readStream);
+                    await WriteDltPackets(readStream, plen.ToArray());
                 }
             }
         }
@@ -107,21 +110,23 @@
                 };
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, plen.ToArray())) {
-                    await WriteDltPackets(readStream);
+                    await WriteDltPackets(readStream, plen.ToArray());
                 }
             }
         }
 
-        private async Task WriteDltPackets(Stream stream)
+        private async Task WriteDltPackets(Stream stream, int[] plen)
         {
             DltTraceLineBase line;
 
             using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
                 line = await reader.GetLineAsync();
                 m_Factory.IsLine1(line, 0, 127);
+                Assert.That(line.Position, Is.EqualTo(0));
 
                 line = await reader.GetLineAsync();
                 m_Factory.IsLine2(line, 1, 128);
+                Assert.That(line.Position, Is.EqualTo(plen[0]));
             }
         }
 
@@ -158,7 +163,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                int p1 = m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
                 int d = writer.Data(new byte[] { 0x41, 0x41, 0x41, 0x41 });
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltInvalidDataAtEnd));
 
@@ -168,9 +173,11 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine2(line, 0, 127);
+                        Assert.That(line.Position, Is.EqualTo(0));
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsSkippedLine(line, DltTestData.Time2, d);
+                        Assert.That(line.Position, Is.EqualTo(p1));
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);
@@ -185,7 +192,7 @@
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
+                int l1 = m_Factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
                 int l2 = m_Factory.Verbose(writer, DltTestData.Time3, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 3").Append(24);
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPartialDataAtEnd));
 
@@ -195,9 +202,11 @@
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
                         m_Factory.IsLine2(line, 0, 127);
+                        Assert.That(line.Position, Is.EqualTo(0));
 
                         line = await reader.GetLineAsync();
                         m_Factory.IsSkippedLine(line, DltTestData.Time2, l2);
+                        Assert.That(line.Position, Is.EqualTo(l1));
 
                         line = await reader.GetLineAsync();
                         Assert.That(line, Is.Null);

@@ -179,6 +179,20 @@
         }
 
         /// <summary>
+        /// Indicates that bytes were skipped. Take a snapshot of the time stamps.
+        /// </summary>
+        /// <param name="bytes">The number of bytes that were skipped.</param>
+        /// <param name="position">
+        /// The current position, which will be set if there are no skipped bytes until now.
+        /// </param>
+        /// <param name="reason">The reason why bytes were skipped.</param>
+        public void AddSkippedBytes(int bytes, long position, string reason)
+        {
+            if (SkippedBytes == 0) SetPosition(position);
+            AddSkippedBytes(bytes, reason);
+        }
+
+        /// <summary>
         /// Gets the current number of skipped bytes.
         /// </summary>
         /// <value>The number of skipped bytes.</value>
