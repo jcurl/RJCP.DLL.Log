@@ -78,13 +78,14 @@
             /// <returns>The actual number of bytes consumed from the cache.</returns>
             public int Consume(int bytes)
             {
+                CacheWriteOffset += bytes;
+
                 if (bytes >= m_CacheLength) {
                     int consumed = m_CacheLength;
-                    CacheWriteOffset += m_CacheLength;
-                    Clear();
+                    m_CacheStart = 0;
+                    m_CacheLength = 0;
                     return consumed;
                 }
-                CacheWriteOffset += bytes;
                 m_CacheStart += bytes;
                 m_CacheLength -= bytes;
                 return bytes;
