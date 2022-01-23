@@ -16,7 +16,7 @@
         public void DefaultLength()
         {
             LineCacheAccessor cache = new LineCacheAccessor();
-            Assert.That(cache.Length, Is.EqualTo(0));
+            Assert.That(cache.CacheLength, Is.EqualTo(0));
         }
 
         [Test]
@@ -29,7 +29,7 @@
 
             LineCacheAccessor cache = new LineCacheAccessor();
             cache.Append(buffer.AsSpan());
-            Assert.That(cache.Length, Is.EqualTo(12));
+            Assert.That(cache.CacheLength, Is.EqualTo(12));
         }
 
         [Test]
@@ -39,80 +39,10 @@
             new Random().NextBytes(buffer);
 
             LineCacheAccessor cache = new LineCacheAccessor();
-            Assert.That(cache.Append(buffer.AsSpan()), Is.EqualTo(10));
-            Assert.That(cache.Length, Is.EqualTo(CacheSize));
-
-            // The first 10 bytes that overflowed are discarded
-            ReadOnlySpan<byte> cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[10..]));
-        }
-
-        [Test]
-        public void AppendTooLargeSecondOp()
-        {
-            byte[] buffer = new byte[CacheSize + 10];
-            new Random().NextBytes(buffer);
-
-            LineCacheAccessor cache = new LineCacheAccessor();
-            Assert.That(cache.Append(buffer.AsSpan(0, MaxPacket + 50)), Is.EqualTo(0));
-            Assert.That(cache.Length, Is.EqualTo(MaxPacket + 50));
-
-            Assert.That(cache.Append(buffer.AsSpan(MaxPacket + 50, buffer.Length - MaxPacket - 50)), Is.EqualTo(10));
-            Assert.That(cache.Length, Is.EqualTo(CacheSize));
-
-            // The first 10 bytes that overflowed are discarded
-            ReadOnlySpan<byte> cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[10..]));
-        }
-
-        [Test]
-        public void AppendOverflowCopyRequired()
-        {
-            byte[] buffer = new byte[CacheSize + 10];
-            new Random().NextBytes(buffer);
-
-            LineCacheAccessor cache = new LineCacheAccessor();
-            Assert.That(cache.Append(buffer.AsSpan(0, MaxPacket + 50)), Is.EqualTo(0));
-            Assert.That(cache.Length, Is.EqualTo(MaxPacket + 50));
-
-            Assert.That(cache.Consume(MaxPacket), Is.EqualTo(MaxPacket));
-            Assert.That(cache.Length, Is.EqualTo(50));
-
-            // No data loss, as we should have enough space
-            Assert.That(cache.Append(buffer.AsSpan(MaxPacket + 50, buffer.Length - MaxPacket - 50)), Is.EqualTo(0));
-            Assert.That(cache.Length, Is.EqualTo(buffer.Length - MaxPacket));
-
-            // The data should be the data that wasn't consumed
-            ReadOnlySpan<byte> cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[MaxPacket..]));
-        }
-
-        [Test]
-        public void AppendOverflowCopyTooLarge()
-        {
-            byte[] buffer = new byte[CacheSize * 2];
-            new Random().NextBytes(buffer);
-
-            ReadOnlySpan<byte> cached;
-            LineCacheAccessor cache = new LineCacheAccessor();
-            Assert.That(cache.Append(buffer.AsSpan(0, MaxPacket + 50)), Is.EqualTo(0));
-            Assert.That(cache.Length, Is.EqualTo(MaxPacket + 50));
-            cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[0..(MaxPacket + 50)]));
-
-            Assert.That(cache.Consume(MaxPacket), Is.EqualTo(MaxPacket));
-            Assert.That(cache.Length, Is.EqualTo(50));
-            cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[MaxPacket..(MaxPacket + 50)]));
-
-            // The cache has CacheSize - 50 bytes free.   || MaxPacket Free | 50 | MaxPacket-50 Free ||
-            // We now add so much data, it should first copy, then discard also.
-            Assert.That(cache.Append(buffer.AsSpan(MaxPacket + 50, CacheSize)), Is.EqualTo(50));
-            Assert.That(cache.Length, Is.EqualTo(CacheSize));
-
-            // The data should be the data that wasn't consumed
-            cached = cache.GetCache();
-            Assert.That(cached.ToArray(), Is.EqualTo(buffer[(MaxPacket + 50)..(MaxPacket + 50 + CacheSize)]));
+            Assert.That(() => {
+                cache.Append(buffer.AsSpan());
+            }, Throws.TypeOf<InsufficientMemoryException>());
+            Assert.That(cache.CacheLength, Is.EqualTo(0));
         }
     }
 }

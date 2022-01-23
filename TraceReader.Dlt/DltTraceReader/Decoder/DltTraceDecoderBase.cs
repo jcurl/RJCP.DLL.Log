@@ -14,11 +14,7 @@
     /// </summary>
     public abstract partial class DltTraceDecoderBase : ITraceDecoder<DltTraceLineBase>
     {
-#if DEBUG
-        private /* readonly */ LineCache m_Cache = new LineCache();
-#else
         private readonly LineCache m_Cache = new LineCache();
-#endif
         private readonly IVerboseDltDecoder m_VerboseDecoder;
         private readonly INonVerboseDltDecoder m_NonVerboseDecoder;
         private readonly IControlDltDecoder m_ControlDecoder;
@@ -105,8 +101,11 @@
             ReadOnlySpan<byte> decodeBuffer = buffer;
             m_Lines.Clear();
 
-            int bytes = flush ? buffer.Length : m_Cache.Length + buffer.Length;
-            if (!flush) m_Cache.VirtualOffset = -m_Cache.Length;
+            int bytes = buffer.Length;
+            if (!flush) {
+                bytes += m_Cache.CacheLength;
+                m_Cache.Write();
+            }
 
             while (bytes > 0) {
                 ReadOnlySpan<byte> dltPacket = decodeBuffer;
@@ -118,14 +117,14 @@
                                 m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                             return m_Lines;
                         }
-                        m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
+                        m_Cache.Append(decodeBuffer);
                         return m_Lines;
                     }
 
                     // Search for the initial marker defining the start of the DLT frame. If data is already cached, we
                     // append and search there.
                     bool found;
-                    if (!flush && m_Cache.Length != 0) {
+                    if (!flush && m_Cache.IsCached) {
                         // Put the smallest amount of data into the cache, that if we find the start marker, and it
                         // happens to be at the start, we already have the packet.
                         decodeBuffer = CacheMinimumPacket(decodeBuffer, out _);
@@ -133,23 +132,23 @@
                         if (skip > 0) {
                             bytes -= m_Cache.Consume(skip);
                             m_DltLineBuilder.AddSkippedBytes(skip, "Searching for next packet");
-                            if (m_Cache.VirtualOffset >= 0) {
+                            if (m_Cache.CacheWriteOffset >= 0) {
                                 // We've consumed enough data from the cache, that, even though there might still be
                                 // data in the cache, it's a subset of the original buffer, and we should use that
                                 // instead. If we continue to use the cache, we'll end up copying most of what's in the
                                 // buffer into the cache just because the data didn't align properly to start with.
-                                decodeBuffer = buffer[m_Cache.VirtualOffset..];
-                                m_Cache.Reset();
+                                decodeBuffer = buffer[m_Cache.CacheWriteOffset..];
+                                m_Cache.Clear();
 
-                                // The variable m_Cache.VirtualOffset is not reset, and remains as it was. However, as
-                                // the m_Cache has been reset (it is now empty), we'll never get back here from within
-                                // the loop. Data is added to the cache only shortly before this decode function is
-                                // exited. The `continue` saves us having to check if we have enough data, and we'll
+                                // The variable m_Cache.CacheWriteOffset is not reset, and remains as it was. However,
+                                // as the m_Cache has been reset (it is now empty), we'll never get back here from
+                                // within the loop. Data is added to the cache only shortly before this decode function
+                                // is exited. The `continue` saves us having to check if we have enough data, and we'll
                                 // check at the beginning of the loop, and if there isn't enough remaining, we exit.
                                 continue;
                             } else {
-                                decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool isCached);
-                                if (!isCached) return m_Lines;
+                                decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool success);
+                                if (!success) return m_Lines;
                             }
                         }
                     } else {
@@ -167,7 +166,7 @@
                                         m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                                     return m_Lines;
                                 }
-                                m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
+                                m_Cache.Append(decodeBuffer);
                                 return m_Lines;
                             }
                         }
@@ -175,10 +174,10 @@
                     if (!found) continue;
 
                     // Get the start of the DLT packet. The offset zero is the beginning of the DLT packet.
-                    if (m_Cache.Length == 0) {
-                        dltPacket = decodeBuffer;
-                    } else {
+                    if (m_Cache.IsCached) {
                         dltPacket = m_Cache.GetCache();
+                    } else {
+                        dltPacket = decodeBuffer;
                     }
 
                     if (!IsValidPacket(dltPacket[StandardHeaderOffset..], out m_ExpectedLength)) {
@@ -201,16 +200,16 @@
                         decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Incomplete packet at end of stream");
                         continue;
                     }
-                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
+                    m_Cache.Append(decodeBuffer);
                     return m_Lines;
                 }
 
                 // Append all remaining data to the cache, so the complete packet is continuous before parsing. If the
                 // data wasn't cached, then dltPacket already points to the start of the DLT packet.
-                if (m_Cache.Length != 0) {
-                    int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.Length;
+                if (m_Cache.IsCached) {
+                    int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.CacheLength;
                     if (restLength > 0) {
-                        m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..restLength]), "Cache overflow");
+                        m_Cache.Append(decodeBuffer[0..restLength]);
                         decodeBuffer = decodeBuffer[restLength..];
                     }
                     dltPacket = m_Cache.GetCache();
@@ -241,23 +240,27 @@
             return m_Lines;
         }
 
-        private ReadOnlySpan<byte> CacheMinimumPacket(ReadOnlySpan<byte> decodeBuffer, out bool isCached)
+        private ReadOnlySpan<byte> CacheMinimumPacket(ReadOnlySpan<byte> decodeBuffer, out bool success)
         {
-            int minLen = StandardHeaderOffset + 4 - m_Cache.Length;
-            if (minLen > 0) {
-                if (decodeBuffer.Length >= minLen) {
-                    m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer[0..minLen]), "Cache overflow");
-                    isCached = true;
-                    return decodeBuffer[minLen..];
-                }
+            int minPacketSize = StandardHeaderOffset + 4;
+            int cached = minPacketSize - m_Cache.CacheLength;
+            if (cached <= 0) {
+                // There is already sufficient data in the packet cache.
+                success = true;
+                return decodeBuffer;
+            }
 
-                m_DltLineBuilder.AddSkippedBytes(m_Cache.Append(decodeBuffer), "Cache overflow");
-                isCached = false;
+            if (decodeBuffer.Length < cached) {
+                // The input buffer does not have enough data, nor does our cache, so append everything, and indicate
+                // that it's incomplete but setting `success` to `false`.
+                success = false;
+                m_Cache.Append(decodeBuffer);
                 return ReadOnlySpan<byte>.Empty;
             }
 
-            isCached = true;
-            return decodeBuffer;
+            success = true;
+            m_Cache.Append(decodeBuffer[0..cached]);
+            return decodeBuffer[cached..];
         }
 
         private ReadOnlySpan<byte> SkipBytes(int skip, ReadOnlySpan<byte> decodeBuffer, bool flush, string reason)
@@ -458,7 +461,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Flush()
         {
-            if (m_Cache.Length == 0) {
+            if (!m_Cache.IsCached) {
                 if (m_DltLineBuilder.SkippedBytes == 0)
                     return Array.Empty<DltTraceLineBase>();
                 m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
@@ -466,18 +469,7 @@
             }
 
             ReadOnlySpan<byte> buffer = m_Cache.GetCache();
-#if DEBUG
-            // When flushing, there should be no access to the `m_Cache` variable within the `Decode` method. By setting
-            // the cache to `null`, we are able to find incorrect accesses bugs quicker.
-
-            LineCache cache = m_Cache;
-            m_Cache = null;
-            IEnumerable<DltTraceLineBase> lines = Decode(buffer, 0, true);
-            m_Cache = cache;
-            return lines;
-#else
             return Decode(buffer, 0, true);
-#endif
         }
 
         /// <summary>

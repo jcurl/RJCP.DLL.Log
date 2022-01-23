@@ -19,7 +19,22 @@
             private int m_CacheStart;
             private int m_CacheLength;
 
-            public int Length { get { return m_CacheLength; } }
+            /// <summary>
+            /// Gets the amount of data cached in this cache.
+            /// </summary>
+            /// <value>The length of the cache.</value>
+            public int CacheLength { get { return m_CacheLength; } }
+
+            /// <summary>
+            /// Gets a value indicating whether this instance has cached data.
+            /// </summary>
+            /// <value>
+            /// Is <see langword="true"/> if this there is cached data; otherwise, <see langword="false"/>.
+            /// </value>
+            public bool IsCached
+            {
+                get { return m_CacheLength > 0; }
+            }
 
             /// <summary>
             /// Gets or sets the virtual offset.
@@ -28,27 +43,48 @@
             /// <remarks>
             /// The virtual offset can be set by the decoder, to calculate the offset of bytes where cached data is
             /// present, in comparison to the actual input data. Usually it will initialize the
-            /// <see cref="VirtualOffset"/> property to be the negative of the <see cref="Length"/>, indicating that
-            /// there are <see cref="Length"/> bytes available before the buffer start.
+            /// <see cref="CacheWriteOffset"/> property to be the negative of the <see cref="CacheLength"/>, indicating
+            /// that there are <see cref="CacheLength"/> bytes available before the buffer start.
             /// <para>
-            /// As data is <see cref="Consume(int)"/> d, the <see cref="VirtualOffset"/> is incremented. The decoder can
-            /// use this to determine if enough data has been consumed, that it can clear this cache and just use the
-            /// original buffer at the real offset given by this <see cref="VirtualOffset"/>.
+            /// As data is <see cref="Consume(int)"/> d, the <see cref="CacheWriteOffset"/> is incremented. The decoder
+            /// can use this to determine if enough data has been consumed, that it can clear this cache and just use
+            /// the original buffer at the real offset given by this <see cref="CacheWriteOffset"/>.
             /// </para>
             /// </remarks>
-            public int VirtualOffset { get; set; }
+            public int CacheWriteOffset { get; private set; }
 
+            /// <summary>
+            /// Gets the cache buffer.
+            /// </summary>
+            /// <returns>The cache buffer.</returns>
             public ReadOnlySpan<byte> GetCache() { return m_Cache.AsSpan(m_CacheStart, m_CacheLength); }
 
+            /// <summary>
+            /// Indicate new buffer data.
+            /// </summary>
+            /// <remarks>
+            /// Indicates a new data buffer. This is used to maintain the current position in the stream, which is
+            /// updated as data is consumed.
+            /// </remarks>
+            public void Write()
+            {
+                CacheWriteOffset = -m_CacheLength;
+            }
+
+            /// <summary>
+            /// Reduces the number of bytes in the cache.
+            /// </summary>
+            /// <param name="bytes">The number of bytes to remove from the beginning of the cache.</param>
+            /// <returns>The actual number of bytes consumed from the cache.</returns>
             public int Consume(int bytes)
             {
                 if (bytes >= m_CacheLength) {
                     int consumed = m_CacheLength;
-                    VirtualOffset += m_CacheLength;
-                    Reset();
+                    CacheWriteOffset += m_CacheLength;
+                    Clear();
                     return consumed;
                 }
-                VirtualOffset += bytes;
+                CacheWriteOffset += bytes;
                 m_CacheStart += bytes;
                 m_CacheLength -= bytes;
                 return bytes;
@@ -58,7 +94,6 @@
             /// Appends the specified buffer to the cache line.
             /// </summary>
             /// <param name="buffer">The buffer containing the data to append.</param>
-            /// <returns>The number of bytes discarded, either by the cache, or the appended buffer.</returns>
             /// <remarks>
             /// Appending data to the cached line should only be done when we're confident we have a DLT packet, but
             /// have not yet received all the data. Data is only discarded when appending if the cache size is less than
@@ -77,37 +112,29 @@
             /// original buffer direct to reduce the number of copy operations.
             /// </para>
             /// </remarks>
-            public int Append(ReadOnlySpan<byte> buffer)
+            public void Append(ReadOnlySpan<byte> buffer)
             {
-                if (buffer.Length == 0) return 0;
+                if (buffer.Length == 0) return;
 
-                // If the amount of data we have exceeds our cache, we need to truncate.
-                int skipped = 0;
-                ReadOnlySpan<byte> append = buffer;
-                if (buffer.Length + m_CacheLength > CacheSize) {
-                    skipped = m_CacheLength + buffer.Length - CacheSize;
-                    m_CacheLength -= skipped;
-                    m_CacheStart += skipped;
-                    if (m_CacheLength <= 0) {
-                        append = buffer[(-m_CacheLength)..];
-                        Reset();
-                    }
-                }
-
-                if (append.Length <= CacheSize - m_CacheStart - m_CacheLength) {
-                    append.CopyTo(m_Cache.AsSpan(m_CacheStart + m_CacheLength, append.Length));
-                    m_CacheLength += append.Length;
-                } else {
+                if (buffer.Length <= CacheSize - m_CacheStart - m_CacheLength) {
+                    buffer.CopyTo(m_Cache.AsSpan(m_CacheStart + m_CacheLength, buffer.Length));
+                    m_CacheLength += buffer.Length;
+                } else if (buffer.Length <= CacheSize - m_CacheLength) {
+                    // Shift the cache to the start, then append.
                     Array.Copy(m_Cache, m_CacheStart, m_Cache, 0, m_CacheLength);
                     m_CacheStart = 0;
-                    append.CopyTo(m_Cache.AsSpan(m_CacheLength, append.Length));
-                    m_CacheLength += append.Length;
+                    buffer.CopyTo(m_Cache.AsSpan(m_CacheLength, buffer.Length));
+                    m_CacheLength += buffer.Length;
+                } else {
+                    throw new InsufficientMemoryException("Buffer appended would exceed available cache size");
                 }
-
-                return skipped;
             }
 
-            public void Reset()
+            /// <summary>
+            /// Resets the state of the cache.
+            /// </summary>
+            /// <remarks>The cache offset <see cref="CacheWriteOffset"/> is not affected.</remarks>
+            public void Clear()
             {
                 m_CacheStart = 0;
                 m_CacheLength = 0;

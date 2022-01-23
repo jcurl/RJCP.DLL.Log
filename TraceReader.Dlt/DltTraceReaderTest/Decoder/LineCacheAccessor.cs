@@ -19,9 +19,9 @@
 
         public LineCacheAccessor() : base(AccType) { }
 
-        public int Length
+        public int CacheLength
         {
-            get { return (int)GetFieldOrProperty(nameof(Length)); }
+            get { return (int)GetFieldOrProperty(nameof(CacheLength)); }
         }
 
         // As ReadOnlySpan<T> is a `ref struct` type, we can't box it, so more code is needed to compile it first.
@@ -43,9 +43,9 @@
         }
 
         // As ReadOnlySpan<T> is a `ref struct` type, we can't box it, so more code is needed to compile it first.
-        private delegate int AppendDelegate(ReadOnlySpan<byte> buffer);
+        private delegate void AppendDelegate(ReadOnlySpan<byte> buffer);
 
-        public int Append(ReadOnlySpan<byte> buffer)
+        public void Append(ReadOnlySpan<byte> buffer)
         {
             var instance = Expression.Constant(PrivateTargetObject);
             var method = AccType.ReferencedType.GetMethod(nameof(Append), new Type[] { typeof(ReadOnlySpan<byte>) });
@@ -53,7 +53,7 @@
             var call = Expression.Call(instance, method, parameter);
             var expression = Expression.Lambda<AppendDelegate>(call, parameter);
             var func = expression.Compile();
-            return func(buffer);
+            func(buffer);
         }
     }
 }
