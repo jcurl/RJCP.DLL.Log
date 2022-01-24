@@ -30,28 +30,48 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
+            arg = null;
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Information, "Float argument with unsupported type info of 0x{0:x}", typeInfo);
                 return -1;
             }
 
             int argLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
             switch (argLength) {
             case DltConstants.TypeInfo.TypeLength128bit:
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 16) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with insufficient buffer length of {0}",
+                        DltConstants.TypeInfo.TypeInfoSize + 16);
+                    return -1;
+                }
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 16)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 16;
             case DltConstants.TypeInfo.TypeLength64bit:
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 8) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with insufficient buffer length of {0}",
+                        DltConstants.TypeInfo.TypeInfoSize + 8);
+                    return -1;
+                }
                 arg = Decode64Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 8;
             case DltConstants.TypeInfo.TypeLength32bit:
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 4) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with insufficient buffer length of {0}",
+                        DltConstants.TypeInfo.TypeInfoSize + 4);
+                    return -1;
+                }
                 arg = Decode32Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 4;
             case DltConstants.TypeInfo.TypeLength16bit:
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 2) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with insufficient buffer length of {0}",
+                        DltConstants.TypeInfo.TypeInfoSize + 2);
+                    return -1;
+                }
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 2)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 2;
             default:
-                Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with unsupported length of {0}", argLength);
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Float argument with unsupported type length of 0x{0:x}", argLength);
                 return -1;
             }
         }

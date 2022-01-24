@@ -49,6 +49,8 @@
                 int payloadLength = 0;
 
                 do {
+                    if (buffer.Length < 4) return -1;
+
                     int typeInfo = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     int argLength = m_ArgDecoder.Decode(typeInfo, buffer, lineBuilder.BigEndian, out IDltArg argument);
                     if (argLength < 0) return -1;

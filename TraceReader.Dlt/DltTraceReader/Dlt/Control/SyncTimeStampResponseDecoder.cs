@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
+    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
 
@@ -22,6 +23,14 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
+            if (buffer.Length < 15) {
+                service = null;
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "Control message 'SyncTimeStampResponse' with insufficient buffer length of {0} (needed 15)",
+                    buffer.Length);
+                return -1;
+            }
+
             int status = buffer[4];
             uint ns = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             uint secLow = unchecked((uint)BitOperations.To32Shift(buffer[9..13], !msbf));

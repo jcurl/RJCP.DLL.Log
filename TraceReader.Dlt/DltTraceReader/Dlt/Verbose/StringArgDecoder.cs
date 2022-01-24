@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
     using System;
+    using System.Diagnostics;
     using System.Text;
     using Args;
     using RJCP.Core;
@@ -27,35 +28,55 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
+            const int DataOffset = DltConstants.TypeInfo.TypeInfoSize + 2;
+
+            arg = null;
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Information, "String argument with unsupported type info of 0x{0:x}", typeInfo);
                 return -1;
             }
 
             StringEncodingType coding =
                 (StringEncodingType)((typeInfo & DltConstants.TypeInfo.CodingMask) >> DltConstants.TypeInfo.CodingBitShift);
-            ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(buffer[4..6], !msbf));
+
+            if (buffer.Length < DataOffset) {
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "String argument with insufficient buffer length of {0} (minimum {1})", buffer.Length, DataOffset);
+                return -1;
+            }
+
+            ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(
+                buffer[DltConstants.TypeInfo.TypeInfoSize..DataOffset], !msbf));
+
+            if (buffer.Length < DataOffset + payloadLength) {
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "String argument with insufficient buffer length of {0} (expected {1})",
+                    buffer.Length, DataOffset + payloadLength);
+                return -1;
+            }
+
             int strLength = payloadLength;
-            if (strLength > 0 && buffer[DltConstants.TypeInfo.TypeInfoSize + 2 + strLength - 1] == '\0')
+            if (strLength > 0 && buffer[DataOffset + payloadLength - 1] == '\0')
                 strLength--;
 
             string data;
             if (strLength == 0) {
                 data = string.Empty;
             } else {
+
                 int cu;
                 switch (coding) {
                 case StringEncodingType.Ascii:
-                    cu = Iso8859_15.Convert(buffer[6..(6 + strLength)], m_CharResult);
+                    cu = Iso8859_15.Convert(buffer[DataOffset..(DataOffset + strLength)], m_CharResult);
                     break;
                 default:
-                    m_Utf8Decoder.Convert(buffer[6..(6 + strLength)], m_CharResult.AsSpan(), true, out _, out cu, out _);
+                    m_Utf8Decoder.Convert(buffer[DataOffset..(DataOffset + strLength)], m_CharResult.AsSpan(), true, out _, out cu, out _);
                     break;
                 }
                 data = new string(m_CharResult, 0, cu);
             }
             arg = new StringDltArg(data, coding);
-            return DltConstants.TypeInfo.TypeInfoSize + 2 + payloadLength;
+            return DataOffset + payloadLength;
         }
     }
 }

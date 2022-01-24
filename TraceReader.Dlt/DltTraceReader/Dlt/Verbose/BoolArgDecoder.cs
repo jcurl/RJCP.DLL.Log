@@ -25,8 +25,9 @@
         /// </returns>
         public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
+            arg = null;
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Information, "Bool argument with unsupported type info of 0x{0:x}", typeInfo);
                 return -1;
             }
 
@@ -49,8 +50,13 @@
                 argLength = 16;
                 break;
             default:
-                Log.Dlt.TraceEvent(TraceEventType.Warning, "Bool argument with unsupported length of {0:x}", typeLength);
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Bool argument with unsupported type length of 0x{0:x}", typeLength);
+                return -1;
+            }
+
+            if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + argLength) {
+                Log.Dlt.TraceEvent(TraceEventType.Warning, "Bool argument with insufficient buffer length of {0}",
+                    DltConstants.TypeInfo.TypeInfoSize + argLength);
                 return -1;
             }
 

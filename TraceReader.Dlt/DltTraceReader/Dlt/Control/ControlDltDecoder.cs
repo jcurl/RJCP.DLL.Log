@@ -184,6 +184,12 @@
 
                 switch (lineBuilder.DltType) {
                 case DltType.CONTROL_REQUEST:
+                    if (buffer.Length < 4) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning,
+                            "Control message with insufficient buffer length of {0} (needed 4)", buffer.Length);
+                        return -1;
+                    }
+
                     serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
                         if (serviceId >= 0 && serviceId < 0xFFF) {
@@ -194,6 +200,12 @@
                     }
                     break;
                 case DltType.CONTROL_RESPONSE:
+                    if (buffer.Length < 4) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning,
+                            "Control message with insufficient buffer length of {0} (needed 4)", buffer.Length);
+                        return -1;
+                    }
+
                     serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
                         if (serviceId >= 0 && serviceId < 0xFFF) {

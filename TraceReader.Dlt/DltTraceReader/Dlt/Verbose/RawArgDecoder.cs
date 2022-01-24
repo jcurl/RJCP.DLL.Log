@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
     using System;
+    using System.Diagnostics;
     using Args;
     using RJCP.Core;
 
@@ -22,21 +23,37 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
+            const int DataOffset = DltConstants.TypeInfo.TypeInfoSize + 2;
+
+            arg = null;
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
-                arg = null;
+                Log.Dlt.TraceEvent(TraceEventType.Information, "Raw argument with unsupported type info of 0x{0:x}", typeInfo);
                 return -1;
             }
 
-            ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(buffer[4..6], !msbf));
+            if (buffer.Length < DataOffset) {
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "Raw argument with insufficient buffer length of {0} (minimum {1})", buffer.Length, DataOffset);
+                return -1;
+            }
+
+            ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(
+                buffer[DltConstants.TypeInfo.TypeInfoSize..DataOffset], !msbf));
 
             byte[] data;
             if (payloadLength == 0) {
                 data = Array.Empty<byte>();
             } else {
-                data = buffer[6..(6 + payloadLength)].ToArray();
+                if (buffer.Length < DataOffset + payloadLength) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning,
+                        "Raw argument with insufficient buffer length of {0} (expected {1})",
+                        buffer.Length, DataOffset + payloadLength);
+                    return -1;
+                }
+                data = buffer[DataOffset..(DataOffset + payloadLength)].ToArray();
             }
             arg = new RawDltArg(data);
-            return DltConstants.TypeInfo.TypeInfoSize + 2 + payloadLength;
+            return DataOffset + payloadLength;
         }
     }
 }

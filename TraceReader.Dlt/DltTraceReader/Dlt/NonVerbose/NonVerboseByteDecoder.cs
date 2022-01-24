@@ -21,15 +21,20 @@
         /// <exception cref="System.NotImplementedException"></exception>
         public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
-            NonVerboseDltArg arg;
-            if (buffer.Length < 4) {
-                arg = new NonVerboseDltArg(0, Array.Empty<byte>());
-            } else {
-                int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                arg = new NonVerboseDltArg(messageId, buffer[4..].ToArray());
+            try {
+                NonVerboseDltArg arg;
+                if (buffer.Length < 4) {
+                    arg = new NonVerboseDltArg(0, Array.Empty<byte>());
+                } else {
+                    int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
+                    arg = new NonVerboseDltArg(messageId, buffer[4..].ToArray());
+                }
+                lineBuilder.AddArgument(arg);
+                return buffer.Length;
+            } catch (Exception ex) {
+                Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding");
+                return -1;
             }
-            lineBuilder.AddArgument(arg);
-            return buffer.Length;
         }
     }
 }

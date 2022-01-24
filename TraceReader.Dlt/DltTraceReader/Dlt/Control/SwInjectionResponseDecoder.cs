@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
+    using System.Diagnostics;
     using ControlArgs;
 
     /// <summary>
@@ -21,6 +22,14 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
+            if (buffer.Length < 5) {
+                service = null;
+                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                    "Control message 'SwInjectionResponse' id 0x{0:x} with insufficient buffer length of {1} (needed 5)",
+                    serviceId, buffer.Length);
+                return -1;
+            }
+
             int status = buffer[4];
             service = new SwInjectionResponse(serviceId, status);
             return 5;
