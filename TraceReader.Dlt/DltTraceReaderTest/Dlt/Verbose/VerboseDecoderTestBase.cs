@@ -112,7 +112,7 @@
                 Assert.That(length, Is.EqualTo(data.Length));
             } else {
                 Assert.That(length, Is.EqualTo(-1));
-                Assert.That(arg, Is.Null);
+                Assert.That(arg, Is.Null.Or.TypeOf<DltArgError>());
             }
         }
     }

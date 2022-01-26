@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
+
     using ControlArgs;
     using Dlt.Packet;
     using NUnit.Framework;
@@ -186,10 +187,12 @@
                 length = argDecoder.Decode(serviceId, data.AsSpan()[0..i], isBig, out IControlArg testService);
                 Assert.That(length, Is.EqualTo(-1).Or.EqualTo(i));
                 if (length == -1) {
-                    Assert.That(testService, Is.Null);
+                    Assert.That(testService, Is.Null.Or.TypeOf<ControlError>());
                 } else {
                     Assert.That(testService, Is.Not.Null);
                 }
+                if (testService != null)
+                    Assert.That(testService.DefaultType, Is.EqualTo(dltType));
             }
         }
     }

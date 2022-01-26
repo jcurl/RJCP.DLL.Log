@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Verbose
 {
     using System;
-    using System.Diagnostics;
     using Args;
 
     /// <summary>
@@ -11,7 +10,7 @@
     /// This class inspects the contents of the verbose argument and calls the appropriate specialized decoder to decode
     /// the argument. This decoder can be used for decoding any kind of verbose argument.
     /// </remarks>
-    public class VerboseArgDecoder : IVerboseArgDecoder
+    public class VerboseArgDecoder : VerboseArgDecoderBase
     {
         private const int TypeInfoMask = 0x67F0;
         private const int BoolType = 0x0010;
@@ -39,7 +38,7 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             switch (typeInfo & TypeInfoMask) {
             case BoolType:
@@ -55,9 +54,7 @@
             case RawType:
                 return m_RawArgDecoder.Decode(typeInfo, buffer, msbf, out arg);
             default:
-                Log.Dlt.TraceEvent(TraceEventType.Warning, "Unsupported Verbose Message {0:x}", typeInfo);
-                arg = null;
-                return -1;
+                return DecodeError("unknown type info", out arg);
             }
         }
     }

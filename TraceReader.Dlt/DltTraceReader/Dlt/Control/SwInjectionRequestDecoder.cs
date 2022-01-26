@@ -1,15 +1,13 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
 
     /// <summary>
     /// Decoder for the payload with <see cref="SwInjectionRequest"/>.
     /// </summary>
-    /// <seealso cref="RJCP.Diagnostics.Log.Dlt.Control.IControlArgDecoder" />
-    public class SwInjectionRequestDecoder : IControlArgDecoder
+    public class SwInjectionRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -22,24 +20,18 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 8) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'SwInjectionRequest' id 0x{0:x} with insufficient buffer length of {1} (minimum 8)",
-                    serviceId, buffer.Length);
-                return -1;
-            }
+            if (buffer.Length < 8)
+                return DecodeError(serviceId, DltType.CONTROL_REQUEST,
+                    "'SwInjectionRequest' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             int length = BitOperations.To32Shift(buffer[4..8], !msbf);
-            if (length != buffer.Length - 8) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'SwInjectionRequest' id 0x{0:x} with insufficient buffer length of {1} (needed {2})",
-                    serviceId, buffer.Length, length + 8);
-                return -1;
-            }
+            if (buffer.Length != 8 + length)
+                return DecodeError(serviceId, DltType.CONTROL_REQUEST,
+                    "'SwInjectionRequest' with incorrect buffer length of {0}", buffer.Length,
+                    out service);
             return 8 + Decode(serviceId, length, buffer[8..], msbf, out service);
         }
 

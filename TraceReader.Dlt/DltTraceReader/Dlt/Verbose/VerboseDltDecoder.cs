@@ -49,11 +49,27 @@
                 int payloadLength = 0;
 
                 do {
-                    if (buffer.Length < 4) return -1;
+                    if (buffer.Length < 4) {
+                        lineBuilder.SetErrorMessage(
+                            "Verbose message with insufficient buffer length decoding arg {0} of {1}",
+                            argCount + 1, lineBuilder.NumberOfArgs);
+                        return -1;
+                    }
 
                     int typeInfo = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     int argLength = m_ArgDecoder.Decode(typeInfo, buffer, lineBuilder.BigEndian, out IDltArg argument);
-                    if (argLength < 0) return -1;
+                    if (argLength < 0) {
+                        if (argument is DltArgError argError) {
+                            lineBuilder.SetErrorMessage(
+                                "Verbose Message 0x{0:x} arg {1} of {2}, {3}",
+                                typeInfo, argCount + 1, lineBuilder.NumberOfArgs, argError.Message);
+                        } else {
+                            lineBuilder.SetErrorMessage(
+                                "Verbose Message 0x{0:x} arg {1} of {2} decoding error",
+                                typeInfo, argCount + 1, lineBuilder.NumberOfArgs);
+                        }
+                        return -1;
+                    }
 
                     lineBuilder.AddArgument(argument);
                     buffer = buffer[argLength..];
@@ -62,7 +78,7 @@
                 } while (argCount < lineBuilder.NumberOfArgs);
                 return payloadLength;
             } catch (Exception ex) {
-                Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding");
+                Log.Dlt.TraceException(ex, nameof(Decode), "Verbose decoding exception");
                 return -1;
             }
         }

@@ -558,5 +558,45 @@
             ControlPayload = service;
             return this;
         }
+
+        private string m_ErrorMessage;
+
+        /// <summary>
+        /// Sets the error message.
+        /// </summary>
+        /// <param name="message">The error message during decoding.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder SetErrorMessage(string message)
+        {
+            m_ErrorMessage = message;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the error message.
+        /// </summary>
+        /// <param name="format">The format string for the error message during decoding.</param>
+        /// <param name="args">The arguments to format.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder SetErrorMessage(string format, params object[] args)
+        {
+            m_ErrorMessage = string.Format(format, args);
+            return this;
+        }
+
+        /// <summary>
+        /// Gets and then resets the error message.
+        /// </summary>
+        /// <returns>The last error message, or <see langword="null"/> if none was set.</returns>
+        /// <remarks>
+        /// By clearing the error message after resetting, we only need to read and clear the message if we have reason
+        /// to use it. If a client uses this field, then it should be used everywhere.
+        /// </remarks>
+        public string ResetErrorMessage()
+        {
+            string message = m_ErrorMessage;
+            m_ErrorMessage = null;
+            return message;
+        }
     }
 }

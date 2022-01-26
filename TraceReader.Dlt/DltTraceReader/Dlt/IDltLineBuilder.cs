@@ -309,5 +309,26 @@
         /// <param name="service">The control payload.</param>
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         IDltLineBuilder SetControlPayload(IControlArg service);
+
+        /// <summary>
+        /// Sets the error message.
+        /// </summary>
+        /// <param name="message">The error message during decoding.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder SetErrorMessage(string message);
+
+        /// <summary>
+        /// Sets the error message.
+        /// </summary>
+        /// <param name="format">The format string for the error message during decoding.</param>
+        /// <param name="args">The arguments to format.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder SetErrorMessage(string format, params object[] args);
+
+        /// <summary>
+        /// Gets and then resets the error message.
+        /// </summary>
+        /// <returns>The last error message, or <see langword="null"/> if none was set.</returns>
+        string ResetErrorMessage();
     }
 }

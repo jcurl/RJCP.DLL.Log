@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
     using Text;
@@ -9,7 +8,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="GetSoftwareVersionResponse"/>.
     /// </summary>
-    public class GetSoftwareVersionResponseDecoder : IControlArgDecoder
+    public class GetSoftwareVersionResponseDecoder : ControlArgDecoderBase
     {
         private readonly char[] m_CharResult = new char[ushort.MaxValue];
         private const int VersionHeaderLength = 5;
@@ -25,17 +24,14 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             const int VersionStringOffset = 4 + VersionHeaderLength;
 
-            if (buffer.Length < VersionStringOffset) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'GetSoftwareVersionResponse' with insufficient buffer length of {0} (needed {1})",
-                    buffer.Length, VersionStringOffset);
-                return -1;
-            }
+            if (buffer.Length < VersionStringOffset)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             uint payloadLength = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             if (payloadLength > ushort.MaxValue) {
@@ -43,13 +39,10 @@
                 return -1;
             }
 
-            if (buffer.Length < VersionStringOffset + payloadLength) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'GetSoftwareVersionResponse' with insufficient buffer length of {0} (needed {1})",
-                    buffer.Length, VersionStringOffset + payloadLength);
-                return -1;
-            }
+            if (buffer.Length < VersionStringOffset + payloadLength)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             int versionLength = (int)payloadLength;
             if (buffer[VersionStringOffset + versionLength - 1] == '\0')

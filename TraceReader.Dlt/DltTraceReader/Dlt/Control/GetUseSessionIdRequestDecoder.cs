@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetUseSessionIdRequest"/>.
     /// </summary>
-    public class GetUseSessionIdRequestDecoder : IControlArgDecoder
+    public class GetUseSessionIdRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -19,7 +19,7 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             service = new GetUseSessionIdRequest();
             return 4;

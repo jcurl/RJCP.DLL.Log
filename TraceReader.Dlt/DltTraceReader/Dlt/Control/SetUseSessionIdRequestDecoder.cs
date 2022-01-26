@@ -1,13 +1,12 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.Diagnostics;
     using ControlArgs;
 
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetUseSessionIdRequest"/>.
     /// </summary>
-    public class SetUseSessionIdRequestDecoder : IControlArgDecoder
+    public class SetUseSessionIdRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -20,15 +19,12 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 5) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'SetUseSessionIdRequest' with insufficient buffer length of {0} (needed 5)",
-                    buffer.Length);
-                return -1;
-            }
+            if (buffer.Length < 5)
+                return DecodeError(serviceId, DltType.CONTROL_REQUEST,
+                    "'SetUseSessionIdRequest' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             int enabled = buffer[4];
             service = new SetUseSessionIdRequest(enabled != 0);

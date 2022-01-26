@@ -1,14 +1,13 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
 
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetLogLevelRequest"/>.
     /// </summary>
-    public class SetLogLevelRequestDecoder : IControlArgDecoder
+    public class SetLogLevelRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -21,15 +20,12 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 17) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'SetLogLevelRequest' with insufficient buffer length of {0} (needed 17)",
-                    buffer.Length);
-                return -1;
-            }
+            if (buffer.Length < 17)
+                return DecodeError(serviceId, DltType.CONTROL_REQUEST,
+                    "'SetLogLevelRequest' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             int appId = BitOperations.To32ShiftBigEndian(buffer[4..8]);
             int ctxId = BitOperations.To32ShiftBigEndian(buffer[8..12]);

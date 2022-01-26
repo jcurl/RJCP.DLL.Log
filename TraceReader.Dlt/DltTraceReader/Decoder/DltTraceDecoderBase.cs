@@ -441,8 +441,14 @@
                 if ((messageType & DltConstants.MessageInfo.MessageTypeMask) == DltConstants.MessageInfo.MessageTypeControl) {
                     int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                     if (controlLength == -1) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",
-                            m_PosMap.Position);
+                        string error = m_DltLineBuilder.ResetErrorMessage();
+                        if (string.IsNullOrEmpty(error)) {
+                            Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",
+                                m_PosMap.Position);
+                        } else {
+                            Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded, {1}",
+                                m_PosMap.Position, error);
+                        }
                         return false;
                     }
                     if (m_ExpectedLength < offset + controlLength || m_ExpectedLength > offset + controlLength + 32) {
@@ -457,8 +463,14 @@
             if (m_DltLineBuilder.IsVerbose) {
                 int payloadLength = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (payloadLength == -1) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",
-                        m_PosMap.Position);
+                    string error = m_DltLineBuilder.ResetErrorMessage();
+                    if (string.IsNullOrEmpty(error)) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",
+                            m_PosMap.Position);
+                    } else {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded, {1}",
+                            m_PosMap.Position, error);
+                    }
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
@@ -469,8 +481,14 @@
             } else {
                 int payloadLength = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (payloadLength == -1) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded",
-                        m_PosMap.Position);
+                    string error = m_DltLineBuilder.ResetErrorMessage();
+                    if (string.IsNullOrEmpty(error)) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded",
+                            m_PosMap.Position);
+                    } else {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded, {1}",
+                            m_PosMap.Position, error);
+                    }
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {

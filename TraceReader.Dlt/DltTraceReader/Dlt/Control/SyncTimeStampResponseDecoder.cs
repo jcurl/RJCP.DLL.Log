@@ -1,14 +1,13 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
-    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
 
     /// <summary>
     /// Decoder for the payload with <see cref="SyncTimeStampResponse"/>.
     /// </summary>
-    public class SyncTimeStampResponseDecoder : IControlArgDecoder
+    public class SyncTimeStampResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -21,15 +20,12 @@
         /// </param>
         /// <param name="service">The control message.</param>
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 15) {
-                service = null;
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
-                    "Control message 'SyncTimeStampResponse' with insufficient buffer length of {0} (needed 15)",
-                    buffer.Length);
-                return -1;
-            }
+            if (buffer.Length < 15)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'SyncTimeStampResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             int status = buffer[4];
             uint ns = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));

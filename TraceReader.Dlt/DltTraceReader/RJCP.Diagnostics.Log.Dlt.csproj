@@ -65,6 +65,7 @@
     <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />
     <Compile Include="Dlt\Args\BoolDltArg.cs" />
     <Compile Include="Dlt\Args\DltArgBase.cs" />
+    <Compile Include="Dlt\Args\DltArgError.cs" />
     <Compile Include="Dlt\Args\DltTypeInfo.cs" />
     <Compile Include="Dlt\Args\Float32DltArg.cs" />
     <Compile Include="Dlt\Args\Float64DltArg.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ContextId.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
+    <Compile Include="Dlt\ControlArgs\ControlError.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
     <Compile Include="Dlt\ControlArgs\CustomConnectionInfoResponse.cs" />
     <Compile Include="Dlt\ControlArgs\CustomMarkerResponse.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Dlt\ControlArgs\SyncTimeStampResponse.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationResponseDecoder.cs" />
+    <Compile Include="Dlt\Control\ControlArgDecoderBase.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\CustomConnectionInfoResponseDecoder.cs" />
     <Compile Include="Dlt\Control\CustomMarkerResponseDecoder.cs" />
@@ -236,6 +239,7 @@
     <Compile Include="Dlt\Verbose\StringArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\UnsignedIntArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\VerboseArgDecoder.cs" />
+    <Compile Include="Dlt\Verbose\VerboseArgDecoderBase.cs" />
     <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

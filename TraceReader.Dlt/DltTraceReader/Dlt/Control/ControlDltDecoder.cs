@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using ControlArgs;
     using RJCP.Core;
 
@@ -178,58 +177,64 @@
         /// <remarks>The result of the decoding is written directly to the <paramref name="lineBuilder"/>.</remarks>
         public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
-            try {
-                int serviceId;
-                IControlArgDecoder decoder;
+            int serviceId;
+            IControlArgDecoder decoder;
 
-                switch (lineBuilder.DltType) {
-                case DltType.CONTROL_REQUEST:
-                    if (buffer.Length < 4) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning,
-                            "Control message with insufficient buffer length of {0} (needed 4)", buffer.Length);
-                        return -1;
-                    }
-
-                    serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                    if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
-                        if (serviceId >= 0 && serviceId < 0xFFF) {
-                            Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control request message service 0x{0:x}", serviceId);
-                            return -1;
-                        }
-                        decoder = m_SwInjectionRequestDecoder;
-                    }
-                    break;
-                case DltType.CONTROL_RESPONSE:
-                    if (buffer.Length < 4) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning,
-                            "Control message with insufficient buffer length of {0} (needed 4)", buffer.Length);
-                        return -1;
-                    }
-
-                    serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                    if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
-                        if (serviceId >= 0 && serviceId < 0xFFF) {
-                            Log.Dlt.TraceEvent(TraceEventType.Warning, "No decoder for control response message service 0x{0:x}", serviceId);
-                            return -1;
-                        }
-                        decoder = m_SwInjectionResponseDecoder;
-                    }
-                    break;
-                case DltType.CONTROL_TIME:
-                    lineBuilder.SetControlPayload(new DltTimeMarker());
-                    return 0;
-                default:
-                    if (Log.Dlt.ShouldTrace(TraceEventType.Warning)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Invalid control message {0}", lineBuilder.DltType.ToString());
-                    }
+            switch (lineBuilder.DltType) {
+            case DltType.CONTROL_REQUEST:
+                if (buffer.Length < 4) {
+                    lineBuilder.SetErrorMessage(
+                        "Control message request with insufficient buffer length of {0}", buffer.Length);
                     return -1;
                 }
 
+                serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
+                if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
+                    if (serviceId >= 0 && serviceId < 0xFFF) {
+                        lineBuilder.SetErrorMessage(
+                            "Control Message request decoder undefined for service 0x{0:x}", serviceId);
+                        return -1;
+                    }
+                    decoder = m_SwInjectionRequestDecoder;
+                }
+                break;
+            case DltType.CONTROL_RESPONSE:
+                if (buffer.Length < 4) {
+                    lineBuilder.SetErrorMessage(
+                        "Control message response with insufficient buffer length of {0}", buffer.Length);
+                    return -1;
+                }
+
+                serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
+                if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
+                    if (serviceId >= 0 && serviceId < 0xFFF) {
+                        lineBuilder.SetErrorMessage(
+                            "Control Message response decoder undefined for service 0x{0:x}", serviceId);
+                        return -1;
+                    }
+                    decoder = m_SwInjectionResponseDecoder;
+                }
+                break;
+            case DltType.CONTROL_TIME:
+                lineBuilder.SetControlPayload(new DltTimeMarker());
+                return 0;
+            default:
+                lineBuilder.SetErrorMessage(
+                    "Control Message {0} unknown type", lineBuilder.DltType);
+                return -1;
+            }
+
+            try {
                 int decoded = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
                 if (decoded == -1 || service == null) {
-                    if (Log.Dlt.ShouldTrace(TraceEventType.Warning)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Failed decoding {0} message service 0x{1:x}",
-                            lineBuilder.DltType.ToString(), serviceId);
+                    if (service is ControlError controlError) {
+                        lineBuilder.SetErrorMessage(
+                            "Control Message {0} Service 0x{1:x} {2}",
+                            lineBuilder.DltType, serviceId, controlError.Message);
+                    } else {
+                        lineBuilder.SetErrorMessage(
+                            "Control Message {0} Service 0x{1:x} decoding error",
+                            lineBuilder.DltType, serviceId);
                     }
                     return -1;
                 }
@@ -237,7 +242,9 @@
                 lineBuilder.SetControlPayload(service);
                 return decoded;
             } catch (Exception ex) {
-                Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding control message");
+                Log.Dlt.TraceException(ex, nameof(Decode),
+                    "Control Message {0} Service 0x{1:x} decoding exception",
+                    lineBuilder.DltType, serviceId);
                 return -1;
             }
         }
