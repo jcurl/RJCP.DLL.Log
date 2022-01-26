@@ -7,7 +7,7 @@
     /// Interface for a packet based log decoder.
     /// </summary>
     /// <typeparam name="T">The type of trace line the decoder produces.</typeparam>
-    public interface ITraceDecoder<T> : IDisposable where T : ITraceLine
+    public interface ITraceDecoder<out T> : IDisposable where T : ITraceLine
     {
         /// <summary>
         /// Decodes data from the buffer and returns a read only collection of trace lines.
