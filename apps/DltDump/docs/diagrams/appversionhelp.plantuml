@@ -1,0 +1,39 @@
+@startuml App.Help
+
+namespace View {
+    class CommandFactory
+
+    interface ICommand
+    class HelpCommand
+
+    ICommand <|.l.HelpCommand
+
+    CommandFactory --> HelpCommand : <<instantiates>>
+
+    HelpCommand --> Application.Help
+    HelpCommand --> Application.Version
+}
+
+'View.HelpCommand --> Framework.System.Console
+
+namespace Application {
+    class Help
+    class Version
+
+    Help --> Infrastructure.Version
+    Version --> Infrastructure.Version
+}
+
+namespace Infrastructure {
+    class Version
+}
+
+namespace Framework {
+    namespace System {
+        class Console
+
+        View.HelpCommand --> Console
+    }
+}
+
+@enduml

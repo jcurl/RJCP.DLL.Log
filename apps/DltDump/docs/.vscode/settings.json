@@ -1,0 +1,17 @@
+{
+    "cSpell.words": [
+        "globbing",
+        "PCAP",
+        "PCAPNG",
+        "regexes"
+    ],
+    "cSpell.ignoreRegExpList": [
+        "`.*`",                   // ignore 'pre' tags
+        "\\[.*\\]\\(\\S+\\)",     // ignore HTML links
+        "```.*```"                // code blocks
+    ],
+    "markdownlint.config": {
+        "MD003": { "style": "atx" },
+        "MD004": false
+    }
+}

@@ -1,0 +1,30 @@
+@startuml Domain.Decoder.Writer
+
+namespace Domain {
+  class DltTraceDecoderFactory
+  class DltDecoder
+  class BinaryWriter
+  class Filter
+  class BinaryWriterConfig
+
+  DltTraceDecoderFactory .r.> DltDecoder : <<instantiates>>
+  DltDecoder *-d- Filter
+  DltDecoder *-d- BinaryWriter
+  DltDecoder *-d- BinaryWriterConfig
+
+  BinaryWriterConfig -r-o BinaryWriter
+}
+
+namespace Framework {
+    namespace System.IO {
+        class Stream
+    }
+
+    namespace RJCP.Diagnostics.Log.Decoder {
+        class DltTraceDecoderBase
+    }
+
+    Domain.BinaryWriter *-- System.IO.Stream
+    Domain.DltDecoder --|> RJCP.Diagnostics.Log.Decoder.DltTraceDecoderBase
+}
+@enduml

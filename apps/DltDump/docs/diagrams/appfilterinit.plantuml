@@ -1,0 +1,52 @@
+@startuml App.Filter.Initialization
+
+namespace View {
+    class CommandFactory
+
+    interface ICommand
+    class FilterCommand
+
+    ICommand <|.l.FilterCommand
+
+    CommandFactory --> FilterCommand : <<instantiates>>
+
+    FilterCommand --> Application.Filter
+    FilterCommand --> Application.FilterConfig : <<instantiates>>
+}
+
+'View.HelpCommand --> Framework.System.Console
+
+namespace Application {
+    class Filter
+    class FilterConfig
+
+    FilterConfig o-r- Filter
+
+    Filter *-d- Domain.InputStreamFactory
+    Filter *-d- Domain.DltTraceDecoderFactory
+    Filter o-d- Domain.InputStream
+}
+
+namespace Domain {
+    class InputStreamFactory
+    class InputStream
+    class DltTraceDecoderFactory
+
+    InputStreamFactory -r-> InputStream : <<instantiates>>
+}
+
+namespace Framework {
+    namespace System.IO {
+        class Stream
+    }
+
+    namespace RJCP.Diagnostics.Log.Decoder {
+        class DltTraceDecoderBase
+    }
+
+    Domain.InputStream *-d- System.IO.Stream : <<instantiates>>
+    Domain.DltTraceDecoderFactory --> RJCP.Diagnostics.Log.Decoder.DltTraceDecoderBase : <<instantiates>>
+    Domain.DltTraceDecoderFactory o-d- System.IO.Stream
+}
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml View.CommandFactory
+
+namespace Main {
+    class Program
+
+    Program *-d- View.CommandLine
+}
+
+namespace View {
+    class CommandLine {
+        + Run
+    }
+    class CmdOptions
+    interface ICommandFactory
+
+    CommandLine *-d- CmdOptions
+    CommandLine *-r- ICommandFactory
+
+    class CommandFactory
+
+    ICommandFactory <|.d. CommandFactory
+
+    interface ICommand
+    class HelpCommand
+    class FilterCommand
+
+    ICommand <|.d.HelpCommand
+    ICommand <|.d.FilterCommand
+
+    CommandFactory --> HelpCommand : <<instantiates>>
+    CommandFactory --> FilterCommand : <<instantiates>>
+}
+
+package Framework {
+    namespace RJCP.Core.CommandLine {
+        class Options
+    }
+}
+
+View.CmdOptions -d-> RJCP.Core.CommandLine.Options
+
+@enduml

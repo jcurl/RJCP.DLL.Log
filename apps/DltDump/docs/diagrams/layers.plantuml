@@ -1,0 +1,38 @@
+@startuml Layers
+allowmixing
+
+skinparam class {
+    fontColor Transparent
+    stereotypeFontColor Transparent
+}
+
+package Root {
+    class A11111 { }
+}
+
+package View {
+    class A22222 { }
+}
+
+package Application {
+    class A33333 { }
+}
+
+package "Domain Model" as Domain {
+    class A44444 { }
+}
+
+package Infrastructure {
+    class A55555 { }
+}
+
+package Framework {
+    class A66666 { }
+}
+
+Root -> View
+View -> Application
+Application -> Domain
+Domain -> Infrastructure
+Infrastructure -> Framework
+@enduml

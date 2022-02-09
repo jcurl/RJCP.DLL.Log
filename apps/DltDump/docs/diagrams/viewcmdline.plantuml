@@ -1,0 +1,15 @@
+@startuml View.CommandLine
+
+namespace View {
+    class CmdOptions
+}
+
+package Framework {
+    namespace RJCP.Core.CommandLine {
+        class Options
+    }
+}
+
+View.CmdOptions -d-> RJCP.Core.CommandLine.Options : <<uses>>
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml AppSearch
+
+object Application
+object "Input Stream" as Input
+object Decoder
+
+rectangle "Console Output" {
+    object "History + Filter" as PostFilter
+    object Console
+}
+
+rectangle "File Output" {
+    object "History + Filter" as DecoderFilter
+    object "Binary Writer" as Writer
+}
+
+Application -r-> Input
+Input -r-> Decoder
+Decoder -r-> PostFilter
+PostFilter -r-> Console
+
+Decoder -d-> DecoderFilter
+DecoderFilter -d-> Writer
+
+@enduml

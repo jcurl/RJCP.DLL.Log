@@ -1,0 +1,24 @@
+@startuml Domain.Filter.Context
+
+rectangle "Decoded Input" as InputStage {
+  object DltTraceLineBase
+}
+
+rectangle "Filter" as FilterStage {
+  object Context
+  object Filter
+  object Constraints
+
+  Filter *-u- Constraints
+  Filter --> Context
+}
+
+rectangle "Output" as OutputStage {
+  object Output
+}
+
+DltTraceLineBase -r-> Filter
+DltTraceLineBase -r-> Context
+Context -r-> Output
+
+@enduml
