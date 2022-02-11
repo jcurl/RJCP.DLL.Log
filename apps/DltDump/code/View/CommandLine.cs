@@ -15,7 +15,13 @@
                 return ExitCode.OptionsError;
             }
 
-            return ExitCode.Success;
+            ICommand command = Application.Instance.CommandFactory.Create(cmdOptions);
+            if (command == null) {
+                /* TODO: Should print that no options were given */
+                return ExitCode.OptionsError;
+            }
+
+            return command.Run();
         }
     }
 }

@@ -56,10 +56,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\CmdOptions.cs" />
+    <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
+    <Compile Include="View\HelpCommand.cs" />
+    <Compile Include="View\ICommand.cs" />
+    <Compile Include="View\ICommandFactory.cs" />
   </ItemGroup>
 
 </Project>
