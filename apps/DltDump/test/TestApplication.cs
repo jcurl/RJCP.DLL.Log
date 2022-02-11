@@ -22,6 +22,7 @@
         public TestApplication()
         {
             Application.Instance.CommandFactory = null;
+            Application.Instance.Terminal = null;
         }
 
         /// <summary>

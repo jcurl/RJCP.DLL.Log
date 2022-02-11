@@ -21,16 +21,19 @@
         {
             get
             {
-                if (s_Instance == null) {
+                Application result = s_Instance;
+                if (result == null) {
                     lock (m_Lock) {
                         if (s_Instance == null) {
                             s_Instance = new Application() {
-                                CommandFactory = new View.CommandFactory()
+                                CommandFactory = new View.CommandFactory(),
+                                Terminal = new Infrastructure.Terminal.ConsoleTerminal()
                             };
+                            result = s_Instance;
                         }
                     }
                 }
-                return s_Instance;
+                return result;
             }
         }
 
@@ -53,5 +56,7 @@
         /// </summary>
         /// <value>The command factory.</value>
         public View.ICommandFactory CommandFactory { get; set; }
+
+        public Infrastructure.Terminal.ITerminal Terminal { get; set; }
     }
 }
