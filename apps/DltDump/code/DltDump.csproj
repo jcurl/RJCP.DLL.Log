@@ -56,6 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />
     <Compile Include="Infrastructure\Terminal\StdErr.cs" />
     <Compile Include="Infrastructure\Terminal\StdOut.cs" />
+    <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />

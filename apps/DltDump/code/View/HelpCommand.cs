@@ -1,5 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
+    using Application;
+
     /// <summary>
     /// Application to show the version or help.
     /// </summary>
@@ -20,7 +22,15 @@
 
         public ExitCode Run()
         {
-            return ExitCode.Success;
+            switch (HelpMode) {
+            case Mode.ShowVersion:
+            case Mode.ShowHelp:
+                VersionApp app = new VersionApp();
+                app.ShowVersion();
+                return ExitCode.Success;
+            default:
+                return ExitCode.OptionsError;
+            }
         }
     }
 }

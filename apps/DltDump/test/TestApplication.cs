@@ -1,15 +1,18 @@
 ﻿namespace RJCP.App.DltDump
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+    using Infrastructure.Terminal;
 
     /// <summary>
     /// Provide a context for the global <see cref="Global"/> state.
     /// </summary>
     /// <remarks>
     /// Any test that uses classes which depend on the global state cannot run in parallel with one another. While it's
-    /// easy to just call <see cref="Global.Reset"/> in the test case, wrapping it in a <c>using</c> statement
-    /// makes the scope clear.
+    /// easy to just call <see cref="Global.Reset"/> in the test case, wrapping it in a <c>using</c> statement makes the
+    /// scope clear.
     /// </remarks>
+    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Design calls for an object, no performance impact")]
     public sealed class TestApplication : IDisposable
     {
         /// <summary>
@@ -22,7 +25,33 @@
         public TestApplication()
         {
             Global.Instance.CommandFactory = null;
-            Global.Instance.Terminal = null;
+            Global.Instance.Terminal = new VirtualTerminal();
+        }
+
+        /// <summary>
+        /// Gets the virtualised standard output.
+        /// </summary>
+        /// <value>The virtualised standard out.</value>
+        public VirtualStdOut StdOut
+        {
+            get
+            {
+                if (!(Global.Instance.Terminal is VirtualTerminal term)) return null;
+                return (VirtualStdOut)term.StdOut;
+            }
+        }
+
+        /// <summary>
+        /// Gets the virtualised standard error.
+        /// </summary>
+        /// <value>The virtualised standard error.</value>
+        public VirtualStdErr StdErr
+        {
+            get
+            {
+                if (!(Global.Instance.Terminal is VirtualTerminal term)) return null;
+                return (VirtualStdErr)term.StdErr;
+            }
         }
 
         /// <summary>

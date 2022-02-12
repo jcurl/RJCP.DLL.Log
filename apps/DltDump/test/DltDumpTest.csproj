@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalOutTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalTest.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualOutBase.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Infrastructure\Terminal\VirtualStdErr.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualStdOut.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualTerminal.cs" />
+    <Compile Include="Infrastructure\VersionTest.cs" />
     <Compile Include="TestApplication.cs" />
     <Compile Include="Infrastructure\OptionsGen.cs" />
     <Compile Include="View\CommandFactoryTest.cs" />
