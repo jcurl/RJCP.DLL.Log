@@ -60,6 +60,7 @@
     <Compile Include="Infrastructure\Terminal\VirtualTerminal.cs" />
     <Compile Include="Infrastructure\Text\FormatTest.cs" />
     <Compile Include="Infrastructure\VersionTest.cs" />
+    <Compile Include="Resources\ResourcesTest.cs" />
     <Compile Include="TestApplication.cs" />
     <Compile Include="Infrastructure\OptionsGen.cs" />
     <Compile Include="View\CommandFactoryTest.cs" />

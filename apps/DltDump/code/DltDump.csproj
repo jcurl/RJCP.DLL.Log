@@ -67,12 +67,24 @@
     <Compile Include="Infrastructure\Text\Format.cs" />
     <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Resources\AppResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />
     <Compile Include="View\ICommandFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\AppResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

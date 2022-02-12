@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using Resources;
 
     /// <summary>
     /// Formats strings for console output.
@@ -107,11 +108,11 @@
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
             if (width < indent + 10)
-                throw new ArgumentOutOfRangeException(nameof(width), "Width should be at least 10 characters including indent");
+                throw new ArgumentOutOfRangeException(nameof(width), AppResources.InfraFormatWidthException);
             if (indent < 0)
-                throw new ArgumentOutOfRangeException(nameof(indent), "Indent must be zero or more");
+                throw new ArgumentOutOfRangeException(nameof(indent), AppResources.InfraFormatIndentException);
             if (hangingIndent < 0)
-                throw new ArgumentOutOfRangeException(nameof(hangingIndent), "Indent must be zero or more");
+                throw new ArgumentOutOfRangeException(nameof(hangingIndent), AppResources.InfraFormatHangingIndentException);
 
             StringBuilder line = new StringBuilder(width);
             List<string> output = new List<string>();
@@ -151,7 +152,7 @@
                     newLine = false;
                     break;
                 default:
-                    throw new InvalidOperationException("Error parsing string");
+                    throw new InvalidOperationException(AppResources.InfraFormatMessageParseException);
                 }
             }
 
@@ -217,7 +218,7 @@
                     }
                     break;
                 default:
-                    throw new InvalidOperationException("Error parsing string");
+                    throw new InvalidOperationException(AppResources.InfraFormatMessageParseException);
                 }
             }
 
@@ -232,7 +233,7 @@
                 offset = message.Length;
                 return token;
             default:
-                throw new InvalidOperationException("Error parsing string");
+                throw new InvalidOperationException(AppResources.InfraFormatMessageParseException);
             }
         }
     }
