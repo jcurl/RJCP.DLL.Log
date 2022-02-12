@@ -56,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Application.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />

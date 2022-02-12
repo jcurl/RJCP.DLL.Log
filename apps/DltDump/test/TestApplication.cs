@@ -3,11 +3,11 @@
     using System;
 
     /// <summary>
-    /// Provide a context for the global <see cref="Application"/> state.
+    /// Provide a context for the global <see cref="Global"/> state.
     /// </summary>
     /// <remarks>
     /// Any test that uses classes which depend on the global state cannot run in parallel with one another. While it's
-    /// easy to just call <see cref="Application.Reset"/> in the test case, wrapping it in a <c>using</c> statement
+    /// easy to just call <see cref="Global.Reset"/> in the test case, wrapping it in a <c>using</c> statement
     /// makes the scope clear.
     /// </remarks>
     public sealed class TestApplication : IDisposable
@@ -21,8 +21,8 @@
         /// </remarks>
         public TestApplication()
         {
-            Application.Instance.CommandFactory = null;
-            Application.Instance.Terminal = null;
+            Global.Instance.CommandFactory = null;
+            Global.Instance.Terminal = null;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
         /// </summary>
         public void Dispose()
         {
-            Application.Reset();
+            Global.Reset();
         }
     }
 }

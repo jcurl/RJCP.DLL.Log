@@ -29,7 +29,7 @@
                 });
 
             // The CommandLine.Run() will use this factory.
-            Application.Instance.CommandFactory = factoryMock.Object;
+            Global.Instance.CommandFactory = factoryMock.Object;
         }
 
         [Test]

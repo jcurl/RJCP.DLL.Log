@@ -3,9 +3,9 @@
     /// <summary>
     /// The application provides global instance data useful for the application.
     /// </summary>
-    public class Application
+    public class Global
     {
-        private static Application s_Instance;
+        private static Global s_Instance;
         private static readonly object m_Lock = new object();
 
         /// <summary>
@@ -13,19 +13,19 @@
         /// </summary>
         /// <value>The instance for application configuration.</value>
         /// <remarks>
-        /// The code should use the <see cref="Instance"/> property of the <see cref="Application"/> class to get
+        /// The code should use the <see cref="Instance"/> property of the <see cref="Global"/> class to get
         /// functionality needed for operation, such as factories and other configuration. Test code should be the only
         /// reason the instance data is overwritten.
         /// </remarks>
-        public static Application Instance
+        public static Global Instance
         {
             get
             {
-                Application result = s_Instance;
+                Global result = s_Instance;
                 if (result == null) {
                     lock (m_Lock) {
                         if (s_Instance == null) {
-                            s_Instance = new Application() {
+                            s_Instance = new Global() {
                                 CommandFactory = new View.CommandFactory(),
                                 Terminal = new Infrastructure.Terminal.ConsoleTerminal()
                             };

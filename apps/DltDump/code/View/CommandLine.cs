@@ -15,7 +15,7 @@
                 return ExitCode.OptionsError;
             }
 
-            ICommand command = Application.Instance.CommandFactory.Create(cmdOptions);
+            ICommand command = Global.Instance.CommandFactory.Create(cmdOptions);
             if (command == null) {
                 /* TODO: Should print that no options were given */
                 return ExitCode.OptionsError;
