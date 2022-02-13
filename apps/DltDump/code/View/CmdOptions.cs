@@ -24,5 +24,23 @@
         /// <value>Is <see langword="true"/> if version should be printed; otherwise, <see langword="false"/>.</value>
         [Option("version")]
         public bool Version { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating if a crash log should be generated when complete.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if a log file should be generated; otherwise, <see langword="false"/>.
+        /// </value>
+        [Option("log")]
+        public bool Log { get; private set; }
+
+#if DEBUG
+        /// <summary>
+        /// Gets a value indicating if a crash test should be performed.
+        /// </summary>
+        /// <value>A crash test should be performed if <see langword="true"/>; otherwise, <see langword="false"/>.</value>
+        [Option("crashtest")]
+        public bool CrashTest { get; private set; }
+#endif
     }
 }

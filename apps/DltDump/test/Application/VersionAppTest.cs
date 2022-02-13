@@ -1,10 +1,23 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
+    using System;
     using NUnit.Framework;
 
     [TestFixture]
     public class VersionAppTest
     {
+        [Test]
+        public void GetVersionString()
+        {
+            using (TestApplication global = new TestApplication()) {
+                string version = VersionApp.GetVersion();
+                Console.WriteLine("Version: {0}", version);
+
+                Assert.That(version, Is.Not.Null);
+                Assert.That(version, Is.Not.Empty);
+            }
+        }
+
         [Test]
         public void GetSimpleVersion()
         {
@@ -13,6 +26,7 @@
 
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }
 
@@ -24,6 +38,7 @@
 
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(3));
+                Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }
     }

@@ -1,8 +1,11 @@
 ﻿namespace RJCP.App.DltDump.View
 {
-    using RJCP.Core.CommandLine;
-    using Resources;
+    using System;
+    using System.IO;
     using Application;
+    using Resources;
+    using RJCP.Core.CommandLine;
+    using RJCP.Diagnostics.Dump;
 
     public static class CommandLine
     {
@@ -13,8 +16,8 @@
             try {
                 _ = Options.Parse(cmdOptions, arguments);
             } catch (OptionException ex) {
-                Global.Instance.Terminal.StdOut.WriteLine(AppResources.OptionsError);
-                Global.Instance.Terminal.StdOut.WriteLine(ex.Message);
+                Terminal.WriteLine(AppResources.OptionsError);
+                Terminal.WriteLine(ex.Message);
 
                 return ExitCode.OptionsError;
             }
@@ -25,7 +28,14 @@
                 return ExitCode.OptionsError;
             }
 
-            return command.Run();
+            ExitCode result = command.Run();
+            if (cmdOptions.Log) {
+                string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
+                Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
+                Crash.Data.Dump(path);
+            }
+
+            return result;
         }
     }
 }

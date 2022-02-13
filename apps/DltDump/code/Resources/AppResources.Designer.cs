@@ -61,6 +61,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
+        /// </summary>
+        internal static string ErrorAppUnhandledException {
+            get {
+                return ResourceManager.GetString("ErrorAppUnhandledException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dumping to: {0}.
+        /// </summary>
+        internal static string ErrorDumpBeingGenerated {
+            get {
+                return ResourceManager.GetString("ErrorDumpBeingGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hanging Indent must be zero or more.
         /// </summary>
         internal static string InfraFormatHangingIndentException {

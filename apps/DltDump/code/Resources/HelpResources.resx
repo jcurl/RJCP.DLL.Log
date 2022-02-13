@@ -149,4 +149,7 @@
   <data name="Help810_OptionError" xml:space="preserve">
     <value>1 - There was an error processing the options</value>
   </data>
+  <data name="Help899_UnknownError" xml:space="preserve">
+    <value>255 - An unhandled exception occurred</value>
+  </data>
 </root>

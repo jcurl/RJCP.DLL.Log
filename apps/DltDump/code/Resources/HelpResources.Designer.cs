@@ -151,5 +151,14 @@ namespace RJCP.App.DltDump.Resources {
                 return ResourceManager.GetString("Help810_OptionError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 255 - An unhandled exception occurred.
+        /// </summary>
+        internal static string Help899_UnknownError {
+            get {
+                return ResourceManager.GetString("Help899_UnknownError", resourceCulture);
+            }
+        }
     }
 }

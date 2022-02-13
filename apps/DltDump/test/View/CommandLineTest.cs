@@ -125,5 +125,19 @@
                 Assert.That(cmdOptions.Version, Is.True);
             }
         }
+
+        [Test]
+        public void Log()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("log")
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Log, Is.True);
+            }
+        }
     }
 }

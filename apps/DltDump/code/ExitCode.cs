@@ -13,6 +13,11 @@
         /// <summary>
         /// There was an error parsing the command line options.
         /// </summary>
-        OptionsError = 1
+        OptionsError = 1,
+
+        /// <summary>
+        /// An unknown error occurred (an unhandled exception).
+        /// </summary>
+        UnknownError = 255
     }
 }

@@ -9,6 +9,12 @@
         /// <returns>A <see cref="ICommand" /> instance from the options.</returns>
         public ICommand Create(CmdOptions options)
         {
+#if DEBUG
+            if (options.CrashTest) {
+                return new CrashCommand();
+            }
+#endif
+
             if (options.Help) {
                 return new HelpCommand(HelpCommand.Mode.ShowHelp);
             } else if (options.Version) {

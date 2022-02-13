@@ -1,8 +1,5 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -26,7 +23,7 @@
                 HelpApp.ShowHelp();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.GreaterThanOrEqualTo(18));
+                Assert.That(global.StdOut.Lines.Count, Is.GreaterThanOrEqualTo(19));
             }
         }
     }

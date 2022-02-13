@@ -54,6 +54,7 @@
     <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
     <ProjectReference Include="..\..\..\..\commandline\code\RJCP.Core.CommandLine.csproj" />
     <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
+    <ProjectReference Include="..\..\..\..\crashreporter\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +69,7 @@
     <Compile Include="Infrastructure\Terminal\StdOut.cs" />
     <Compile Include="Infrastructure\Text\Format.cs" />
     <Compile Include="Infrastructure\Version.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -82,9 +84,11 @@
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
+    <Compile Include="View\CrashCommand.cs" />
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />
     <Compile Include="View\ICommandFactory.cs" />
+    <Compile Include="View\Terminal.cs" />
   </ItemGroup>
 
   <ItemGroup>

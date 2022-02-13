@@ -57,6 +57,7 @@
             Write();
             Write(2, 4, HelpResources.Help805_Success);
             Write(2, 4, HelpResources.Help810_OptionError);
+            Write(2, 4, HelpResources.Help899_UnknownError);
             Write();
         }
 

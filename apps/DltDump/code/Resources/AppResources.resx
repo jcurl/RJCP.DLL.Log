@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorAppUnhandledException" xml:space="preserve">
+    <value>An internal error has occurred (unhandled exception).</value>
+  </data>
+  <data name="ErrorDumpBeingGenerated" xml:space="preserve">
+    <value>Dumping to: {0}</value>
+  </data>
   <data name="InfraFormatHangingIndentException" xml:space="preserve">
     <value>Hanging Indent must be zero or more</value>
   </data>
