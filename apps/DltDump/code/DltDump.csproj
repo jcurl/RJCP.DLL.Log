@@ -53,9 +53,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
     <ProjectReference Include="..\..\..\..\commandline\code\RJCP.Core.CommandLine.csproj" />
+    <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application\HelpApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="ExitCode.cs" />
@@ -72,6 +74,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\HelpResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HelpResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
@@ -84,6 +91,10 @@
     <EmbeddedResource Include="Resources\AppResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\HelpResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HelpResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

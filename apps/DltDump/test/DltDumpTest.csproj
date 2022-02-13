@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application\HelpAppTest.cs" />
     <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalOutTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalTest.cs" />

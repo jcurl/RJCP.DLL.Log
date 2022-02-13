@@ -55,6 +55,20 @@
         }
 
         /// <summary>
+        /// Writes the virtual <see cref="StdOut"/> and <see cref="StdErr"/> to the console.
+        /// </summary>
+        public void WriteStd()
+        {
+            foreach (string line in StdOut.Lines) {
+                Console.WriteLine(line);
+            }
+
+            foreach (string line in StdErr.Lines) {
+                Console.WriteLine(line);
+            }
+        }
+
+        /// <summary>
         /// When this object is disposed, the global state is reset.
         /// </summary>
         public void Dispose()

@@ -9,9 +9,9 @@
         public void GetSimpleVersion()
         {
             using (TestApplication global = new TestApplication()) {
-                VersionApp app = new VersionApp();
-                app.ShowSimpleVersion();
+                VersionApp.ShowSimpleVersion();
 
+                global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
             }
         }
@@ -20,9 +20,9 @@
         public void GetVersion()
         {
             using (TestApplication global = new TestApplication()) {
-                VersionApp app = new VersionApp();
-                app.ShowVersion();
+                VersionApp.ShowVersion();
 
+                global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(3));
             }
         }

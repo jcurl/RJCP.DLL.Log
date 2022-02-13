@@ -1,13 +1,11 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
-    using System.Diagnostics.CodeAnalysis;
     using Infrastructure;
     using Resources;
 
-    [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Design calls for an object, no performance impact")]
-    public class VersionApp
+    public static class VersionApp
     {
-        public void ShowVersion()
+        public static void ShowVersion()
         {
             ShowSimpleVersion();
 
@@ -17,7 +15,7 @@
                 Version.GetAssemblyVersion(typeof(Diagnostics.Log.DltFileTraceReaderFactory)));
         }
 
-        public void ShowSimpleVersion()
+        public static void ShowSimpleVersion()
         {
             string copyright = Version.GetAssemblyCopyright(typeof(Program));
             if (string.IsNullOrWhiteSpace(copyright)) {

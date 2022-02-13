@@ -24,9 +24,10 @@
         {
             switch (HelpMode) {
             case Mode.ShowVersion:
+                VersionApp.ShowVersion();
+                return ExitCode.Success;
             case Mode.ShowHelp:
-                VersionApp app = new VersionApp();
-                app.ShowVersion();
+                HelpApp.ShowHelp();
                 return ExitCode.Success;
             default:
                 return ExitCode.OptionsError;

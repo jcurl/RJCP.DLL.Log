@@ -124,7 +124,10 @@
                 Token token = GetWord(ref offset, message);
                 switch (token.Type) {
                 case TokenType.None:
+                    break;
                 case TokenType.Space:
+                    // If the first token is a space, then we take this as a hanging indent.
+                    lineIndent = hangingIndent;
                     break;
                 case TokenType.Newline:
                     if (newLine) {

@@ -419,5 +419,17 @@
             Assert.That(lines[6], Is.EqualTo("    look like a nice markdown bullet"));
             Assert.That(lines[7], Is.EqualTo("    point list."));
         }
+
+        [Test]
+        public void FormatNewLineWithHangingIndent()
+        {
+            const string message = "Line1\n Line2";
+
+            string[] lines = Format.Wrap(40, 2, 4, message);
+            Assert.That(lines, Is.Not.Null);
+            Assert.That(lines.Length, Is.EqualTo(2));
+            Assert.That(lines[0], Is.EqualTo("  Line1"));
+            Assert.That(lines[1], Is.EqualTo("    Line2"));
+        }
     }
 }
