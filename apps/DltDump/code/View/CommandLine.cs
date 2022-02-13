@@ -1,6 +1,8 @@
 ﻿namespace RJCP.App.DltDump.View
 {
     using RJCP.Core.CommandLine;
+    using Resources;
+    using Application;
 
     public static class CommandLine
     {
@@ -10,14 +12,16 @@
 
             try {
                 _ = Options.Parse(cmdOptions, arguments);
-            } catch (OptionException) {
-                /* TODO: Should print the error and then the usage */
+            } catch (OptionException ex) {
+                Global.Instance.Terminal.StdOut.WriteLine(AppResources.OptionsError);
+                Global.Instance.Terminal.StdOut.WriteLine(ex.Message);
+
                 return ExitCode.OptionsError;
             }
 
             ICommand command = Global.Instance.CommandFactory.Create(cmdOptions);
             if (command == null) {
-                /* TODO: Should print that no options were given */
+                HelpApp.ShowSimpleHelp();
                 return ExitCode.OptionsError;
             }
 

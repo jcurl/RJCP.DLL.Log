@@ -129,6 +129,9 @@
   <data name="InfraFormatWidthException" xml:space="preserve">
     <value>Width should be at least 10 characters including indent</value>
   </data>
+  <data name="OptionsError" xml:space="preserve">
+    <value>Problem with the command line.</value>
+  </data>
   <data name="VersionDltDump" xml:space="preserve">
     <value>DltDump Version: {0}</value>
   </data>

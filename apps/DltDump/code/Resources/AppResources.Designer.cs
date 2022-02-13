@@ -97,6 +97,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Problem with the command line..
+        /// </summary>
+        internal static string OptionsError {
+            get {
+                return ResourceManager.GetString("OptionsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DltDump Version: {0}.
         /// </summary>
         internal static string VersionDltDump {
