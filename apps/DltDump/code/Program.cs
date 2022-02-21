@@ -2,18 +2,17 @@
 {
     using System;
     using System.Diagnostics;
-    using System.IO;
+    using System.Threading;
     using Application;
     using Resources;
     using RJCP.Diagnostics;
-    using RJCP.Diagnostics.Dump;
     using View;
 
     public static class Program
     {
         public static int Main(string[] args)
         {
-            InitCrashReporter();
+            CrashReporter.SetExceptionHandlers();
 
             Log.App.TraceEvent(TraceEventType.Information, VersionApp.GetVersion());
 
@@ -22,17 +21,14 @@
             } catch (Exception ex) {
                 Terminal.WriteLine(AppResources.ErrorAppUnhandledException);
                 Log.App.TraceException(ex, nameof(Program), "Unhandled exception");
-                string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
-                Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
-                Crash.Data.Dump(path);
 
+                // We don't need the path. This will print to the log at level 'warn'.
+                CrashReporter.CreateDump();
+
+                // If the user is logging to the console, we need to wait 200ms for it to be printed.
+                Thread.Sleep(200);
                 return (int)ExitCode.UnknownError;
             }
-        }
-
-        private static void InitCrashReporter()
-        {
-            CrashReporter.SetExceptionHandlers();
         }
     }
 }

@@ -1,11 +1,10 @@
 ﻿namespace RJCP.App.DltDump.View
 {
-    using System;
-    using System.IO;
+    using System.Threading;
     using Application;
     using Resources;
     using RJCP.Core.CommandLine;
-    using RJCP.Diagnostics.Dump;
+    using RJCP.Diagnostics;
 
     public static class CommandLine
     {
@@ -30,9 +29,9 @@
 
             ExitCode result = command.Run();
             if (cmdOptions.Log) {
-                string path = Path.Combine(Environment.CurrentDirectory, Crash.Data.CrashDumpFactory.FileName);
+                string path = CrashReporter.CreateDump(Diagnostics.Dump.CoreType.None);
                 Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
-                Crash.Data.Dump(path);
+                Thread.Sleep(200);
             }
 
             return result;

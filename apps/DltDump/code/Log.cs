@@ -1,6 +1,9 @@
 ﻿namespace RJCP.App.DltDump
 {
-    using System.Diagnostics;
+    using System.IO;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+    using RJCP.Diagnostics.Logging;
     using RJCP.Diagnostics.Trace;
 
     public static class Log
@@ -9,21 +12,26 @@
 
         static Log()
         {
-            SimplePrioMemoryLog log = new SimplePrioMemoryLog() {
-                Critical = 100,
-                Error = 150,
-                Warning = 200,
-                Info = 250,
-                Verbose = 300,
-                Other = 100,
-                Total = 1500
-            };
-            MemoryTraceListener listener = new MemoryTraceListener(log);
-            LogSource.SetLogSource("DltDump", SourceLevels.Verbose, listener);
-            LogSource.SetLogSource("RJCP.CrashReporter", SourceLevels.Verbose, listener);
-            LogSource.SetLogSource("RJCP.CrashReporter.Watchdog", SourceLevels.Verbose, listener);
-
+            LogSource.SetLoggerFactory(GetLoggerFactory());
             App = new LogSource("DltDump");
+        }
+
+        private static ILoggerFactory GetLoggerFactory()
+        {
+            // Should be something similar to dltdump.dll.json
+            string file = typeof(Program).Assembly.Location;
+            string app = Path.GetFileName(file);
+
+            IConfigurationRoot config = new ConfigurationBuilder()
+                .AddJsonFile($"{app}.json", true, false)
+                .Build();
+
+            return LoggerFactory.Create(builder => {
+                builder
+                    .AddConfiguration(config.GetSection("Logging"))
+                    .AddConsole()
+                    .AddSimplePrioMemoryLogger();
+            });
         }
     }
 }
