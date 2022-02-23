@@ -6,33 +6,40 @@ skinparam class {
     stereotypeFontColor Transparent
 }
 
-package Root {
+
+rectangle Root {
     class A11111 { }
 }
 
-package View {
-    class A22222 { }
-}
-
-package Application {
+rectangle Application {
     class A33333 { }
 }
 
-package "Domain Model" as Domain {
+rectangle Services {
     class A44444 { }
 }
 
-package Infrastructure {
+rectangle "Domain Model" as Domain {
     class A55555 { }
 }
 
-package Framework {
+rectangle View {
+    class A22222 { }
+}
+
+rectangle Infrastructure {
     class A66666 { }
 }
 
-Root -> View
-View -> Application
-Application -> Domain
-Domain -> Infrastructure
-Infrastructure -> Framework
+rectangle Framework {
+    class A77777 { }
+}
+
+Root -r-> View
+View -r-> Application
+Application -r-> Services
+Services -r-> Domain
+Domain -r-> Infrastructure
+Infrastructure -r-> Framework
+
 @enduml

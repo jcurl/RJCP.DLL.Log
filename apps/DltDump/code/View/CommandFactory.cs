@@ -21,6 +21,10 @@
                 return new HelpCommand(HelpCommand.Mode.ShowVersion);
             }
 
+            if (options.Arguments.Count > 0) {
+                return new FilterCommand(options);
+            }
+
             return null;
         }
     }

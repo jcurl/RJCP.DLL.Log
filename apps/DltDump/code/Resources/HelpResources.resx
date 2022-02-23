@@ -124,7 +124,7 @@
     <value>To run the tool execute it with the optional [options] and the mandatory &lt;input&gt;. The following command line options are available:</value>
   </data>
   <data name="Help210_SimpleUsageScheme" xml:space="preserve">
-    <value>dltdump.exe /?</value>
+    <value>dltdump.exe {0}?</value>
   </data>
   <data name="Help210_UsageScheme" xml:space="preserve">
     <value>dltdump.exe [options] &lt;input&gt;</value>
@@ -139,6 +139,9 @@
   <data name="Help315_VersionOption" xml:space="preserve">
     <value>{1}version
  displays the version of the software.</value>
+  </data>
+  <data name="Help400_Input" xml:space="preserve">
+    <value>The input stream shall be the last option in the command line. Multiple files can be specified.</value>
   </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>

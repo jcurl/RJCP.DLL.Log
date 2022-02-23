@@ -3,6 +3,7 @@
     using System;
     using Moq;
     using NUnit.Framework;
+    using RJCP.CodeQuality.NUnitExtensions;
     using static Infrastructure.OptionsGen;
 
     [TestFixture]
@@ -10,7 +11,7 @@
     {
         private static void CommandFactorySetup(Action<ICommand> action)
         {
-            // The command does nothing other than return the exit code requested.
+            // The command does nothing other than return the exit code success.
             var commandMock = new Mock<ICommand>();
             commandMock.Setup(m => m.Run())
                 .Returns(ExitCode.Success);
@@ -61,6 +62,20 @@
 
                 HelpCommand helpCommand = (HelpCommand)command;
                 Assert.That(helpCommand.HelpMode, Is.EqualTo(HelpCommand.Mode.ShowVersion));
+            }
+        }
+
+        private readonly string EmptyFile = System.IO.Path.Combine(Deploy.TestDirectory, "Input", "EmptyFile.dlt");
+
+        [Test]
+        public void GetFilterCommand()
+        {
+            using (new TestApplication()) {
+                ICommand command = null;
+                CommandFactorySetup(cmd => { command = cmd; });
+
+                CommandLine.Run(new string[] { EmptyFile });
+                Assert.That(command, Is.TypeOf<FilterCommand>());
             }
         }
     }

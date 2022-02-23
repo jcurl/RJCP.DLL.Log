@@ -11,9 +11,10 @@ implementation in an incremental manner).
     - [2.1.1. Root](#211-root)
     - [2.1.2. View](#212-view)
     - [2.1.3. Application](#213-application)
-    - [2.1.4. Domain Model](#214-domain-model)
-    - [2.1.5. Infrastructure](#215-infrastructure)
-    - [2.1.6. Framework](#216-framework)
+    - [2.1.4. Services](#214-services)
+    - [2.1.5. Domain Model](#215-domain-model)
+    - [2.1.6. Infrastructure](#216-infrastructure)
+    - [2.1.7. Framework](#217-framework)
   - [2.2. View](#22-view)
     - [2.2.1. Command Line Options](#221-command-line-options)
     - [2.2.2. The Command Factory](#222-the-command-factory)
@@ -117,7 +118,17 @@ If a graphical user interface should be created, only this layer is modified.
 
 These are classes that represent various application use cases.
 
-#### 2.1.4. Domain Model
+#### 2.1.4. Services
+
+Generally thin classes that offer specific services to the View and the
+Application layers. It might depend on the infrastructure or framework. It
+usually offers thin functionality that the View or the Application uses.
+
+For the command line, there is a special service, called the `Terminal` which
+formats strings to print to the terminal. In a GUI application, a ViewModel
+would define the classes that the View binds to, but the application updates.
+
+#### 2.1.5. Domain Model
 
 The Domain Model contains the parts which business logic can combine together to
 execute use cases. Elements of the domain model can be:
@@ -133,7 +144,7 @@ input on other elements of the domain model. The Application layer ties the
 Domain model together. As the domain becomes larger, application services can be
 introduced.
 
-#### 2.1.5. Infrastructure
+#### 2.1.6. Infrastructure
 
 This contains code local to this application, but could be considered reasonably
 generic, but for now only used in this application. Importantly, it doesn't
@@ -141,7 +152,7 @@ contain any thing related to policy. It helps implement business logic for the
 application, but doesn't assume what those decisions are, applying only
 technical constraints.
 
-#### 2.1.6. Framework
+#### 2.1.7. Framework
 
 This encapsulates reusable library components, abstracting the runtime or the
 Operating System.

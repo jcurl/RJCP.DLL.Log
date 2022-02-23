@@ -1,5 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using RJCP.Core.CommandLine;
 
     /// <summary>
@@ -42,5 +44,15 @@
         [Option("crashtest")]
         public bool CrashTest { get; private set; }
 #endif
+
+        [OptionArguments]
+        [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set by reflection")]
+        private List<string> m_Arguments = new List<string>();
+
+        /// <summary>
+        /// Gets the list of arguments which are inputs for DLT streams.
+        /// </summary>
+        /// <value>The input DLT streams to read.</value>
+        public IReadOnlyList<string> Arguments { get { return m_Arguments; } }
     }
 }

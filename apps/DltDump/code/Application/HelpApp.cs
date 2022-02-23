@@ -53,6 +53,8 @@
             Write(2, 4, HelpResources.Help310_HelpOption);
             Write(2, 4, HelpResources.Help315_VersionOption);
             Write();
+            Write(HelpResources.Help400_Input);
+            Write();
             Write(HelpResources.Help800_ExitCodes);
             Write();
             Write(2, 4, HelpResources.Help805_Success);

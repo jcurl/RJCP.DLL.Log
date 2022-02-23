@@ -79,6 +79,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The file {0} was not found..
+        /// </summary>
+        internal static string FilterApp_InputFileNotFound {
+            get {
+                return ResourceManager.GetString("FilterApp_InputFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hanging Indent must be zero or more.
         /// </summary>
         internal static string InfraFormatHangingIndentException {

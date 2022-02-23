@@ -5,6 +5,7 @@
     using Resources;
     using RJCP.Core.CommandLine;
     using RJCP.Diagnostics;
+    using Services;
 
     public static class CommandLine
     {

@@ -61,6 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Application\FilterApp.cs" />
+    <Compile Include="Application\FilterConfig.cs" />
     <Compile Include="Application\HelpApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="ExitCode.cs" />
@@ -88,10 +90,11 @@
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
     <Compile Include="View\CrashCommand.cs" />
+    <Compile Include="View\FilterCommand.cs" />
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />
     <Compile Include="View\ICommandFactory.cs" />
-    <Compile Include="View\Terminal.cs" />
+    <Compile Include="Services\Terminal.cs" />
   </ItemGroup>
 
   <ItemGroup>

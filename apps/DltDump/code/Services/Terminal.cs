@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump.View
+﻿namespace RJCP.App.DltDump.Services
 {
     using Infrastructure.Text;
 

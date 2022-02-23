@@ -79,7 +79,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dltdump.exe /?.
+        ///   Looks up a localized string similar to dltdump.exe {0}?.
         /// </summary>
         internal static string Help210_SimpleUsageScheme {
             get {
@@ -122,6 +122,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help315_VersionOption {
             get {
                 return ResourceManager.GetString("Help315_VersionOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified..
+        /// </summary>
+        internal static string Help400_Input {
+            get {
+                return ResourceManager.GetString("Help400_Input", resourceCulture);
             }
         }
         
