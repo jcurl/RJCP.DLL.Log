@@ -162,6 +162,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 2 - None of the input files could be processed.
+        /// </summary>
+        internal static string Help811_NoFilesProcessed {
+            get {
+                return ResourceManager.GetString("Help811_NoFilesProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3 - Not all of the files could be processed (partial error).
+        /// </summary>
+        internal static string Help812_PartialFilesProcessed {
+            get {
+                return ResourceManager.GetString("Help812_PartialFilesProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 255 - An unhandled exception occurred.
         /// </summary>
         internal static string Help899_UnknownError {

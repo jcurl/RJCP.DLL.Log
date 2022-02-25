@@ -1,5 +1,9 @@
 ﻿namespace RJCP.App.DltDump
 {
+    using Infrastructure.Dlt;
+    using Infrastructure.Terminal;
+    using View;
+
     /// <summary>
     /// The application provides global instance data useful for the application.
     /// </summary>
@@ -26,8 +30,9 @@
                     lock (m_Lock) {
                         if (s_Instance == null) {
                             s_Instance = new Global() {
-                                CommandFactory = new View.CommandFactory(),
-                                Terminal = new Infrastructure.Terminal.ConsoleTerminal()
+                                CommandFactory = new CommandFactory(),
+                                Terminal = new ConsoleTerminal(),
+                                DltReaderFactory = new DltTraceReaderFactory()
                             };
                             result = s_Instance;
                         }
@@ -55,8 +60,18 @@
         /// The command factory that interprets the options and gives a command.
         /// </summary>
         /// <value>The command factory.</value>
-        public View.ICommandFactory CommandFactory { get; set; }
+        public ICommandFactory CommandFactory { get; set; }
 
-        public Infrastructure.Terminal.ITerminal Terminal { get; set; }
+        /// <summary>
+        /// The class to write to the console terminal.
+        /// </summary>
+        /// <value>The console terminal.</value>
+        public ITerminal Terminal { get; set; }
+
+        /// <summary>
+        /// The DLT reader factory that is used to obtain the reader based on inputs.
+        /// </summary>
+        /// <value>The DLT reader factory.</value>
+        public IDltTraceReaderFactory DltReaderFactory { get; set; }
     }
 }

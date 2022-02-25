@@ -152,6 +152,12 @@
   <data name="Help810_OptionError" xml:space="preserve">
     <value>1 - There was an error processing the options</value>
   </data>
+  <data name="Help811_NoFilesProcessed" xml:space="preserve">
+    <value>2 - None of the input files could be processed</value>
+  </data>
+  <data name="Help812_PartialFilesProcessed" xml:space="preserve">
+    <value>3 - Not all of the files could be processed (partial error)</value>
+  </data>
   <data name="Help899_UnknownError" xml:space="preserve">
     <value>255 - An unhandled exception occurred</value>
   </data>

@@ -13,8 +13,8 @@
         // must use the CommandLine functionality to do this for us, via CommandLine.Run(). Therefore, this test harness
         // tests both the command line conversion and the functionality of the FilterCommand.
 
-        // Everything that the FilterApp needs would need to be mocked, and those components then tested separately to
-        // minimize the amount of integration testing required.
+        // Even though FilterApp.Run() is called, it won't open or read the files as the dependencies are mocked via
+        // TestApplication.
 
         private static void CommandFactorySetup(Action<CmdOptions> action)
         {

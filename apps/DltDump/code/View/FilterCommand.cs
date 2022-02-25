@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
     using System;
+    using System.Threading.Tasks;
     using Application;
 
     public class FilterCommand : ICommand
@@ -20,7 +21,9 @@
             FilterConfig config = new FilterConfig(m_Options.Arguments);
             FilterApp app = new FilterApp(config);
 
-            return app.Run();
+            Task<ExitCode> filterTask = app.Run();
+            filterTask.ConfigureAwait(false);
+            return filterTask.GetAwaiter().GetResult();
         }
     }
 }

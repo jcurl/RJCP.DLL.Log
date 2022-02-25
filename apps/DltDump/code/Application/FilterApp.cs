@@ -2,7 +2,10 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Resources;
+    using RJCP.Diagnostics.Log;
+    using RJCP.Diagnostics.Log.Dlt;
     using Services;
 
     public class FilterApp
@@ -16,11 +19,27 @@
             m_Config = config;
         }
 
-        public ExitCode Run()
+        public async Task<ExitCode> Run()
         {
             if (!CheckInput())
                 return ExitCode.OptionsError;
 
+            int processed = 0;
+            foreach (string file in m_Config.Input) {
+                ITraceReader<DltTraceLineBase> decoder = await GetDecoder(file);
+                if (decoder == null) continue;
+
+                DltTraceLineBase line;
+                do {
+                    line = await decoder.GetLineAsync();
+                    if (line != null)
+                        Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                } while (line != null);
+                processed++;
+            }
+
+            if (processed == 0) return ExitCode.NoFilesProcessed;
+            if (processed != m_Config.Input.Count) return ExitCode.PartialFilesProcessed;
             return ExitCode.Success;
         }
 
@@ -36,6 +55,37 @@
             }
 
             return true;
+        }
+
+        private static async Task<ITraceReader<DltTraceLineBase>> GetDecoder(string uri)
+        {
+            try {
+                return await Global.Instance.DltReaderFactory.CreateAsync(uri);
+            } catch (FileNotFoundException) {
+                Terminal.WriteLine(AppResources.FilterOpenError_FileNotFound, uri);
+                return null;
+            } catch (DirectoryNotFoundException) {
+                Terminal.WriteLine(AppResources.FilterOpenError_DirectoryNotFound, uri);
+                return null;
+            } catch (PathTooLongException) {
+                Terminal.WriteLine(AppResources.FilterOpenError_PathTooLong, uri);
+                return null;
+            } catch (IOException ex) {
+                Terminal.WriteLine(AppResources.FilterOpenError_IOException, uri, ex.Message);
+                return null;
+            } catch (ArgumentException ex) {
+                Terminal.WriteLine(AppResources.FilterOpenError_InvalidFile, uri, ex.Message);
+                return null;
+            } catch (NotSupportedException ex) {
+                Terminal.WriteLine(AppResources.FilterOpenError_InvalidFile, uri, ex.Message);
+                return null;
+            } catch (System.Security.SecurityException ex) {
+                Terminal.WriteLine(AppResources.FilterOpenError_Security, uri, ex.Message);
+                return null;
+            } catch (UnauthorizedAccessException) {
+                Terminal.WriteLine(AppResources.FilterOpenError_Unauthorized, uri);
+                return null;
+            }
         }
     }
 }

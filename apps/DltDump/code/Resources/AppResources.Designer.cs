@@ -88,6 +88,69 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specified path is invalid {0}.
+        /// </summary>
+        internal static string FilterOpenError_DirectoryNotFound {
+            get {
+                return ResourceManager.GetString("FilterOpenError_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found {0}.
+        /// </summary>
+        internal static string FilterOpenError_FileNotFound {
+            get {
+                return ResourceManager.GetString("FilterOpenError_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t open file {0} ({1})..
+        /// </summary>
+        internal static string FilterOpenError_InvalidFile {
+            get {
+                return ResourceManager.GetString("FilterOpenError_InvalidFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An I/O Exception occurred opening {0} ({1})..
+        /// </summary>
+        internal static string FilterOpenError_IOException {
+            get {
+                return ResourceManager.GetString("FilterOpenError_IOException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path length too long {0}.
+        /// </summary>
+        internal static string FilterOpenError_PathTooLong {
+            get {
+                return ResourceManager.GetString("FilterOpenError_PathTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insufficient permissions opening {0} ({1}).
+        /// </summary>
+        internal static string FilterOpenError_Security {
+            get {
+                return ResourceManager.GetString("FilterOpenError_Security", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Insufficient access privileges opening {0}.
+        /// </summary>
+        internal static string FilterOpenError_Unauthorized {
+            get {
+                return ResourceManager.GetString("FilterOpenError_Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hanging Indent must be zero or more.
         /// </summary>
         internal static string InfraFormatHangingIndentException {

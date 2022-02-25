@@ -16,6 +16,16 @@
         OptionsError = 1,
 
         /// <summary>
+        /// None of the input files could be processed.
+        /// </summary>
+        NoFilesProcessed = 2,
+
+        /// <summary>
+        /// Not all of the input files could be processed.
+        /// </summary>
+        PartialFilesProcessed = 3,
+
+        /// <summary>
         /// An unknown error occurred (an unhandled exception).
         /// </summary>
         UnknownError = 255

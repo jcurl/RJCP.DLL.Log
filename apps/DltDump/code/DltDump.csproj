@@ -53,6 +53,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.22" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.22" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.22" />
+    <ProjectReference Include="..\..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
     <ProjectReference Include="..\..\..\..\commandline\code\RJCP.Core.CommandLine.csproj" />
     <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
@@ -67,6 +68,8 @@
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Infrastructure\Dlt\DltTraceReaderFactory.cs" />
+    <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />

@@ -28,10 +28,27 @@
         }
 
         /// <summary>
-        /// Creates an <see cref="ITraceReader{T}" /> from a file.
+        /// Creates an <see cref="ITraceReader{T}"/> from a file.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>The <see cref="ITraceReader{T}"/> object for log file enumeration.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="fileName"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">The <paramref name="fileName"/> is invalid.</exception>
+        /// <exception cref="NotSupportedException">The <paramref name="fileName"/> is a non-file device.</exception>
+        /// <exception cref="FileNotFoundException">The <paramref name="fileName"/> is not found.</exception>
+        /// <exception cref="IOException">An I/O error occurred.</exception>
+        /// <exception cref="System.Security.SecurityException">
+        /// The caller doesn't have the required permissions.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">
+        /// The specified path is invalid, such as being on an unmapped drive.
+        /// </exception>
+        /// <exception cref="UnauthorizedAccessException">The file is in use, or insufficient permissions.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// </exception>
         public Task<ITraceReader<T>> CreateAsync(string fileName)
         {
             if (fileName == null)
