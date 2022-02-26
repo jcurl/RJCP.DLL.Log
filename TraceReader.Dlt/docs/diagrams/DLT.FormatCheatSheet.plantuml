@@ -41,7 +41,7 @@ map "MTIN DLT_TYPE_LOG (MSTP=0)" as DLT_TYPE_LOG {
     2 => DLT_LOG_ERROR
     3 => DLT_LOG_WARN
     4 => DLT_LOG_INFO
-    5 => DLT_LOG_WARN
+    5 => DLT_LOG_DEBUG
     6 => DLT_LOG_VERBOSE
 }
 
