@@ -423,8 +423,13 @@
 
                 m_DltLineBuilder.SetIsVerbose((messageInfo & DltConstants.MessageInfo.Verbose) != 0);
 
-                int messageType = messageInfo & DltConstants.MessageInfo.MessageTypeInfoMask;
-                m_DltLineBuilder.SetDltType((DltType)messageType);
+                DltType messageType = GetMessageType(messageInfo);
+                if (messageType == DltType.UNKNOWN) {
+                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet at offset 0x{0:x} has invalid message info {1:x2}",
+                        m_PosMap.Position, messageInfo);
+                    return false;
+                }
+                m_DltLineBuilder.SetDltType(messageType);
 
                 byte noar = standardHeader[offset + 1];
                 m_DltLineBuilder.SetNumberOfArgs(noar);
@@ -438,7 +443,7 @@
                 offset += 10;
 
                 // A control message can only be present when there's an extended header.
-                if ((messageType & DltConstants.MessageInfo.MessageTypeMask) == DltConstants.MessageInfo.MessageTypeControl) {
+                if (((int)messageType & DltConstants.MessageInfo.MessageTypeMaskMstp) == DltConstants.MessageInfo.MessageTypeControl) {
                     int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                     if (controlLength == -1) {
                         string error = m_DltLineBuilder.ResetErrorMessage();
@@ -499,6 +504,31 @@
             }
 
             return true;
+        }
+
+        private static DltType GetMessageType(int messageInfo)
+        {
+            int mtin = messageInfo & DltConstants.MessageInfo.MessageTypeMaskMtin;
+            if (mtin == 0) return DltType.UNKNOWN;
+
+            int mstp = messageInfo & DltConstants.MessageInfo.MessageTypeMaskMstp;
+            switch (mstp) {
+            case DltConstants.MessageInfo.MessageTypeLog:
+                if (mtin > (6 << DltConstants.MessageInfo.MessageTypeMaskMtinShift))
+                    return DltType.UNKNOWN;
+                break;
+            case DltConstants.MessageInfo.MessageTypeControl:
+                if (mtin > (3 << DltConstants.MessageInfo.MessageTypeMaskMtinShift))
+                    return DltType.UNKNOWN;
+                break;
+            case DltConstants.MessageInfo.MessageTypeAppTrace:
+            case DltConstants.MessageInfo.MessageTypeNwTrace:
+                break;
+            default:
+                return DltType.UNKNOWN;
+            }
+
+            return (DltType)(messageInfo & DltConstants.MessageInfo.MessageTypeInfoMask);
         }
 
         /// <summary>

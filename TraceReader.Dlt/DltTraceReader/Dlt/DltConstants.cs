@@ -123,7 +123,17 @@
             /// <summary>
             /// The message type mask (MSTP).
             /// </summary>
-            public const int MessageTypeMask = 0x0E;
+            public const int MessageTypeMaskMstp = 0x0E;
+
+            /// <summary>
+            /// The message type info mask (MTIN).
+            /// </summary>
+            public const int MessageTypeMaskMtin = 0xF0;
+
+            /// <summary>
+            /// The message type info mask bit shift.
+            /// </summary>
+            public const int MessageTypeMaskMtinShift = 4;
 
             /// <summary>
             /// The message DLT_TYPE_LOG.

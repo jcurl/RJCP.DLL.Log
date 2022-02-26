@@ -1,6 +1,5 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
-    using System.Runtime.CompilerServices;
     using System.Text;
 
     /// <summary>
