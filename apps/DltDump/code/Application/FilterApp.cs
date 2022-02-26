@@ -32,8 +32,13 @@
                 DltTraceLineBase line;
                 do {
                     line = await decoder.GetLineAsync();
-                    if (line != null)
-                        Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                    if (line != null) {
+                        if (m_Config.ShowPosition) {
+                            Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
+                        } else {
+                            Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                        }
+                    }
                 } while (line != null);
                 processed++;
             }

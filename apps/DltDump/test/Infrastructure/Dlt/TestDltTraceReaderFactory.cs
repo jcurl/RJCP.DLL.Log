@@ -1,9 +1,9 @@
 ﻿namespace RJCP.App.DltDump.Infrastructure.Dlt
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-    using Moq;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
 
@@ -34,6 +34,12 @@
         public FileOpenError OpenError { get; set; } = FileOpenError.None;
 
         /// <summary>
+        /// Gets the collection of lines that can be modified which the factory uses to create a reader.
+        /// </summary>
+        /// <value>The collection of lines to return.</value>
+        public ICollection<DltTraceLineBase> Lines { get; } = new List<DltTraceLineBase>();
+
+        /// <summary>
         /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -41,9 +47,7 @@
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
-
-            var mock = new Mock<ITraceReader<DltTraceLineBase>>();
-            return Task.FromResult(mock.Object);
+            return Task.FromResult(GetTraceReader());
         }
 
         /// <summary>
@@ -78,8 +82,12 @@
                 throw new InvalidOperationException("Simulated Invalid Operation Exception");
             }
 
-            var mock = new Mock<ITraceReader<DltTraceLineBase>>();
-            return Task.FromResult(mock.Object);
+            return Task.FromResult(GetTraceReader());
+        }
+
+        private ITraceReader<DltTraceLineBase> GetTraceReader()
+        {
+            return new LineTraceReader<DltTraceLineBase>(Lines);
         }
     }
 }

@@ -126,6 +126,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}position
+        ///  Show the offset of the stream on text output.
+        /// </summary>
+        internal static string Help320_Position {
+            get {
+                return ResourceManager.GetString("Help320_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified..
         /// </summary>
         internal static string Help400_Input {

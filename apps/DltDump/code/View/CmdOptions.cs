@@ -45,6 +45,13 @@
         public bool CrashTest { get; private set; }
 #endif
 
+        /// <summary>
+        /// Gets a value if the position for each line should be shown on the console.
+        /// </summary>
+        /// <value>Show the position if <see langword="true"/>; otherwise, <see langword="false"/>.</value>
+        [Option("position")]
+        public bool Position { get; private set; }
+
         [OptionArguments]
         [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set by reflection")]
         private List<string> m_Arguments = new List<string>();

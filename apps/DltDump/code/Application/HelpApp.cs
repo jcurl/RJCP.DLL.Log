@@ -52,6 +52,7 @@
             Write();
             Write(2, 4, HelpResources.Help310_HelpOption);
             Write(2, 4, HelpResources.Help315_VersionOption);
+            Write(2, 4, HelpResources.Help320_Position);
             Write();
             Write(HelpResources.Help400_Input);
             Write();

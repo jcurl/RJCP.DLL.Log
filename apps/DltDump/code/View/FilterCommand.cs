@@ -18,7 +18,9 @@
 
         public ExitCode Run()
         {
-            FilterConfig config = new FilterConfig(m_Options.Arguments);
+            FilterConfig config = new FilterConfig(m_Options.Arguments) {
+                ShowPosition = m_Options.Position
+            };
             FilterApp app = new FilterApp(config);
 
             Task<ExitCode> filterTask = app.Run();

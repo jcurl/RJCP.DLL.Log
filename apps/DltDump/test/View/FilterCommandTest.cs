@@ -5,6 +5,7 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using static Infrastructure.OptionsGen;
 
     [TestFixture]
     public class FilterCommandTest
@@ -40,6 +41,9 @@
                 _ = new FilterCommand(null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
+
+        private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
+        private readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
 
         [Test]
         public void InputFileMissing()
@@ -83,17 +87,16 @@
         [Test]
         public void InputFileAbsolute()
         {
-            string file = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new string[] {
-                    file
+                    EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(file));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
             }
         }
 
@@ -121,19 +124,32 @@
         [Test]
         public void InputFilesAbsolute()
         {
-            string file1 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
-            string file2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
-
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new string[] {
-                    file1, file2
+                    EmptyFile, EmptyFile2
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(2));
-                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(file1));
-                Assert.That(cmdOptions.Arguments[1], Is.EqualTo(file2));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.Arguments[1], Is.EqualTo(EmptyFile2));
+            }
+        }
+
+        [Test]
+        public void ShowPosition()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("position"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.Position, Is.True);
             }
         }
     }

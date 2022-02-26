@@ -140,6 +140,10 @@
     <value>{1}version
  displays the version of the software.</value>
   </data>
+  <data name="Help320_Position" xml:space="preserve">
+    <value>{1}position
+  Show the offset of the stream on text output</value>
+  </data>
   <data name="Help400_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified.</value>
   </data>

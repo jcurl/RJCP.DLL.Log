@@ -25,5 +25,11 @@
         /// </summary>
         /// <value>The input streams for parsing.</value>
         public IReadOnlyList<string> Input { get; }
+
+        /// <summary>
+        /// Print the position when outputting in text mode (console or file).
+        /// </summary>
+        /// <value>Shows the position when <see langword="true"/>; otherwise, <see langword="false"/>.</value>
+        public bool ShowPosition { get; set; }
     }
 }
