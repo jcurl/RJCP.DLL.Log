@@ -181,7 +181,7 @@
                     if (!found) continue;
 
                     // Get the start of the DLT packet. The offset zero is the beginning of the DLT packet.
-                    if (m_Cache.IsCached) {
+                    if (!flush && m_Cache.IsCached) {
                         dltPacket = m_Cache.GetCache();
                     } else {
                         dltPacket = decodeBuffer;
@@ -204,7 +204,8 @@
                         // could be incorrect, and hence look for the next packet. This may result in additional packets
                         // at the end of the stream if data within a packet could be interpreted as a new DLT packet.
                         bytes -= MinimumDiscard;
-                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Incomplete packet at end of stream");
+                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Flushing packets at end of stream");
+                        m_ValidHeaderFound = false;
                         continue;
                     }
                     AppendFinal(decodeBuffer);
@@ -213,7 +214,7 @@
 
                 // Append all remaining data to the cache, so the complete packet is continuous before parsing. If the
                 // data wasn't cached, then dltPacket already points to the start of the DLT packet.
-                if (m_Cache.IsCached) {
+                if (!flush && m_Cache.IsCached) {
                     int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.CacheLength;
                     if (restLength > 0) {
                         m_Cache.Append(decodeBuffer[0..restLength]);
@@ -237,8 +238,9 @@
                 m_Lines.Add(m_DltLineBuilder.GetResult());
                 m_DltLineBuilder.Reset();
 
-                bytes -= StandardHeaderOffset + m_ExpectedLength;
-                decodeBuffer = Consume(StandardHeaderOffset + m_ExpectedLength, decodeBuffer);
+                int packetLen = StandardHeaderOffset + m_ExpectedLength;
+                bytes -= packetLen;
+                decodeBuffer = Consume(packetLen, decodeBuffer, flush);
                 m_ValidHeaderFound = false;
             }
 
@@ -290,22 +292,22 @@
             if (skip == 0) return decodeBuffer;
             m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, reason);
 
-            if (flush) {
-                m_PosMap.Consume(skip);
-                return decodeBuffer[skip..];
-            }
-            return Consume(skip, decodeBuffer);
+            return Consume(skip, decodeBuffer, flush);
         }
 
-        private ReadOnlySpan<byte> Consume(int bytes, ReadOnlySpan<byte> decodeBuffer)
+        private ReadOnlySpan<byte> Consume(int bytes, ReadOnlySpan<byte> decodeBuffer, bool flush)
         {
             if (bytes == 0) return decodeBuffer;
 
             m_PosMap.Consume(bytes);
-            bytes -= m_Cache.Consume(bytes);
 
-            if (bytes > 0) return decodeBuffer[bytes..];
-            return decodeBuffer;
+            if (!flush) {
+                bytes -= m_Cache.Consume(bytes);
+                if (bytes > 0) return decodeBuffer[bytes..];
+                return decodeBuffer;
+            }
+
+            return decodeBuffer[bytes..];
         }
 
         /// <summary>
