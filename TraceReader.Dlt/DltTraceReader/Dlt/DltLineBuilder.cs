@@ -88,7 +88,6 @@
             Count = DltTraceLineBase.InvalidCounter;
             DltType = DltType.UNKNOWN;
             SessionId = 0;
-            Position = 0;
             NumberOfArgs = 0;
             m_Arguments.Clear();
             ControlPayload = null;

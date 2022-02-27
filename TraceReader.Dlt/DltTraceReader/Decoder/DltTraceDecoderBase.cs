@@ -227,9 +227,7 @@
                     !ParsePacket(dltPacket[StandardHeaderOffset..(StandardHeaderOffset + m_ExpectedLength)])) {
                     // We need to keep the position, as a reset will set it to zero. We don't know if the next packet
                     // will be valid, or more skipped data.
-                    long currentPosition = m_DltLineBuilder.Position;
                     m_DltLineBuilder.Reset();
-                    m_DltLineBuilder.SetPosition(currentPosition);
                     bytes -= MinimumDiscard;
                     decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Invalid packet");
                     m_ValidHeaderFound = false;

@@ -535,8 +535,10 @@
             DltTraceLine line = (DltTraceLine)builder.GetResult();
             Assert.That(line.Position, Is.EqualTo(10));
 
+            // Reset doesn't reset the position, it resets so that a new line can be created. This is an optimization
+            // used in the decoder where it needs to reset and keep the position.
             builder.Reset();
-            Assert.That(builder.Position, Is.EqualTo(0));
+            Assert.That(builder.Position, Is.EqualTo(10));
         }
 
         [Test]
@@ -738,7 +740,7 @@
             builder.AddSkippedBytes(25, "header");
             DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
             Assert.That(line.Line, Is.EqualTo(1));
-            Assert.That(line.Position, Is.EqualTo(0));
+            Assert.That(line.Position, Is.EqualTo(10));
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.EcuId, Is.EqualTo(string.Empty));
