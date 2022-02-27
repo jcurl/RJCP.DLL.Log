@@ -18,6 +18,7 @@
 
             private int m_CacheStart;
             private int m_CacheLength;
+            private bool m_CacheLocked;
 
             /// <summary>
             /// Gets the amount of data cached in this cache.
@@ -68,6 +69,7 @@
             /// </remarks>
             public void Write()
             {
+                if (m_CacheLocked) throw new InvalidOperationException("Line cache is locked");
                 CacheWriteOffset = -m_CacheLength;
             }
 
@@ -78,6 +80,7 @@
             /// <returns>The actual number of bytes consumed from the cache.</returns>
             public int Consume(int bytes)
             {
+                if (m_CacheLocked) throw new InvalidOperationException("Line cache is locked");
                 CacheWriteOffset += bytes;
 
                 if (bytes >= m_CacheLength) {
@@ -115,6 +118,7 @@
             /// </remarks>
             public void Append(ReadOnlySpan<byte> buffer)
             {
+                if (m_CacheLocked) throw new InvalidOperationException("Line cache is locked");
                 if (buffer.Length == 0) return;
 
                 if (buffer.Length <= CacheSize - m_CacheStart - m_CacheLength) {
@@ -129,6 +133,15 @@
                 } else {
                     throw new InsufficientMemoryException("Buffer appended would exceed available cache size");
                 }
+            }
+
+            public ReadOnlySpan<byte> SetFlush()
+            {
+                ReadOnlySpan<byte> buffer = m_Cache.AsSpan(m_CacheStart, m_CacheLength);
+                m_CacheStart = 0;
+                m_CacheLength = 0;
+                m_CacheLocked = true;
+                return buffer;
             }
 
             /// <summary>

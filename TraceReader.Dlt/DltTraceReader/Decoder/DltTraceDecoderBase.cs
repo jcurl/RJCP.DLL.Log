@@ -127,7 +127,7 @@
                     // Search for the initial marker defining the start of the DLT frame. If data is already cached, we
                     // append and search there.
                     bool found;
-                    if (!flush && m_Cache.IsCached) {
+                    if (m_Cache.IsCached) {
                         // Put the smallest amount of data into the cache, that if we find the start marker, and it
                         // happens to be at the start, we already have the packet.
                         decodeBuffer = CacheMinimumPacket(decodeBuffer, out bool success);
@@ -181,7 +181,7 @@
                     if (!found) continue;
 
                     // Get the start of the DLT packet. The offset zero is the beginning of the DLT packet.
-                    if (!flush && m_Cache.IsCached) {
+                    if (m_Cache.IsCached) {
                         dltPacket = m_Cache.GetCache();
                     } else {
                         dltPacket = decodeBuffer;
@@ -214,7 +214,7 @@
 
                 // Append all remaining data to the cache, so the complete packet is continuous before parsing. If the
                 // data wasn't cached, then dltPacket already points to the start of the DLT packet.
-                if (!flush && m_Cache.IsCached) {
+                if (m_Cache.IsCached) {
                     int restLength = StandardHeaderOffset + m_ExpectedLength - m_Cache.CacheLength;
                     if (restLength > 0) {
                         m_Cache.Append(decodeBuffer[0..restLength]);
@@ -552,7 +552,7 @@
                 return m_Lines;
             }
 
-            ReadOnlySpan<byte> buffer = m_Cache.GetCache();
+            ReadOnlySpan<byte> buffer = m_Cache.SetFlush();
             return Decode(buffer, 0, true);
         }
 
