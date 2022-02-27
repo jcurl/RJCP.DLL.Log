@@ -135,9 +135,9 @@
 
                         found = ScanStartFrame(m_Cache.GetCache(), out int skip);
                         if (skip > 0) {
+                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             m_PosMap.Consume(skip);
                             bytes -= m_Cache.Consume(skip);
-                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             if (m_Cache.CacheWriteOffset >= 0) {
                                 // We've consumed enough data from the cache, that, even though there might still be
                                 // data in the cache, it's a subset of the original buffer, and we should use that
@@ -160,9 +160,9 @@
                     } else {
                         found = ScanStartFrame(decodeBuffer, out int skip);
                         if (skip > 0) {
+                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             bytes -= skip;
                             m_PosMap.Consume(skip);
-                            m_DltLineBuilder.AddSkippedBytes(skip, m_PosMap.Position, "Searching for next packet");
                             decodeBuffer = decodeBuffer[skip..];
 
                             // We need the standard header before we know what is happening.
@@ -225,7 +225,11 @@
 
                 if (!ParsePrefixHeader(dltPacket, m_DltLineBuilder) ||
                     !ParsePacket(dltPacket[StandardHeaderOffset..(StandardHeaderOffset + m_ExpectedLength)])) {
+                    // We need to keep the position, as a reset will set it to zero. We don't know if the next packet
+                    // will be valid, or more skipped data.
+                    long currentPosition = m_DltLineBuilder.Position;
                     m_DltLineBuilder.Reset();
+                    m_DltLineBuilder.SetPosition(currentPosition);
                     bytes -= MinimumDiscard;
                     decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Invalid packet");
                     m_ValidHeaderFound = false;
