@@ -41,7 +41,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(0));
-            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info non-verbose "));
+            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info non-verbose 0 "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.EcuId, Is.False);
             Assert.That(dltLine.EcuId, Is.EqualTo(string.Empty));
@@ -102,7 +102,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(10));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose custom"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 1 custom"));
             Assert.That(dltLine.Text, Is.EqualTo("custom"));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
@@ -163,7 +163,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(10));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose custom foo"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 2 custom foo"));
             Assert.That(dltLine.Text, Is.EqualTo("custom foo"));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
@@ -220,7 +220,7 @@
             DltTraceLine dltLine = (DltTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(10));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 0 log info verbose "));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 0 log info verbose 0 "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
@@ -265,7 +265,7 @@
             builder.Reset();
             Assert.That(line.Line, Is.EqualTo(0));
             Assert.That(line.Position, Is.EqualTo(10));
-            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose "));
+            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 0 "));
             Assert.That(line.Text, Is.EqualTo(string.Empty));
             Assert.That(line.Features.EcuId, Is.True);
             Assert.That(line.EcuId, Is.EqualTo("ECU1"));
@@ -301,7 +301,7 @@
             builder.Reset();
             Assert.That(line.Line, Is.EqualTo(1));                     // This number must be incremented by 1
             Assert.That(line.Position, Is.EqualTo(60));
-            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time2)} 5.5356 128 ECU1 APP1 CTX1 0 log info verbose "));
+            Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time2)} 5.5356 128 ECU1 APP1 CTX1 0 log info verbose 0 "));
             Assert.That(line.Text, Is.EqualTo(string.Empty));
             Assert.That(line.Features.EcuId, Is.True);
             Assert.That(line.EcuId, Is.EqualTo("ECU1"));

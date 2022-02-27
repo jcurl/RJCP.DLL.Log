@@ -103,7 +103,8 @@
             Type = DltType.LOG_INFO,
             TimeStamp = DateTime.UtcNow,
             DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
-            Features = DltLineFeatures.VerboseFeature
+            Features = DltLineFeatures.VerboseFeature + DltLineFeatures.MessageTypeFeature +
+                DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
         [Test]
@@ -119,7 +120,7 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose Message 1",
+                string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose 1 Message 1",
                     line1.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
@@ -140,7 +141,7 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose Message 1",
+                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose 1 Message 1",
                     line1.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }

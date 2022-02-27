@@ -63,7 +63,7 @@
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Message 1"));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info verbose Message 1"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 1"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.Features.SessionId, Is.True);
@@ -92,7 +92,7 @@
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Warning"));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2320 {count} ECU1 APP1 CTX1 50 log warn verbose Warning"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2320 {count} ECU1 APP1 CTX1 50 log warn verbose 1 Warning"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.Features.SessionId, Is.True);
@@ -121,7 +121,7 @@
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Message 3"));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2330 {count} ECU1 APP1 CTX1 50 log info verbose Message 3"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2330 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 3"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.Features.SessionId, Is.True);
@@ -150,7 +150,7 @@
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Message 2"));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.3000 {count} ECU1 APP1 CTX1 50 log info verbose Message 2"));
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.3000 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 2"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.Features.SessionId, Is.True);

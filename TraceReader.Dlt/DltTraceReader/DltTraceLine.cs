@@ -102,8 +102,10 @@
         /// </remarks>
         public override string ToString()
         {
-            return string.Format("{0} {1} {2}", base.ToString(),
-                Features.IsVerbose ? "verbose" : "non-verbose", BuildArgumentText());
+            // We don't return the 'NOAR' field in the line as dlt-viewer does, as this information is used only
+            // when decoding. As an alternative, we show the actual number of arguments present.
+            return string.Format("{0} {1} {2} {3}", base.ToString(),
+                Features.IsVerbose ? "verbose" : "non-verbose", Arguments.Count, BuildArgumentText());
         }
     }
 }
