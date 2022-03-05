@@ -178,6 +178,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internal Error: Decoding this format is not implemented.
+        /// </summary>
+        internal static string InfraDltInvalidFormat {
+            get {
+                return ResourceManager.GetString("InfraDltInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hanging Indent must be zero or more.
         /// </summary>
         internal static string InfraFormatHangingIndentException {

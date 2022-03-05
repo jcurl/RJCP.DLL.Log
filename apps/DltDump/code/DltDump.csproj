@@ -75,7 +75,7 @@
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="Infrastructure\Dlt\DltTraceReaderFactory.cs" />
+    <Compile Include="Infrastructure\Dlt\DltDumpTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />

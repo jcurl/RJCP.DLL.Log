@@ -16,6 +16,13 @@
         public ICollection<DltTraceLineBase> Lines { get; } = new List<DltTraceLineBase>();
 
         /// <summary>
+        /// Gets or sets the input format which is used to decide which decoder to create.
+        /// </summary>
+        /// <value>The input format that defines the decoder that should be created.</value>
+        /// <remarks>This field is not used for the test mocks, as no files or binary data is interpreted.</remarks>
+        public InputFormat InputFormat { get; set; }
+
+        /// <summary>
         /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>

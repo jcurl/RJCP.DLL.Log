@@ -18,7 +18,7 @@
         [Test]
         public async Task GetFileDecoder()
         {
-            DltTraceReaderFactory factory = new DltTraceReaderFactory();
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory();
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
             TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);

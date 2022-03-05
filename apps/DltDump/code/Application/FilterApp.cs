@@ -83,6 +83,7 @@
 
         private static async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
         {
+            Global.Instance.DltReaderFactory.InputFormat = inputStream.SuggestedFormat;
             return await Global.Instance.DltReaderFactory.CreateAsync(inputStream.InputStream);
         }
     }

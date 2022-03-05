@@ -156,6 +156,9 @@
   <data name="FilterOpenError_CreateError" xml:space="preserve">
     <value>Couldn't open the input {0}.</value>
   </data>
+  <data name="InfraDltInvalidFormat" xml:space="preserve">
+    <value>Internal Error: Decoding this format is not implemented</value>
+  </data>
   <data name="InfraFormatHangingIndentException" xml:space="preserve">
     <value>Hanging Indent must be zero or more</value>
   </data>

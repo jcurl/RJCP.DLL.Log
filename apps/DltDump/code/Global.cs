@@ -34,7 +34,7 @@
                                 CommandFactory = new CommandFactory(),
                                 Terminal = new ConsoleTerminal(),
                                 InputStreamFactory = new InputStreamFactory(),
-                                DltReaderFactory = new DltTraceReaderFactory()
+                                DltReaderFactory = new DltDumpTraceReaderFactory()
                             };
                             result = s_Instance;
                         }
