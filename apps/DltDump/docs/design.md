@@ -21,11 +21,13 @@ implementation in an incremental manner).
   - [2.3. Application](#23-application)
     - [2.3.1. Help and Version](#231-help-and-version)
     - [2.3.2. Filtering and Output](#232-filtering-and-output)
-      - [2.3.2.1. Initialization and Input](#2321-initialization-and-input)
-      - [2.3.2.2. Decoder Factory](#2322-decoder-factory)
-      - [2.3.2.3. Context and Filter](#2323-context-and-filter)
-      - [2.3.2.4. Console Output](#2324-console-output)
-      - [2.3.2.5. File Output](#2325-file-output)
+      - [2.3.2.1. Initialization](#2321-initialization)
+      - [2.3.2.2. Instantiating a Stream from the Input Path](#2322-instantiating-a-stream-from-the-input-path)
+        - [2.3.2.2.1. Implementing a IInputStreamFactory](#23221-implementing-a-iinputstreamfactory)
+      - [2.3.2.3. Decoder Factory](#2323-decoder-factory)
+      - [2.3.2.4. Context and Filter](#2324-context-and-filter)
+      - [2.3.2.5. Console Output](#2325-console-output)
+      - [2.3.2.6. File Output](#2326-file-output)
   - [2.4. Domain](#24-domain)
     - [2.4.1. InputStreamFactory and InputStream](#241-inputstreamfactory-and-inputstream)
     - [2.4.2. Decoders (and PCAP, PCAPNG formats)](#242-decoders-and-pcap-pcapng-formats)
@@ -279,7 +281,7 @@ The next stages describe the following stages:
 * The output stage for console writing
 * The output stage for file writing
 
-##### 2.3.2.1. Initialization and Input
+##### 2.3.2.1. Initialization
 
 The View layer handles the user interface and has the list of inputs. It shall
 interpret the input commands and construct a `FilterConfig` object which
@@ -294,11 +296,11 @@ layer.
 It will loop over all the inputs given in the `FilterConfig`. The
 `InputStreamFactory` knows how to take the input file which is a URI string, and
 generates an appropriate stream. This stream could be a file, or a TCP stream.
-The output `InputStream` provides additional methods which can asynchronously
+The output `IInputStream` provides additional methods which can asynchronously
 connect the stream if it is required (files don't need to be connected, where
 network streams do).
 
-The `InputStream` provides additional information about how to instantiate a
+The `IInputStream` provides additional information about how to instantiate a
 decoder. It can indicate if the URI is a "live" stream, where time stamps are
 generated based on the current system time, or if the time stamp is derived from
 the input file. This information is needed when constructing the decoder.
@@ -310,7 +312,47 @@ Because the inputs are looped, each input is decoded one after the other, there
 being no multiplexing of input files to generate a single file (e.g. no sorting
 of the inputs or their time stamps are considered in this design).
 
-##### 2.3.2.2. Decoder Factory
+##### 2.3.2.2. Instantiating a Stream from the Input Path
+
+The input path can be a file name or a URI. The diagram in the previous section
+is a simplification. To enable testing and extension for reading various input
+streams, the following design is taken.
+
+In the diagram below, it shows the `DltFileStreamFactory` and the
+`DltFileStream`, but the same is also for the serial and network streams.
+
+![Input Stream](out/diagrams/InputStreamFactory/InputStreamFactory.svg)
+
+The `FilterApp` instantiates only through the `InputStreamFilter`. This has an
+internal mapping of a URI scheme to a second factory, e.g.:
+
+* `DltFileStreamFactory`: creates a `DltFileStream`, opening a `FileStream`,
+  that is for DLT files with a storage header. The URI is `file://` or just a
+  local path. Note, this can extend for different encapsulation formats (e.g.
+  for PCAP or PCAPNG files).
+* `DltSerialStreamFactory`: creates a `DltSerialStream`, opening a
+  `SerialPortStream` (another project of mine), that is for DLT with the the
+  `DLS\1` header. The URI starts with `ser:`.
+* `DltNetworkStreamFactory`: creates a `DltNetworkStream`, opening a TCP stream
+  for streams that have the DLT server. The URI starts with `tcp:`.
+
+Other schemes can be added later, such as `http://`, or `https://` that can use
+underlying .NET stream implementations. The decoder just needs a stream and to
+know if the timestamps are generated locally, or come from the stream.
+
+###### 2.3.2.2.1. Implementing a IInputStreamFactory
+
+When implementing a new `IInputStreamFactory`:
+
+* Create a new class that implements `IInputStream`.
+* Create a new class that implements `IInputStreamFactory`, preferably derived
+  instead from `InputStreamFactoryBase`.
+* The new factory checks the stream and instantiates the specific
+  `IInputStream`.
+* Modify the `InputStreamFactory` class to add the scheme and reference the
+  newly created factory class.
+
+##### 2.3.2.3. Decoder Factory
 
 The decoder factory is an implementation that is told what kind of decoder to
 create based on various inputs given by the `FilterConfig` class. The decoder
@@ -319,9 +361,9 @@ create, where as the framework component factory only creates a decoder for a
 specific format.
 
 The decoder factory is given the input file format from the `FilterConfig`,
-which it has presumably received from the `InputStream`.
+which it has presumably received from the `IInputStream`.
 
-* Checks the type of URI from `InputStream`
+* Checks the type of URI from `IInputStream`
 * Creates a decoder based on TCP, Serial, File. Online mode or not.
 * Handles PCAP and UDP streams
 
@@ -329,7 +371,7 @@ Before instantiating the decoder, the output must also be known, so that the
 `BinaryWriter` can be used directly from the decoder itself. This is covered
 later in section for File Output.
 
-##### 2.3.2.3. Context and Filter
+##### 2.3.2.4. Context and Filter
 
 The context and filter are used for matching. They are two separate blocks, very
 closely related and to be managed as a single unit.
@@ -343,13 +385,13 @@ the overridden decoder. The glue logic in this case must also record the input
 buffer byte stream, optionally create a storage header, and if there is a filter
 match, then write this stream to a file.
 
-##### 2.3.2.4. Console Output
+##### 2.3.2.5. Console Output
 
 The console writer is maintained by the `Filter` application, which is given the
 output from the `Context` block. The context block is an array of lines so it
 can maintain context.
 
-##### 2.3.2.5. File Output
+##### 2.3.2.6. File Output
 
 The binary writer block needs information from the `Filter` layer to be able to
 substitute and write the output file:
@@ -395,7 +437,7 @@ data.
 This component handles parsing a string input, and determining if this is a file
 to read, or a URI for creating a stream.
 
-The output of the `InputStreamFactory` is an object of type `InputStream` which
+The output of the `InputStreamFactory` is an object of type `IInputStream` which
 returns a stream and other metadata:
 
 * If time stamps are to be obtained from the stream, or from the PC
@@ -421,7 +463,7 @@ interpreting DLT contents, implemented as per the [AutoSAR R20-11
 PRS](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11/AUTOSAR_PRS_LogAndTraceProtocol.pdf)
 standard (DLT version 1).
 
-Additional decoders can be implemented dependent on the `InputStream` assumed
+Additional decoders can be implemented dependent on the `IInputStream` assumed
 format, that derives from the `DltTraceDecoderBase`. For example, reading a
 WireShark file, that contains DLT packets transmitted as UDP.
 

@@ -1,0 +1,49 @@
+@startuml InputStreamFactory
+
+interface IDisposable
+class Exception
+
+enum InputFormat {
+    File
+    Serial
+    Network
+}
+
+interface IInputStream {
+    +InputStream: Stream
+    +IsLiveStream: bool
+    +SuggestedFormat: InputFormat
+    ---
+    +ConnectAsync(): Task<bool>
+}
+IDisposable <|.d. IInputStream
+IInputStream -r-> InputFormat
+
+interface IInputStreamFactory {
+    +Create(uri: string): IInputStream
+    +Create(uri: Uri): IInputStream
+}
+
+class InputStreamFactory
+
+'InputStreamFactory -r-> IInputStream : <<instantiates>>
+
+class InputStreamFactoryBase
+
+InputStreamFactoryBase .u.|> IInputStreamFactory
+InputStreamFactory -u-|> InputStreamFactoryBase
+
+class InputStreamException
+InputStreamException -l-|> Exception
+
+class DltFileStreamFactory
+class DltFileStream
+DltFileStream .u.|> IInputStream
+DltFileStreamFactory -u-|> InputStreamFactoryBase
+InputStreamFactory -r-> DltFileStreamFactory : <<instantiates>>
+DltFileStreamFactory -r-> DltFileStream : <<instantiates>>
+DltFileStreamFactory -d-> InputStreamException : <<throws>>
+
+class FilterApp
+FilterApp -r-> InputStreamFactory : <<uses>>
+@enduml

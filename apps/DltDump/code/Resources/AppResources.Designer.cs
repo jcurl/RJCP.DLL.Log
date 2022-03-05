@@ -61,6 +61,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input URI {0} not unknown.
+        /// </summary>
+        internal static string DomainInputStreamFactoryUnknown {
+            get {
+                return ResourceManager.GetString("DomainInputStreamFactoryUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input URI {0} not supported.
+        /// </summary>
+        internal static string DomainInputStreamFactoryUnsupported {
+            get {
+                return ResourceManager.GetString("DomainInputStreamFactoryUnsupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {
@@ -79,74 +97,83 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file {0} was not found..
-        /// </summary>
-        internal static string FilterApp_InputFileNotFound {
-            get {
-                return ResourceManager.GetString("FilterApp_InputFileNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Specified path is invalid {0}.
         /// </summary>
-        internal static string FilterOpenError_DirectoryNotFound {
+        internal static string FileOpenError_DirectoryNotFound {
             get {
-                return ResourceManager.GetString("FilterOpenError_DirectoryNotFound", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_DirectoryNotFound", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to File not found {0}.
         /// </summary>
-        internal static string FilterOpenError_FileNotFound {
+        internal static string FileOpenError_FileNotFound {
             get {
-                return ResourceManager.GetString("FilterOpenError_FileNotFound", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_FileNotFound", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t open file {0} ({1})..
         /// </summary>
-        internal static string FilterOpenError_InvalidFile {
+        internal static string FileOpenError_InvalidFile {
             get {
-                return ResourceManager.GetString("FilterOpenError_InvalidFile", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_InvalidFile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to An I/O Exception occurred opening {0} ({1})..
         /// </summary>
-        internal static string FilterOpenError_IOException {
+        internal static string FileOpenError_IOException {
             get {
-                return ResourceManager.GetString("FilterOpenError_IOException", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_IOException", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Path length too long {0}.
         /// </summary>
-        internal static string FilterOpenError_PathTooLong {
+        internal static string FileOpenError_PathTooLong {
             get {
-                return ResourceManager.GetString("FilterOpenError_PathTooLong", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_PathTooLong", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Insufficient permissions opening {0} ({1}).
         /// </summary>
-        internal static string FilterOpenError_Security {
+        internal static string FileOpenError_Security {
             get {
-                return ResourceManager.GetString("FilterOpenError_Security", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_Security", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Insufficient access privileges opening {0}.
         /// </summary>
-        internal static string FilterOpenError_Unauthorized {
+        internal static string FileOpenError_Unauthorized {
             get {
-                return ResourceManager.GetString("FilterOpenError_Unauthorized", resourceCulture);
+                return ResourceManager.GetString("FileOpenError_Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t connect to the stream end-point {0}..
+        /// </summary>
+        internal static string FilterOpenError_ConnectError {
+            get {
+                return ResourceManager.GetString("FilterOpenError_ConnectError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t open the input {0}..
+        /// </summary>
+        internal static string FilterOpenError_CreateError {
+            get {
+                return ResourceManager.GetString("FilterOpenError_CreateError", resourceCulture);
             }
         }
         

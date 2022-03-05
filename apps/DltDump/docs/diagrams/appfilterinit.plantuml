@@ -10,29 +10,29 @@ namespace View {
 
     CommandFactory --> FilterCommand : <<instantiates>>
 
-    FilterCommand --> Application.Filter
+    FilterCommand --> Application.FilterApp
     FilterCommand --> Application.FilterConfig : <<instantiates>>
 }
 
 'View.HelpCommand --> Framework.System.Console
 
 namespace Application {
-    class Filter
+    class FilterApp
     class FilterConfig
 
-    FilterConfig o-r- Filter
+    FilterConfig o-r- FilterApp
 
-    Filter *-d- Domain.InputStreamFactory
-    Filter *-d- Domain.DltTraceDecoderFactory
-    Filter o-d- Domain.InputStream
+    FilterApp *-d- Domain.InputStreamFactory
+    FilterApp *-d- Domain.DltTraceDecoderFactory
+    FilterApp o-d- Domain.IInputStream
 }
 
 namespace Domain {
     class InputStreamFactory
-    class InputStream
+    interface IInputStream
     class DltTraceDecoderFactory
 
-    InputStreamFactory -r-> InputStream : <<instantiates>>
+    InputStreamFactory -r-> IInputStream : <<instantiates>>
 }
 
 namespace Framework {
@@ -44,7 +44,7 @@ namespace Framework {
         class DltTraceDecoderBase
     }
 
-    Domain.InputStream *-d- System.IO.Stream : <<instantiates>>
+    Domain.IInputStream *-d- System.IO.Stream : <<instantiates>>
     Domain.DltTraceDecoderFactory --> RJCP.Diagnostics.Log.Decoder.DltTraceDecoderBase : <<instantiates>>
     Domain.DltTraceDecoderFactory o-d- System.IO.Stream
 }

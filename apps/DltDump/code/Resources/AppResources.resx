@@ -117,35 +117,44 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DomainInputStreamFactoryUnknown" xml:space="preserve">
+    <value>Input URI {0} not unknown</value>
+  </data>
+  <data name="DomainInputStreamFactoryUnsupported" xml:space="preserve">
+    <value>Input URI {0} not supported</value>
+  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>
   <data name="ErrorDumpBeingGenerated" xml:space="preserve">
     <value>Dumping to: {0}</value>
   </data>
-  <data name="FilterApp_InputFileNotFound" xml:space="preserve">
-    <value>The file {0} was not found.</value>
-  </data>
-  <data name="FilterOpenError_DirectoryNotFound" xml:space="preserve">
+  <data name="FileOpenError_DirectoryNotFound" xml:space="preserve">
     <value>Specified path is invalid {0}</value>
   </data>
-  <data name="FilterOpenError_FileNotFound" xml:space="preserve">
+  <data name="FileOpenError_FileNotFound" xml:space="preserve">
     <value>File not found {0}</value>
   </data>
-  <data name="FilterOpenError_InvalidFile" xml:space="preserve">
+  <data name="FileOpenError_InvalidFile" xml:space="preserve">
     <value>Couldn't open file {0} ({1}).</value>
   </data>
-  <data name="FilterOpenError_IOException" xml:space="preserve">
+  <data name="FileOpenError_IOException" xml:space="preserve">
     <value>An I/O Exception occurred opening {0} ({1}).</value>
   </data>
-  <data name="FilterOpenError_PathTooLong" xml:space="preserve">
+  <data name="FileOpenError_PathTooLong" xml:space="preserve">
     <value>Path length too long {0}</value>
   </data>
-  <data name="FilterOpenError_Security" xml:space="preserve">
+  <data name="FileOpenError_Security" xml:space="preserve">
     <value>Insufficient permissions opening {0} ({1})</value>
   </data>
-  <data name="FilterOpenError_Unauthorized" xml:space="preserve">
+  <data name="FileOpenError_Unauthorized" xml:space="preserve">
     <value>Insufficient access privileges opening {0}</value>
+  </data>
+  <data name="FilterOpenError_ConnectError" xml:space="preserve">
+    <value>Couldn't connect to the stream end-point {0}.</value>
+  </data>
+  <data name="FilterOpenError_CreateError" xml:space="preserve">
+    <value>Couldn't open the input {0}.</value>
   </data>
   <data name="InfraFormatHangingIndentException" xml:space="preserve">
     <value>Hanging Indent must be zero or more</value>

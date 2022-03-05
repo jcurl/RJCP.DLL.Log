@@ -50,13 +50,12 @@
         {
             string file = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "NonExistent.dlt");
             using (new TestApplication()) {
-                // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new string[] {
                     file
-                }), Is.EqualTo(ExitCode.OptionsError));
+                }), Is.EqualTo(ExitCode.NoFilesProcessed));
 
                 // The command options don't really matter for FilterCommand, but useful to see that the options were
                 // properly generated.

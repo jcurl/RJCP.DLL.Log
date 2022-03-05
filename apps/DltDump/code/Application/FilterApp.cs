@@ -1,8 +1,9 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
+    using Domain;
+    using Domain.InputStream;
     using Resources;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
@@ -21,25 +22,30 @@
 
         public async Task<ExitCode> Run()
         {
-            if (!CheckInput())
+            if (m_Config.Input.Count == 0)
                 return ExitCode.OptionsError;
 
             int processed = 0;
-            foreach (string file in m_Config.Input) {
-                ITraceReader<DltTraceLineBase> decoder = await GetDecoder(file);
-                if (decoder == null) continue;
+            foreach (string uri in m_Config.Input) {
+                using (IInputStream inputStream = await GetInputStream(uri)) {
+                    if (inputStream == null) continue;
 
-                DltTraceLineBase line;
-                do {
-                    line = await decoder.GetLineAsync();
-                    if (line != null) {
-                        if (m_Config.ShowPosition) {
-                            Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
-                        } else {
-                            Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
-                        }
+                    using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
+                        if (decoder == null) continue;
+
+                        DltTraceLineBase line;
+                        do {
+                            line = await decoder.GetLineAsync();
+                            if (line != null) {
+                                if (m_Config.ShowPosition) {
+                                    Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
+                                } else {
+                                    Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                                }
+                            }
+                        } while (line != null);
                     }
-                } while (line != null);
+                }
                 processed++;
             }
 
@@ -48,49 +54,36 @@
             return ExitCode.Success;
         }
 
-        private bool CheckInput()
+        private static async Task<IInputStream> GetInputStream(string uri)
         {
-            if (m_Config.Input.Count == 0) return false;
-
-            foreach (string file in m_Config.Input) {
-                if (!File.Exists(file)) {
-                    Terminal.WriteLine(AppResources.FilterApp_InputFileNotFound, file);
-                    return false;
+            IInputStream inputStream = null;
+            try {
+                inputStream = Global.Instance.InputStreamFactory.Create(uri);
+                if (inputStream == null) {
+                    Terminal.WriteLine(AppResources.FilterOpenError_CreateError, uri);
+                    return null;
                 }
-            }
 
-            return true;
+                bool connected = await inputStream.ConnectAsync();
+                if (!connected) {
+                    Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, uri);
+                    inputStream.Dispose();
+                    return null;
+                }
+
+                return inputStream;
+            } catch (InputStreamException ex) {
+                if (inputStream != null) {
+                    inputStream.Dispose();
+                }
+                Terminal.WriteLine(ex.Message);
+                return null;
+            }
         }
 
-        private static async Task<ITraceReader<DltTraceLineBase>> GetDecoder(string uri)
+        private static async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
         {
-            try {
-                return await Global.Instance.DltReaderFactory.CreateAsync(uri);
-            } catch (FileNotFoundException) {
-                Terminal.WriteLine(AppResources.FilterOpenError_FileNotFound, uri);
-                return null;
-            } catch (DirectoryNotFoundException) {
-                Terminal.WriteLine(AppResources.FilterOpenError_DirectoryNotFound, uri);
-                return null;
-            } catch (PathTooLongException) {
-                Terminal.WriteLine(AppResources.FilterOpenError_PathTooLong, uri);
-                return null;
-            } catch (IOException ex) {
-                Terminal.WriteLine(AppResources.FilterOpenError_IOException, uri, ex.Message);
-                return null;
-            } catch (ArgumentException ex) {
-                Terminal.WriteLine(AppResources.FilterOpenError_InvalidFile, uri, ex.Message);
-                return null;
-            } catch (NotSupportedException ex) {
-                Terminal.WriteLine(AppResources.FilterOpenError_InvalidFile, uri, ex.Message);
-                return null;
-            } catch (System.Security.SecurityException ex) {
-                Terminal.WriteLine(AppResources.FilterOpenError_Security, uri, ex.Message);
-                return null;
-            } catch (UnauthorizedAccessException) {
-                Terminal.WriteLine(AppResources.FilterOpenError_Unauthorized, uri);
-                return null;
-            }
+            return await Global.Instance.DltReaderFactory.CreateAsync(inputStream.InputStream);
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using Domain;
     using Infrastructure.Dlt;
     using Infrastructure.Terminal;
 
@@ -27,6 +28,7 @@
         {
             Global.Instance.CommandFactory = null;
             Global.Instance.Terminal = new VirtualTerminal();
+            Global.Instance.InputStreamFactory = new TestInputStreamFactory();
             Global.Instance.DltReaderFactory = new TestDltTraceReaderFactory();
         }
 

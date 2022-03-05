@@ -1,5 +1,6 @@
 ﻿namespace RJCP.App.DltDump
 {
+    using Domain;
     using Infrastructure.Dlt;
     using Infrastructure.Terminal;
     using View;
@@ -32,6 +33,7 @@
                             s_Instance = new Global() {
                                 CommandFactory = new CommandFactory(),
                                 Terminal = new ConsoleTerminal(),
+                                InputStreamFactory = new InputStreamFactory(),
                                 DltReaderFactory = new DltTraceReaderFactory()
                             };
                             result = s_Instance;
@@ -67,6 +69,12 @@
         /// </summary>
         /// <value>The console terminal.</value>
         public ITerminal Terminal { get; set; }
+
+        /// <summary>
+        /// Gets or sets the input stream factory.
+        /// </summary>
+        /// <value>The input stream factory.</value>
+        public IInputStreamFactory InputStreamFactory { get; set; }
 
         /// <summary>
         /// The DLT reader factory that is used to obtain the reader based on inputs.
