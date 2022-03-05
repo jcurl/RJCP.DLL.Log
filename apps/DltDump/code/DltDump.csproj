@@ -68,7 +68,6 @@
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
-    <Compile Include="Domain\InputFormat.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltFileStream.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactory.cs" />
@@ -78,6 +77,7 @@
     <Compile Include="Global.cs" />
     <Compile Include="Infrastructure\Dlt\DltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
+    <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />
@@ -97,6 +97,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HelpResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Terminal.cs" />
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
@@ -105,7 +106,6 @@
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />
     <Compile Include="View\ICommandFactory.cs" />
-    <Compile Include="Services\Terminal.cs" />
   </ItemGroup>
 
   <ItemGroup>

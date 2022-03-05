@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
+    using Infrastructure.Dlt;
 
     /// <summary>
     /// Provides an input stream for DLT files.
