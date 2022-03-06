@@ -30,6 +30,7 @@
             int argLength;
             int typeLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
             switch (typeLength) {
+            case DltConstants.TypeInfo.TypeLengthUnknown:
             case DltConstants.TypeInfo.TypeLength8bit:
                 argLength = 1;
                 break;
