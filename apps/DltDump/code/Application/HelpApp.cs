@@ -53,6 +53,11 @@
             Write(2, 4, HelpResources.Help310_HelpOption);
             Write(2, 4, HelpResources.Help315_VersionOption);
             Write(2, 4, HelpResources.Help320_Position);
+            Write(2, 4, HelpResources.Help325_InputFormat);
+            Write(4, 6, HelpResources.Help325_InputFormatAuto);
+            Write(4, 6, HelpResources.Help325_InputFormatFile);
+            Write(4, 6, HelpResources.Help325_InputFormatSerial);
+            Write(4, 6, HelpResources.Help325_InputFormatNetwork);
             Write();
             Write(HelpResources.Help400_Input);
             Write();

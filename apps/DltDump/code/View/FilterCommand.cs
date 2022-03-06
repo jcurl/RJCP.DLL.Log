@@ -19,7 +19,8 @@
         public ExitCode Run()
         {
             FilterConfig config = new FilterConfig(m_Options.Arguments) {
-                ShowPosition = m_Options.Position
+                ShowPosition = m_Options.Position,
+                InputFormat = m_Options.InputFormat
             };
             FilterApp app = new FilterApp(config);
 

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.InputStream;
+    using Infrastructure.Dlt;
     using Resources;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
@@ -81,9 +82,14 @@
             }
         }
 
-        private static async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
+        private async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
         {
-            Global.Instance.DltReaderFactory.InputFormat = inputStream.SuggestedFormat;
+            if (m_Config.InputFormat == InputFormat.Automatic) {
+                Global.Instance.DltReaderFactory.InputFormat = inputStream.SuggestedFormat;
+            } else {
+                Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
+            }
+
             return await Global.Instance.DltReaderFactory.CreateAsync(inputStream.InputStream);
         }
     }

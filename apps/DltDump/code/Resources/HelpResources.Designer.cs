@@ -136,6 +136,52 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}format
+        ///  Defines the input format. This can be one of the following (by default it is automatic):.
+        /// </summary>
+        internal static string Help325_InputFormat {
+            get {
+                return ResourceManager.GetString("Help325_InputFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * automatic|auto - choose based on the URI, or the file name extension.
+        /// </summary>
+        internal static string Help325_InputFormatAuto {
+            get {
+                return ResourceManager.GetString("Help325_InputFormatAuto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * file - interpret the URI as a file with a storage header.
+        /// </summary>
+        internal static string Help325_InputFormatFile {
+            get {
+                return ResourceManager.GetString("Help325_InputFormatFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * network|net - interpret the URI as a network stream, each packet starting with the standard header.
+        /// </summary>
+        internal static string Help325_InputFormatNetwork {
+            get {
+                return ResourceManager.GetString("Help325_InputFormatNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header.
+        /// </summary>
+        internal static string Help325_InputFormatSerial {
+            get {
+                return ResourceManager.GetString("Help325_InputFormatSerial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified..
         /// </summary>
         internal static string Help400_Input {

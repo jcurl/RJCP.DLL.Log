@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using Infrastructure.Dlt;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -149,6 +150,65 @@
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.Position, Is.True);
+            }
+        }
+
+        [Test]
+        public void DefaultSetInputFormatFile()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                Assert.That(cmdOptions.InputFormat, Is.EqualTo(InputFormat.Automatic));
+
+                // When automatic, the FilterApp uses the InputStream.SuggestedFormat which is created
+                // by the InputStreamFactory.
+                Assert.That(Global.Instance.DltReaderFactory.InputFormat, Is.EqualTo(InputFormat.File));
+            }
+        }
+
+        [TestCase("file", InputFormat.File, InputFormat.File)]
+        [TestCase("File", InputFormat.File, InputFormat.File)]
+        [TestCase("FILE", InputFormat.File, InputFormat.File)]
+        [TestCase("serial", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("ser", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("network", InputFormat.Network, InputFormat.Network)]
+        [TestCase("net", InputFormat.Network, InputFormat.Network)]
+        [TestCase("automatic", InputFormat.Automatic, InputFormat.File)]
+        [TestCase("auto", InputFormat.Automatic, InputFormat.File)]
+        public void SetInputFormat(string option, InputFormat result, InputFormat decodeFormat)
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("format", option), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                Assert.That(cmdOptions.InputFormat, Is.EqualTo(result));
+
+                // This shows that the DltReaderFactory got the command line option when parsing (it only shows the last
+                // instance that was instantiated).
+                Assert.That(Global.Instance.DltReaderFactory.InputFormat, Is.EqualTo(decodeFormat));
+            }
+        }
+
+        [Test]
+        public void InvalidInputFormat()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("format", "foo"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
             }
         }
     }

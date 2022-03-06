@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Infrastructure.Dlt;
 
     /// <summary>
     /// Configuration for the <see cref="FilterApp"/>.
@@ -31,5 +32,11 @@
         /// </summary>
         /// <value>Shows the position when <see langword="true"/>; otherwise, <see langword="false"/>.</value>
         public bool ShowPosition { get; set; }
+
+        /// <summary>
+        /// Gets or sets the input format for reading the input stream.
+        /// </summary>
+        /// <value>The input format for reading the input stream.</value>
+        public InputFormat InputFormat { get; set; } = InputFormat.Automatic;
     }
 }

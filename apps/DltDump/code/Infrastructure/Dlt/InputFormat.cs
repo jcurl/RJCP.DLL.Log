@@ -6,6 +6,11 @@
     public enum InputFormat
     {
         /// <summary>
+        /// Try and determine the format automatically.
+        /// </summary>
+        Automatic,
+
+        /// <summary>
         /// File input stream with a storage header.
         /// </summary>
         File,

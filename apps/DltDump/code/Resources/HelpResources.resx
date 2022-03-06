@@ -144,6 +144,22 @@
     <value>{1}position
   Show the offset of the stream on text output</value>
   </data>
+  <data name="Help325_InputFormat" xml:space="preserve">
+    <value>{1}format
+  Defines the input format. This can be one of the following (by default it is automatic):</value>
+  </data>
+  <data name="Help325_InputFormatAuto" xml:space="preserve">
+    <value>* automatic|auto - choose based on the URI, or the file name extension</value>
+  </data>
+  <data name="Help325_InputFormatFile" xml:space="preserve">
+    <value>* file - interpret the URI as a file with a storage header</value>
+  </data>
+  <data name="Help325_InputFormatNetwork" xml:space="preserve">
+    <value>* network|net - interpret the URI as a network stream, each packet starting with the standard header</value>
+  </data>
+  <data name="Help325_InputFormatSerial" xml:space="preserve">
+    <value>* serial|ser - interpret the URI as a serial stream with a DLS\1 header</value>
+  </data>
   <data name="Help400_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified.</value>
   </data>
