@@ -223,6 +223,33 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        internal static string InfraNetTcpStream_NotConnected {
+            get {
+                return ResourceManager.GetString("InfraNetTcpStream_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection already established.
+        /// </summary>
+        internal static string InfraTcpStreamAlreadyConnected {
+            get {
+                return ResourceManager.GetString("InfraTcpStreamAlreadyConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid hostname for connection.
+        /// </summary>
+        internal static string InfraTcpStreamInvalidHostName {
+            get {
+                return ResourceManager.GetString("InfraTcpStreamInvalidHostName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem with the command line..
         /// </summary>
         internal static string OptionsError {

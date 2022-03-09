@@ -171,6 +171,15 @@
   <data name="InfraFormatWidthException" xml:space="preserve">
     <value>Width should be at least 10 characters including indent</value>
   </data>
+  <data name="InfraNetTcpStream_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="InfraTcpStreamAlreadyConnected" xml:space="preserve">
+    <value>Connection already established</value>
+  </data>
+  <data name="InfraTcpStreamInvalidHostName" xml:space="preserve">
+    <value>Invalid hostname for connection</value>
+  </data>
   <data name="OptionsError" xml:space="preserve">
     <value>Problem with the command line.</value>
   </data>

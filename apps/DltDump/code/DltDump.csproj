@@ -78,6 +78,9 @@
     <Compile Include="Infrastructure\Dlt\DltDumpTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
+    <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
+    <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
+    <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />
