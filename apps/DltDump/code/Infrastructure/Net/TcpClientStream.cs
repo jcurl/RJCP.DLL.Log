@@ -64,7 +64,7 @@
             OneShotTimer timer = new OneShotTimer(DisconnectTimeout);
             timer.TimerEvent += (s, e) => {
                 lock (connectLock) {
-                    if (m_IsConnected) return;
+                    if (m_IsConnected || m_TcpClient == null) return;
                     m_TcpClient.Close();
                 }
             };
@@ -74,7 +74,11 @@
                 m_TcpClient.Connect(m_HostName, m_Port);
             } catch (Exception ex) when (ex is SocketException ||
                                          ex is ObjectDisposedException) {
-                m_TcpClient = null;
+                lock (connectLock) {
+                    timer.Dispose();
+                    m_TcpClient.Dispose();
+                    m_TcpClient = null;
+                }
                 return false;
             }
             lock (connectLock) {
@@ -115,7 +119,7 @@
             OneShotTimer timer = new OneShotTimer(DisconnectTimeout);
             timer.TimerEvent += (s, e) => {
                 lock (connectLock) {
-                    if (m_IsConnected) return;
+                    if (m_IsConnected || m_TcpClient == null) return;
                     m_TcpClient.Dispose();
                 }
             };
@@ -125,7 +129,11 @@
                 await m_TcpClient.ConnectAsync(m_HostName, m_Port);
             } catch (Exception ex) when (ex is SocketException ||
                                          ex is ObjectDisposedException) {
-                m_TcpClient = null;
+                lock (connectLock) {
+                    timer.Dispose();
+                    m_TcpClient.Dispose();
+                    m_TcpClient = null;
+                }
                 return false;
             }
             lock (connectLock) {
