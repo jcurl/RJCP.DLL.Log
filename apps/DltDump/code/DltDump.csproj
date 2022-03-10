@@ -71,6 +71,8 @@
     <Compile Include="Domain\InputStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltFileStream.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactory.cs" />
+    <Compile Include="Domain\InputStream\DltTcpStream.cs" />
+    <Compile Include="Domain\InputStream\DltTcpStreamFactory.cs" />
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
     <Compile Include="ExitCode.cs" />

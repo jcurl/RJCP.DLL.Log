@@ -11,6 +11,12 @@
     public interface IInputStream : IDisposable
     {
         /// <summary>
+        /// Gets the input scheme.
+        /// </summary>
+        /// <value>The input scheme.</value>
+        string Scheme { get; }
+
+        /// <summary>
         /// Gets the input stream.
         /// </summary>
         /// <value>The input stream.</value>

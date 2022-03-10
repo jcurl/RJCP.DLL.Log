@@ -7,7 +7,7 @@
     /// <summary>
     /// An input factory to create a file stream for reading DLT files.
     /// </summary>
-    public class DltFileStreamFactory : InputStreamFactoryBase
+    public sealed class DltFileStreamFactory : InputStreamFactoryBase
     {
         /// <summary>
         /// Creates the input stream from a specified URI.

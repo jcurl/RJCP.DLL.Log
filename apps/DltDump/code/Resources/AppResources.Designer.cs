@@ -259,6 +259,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid host name: {0}.
+        /// </summary>
+        internal static string TcpOpenError_InvalidHostName {
+            get {
+                return ResourceManager.GetString("TcpOpenError_InvalidHostName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DltDump Version: {0}.
         /// </summary>
         internal static string VersionDltDump {

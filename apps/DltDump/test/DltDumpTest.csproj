@@ -55,6 +55,7 @@
     <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Domain\InputStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactoryTest.cs" />
+    <Compile Include="Domain\InputStream\DltTcpStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\InvalidStreamFactory.cs" />
     <Compile Include="Domain\InputStream\NullInputStream.cs" />
     <Compile Include="Domain\InputStream\NullInputStreamFactory.cs" />

@@ -161,7 +161,13 @@
     <value>* serial|ser - interpret the URI as a serial stream with a DLS\1 header</value>
   </data>
   <data name="Help400_Input" xml:space="preserve">
-    <value>The input stream shall be the last option in the command line. Multiple files can be specified.</value>
+    <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
+  </data>
+  <data name="Help405_InputFile" xml:space="preserve">
+    <value>file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available.</value>
+  </data>
+  <data name="Help410_InputTcp" xml:space="preserve">
+    <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>

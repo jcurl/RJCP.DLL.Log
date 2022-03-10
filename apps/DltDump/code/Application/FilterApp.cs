@@ -84,10 +84,22 @@
 
         private async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
         {
-            if (m_Config.InputFormat == InputFormat.Automatic) {
+            switch (m_Config.InputFormat) {
+            case InputFormat.Automatic:
                 Global.Instance.DltReaderFactory.InputFormat = inputStream.SuggestedFormat;
-            } else {
+                Global.Instance.DltReaderFactory.OnlineMode = inputStream.IsLiveStream;
+                break;
+            case InputFormat.File:
                 Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
+                Global.Instance.DltReaderFactory.OnlineMode = false;
+                break;
+            case InputFormat.Network:
+            case InputFormat.Serial:
+                Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
+
+                // If we read from a file, then we never use the local time stamp.
+                Global.Instance.DltReaderFactory.OnlineMode = !inputStream.Scheme.Equals("file");
+                break;
             }
 
             return await Global.Instance.DltReaderFactory.CreateAsync(inputStream.InputStream);

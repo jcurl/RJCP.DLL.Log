@@ -183,6 +183,9 @@
   <data name="OptionsError" xml:space="preserve">
     <value>Problem with the command line.</value>
   </data>
+  <data name="TcpOpenError_InvalidHostName" xml:space="preserve">
+    <value>Invalid host name: {0}</value>
+  </data>
   <data name="VersionDltDump" xml:space="preserve">
     <value>DltDump Version: {0}</value>
   </data>

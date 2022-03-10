@@ -13,5 +13,14 @@
         /// </summary>
         /// <value>The input format that defines the decoder that should be created.</value>
         InputFormat InputFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating if in online mode.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/> this is in online mode, where time stamps are obtained by the local host, else
+        /// <see langword="false"/>. Formats with a storage header ignore this field.
+        /// </value>
+        bool OnlineMode { get; set; }
     }
 }

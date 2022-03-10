@@ -195,5 +195,51 @@
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
+
+        [TestCase(InputFormat.Automatic, true)]
+        [TestCase(InputFormat.Network, true)]
+        [TestCase(InputFormat.Serial, true)]
+        [TestCase(InputFormat.File, false)]
+        public async Task OnlineModeForNetwork(InputFormat inputFormat, bool onlineMode)
+        {
+            using (TestApplication global = new TestApplication()) {
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                    InputFormat = inputFormat
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+                // We're in online mode, as per the InputFormat
+                Assert.That(Global.Instance.DltReaderFactory.OnlineMode, Is.EqualTo(onlineMode));
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [TestCase(InputFormat.Automatic)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.File)]
+        public async Task OfflineModeForNetwork(InputFormat inputFormat)
+        {
+            using (TestApplication global = new TestApplication()) {
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    InputFormat = inputFormat
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+
+                // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
+                Assert.That(Global.Instance.DltReaderFactory.OnlineMode, Is.False);
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
     }
 }

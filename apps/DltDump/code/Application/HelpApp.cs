@@ -61,6 +61,9 @@
             Write();
             Write(HelpResources.Help400_Input);
             Write();
+            Write(2, 4, HelpResources.Help405_InputFile);
+            Write(2, 4, HelpResources.Help410_InputTcp);
+            Write();
             Write(HelpResources.Help800_ExitCodes);
             Write();
             Write(2, 4, HelpResources.Help805_Success);

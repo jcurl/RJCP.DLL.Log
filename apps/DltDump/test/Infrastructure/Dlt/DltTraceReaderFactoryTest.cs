@@ -26,5 +26,31 @@
             TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltFileTraceDecoder>());
         }
+
+        [Test]
+        public async Task GetTcpDecoderOnline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Network,
+                OnlineMode = true
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetTcpDecoderOffline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Network,
+                OnlineMode = false
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltTraceDecoder>());
+        }
     }
 }

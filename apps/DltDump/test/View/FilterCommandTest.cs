@@ -138,6 +138,22 @@
         }
 
         [Test]
+        public void InputFileUri()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    new Uri(EmptyFile).AbsoluteUri
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(new Uri(EmptyFile).AbsoluteUri));
+            }
+        }
+
+        [Test]
         public void ShowPosition()
         {
             using (new TestApplication()) {

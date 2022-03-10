@@ -23,6 +23,16 @@
         public InputFormat InputFormat { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating if in online mode.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/> this is in online mode, where time stamps are obtained by the local host, else
+        /// <see langword="false"/>. Formats with a storage header ignore this field.
+        /// </value>
+        /// <remarks>This field is not used for the test mocks, as no files or binary data is interpreted.</remarks>
+        public bool OnlineMode { get; set; }
+
+        /// <summary>
         /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>

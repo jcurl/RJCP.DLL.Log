@@ -182,11 +182,29 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified..
+        ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
         internal static string Help400_Input {
             get {
                 return ResourceManager.GetString("Help400_Input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available..
+        /// </summary>
+        internal static string Help405_InputFile {
+            get {
+                return ResourceManager.GetString("Help405_InputFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer..
+        /// </summary>
+        internal static string Help410_InputTcp {
+            get {
+                return ResourceManager.GetString("Help410_InputTcp", resourceCulture);
             }
         }
         

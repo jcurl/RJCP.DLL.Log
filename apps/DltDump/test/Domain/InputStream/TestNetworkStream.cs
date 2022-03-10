@@ -15,6 +15,8 @@
             m_ConnectResult = connectResult;
         }
 
+        public string Scheme { get { return "net"; } }
+
         public Stream InputStream { get; }
 
         public bool IsLiveStream

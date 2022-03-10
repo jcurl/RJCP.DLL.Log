@@ -68,6 +68,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create(EmptyFile)) {
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
+                Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
                 Assert.That(stream.IsLiveStream, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
@@ -83,6 +84,7 @@
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create("EmptyFile.dlt")) {
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
+                    Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
@@ -99,6 +101,7 @@
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create(Path.Combine(".", "EmptyFile.dlt"))) {
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
+                    Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
@@ -115,6 +118,7 @@
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create(Path.Combine(scratch.RelativePath, "EmptyFile.dlt"))) {
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
+                    Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
@@ -140,6 +144,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create(new Uri(EmptyFile))) {
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
+                Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
                 Assert.That(stream.IsLiveStream, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));

@@ -43,6 +43,12 @@
         }
 
         /// <summary>
+        /// Gets the input scheme.
+        /// </summary>
+        /// <value>The input scheme.</value>
+        public string Scheme { get { return "file"; } }
+
+        /// <summary>
         /// Gets the input stream.
         /// </summary>
         /// <value>The input stream.</value>

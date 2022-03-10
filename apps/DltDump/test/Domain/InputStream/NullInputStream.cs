@@ -12,6 +12,8 @@
             InputStream = new MemoryStream(Array.Empty<byte>());
         }
 
+        public string Scheme { get { return "null"; } }
+
         public Stream InputStream { get; }
 
         public bool IsLiveStream
