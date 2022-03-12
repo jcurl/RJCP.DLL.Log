@@ -10,14 +10,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="TestNetworkStream"/> class.
         /// </summary>
-        /// <param name="requiredAttempts">
-        /// The required attempts. If negative, it will always fail. If zero, it will always succeed. If more than zero,
-        /// the first number of attempts will fail.
-        /// </param>
-        public TestNetworkStream()
-        {
-            InputStream = new MemoryStream(Array.Empty<byte>());
-        }
+        public TestNetworkStream() { }
 
         public event EventHandler<ConnectSuccessEventArgs> ConnectEvent;
 
@@ -29,7 +22,7 @@
 
         public string Scheme { get { return "net"; } }
 
-        public Stream InputStream { get; }
+        public string Connection { get { return "net://127.0.0.1"; } }
 
         public bool IsLiveStream
         {
@@ -40,13 +33,35 @@
 
         public bool RequiresConnection { get { return true; } }
 
+        public Stream InputStream { get; private set; }
+
+        public void Open()
+        {
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(NullInputStream));
+
+            if (InputStream == null)
+                InputStream = new MemoryStream(Array.Empty<byte>());
+        }
+
         public Task<bool> ConnectAsync()
         {
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(NullInputStream));
+
             ConnectSuccessEventArgs args = new ConnectSuccessEventArgs();
             OnConnectEvent(this, args);
             return Task.FromResult(args.Succeed);
         }
 
-        public void Dispose() { /* Nothing to do */ }
+        private bool m_IsDisposed;
+
+        public void Dispose()
+        {
+            if (!m_IsDisposed) {
+                if (InputStream != null) InputStream.Dispose();
+                m_IsDisposed = true;
+            }
+        }
     }
 }

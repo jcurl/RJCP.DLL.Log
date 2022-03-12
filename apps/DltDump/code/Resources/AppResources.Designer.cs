@@ -79,6 +79,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot connect, input stream has not been opened.
+        /// </summary>
+        internal static string DomainInputStreamNotOpen {
+            get {
+                return ResourceManager.GetString("DomainInputStreamNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {

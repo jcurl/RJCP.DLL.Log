@@ -57,9 +57,11 @@
     <Compile Include="Domain\InputStream\ConnectSuccessEventArgs.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\DltTcpStreamFactoryTest.cs" />
+    <Compile Include="Domain\InputStream\FileOpenError.cs" />
     <Compile Include="Domain\InputStream\InvalidStreamFactory.cs" />
     <Compile Include="Domain\InputStream\NullInputStream.cs" />
     <Compile Include="Domain\InputStream\NullInputStreamFactory.cs" />
+    <Compile Include="Domain\InputStream\TestDltFileStream.cs" />
     <Compile Include="Domain\InputStream\TestDltFileStreamFactory.cs" />
     <Compile Include="Domain\InputStream\TestNetworkStream.cs" />
     <Compile Include="Domain\InputStream\TestNetworkStreamFactory.cs" />

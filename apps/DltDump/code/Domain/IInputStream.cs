@@ -17,10 +17,10 @@
         string Scheme { get; }
 
         /// <summary>
-        /// Gets the input stream.
+        /// Gets the connection string.
         /// </summary>
-        /// <value>The input stream.</value>
-        Stream InputStream { get; }
+        /// <value>The connection string.</value>
+        string Connection { get; }
 
         /// <summary>
         /// Gets a value indicating if this input stream requires a connection.
@@ -29,6 +29,18 @@
         /// If <see langword="true"/>, this stream requires a connection; otherwise, <see langword="false"/>.
         /// </value>
         bool RequiresConnection { get; }
+
+        /// <summary>
+        /// Gets the input stream.
+        /// </summary>
+        /// <value>The input stream.</value>
+        Stream InputStream { get; }
+
+        /// <summary>
+        /// Opens the input stream.
+        /// </summary>
+        /// <returns>The input stream.</returns>
+        void Open();
 
         /// <summary>
         /// Connects the input stream asynchronously (e.g. for network streams).

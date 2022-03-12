@@ -77,6 +77,7 @@
                     return null;
                 }
 
+                inputStream.Open();
                 if (inputStream.RequiresConnection) {
                     int connectAttempt = 0;
                     bool connected = false;

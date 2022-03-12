@@ -1,0 +1,31 @@
+@startuml Domain.InputStream_Sequence
+
+FilterApp -> IInputStreamFactory : Create(uri)
+activate IInputStreamFactory
+FilterApp <-- IInputStreamFactory : returns IInputStream
+deactivate IInputStreamFactory
+
+FilterApp -> IInputStream : Open()
+activate IInputStream
+FilterApp <-- IInputStream
+deactivate IInputStream
+
+alt inputStream.RequiresConnection == true
+
+    loop !connected && (retries < 0 || connectAttempt <= retries)
+
+        FilterApp -> IInputStream : ConnectAsync()
+        activate IInputStream
+        FilterApp <-- IInputStream : returns connected:bool
+        deactivate IInputStream
+
+    end
+
+end
+
+FilterApp -> IInputStream : get_InputStream()
+activate IInputStream
+FilterApp <-- IInputStream : returns Stream
+deactivate IInputStream
+
+@enduml

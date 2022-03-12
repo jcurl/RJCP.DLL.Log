@@ -123,6 +123,9 @@
   <data name="DomainInputStreamFactoryUnsupported" xml:space="preserve">
     <value>Input URI {0} not supported</value>
   </data>
+  <data name="DomainInputStreamNotOpen" xml:space="preserve">
+    <value>Cannot connect, input stream has not been opened</value>
+  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>

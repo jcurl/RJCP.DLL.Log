@@ -5,16 +5,11 @@
     using System.Threading.Tasks;
     using Infrastructure.Dlt;
 
-    public sealed class NullInputStream : IInputStream
+    public class NullInputStream : IInputStream
     {
-        public NullInputStream()
-        {
-            InputStream = new MemoryStream(Array.Empty<byte>());
-        }
-
         public string Scheme { get { return "null"; } }
 
-        public Stream InputStream { get; }
+        public string Connection { get { return "null:"; } }
 
         public bool IsLiveStream
         {
@@ -25,11 +20,41 @@
 
         public bool RequiresConnection { get { return false; } }
 
-        public Task<bool> ConnectAsync()
+        public Stream InputStream { get; private set; }
+
+        public virtual void Open()
         {
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(NullInputStream));
+
+            if (InputStream == null)
+                InputStream = new MemoryStream(Array.Empty<byte>());
+        }
+
+        public virtual Task<bool> ConnectAsync()
+        {
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(NullInputStream));
+
             return Task.FromResult(true);
         }
 
-        public void Dispose() { /* Nothing to do */ }
+        private bool m_IsDisposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing) {
+                if (!m_IsDisposed) {
+                    if (InputStream != null) InputStream.Dispose();
+                    m_IsDisposed = true;
+                }
+            }
+        }
     }
 }

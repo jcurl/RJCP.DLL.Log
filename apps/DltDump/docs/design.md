@@ -352,6 +352,10 @@ When implementing a new `IInputStreamFactory`:
 * Modify the `InputStreamFactory` class to add the scheme and reference the
   newly created factory class.
 
+The sequence of how the `FilterApp` uses the `IInputStreamFactory` is given:
+
+![InputStreamCreate](out/diagrams/inputstream/Domain.InputStream_Sequence.svg)
+
 ##### 2.3.2.3. Decoder Factory
 
 The decoder factory is an implementation that is told what kind of decoder to

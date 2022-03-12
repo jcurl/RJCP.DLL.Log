@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Infrastructure.Dlt;
+    using Resources;
 
     /// <summary>
     /// Provides an input stream for DLT files.
@@ -11,6 +12,7 @@
     public sealed class DltFileStream : IInputStream
     {
         private const int FileSystemCaching = 262144;
+        private readonly string m_FileName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltFileStream"/> class.
@@ -19,27 +21,13 @@
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="fileName"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentException">The <paramref name="fileName"/> is invalid.</exception>
-        /// <exception cref="NotSupportedException">The <paramref name="fileName"/> is a non-file device.</exception>
-        /// <exception cref="FileNotFoundException">The <paramref name="fileName"/> is not found.</exception>
-        /// <exception cref="IOException">An I/O error occurred.</exception>
-        /// <exception cref="System.Security.SecurityException">
-        /// The caller doesn't have the required permissions.
-        /// </exception>
-        /// <exception cref="DirectoryNotFoundException">
-        /// The specified path is invalid, such as being on an unmapped drive.
-        /// </exception>
-        /// <exception cref="UnauthorizedAccessException">The file is in use, or insufficient permissions.</exception>
-        /// <exception cref="PathTooLongException">
-        /// The specified path, file name, or both exceed the system-defined maximum length.
-        /// </exception>
         public DltFileStream(string fileName)
         {
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
 
-            InputStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read,
-                FileSystemCaching, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            Connection = fileName;
+            m_FileName = fileName;
         }
 
         /// <summary>
@@ -49,10 +37,10 @@
         public string Scheme { get { return "file"; } }
 
         /// <summary>
-        /// Gets the input stream.
+        /// Gets the connection string.
         /// </summary>
-        /// <value>The input stream.</value>
-        public Stream InputStream { get; }
+        /// <value>The connection string.</value>
+        public string Connection { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is live stream.
@@ -79,6 +67,69 @@
         public bool RequiresConnection { get { return false; } }
 
         /// <summary>
+        /// Gets the input stream.
+        /// </summary>
+        /// <value>The input stream.</value>
+        public Stream InputStream { get; private set; }
+
+        /// <summary>
+        /// Opens the input stream.
+        /// </summary>
+        /// <returns>The input stream.</returns>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
+        /// <exception cref="InputStreamException">
+        /// There was a problem opening the stream. Exceptions of this type are wrappers around the more specific
+        /// exception, that indicate the stream should be skipped.
+        /// <para>File name is invalid.</para>
+        /// <para>- or -</para>
+        /// <para>The file is not found.</para>
+        /// <para>- or -</para>
+        /// <para>The directory is not found.</para>
+        /// <para>- or -</para>
+        /// <para>The path is too long.</para>
+        /// <para>- or -</para>
+        /// <para>An I/O error occurred.</para>
+        /// <para>- or -</para>
+        /// <para>The caller doesn't have the required permissions.</para>
+        /// <para>- or -</para>
+        /// <para>The file is in use, or insufficient permissions.</para>
+        /// </exception>
+        public void Open()
+        {
+            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
+            if (InputStream != null) return;
+
+            try {
+                InputStream = new FileStream(m_FileName, FileMode.Open, FileAccess.Read, FileShare.Read,
+                    FileSystemCaching, FileOptions.Asynchronous | FileOptions.SequentialScan);
+            } catch (FileNotFoundException ex) {
+                string message = string.Format(AppResources.FileOpenError_FileNotFound, Connection);
+                throw new InputStreamException(message, ex);
+            } catch (DirectoryNotFoundException ex) {
+                string message = string.Format(AppResources.FileOpenError_DirectoryNotFound, Connection);
+                throw new InputStreamException(message, ex);
+            } catch (PathTooLongException ex) {
+                string message = string.Format(AppResources.FileOpenError_PathTooLong, Connection);
+                throw new InputStreamException(message, ex);
+            } catch (IOException ex) {
+                string message = string.Format(AppResources.FileOpenError_IOException, Connection, ex.Message);
+                throw new InputStreamException(message, ex);
+            } catch (ArgumentException ex) {
+                string message = string.Format(AppResources.FileOpenError_InvalidFile, Connection, ex.Message);
+                throw new InputStreamException(message, ex);
+            } catch (NotSupportedException ex) {
+                string message = string.Format(AppResources.FileOpenError_InvalidFile, Connection, ex.Message);
+                throw new InputStreamException(message, ex);
+            } catch (System.Security.SecurityException ex) {
+                string message = string.Format(AppResources.FileOpenError_Security, Connection, ex.Message);
+                throw new InputStreamException(message, ex);
+            } catch (UnauthorizedAccessException ex) {
+                string message = string.Format(AppResources.FileOpenError_Unauthorized, Connection);
+                throw new InputStreamException(message, ex);
+            }
+        }
+
+        /// <summary>
         /// Connects the input stream asynchronously (e.g. for network streams).
         /// </summary>
         /// <returns>
@@ -87,6 +138,11 @@
         /// </returns>
         public Task<bool> ConnectAsync()
         {
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(DltFileStream));
+            if (InputStream == null)
+                throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
+
             return Task.FromResult(true);
         }
 
@@ -98,10 +154,10 @@
         /// </summary>
         public void Dispose()
         {
-            if (!m_IsDisposed && InputStream != null) {
-                InputStream.Dispose();
+            if (!m_IsDisposed) {
+                if (InputStream != null) InputStream.Dispose();
+                m_IsDisposed = true;
             }
-            m_IsDisposed = true;
         }
     }
 }

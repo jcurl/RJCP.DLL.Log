@@ -5,13 +5,15 @@
     using System.Threading.Tasks;
     using Infrastructure.Dlt;
     using Infrastructure.Net;
+    using Resources;
 
     /// <summary>
     /// A connection to a TCP listen socket on the server.
     /// </summary>
     public sealed class DltTcpStream : IInputStream
     {
-        private readonly TcpClientStream m_TcpStream;
+        private readonly string m_HostName;
+        private readonly int m_Port;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTcpStream"/> class.
@@ -25,9 +27,13 @@
         /// </exception>
         public DltTcpStream(string hostname, int port)
         {
-            m_TcpStream = new TcpClientStream(hostname, port) {
-                DisconnectTimeout = 5000
-            };
+            if (hostname == null) throw new ArgumentNullException(nameof(hostname));
+            if (string.IsNullOrWhiteSpace(hostname))
+                throw new ArgumentException(AppResources.InfraTcpStreamInvalidHostName, nameof(hostname));
+            if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+
+            m_HostName = hostname;
+            m_Port = port;
         }
 
         /// <summary>
@@ -37,10 +43,16 @@
         public string Scheme { get { return "tcp"; } }
 
         /// <summary>
-        /// Gets the input stream.
+        /// Gets the connection string.
         /// </summary>
-        /// <value>The input stream.</value>
-        public Stream InputStream { get { return m_TcpStream; } }
+        /// <value>The connection string.</value>
+        public string Connection
+        {
+            get
+            {
+                return string.Format("{0}://{1}:{2}", Scheme, m_HostName, m_Port);
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is live stream.
@@ -67,20 +79,51 @@
         public bool RequiresConnection { get { return true; } }
 
         /// <summary>
+        /// Gets the input stream.
+        /// </summary>
+        /// <value>The input stream.</value>
+        public Stream InputStream { get; private set; }
+
+        /// <summary>
+        /// Opens the input stream.
+        /// </summary>
+        /// <returns>The input stream.</returns>
+        /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
+        public void Open()
+        {
+            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
+            if (InputStream != null) return;
+
+            InputStream = new TcpClientStream(m_HostName, m_Port) {
+                DisconnectTimeout = 5000
+            };
+        }
+
+        /// <summary>
         /// Connects the input stream asynchronously (e.g. for network streams).
         /// </summary>
         /// <returns>Returns if the input stream was connected.</returns>
         public Task<bool> ConnectAsync()
         {
-            return m_TcpStream.ConnectAsync();
+            if (m_IsDisposed)
+                throw new ObjectDisposedException(nameof(DltFileStream));
+            if (InputStream == null)
+                throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
+
+            return ((TcpClientStream)InputStream).ConnectAsync();
         }
+
+        private bool m_IsDisposed;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            m_TcpStream.Dispose();
+            if (!m_IsDisposed) {
+                if (InputStream != null) InputStream.Dispose();
+                m_IsDisposed = true;
+            }
         }
     }
 }

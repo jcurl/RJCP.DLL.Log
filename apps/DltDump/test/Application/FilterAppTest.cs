@@ -55,16 +55,16 @@
             }
         }
 
-        [TestCase(TestDltFileStreamFactory.FileOpenError.ArgumentNullException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.ArgumentException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.NotSupportedException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.FileNotFoundException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.IOException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.SecurityException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.DirectoryNotFoundException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.UnauthorizedAccessException)]
-        [TestCase(TestDltFileStreamFactory.FileOpenError.PathTooLongException)]
-        public async Task OpenErrorArgumentNullException(TestDltFileStreamFactory.FileOpenError openError)
+        [TestCase(FileOpenError.ArgumentNullException)]
+        [TestCase(FileOpenError.ArgumentException)]
+        [TestCase(FileOpenError.NotSupportedException)]
+        [TestCase(FileOpenError.FileNotFoundException)]
+        [TestCase(FileOpenError.IOException)]
+        [TestCase(FileOpenError.SecurityException)]
+        [TestCase(FileOpenError.DirectoryNotFoundException)]
+        [TestCase(FileOpenError.UnauthorizedAccessException)]
+        [TestCase(FileOpenError.PathTooLongException)]
+        public async Task OpenErrorArgumentNullException(FileOpenError openError)
         {
             // Tests that the FilterApp catches the InputStreamException. Is also a partial integration test for
             // InputStreamFactory that sees a file.
@@ -92,7 +92,7 @@
 
             using (new TestApplication()) {
                 TestDltFileStreamFactory fileFactory = new TestDltFileStreamFactory {
-                    OpenError = TestDltFileStreamFactory.FileOpenError.InvalidOperationException
+                    OpenError = FileOpenError.InvalidOperationException
                 };
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("file", fileFactory);
 

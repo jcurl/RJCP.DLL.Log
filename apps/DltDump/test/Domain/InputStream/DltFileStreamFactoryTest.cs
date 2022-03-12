@@ -55,7 +55,8 @@
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             Assert.That(() => {
-                _ = factory.Create(string.Empty);
+                IInputStream input = factory.Create(string.Empty);
+                input.Open();
             }, Throws.TypeOf<InputStreamException>());
         }
 
@@ -67,6 +68,7 @@
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create(EmptyFile)) {
+                stream.Open();
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
                 Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
@@ -83,6 +85,7 @@
                 scratch.DeployItem(EmptyFile);
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create("EmptyFile.dlt")) {
+                    stream.Open();
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
@@ -100,6 +103,7 @@
                 scratch.DeployItem(EmptyFile);
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create(Path.Combine(".", "EmptyFile.dlt"))) {
+                    stream.Open();
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
@@ -117,6 +121,7 @@
                 scratch.DeployItem(EmptyFile);
                 IInputStreamFactory factory = GetFactory(factoryType);
                 using (IInputStream stream = factory.Create(Path.Combine(scratch.RelativePath, "EmptyFile.dlt"))) {
+                    stream.Open();
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
@@ -131,9 +136,11 @@
         public void OpenNonExistentDltFile(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
-            Assert.That(() => {
-                _ = factory.Create("./nonexistent.dlt");
-            }, Throws.TypeOf<InputStreamException>());
+            using (IInputStream input = factory.Create("./nonexistent.dlt")) {
+                Assert.That(() => {
+                    input.Open();
+                }, Throws.TypeOf<InputStreamException>());
+            }
         }
 
         [TestCase(Factory.InputStreamFactory)]
@@ -143,6 +150,7 @@
             // Need to also use the InputStreamFactory that it properly converts the URI to a file://
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create(new Uri(EmptyFile))) {
+                stream.Open();
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
                 Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
@@ -157,6 +165,57 @@
             Assert.That(() => {
                 _ = new DltFileStream(null);
             }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltFileFactory)]
+        public void OpenDisposedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create(EmptyFile);
+                input.Dispose();
+                Assert.That(() => {
+                    input.Open();
+                }, Throws.TypeOf<ObjectDisposedException>());
+            } finally {
+                if (input != null) input.Dispose();
+            }
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltFileFactory)]
+        public void ConnectUnopenedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create(EmptyFile);
+                Assert.That(async () => {
+                    _ = await input.ConnectAsync();
+                }, Throws.TypeOf<InvalidOperationException>());
+            } finally {
+                if (input != null) input.Dispose();
+            }
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltFileFactory)]
+        public void ConnectDisposedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create(EmptyFile);
+                input.Open();
+                input.Dispose();
+                Assert.That(async () => {
+                    _ = await input.ConnectAsync();
+                }, Throws.TypeOf<ObjectDisposedException>());
+            } finally {
+                if (input != null) input.Dispose();
+            }
         }
     }
 }

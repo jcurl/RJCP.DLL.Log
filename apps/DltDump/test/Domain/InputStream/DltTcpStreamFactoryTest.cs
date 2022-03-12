@@ -43,7 +43,6 @@
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
-        [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltTcpFactory)]
         public void OpenEmptyDltFile(Factory factoryType)
         {
@@ -142,6 +141,57 @@
                 Assert.That(stream.Scheme, Is.EqualTo("tcp"));
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.Network));
                 Assert.That(stream.IsLiveStream, Is.True);
+            }
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void OpenDisposedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create("tcp://127.0.0.1:123");
+                input.Dispose();
+                Assert.That(() => {
+                    input.Open();
+                }, Throws.TypeOf<ObjectDisposedException>());
+            } finally {
+                if (input != null) input.Dispose();
+            }
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void ConnectUnopenedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create("tcp://127.0.0.1:123");
+                Assert.That(async () => {
+                    _ = await input.ConnectAsync();
+                }, Throws.TypeOf<InvalidOperationException>());
+            } finally {
+                if (input != null) input.Dispose();
+            }
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void ConnectDisposedInputStream(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            IInputStream input = null;
+            try {
+                input = factory.Create("tcp://127.0.0.1:123");
+                input.Open();
+                input.Dispose();
+                Assert.That(async () => {
+                    _ = await input.ConnectAsync();
+                }, Throws.TypeOf<ObjectDisposedException>());
+            } finally {
+                if (input != null) input.Dispose();
             }
         }
     }
