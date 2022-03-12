@@ -69,8 +69,9 @@
             Write();
             Write(2, 4, HelpResources.Help805_Success);
             Write(2, 4, HelpResources.Help810_OptionError);
-            Write(2, 4, HelpResources.Help811_NoFilesProcessed);
-            Write(2, 4, HelpResources.Help812_PartialFilesProcessed);
+            Write(2, 4, HelpResources.Help811_InputUnknown);
+            Write(2, 4, HelpResources.Help812_NoFilesProcessed);
+            Write(2, 4, HelpResources.Help813_PartialFilesProcessed);
             Write(2, 4, HelpResources.Help899_UnknownError);
             Write();
         }

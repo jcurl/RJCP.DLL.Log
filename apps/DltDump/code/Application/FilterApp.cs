@@ -23,8 +23,8 @@
 
         public async Task<ExitCode> Run()
         {
-            if (m_Config.Input.Count == 0)
-                return ExitCode.OptionsError;
+            if (!CheckInputs())
+                return ExitCode.InputError;
 
             int processed = 0;
             foreach (string uri in m_Config.Input) {
@@ -65,6 +65,28 @@
             if (processed == 0) return ExitCode.NoFilesProcessed;
             if (processed != m_Config.Input.Count) return ExitCode.PartialFilesProcessed;
             return ExitCode.Success;
+        }
+
+        private bool CheckInputs()
+        {
+            int count = m_Config.Input.Count;
+            if (count == 0) {
+                Terminal.WriteLine(AppResources.FilterCheckError_NoStreams);
+                return false;
+            }
+
+            foreach (string uri in m_Config.Input) {
+                IInputStream inputStream = Global.Instance.InputStreamFactory.Create(uri);
+                if (inputStream == null) {
+                    Terminal.WriteLine(AppResources.FilterCheckError_UnknownInput, uri);
+                    return false;
+                }
+                if (inputStream.IsLiveStream && count > 1) {
+                    Terminal.WriteLine(AppResources.FilterCheckError_LiveStreams);
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static async Task<IInputStream> GetInputStream(string uri, int retries)

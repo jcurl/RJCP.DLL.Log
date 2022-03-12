@@ -34,7 +34,7 @@
             FilterConfig config = new FilterConfig(Array.Empty<string>());
             FilterApp app = new FilterApp(config);
             ExitCode result = await app.Run();
-            Assert.That(result, Is.EqualTo(ExitCode.OptionsError));
+            Assert.That(result, Is.EqualTo(ExitCode.InputError));
         }
 
         [Test]
@@ -116,7 +116,7 @@
 
                 // The user will be told also on the command line.
                 global.WriteStd();
-                Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
+                Assert.That(result, Is.EqualTo(ExitCode.InputError));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
             }
         }
@@ -153,14 +153,12 @@
         [TestCase(ConnectTestMode.RetryThenFail)]
         public async Task OpenConnectErrorRetries(ConnectTestMode mode)
         {
-            const int RetryOption = 7;   // Option given to FilterApp
-            const int ConnectCount = 2;  // Our test case fails to connect after this count
-            const int RetryCount = 4;    // Our test case connects after this many retries
-
-            int connects = ConnectCount;
-            int retries = RetryCount;
+            const int RetryOption = 7;      // Option given to FilterApp
+            const int CreateCount = 2;      // Our test case fails to connect after this count
+            const int RetryCount = 4;       // Our test case connects after this many retries
 
             ExitCode expectedResult;
+            int retries = RetryCount;
             int expectedConnects;
             int actualConnects = 0;
 
@@ -177,13 +175,14 @@
                     expectedConnects = RetryOption + 1;
                     break;
                 case ConnectTestMode.RetryThenCreateFail:
+                    int creates = CreateCount + 1;  // First create is to check
                     // For loop 1, it fails the first two times and then connects.
                     // For loop 2, it fails the first two times and then connects.
                     // For loop 3, the connection has an error.
                     testFactory.CreateEvent += (s, e) => {
-                        --connects;
+                        --creates;
                         retries = RetryCount;
-                        e.Succeed = connects >= 0;
+                        e.Succeed = creates >= 0;
                     };
                     testFactory.ConnectEvent += (s, e) => {
                         actualConnects++;
@@ -191,23 +190,25 @@
                         e.Succeed = retries < 0;
                     };
                     expectedResult = ExitCode.Success;
-                    expectedConnects = 2 * (RetryCount + 1);
+                    expectedConnects = CreateCount * (RetryCount + 1);
                     break;
                 case ConnectTestMode.RetryThenFail:
+                    int loop = CreateCount;
                     // For loop 1, it fails the first two times and then connects.
                     // For loop 2, it fails the first two times and then connects.
                     // For loop 3, it will never connect, thus ending the connect infinite loop
                     testFactory.ConnectEvent += (s, e) => {
+                        Console.WriteLine("ConnectEvent");
                         actualConnects++;
                         --retries;
-                        e.Succeed = retries < 0 && connects > 0;
+                        e.Succeed = retries < 0 && loop > 0;  // Here is 1, because first create has no connect.
                         if (e.Succeed) {
                             retries = RetryCount;
-                            --connects;
+                            --loop;
                         }
                     };
                     expectedResult = ExitCode.Success;
-                    expectedConnects = 2 * (RetryCount + 1) + RetryOption + 1;
+                    expectedConnects = CreateCount * (RetryCount + 1) + RetryOption + 1;
                     break;
                 default:
                     Assert.Fail("Unknown test case");
@@ -240,6 +241,60 @@
                 FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
                     ConnectRetries = -1
                 };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                // The user will be told also on the command line.
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public async Task OpenMultipleMix1()
+        {
+            using (TestApplication global = new TestApplication()) {
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile, "net://127.0.0.1" });
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                // The user will be told also on the command line.
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.InputError));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public async Task OpenMultipleMix2()
+        {
+            using (TestApplication global = new TestApplication()) {
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1", EmptyFile });
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                // The user will be told also on the command line.
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.InputError));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public async Task OpenMultipleFile()
+        {
+            using (TestApplication global = new TestApplication()) {
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile, EmptyFile });
                 FilterApp app = new FilterApp(config);
                 ExitCode result = await app.Run();
 

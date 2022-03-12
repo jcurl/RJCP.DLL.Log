@@ -246,20 +246,29 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2 - None of the input files could be processed.
+        ///   Looks up a localized string similar to 2 - There was an error parsing the input URIs.
         /// </summary>
-        internal static string Help811_NoFilesProcessed {
+        internal static string Help811_InputUnknown {
             get {
-                return ResourceManager.GetString("Help811_NoFilesProcessed", resourceCulture);
+                return ResourceManager.GetString("Help811_InputUnknown", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 3 - Not all of the files could be processed (partial error).
+        ///   Looks up a localized string similar to 3 - None of the input files could be processed.
         /// </summary>
-        internal static string Help812_PartialFilesProcessed {
+        internal static string Help812_NoFilesProcessed {
             get {
-                return ResourceManager.GetString("Help812_PartialFilesProcessed", resourceCulture);
+                return ResourceManager.GetString("Help812_NoFilesProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 4 - Not all of the files could be processed (partial error).
+        /// </summary>
+        internal static string Help813_PartialFilesProcessed {
+            get {
+                return ResourceManager.GetString("Help813_PartialFilesProcessed", resourceCulture);
             }
         }
         

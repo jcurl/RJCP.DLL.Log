@@ -153,6 +153,15 @@
   <data name="FileOpenError_Unauthorized" xml:space="preserve">
     <value>Insufficient access privileges opening {0}</value>
   </data>
+  <data name="FilterCheckError_LiveStreams" xml:space="preserve">
+    <value>Only one input argument allowed for live streams.</value>
+  </data>
+  <data name="FilterCheckError_NoStreams" xml:space="preserve">
+    <value>No input files specified.</value>
+  </data>
+  <data name="FilterCheckError_UnknownInput" xml:space="preserve">
+    <value>Don't know how to interpret {0}.</value>
+  </data>
   <data name="FilterOpenError_ConnectError" xml:space="preserve">
     <value>Couldn't connect to the stream end-point {0}.</value>
   </data>

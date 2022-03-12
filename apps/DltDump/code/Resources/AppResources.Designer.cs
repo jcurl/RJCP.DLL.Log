@@ -169,6 +169,33 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only one input argument allowed for live streams..
+        /// </summary>
+        internal static string FilterCheckError_LiveStreams {
+            get {
+                return ResourceManager.GetString("FilterCheckError_LiveStreams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No input files specified..
+        /// </summary>
+        internal static string FilterCheckError_NoStreams {
+            get {
+                return ResourceManager.GetString("FilterCheckError_NoStreams", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t know how to interpret {0}..
+        /// </summary>
+        internal static string FilterCheckError_UnknownInput {
+            get {
+                return ResourceManager.GetString("FilterCheckError_UnknownInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Couldn&apos;t connect to the stream end-point {0}..
         /// </summary>
         internal static string FilterOpenError_ConnectError {
