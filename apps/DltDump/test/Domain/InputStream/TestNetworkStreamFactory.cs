@@ -2,17 +2,35 @@
 {
     using System;
 
-    public class TestNetworkStreamFactory : InputStreamFactoryBase
+    public sealed class TestNetworkStreamFactory : InputStreamFactoryBase
     {
-        /// <summary>
-        /// Used to simulate an error on opening a file name.
-        /// </summary>
-        /// <value>The exception that should be simulated when opening a file.</value>
-        public bool ConnectResult { get; set; } = true;
+        public event EventHandler<ConnectSuccessEventArgs> CreateEvent;
+
+        public event EventHandler<ConnectSuccessEventArgs> ConnectEvent;
+
+        private void OnCreateEvent(object sender, ConnectSuccessEventArgs args)
+        {
+            EventHandler<ConnectSuccessEventArgs> handler = CreateEvent;
+            if (handler != null) handler(sender, args);
+        }
+
+        private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
+        {
+            EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
+            if (handler != null) handler(sender, args);
+        }
 
         public override IInputStream Create(Uri uri)
         {
-            return new TestNetworkStream(ConnectResult);
+            ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
+            OnCreateEvent(this, createArgs);
+            if (!createArgs.Succeed) throw new InputStreamException("TestNetworkStream creation failed");
+
+            TestNetworkStream inputStream = new TestNetworkStream();
+            inputStream.ConnectEvent += (s, e) => {
+                OnConnectEvent(s, e);
+            };
+            return inputStream;
         }
     }
 }

@@ -20,7 +20,8 @@
         {
             FilterConfig config = new FilterConfig(m_Options.Arguments) {
                 ShowPosition = m_Options.Position,
-                InputFormat = m_Options.InputFormat
+                InputFormat = m_Options.InputFormat,
+                ConnectRetries = m_Options.ConnectRetries
             };
             FilterApp app = new FilterApp(config);
 

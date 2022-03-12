@@ -156,6 +156,9 @@
   <data name="FilterOpenError_CreateError" xml:space="preserve">
     <value>Couldn't open the input {0}.</value>
   </data>
+  <data name="FilterOpenError_Retry" xml:space="preserve">
+    <value>Couldn't connect to {0}. Retry {1}...</value>
+  </data>
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>
   </data>

@@ -23,6 +23,8 @@
 
         public InputFormat SuggestedFormat { get { return InputFormat.File; } }
 
+        public bool RequiresConnection { get { return false; } }
+
         public Task<bool> ConnectAsync()
         {
             return Task.FromResult(true);

@@ -28,26 +28,38 @@
 
             int processed = 0;
             foreach (string uri in m_Config.Input) {
-                using (IInputStream inputStream = await GetInputStream(uri)) {
-                    if (inputStream == null) continue;
+                bool retries;
+                bool connected = false;
+                do {
+                    using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
+                        if (inputStream == null) {
+                            retries = false;
+                            continue;
+                        }
+                        retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
 
-                    using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
-                        if (decoder == null) continue;
-
-                        DltTraceLineBase line;
-                        do {
-                            line = await decoder.GetLineAsync();
-                            if (line != null) {
-                                if (m_Config.ShowPosition) {
-                                    Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
-                                } else {
-                                    Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
-                                }
+                        using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
+                            if (decoder == null) {
+                                retries = false;
+                                continue;
                             }
-                        } while (line != null);
+
+                            connected = true;
+                            DltTraceLineBase line;
+                            do {
+                                line = await decoder.GetLineAsync();
+                                if (line != null) {
+                                    if (m_Config.ShowPosition) {
+                                        Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
+                                    } else {
+                                        Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                                    }
+                                }
+                            } while (line != null);
+                        }
                     }
-                }
-                processed++;
+                } while (retries);
+                if (connected) processed++;
             }
 
             if (processed == 0) return ExitCode.NoFilesProcessed;
@@ -55,7 +67,7 @@
             return ExitCode.Success;
         }
 
-        private static async Task<IInputStream> GetInputStream(string uri)
+        private static async Task<IInputStream> GetInputStream(string uri, int retries)
         {
             IInputStream inputStream = null;
             try {
@@ -65,11 +77,22 @@
                     return null;
                 }
 
-                bool connected = await inputStream.ConnectAsync();
-                if (!connected) {
-                    Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, uri);
-                    inputStream.Dispose();
-                    return null;
+                if (inputStream.RequiresConnection) {
+                    int connectAttempt = 0;
+                    bool connected = false;
+                    while (!connected && (retries < 0 || connectAttempt <= retries)) {
+                        if (connectAttempt > 0) {
+                            Terminal.WriteLine(AppResources.FilterOpenError_Retry, uri, connectAttempt);
+                        }
+                        connected = await inputStream.ConnectAsync();
+                        connectAttempt++;
+                    }
+
+                    if (!connected) {
+                        Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, uri);
+                        inputStream.Dispose();
+                        return null;
+                    }
                 }
 
                 return inputStream;

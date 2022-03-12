@@ -59,6 +59,14 @@
         public InputFormat SuggestedFormat { get { return InputFormat.Network; } }
 
         /// <summary>
+        /// Gets a value indicating if this input stream requires a connection.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/>, this stream requires a connection; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool RequiresConnection { get { return true; } }
+
+        /// <summary>
         /// Connects the input stream asynchronously (e.g. for network streams).
         /// </summary>
         /// <returns>Returns if the input stream was connected.</returns>

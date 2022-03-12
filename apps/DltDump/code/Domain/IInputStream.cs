@@ -23,6 +23,14 @@
         Stream InputStream { get; }
 
         /// <summary>
+        /// Gets a value indicating if this input stream requires a connection.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/>, this stream requires a connection; otherwise, <see langword="false"/>.
+        /// </value>
+        bool RequiresConnection { get; }
+
+        /// <summary>
         /// Connects the input stream asynchronously (e.g. for network streams).
         /// </summary>
         /// <returns>Returns if the input stream was connected.</returns>

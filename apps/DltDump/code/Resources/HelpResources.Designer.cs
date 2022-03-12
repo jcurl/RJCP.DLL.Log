@@ -136,7 +136,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {1}format
+        ///   Looks up a localized string similar to {1}format{2}&lt;format&gt;
         ///  Defines the input format. This can be one of the following (by default it is automatic):.
         /// </summary>
         internal static string Help325_InputFormat {
@@ -178,6 +178,16 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help325_InputFormatSerial {
             get {
                 return ResourceManager.GetString("Help325_InputFormatSerial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}retries{2}&lt;count&gt;
+        ///  For input URIs that need a connection (e.g. tcp), specify the number of retries when connecting. When the retries is negative, attempts go on forever. When the retries is more than zero, it tries &apos;n&apos; times again. If retries are enabled, an attempt to reconnect after the stream is closed is always made until the connection attempts fails. This allows for connecting to remote targets that reset forever, and ending only if the remote target doesn&apos;t recover..
+        /// </summary>
+        internal static string Help330_Retries {
+            get {
+                return ResourceManager.GetString("Help330_Retries", resourceCulture);
             }
         }
         

@@ -2,6 +2,8 @@
 {
     using System;
     using System.IO;
+    using Domain;
+    using Domain.InputStream;
     using Infrastructure.Dlt;
     using Moq;
     using NUnit.Framework;
@@ -225,6 +227,64 @@
                 Assert.That(CommandLine.Run(new string[] {
                     LongOpt("format", "foo"), EmptyFile
                 }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [TestCase(1)]
+        [TestCase(0)]
+        [TestCase(10)]
+        public void RetryCount(int count)
+        {
+            using (new TestApplication()) {
+                int actualConnects = 0;
+
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                testFactory.ConnectEvent += (s, e) => {
+                    actualConnects++;
+                    e.Succeed = false;
+                };
+
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("retries", count.ToString()), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.NoFilesProcessed));
+
+                // 5 retries produces 6 connect attempts before ending.
+                Assert.That(actualConnects, Is.EqualTo(count + 1));
+            }
+        }
+
+        [Test]
+        public void RetryCountInfinite()
+        {
+            using (new TestApplication()) {
+                int actualCreate = 0;
+
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                testFactory.CreateEvent += (s, e) => {
+                    e.Succeed = actualCreate < 20;
+                    actualCreate++;
+                };
+                testFactory.ConnectEvent += (s, e) => {
+                    e.Succeed = true;
+                };
+
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                // Tests that a retries of -1 results in infinite retries, even after successful connects.
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("retries", "-1"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The reconnects is infinite, until we get the a CreateEvent failing.
+                Assert.That(actualCreate, Is.EqualTo(21));
             }
         }
     }

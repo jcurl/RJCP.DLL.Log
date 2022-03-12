@@ -38,5 +38,11 @@
         /// </summary>
         /// <value>The input format for reading the input stream.</value>
         public InputFormat InputFormat { get; set; } = InputFormat.Automatic;
+
+        /// <summary>
+        /// Gets or sets the connect retries for input stream types that require a connection.
+        /// </summary>
+        /// <value>The number of connect retries.</value>
+        public int ConnectRetries { get; set; } = 0;
     }
 }

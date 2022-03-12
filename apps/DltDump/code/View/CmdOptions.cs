@@ -68,6 +68,13 @@
         public InputFormat InputFormat { get; private set; }
 
         /// <summary>
+        /// Gets the connect retries for input connection types that need a connection.
+        /// </summary>
+        /// <value>The connect retries.</value>
+        [Option("retries")]
+        public int ConnectRetries { get; private set; }
+
+        /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
         /// <value>The input DLT streams to read.</value>

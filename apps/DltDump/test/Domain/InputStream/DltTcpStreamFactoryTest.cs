@@ -1,10 +1,8 @@
 ﻿namespace RJCP.App.DltDump.Domain.InputStream
 {
     using System;
-    using System.IO;
     using Infrastructure.Dlt;
     using NUnit.Framework;
-    using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture]
     public class DltTcpStreamFactoryTest

@@ -125,9 +125,8 @@
         public async Task OpenConnectError()
         {
             using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory() {
-                    ConnectResult = false
-                };
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                testFactory.ConnectEvent += (s, e) => { e.Succeed = false; };
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
@@ -139,6 +138,115 @@
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        public enum ConnectTestMode
+        {
+            ConnectFail,
+            RetryThenCreateFail,
+            RetryThenFail
+        }
+
+        [TestCase(ConnectTestMode.ConnectFail)]
+        [TestCase(ConnectTestMode.RetryThenCreateFail)]
+        [TestCase(ConnectTestMode.RetryThenFail)]
+        public async Task OpenConnectErrorRetries(ConnectTestMode mode)
+        {
+            const int RetryOption = 7;   // Option given to FilterApp
+            const int ConnectCount = 2;  // Our test case fails to connect after this count
+            const int RetryCount = 4;    // Our test case connects after this many retries
+
+            int connects = ConnectCount;
+            int retries = RetryCount;
+
+            ExitCode expectedResult;
+            int expectedConnects;
+            int actualConnects = 0;
+
+            using (TestApplication global = new TestApplication()) {
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                switch (mode) {
+                case ConnectTestMode.ConnectFail:
+                    // Connection will never succeed.
+                    testFactory.ConnectEvent += (s, e) => {
+                        actualConnects++;
+                        e.Succeed = false;
+                    };
+                    expectedResult = ExitCode.NoFilesProcessed;
+                    expectedConnects = RetryOption + 1;
+                    break;
+                case ConnectTestMode.RetryThenCreateFail:
+                    // For loop 1, it fails the first two times and then connects.
+                    // For loop 2, it fails the first two times and then connects.
+                    // For loop 3, the connection has an error.
+                    testFactory.CreateEvent += (s, e) => {
+                        --connects;
+                        retries = RetryCount;
+                        e.Succeed = connects >= 0;
+                    };
+                    testFactory.ConnectEvent += (s, e) => {
+                        actualConnects++;
+                        --retries;
+                        e.Succeed = retries < 0;
+                    };
+                    expectedResult = ExitCode.Success;
+                    expectedConnects = 2 * (RetryCount + 1);
+                    break;
+                case ConnectTestMode.RetryThenFail:
+                    // For loop 1, it fails the first two times and then connects.
+                    // For loop 2, it fails the first two times and then connects.
+                    // For loop 3, it will never connect, thus ending the connect infinite loop
+                    testFactory.ConnectEvent += (s, e) => {
+                        actualConnects++;
+                        --retries;
+                        e.Succeed = retries < 0 && connects > 0;
+                        if (e.Succeed) {
+                            retries = RetryCount;
+                            --connects;
+                        }
+                    };
+                    expectedResult = ExitCode.Success;
+                    expectedConnects = 2 * (RetryCount + 1) + RetryOption + 1;
+                    break;
+                default:
+                    Assert.Fail("Unknown test case");
+                    return;
+                }
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                    ConnectRetries = RetryOption
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                // The user will be told also on the command line.
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(expectedResult));
+
+                // 3 lines to indicate connecting, the 4th line that it failed.
+                Assert.That(actualConnects, Is.EqualTo(expectedConnects));
+                Assert.That(global.StdOut.Lines.Count, Is.Not.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public async Task OpenRetriesFile()
+        {
+            using (TestApplication global = new TestApplication()) {
+                // The number of retries should be ignored for streams that aren't live.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ConnectRetries = -1
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                // The user will be told also on the command line.
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
             }
         }
 

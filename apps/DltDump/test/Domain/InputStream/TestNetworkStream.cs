@@ -7,12 +7,24 @@
 
     public sealed class TestNetworkStream : IInputStream
     {
-        private readonly bool m_ConnectResult;
-
-        public TestNetworkStream(bool connectResult)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestNetworkStream"/> class.
+        /// </summary>
+        /// <param name="requiredAttempts">
+        /// The required attempts. If negative, it will always fail. If zero, it will always succeed. If more than zero,
+        /// the first number of attempts will fail.
+        /// </param>
+        public TestNetworkStream()
         {
             InputStream = new MemoryStream(Array.Empty<byte>());
-            m_ConnectResult = connectResult;
+        }
+
+        public event EventHandler<ConnectSuccessEventArgs> ConnectEvent;
+
+        private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
+        {
+            EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
+            if (handler != null) handler(sender, args);
         }
 
         public string Scheme { get { return "net"; } }
@@ -26,9 +38,13 @@
 
         public InputFormat SuggestedFormat { get { return InputFormat.Network; } }
 
+        public bool RequiresConnection { get { return true; } }
+
         public Task<bool> ConnectAsync()
         {
-            return Task.FromResult(m_ConnectResult);
+            ConnectSuccessEventArgs args = new ConnectSuccessEventArgs();
+            OnConnectEvent(this, args);
+            return Task.FromResult(args.Succeed);
         }
 
         public void Dispose() { /* Nothing to do */ }

@@ -58,6 +58,7 @@
             Write(4, 6, HelpResources.Help325_InputFormatFile);
             Write(4, 6, HelpResources.Help325_InputFormatSerial);
             Write(4, 6, HelpResources.Help325_InputFormatNetwork);
+            Write(2, 4, HelpResources.Help330_Retries);
             Write();
             Write(HelpResources.Help400_Input);
             Write();

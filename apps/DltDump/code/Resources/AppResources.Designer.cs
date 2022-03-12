@@ -178,6 +178,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t connect to {0}. Retry {1}....
+        /// </summary>
+        internal static string FilterOpenError_Retry {
+            get {
+                return ResourceManager.GetString("FilterOpenError_Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internal Error: Decoding this format is not implemented.
         /// </summary>
         internal static string InfraDltInvalidFormat {
