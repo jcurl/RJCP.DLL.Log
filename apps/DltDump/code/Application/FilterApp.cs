@@ -102,6 +102,11 @@
                 }
                 Terminal.WriteLine(ex.Message);
                 return null;
+            } catch {
+                if (inputStream != null) {
+                    inputStream.Dispose();
+                }
+                throw;
             }
         }
 
