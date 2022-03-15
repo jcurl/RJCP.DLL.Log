@@ -59,6 +59,7 @@
     <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
     <ProjectReference Include="..\..\..\..\crashreporter\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
     <ProjectReference Include="..\..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
+    <ProjectReference Include="..\..\..\..\serialportstream\code\SerialPortStream.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,6 +72,8 @@
     <Compile Include="Domain\InputStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltFileStream.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactory.cs" />
+    <Compile Include="Domain\InputStream\DltSerialStream.cs" />
+    <Compile Include="Domain\InputStream\DltSerialStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltTcpStream.cs" />
     <Compile Include="Domain\InputStream\DltTcpStreamFactory.cs" />
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
@@ -89,6 +92,7 @@
     <Compile Include="Infrastructure\Terminal\StdErr.cs" />
     <Compile Include="Infrastructure\Terminal\StdOut.cs" />
     <Compile Include="Infrastructure\Text\Format.cs" />
+    <Compile Include="Infrastructure\Uri\UriExtensions.cs" />
     <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />

@@ -38,7 +38,8 @@
 
         private readonly Dictionary<string, IInputStreamFactory> m_Factories = new Dictionary<string, IInputStreamFactory>() {
             { "file", new DltFileStreamFactory() },
-            { "tcp", new DltTcpStreamFactory() }
+            { "tcp", new DltTcpStreamFactory() },
+            { "ser", new DltSerialStreamFactory() }
         };
 
         /// <summary>

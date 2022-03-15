@@ -195,8 +195,47 @@
   <data name="InfraTcpStreamInvalidHostName" xml:space="preserve">
     <value>Invalid hostname for connection</value>
   </data>
+  <data name="InfraUriError_EscapeCharacter" xml:space="preserve">
+    <value>Error parsing URI parameters, incomplete escape sequence</value>
+  </data>
+  <data name="InfraUriError_QuoteInMiddle" xml:space="preserve">
+    <value>Error parsing URI parameters, quotes must follow entire field</value>
+  </data>
+  <data name="InfraUriError_QuotesMismatch" xml:space="preserve">
+    <value>Error parsing URI parameters, quotes don't match</value>
+  </data>
+  <data name="InfraUriError_QuotesMultiple" xml:space="preserve">
+    <value>Error parsing URI parameters, multiple quotes seen for same field</value>
+  </data>
+  <data name="InfraUriError_QuotesNotClosed" xml:space="preserve">
+    <value>Error parsing URI parameters, quotes not terminated</value>
+  </data>
   <data name="OptionsError" xml:space="preserve">
     <value>Problem with the command line.</value>
+  </data>
+  <data name="SerialOpenError_AuthorityNotSupported" xml:space="preserve">
+    <value>Cannot connect to a remote host with ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidBaud" xml:space="preserve">
+    <value>Invalid baud rate given for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidDataBits" xml:space="preserve">
+    <value>Invalid data bits given for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidHandshake" xml:space="preserve">
+    <value>Invalid handshake specified for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidParity" xml:space="preserve">
+    <value>Invalid parity specified for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidPort" xml:space="preserve">
+    <value>Invalid port given for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidStopBits" xml:space="preserve">
+    <value>Invalid parameter for stop bits for ser:</value>
+  </data>
+  <data name="SerialOpenError_InvalidUri" xml:space="preserve">
+    <value>Invalid URI specifier for ser:port,baud,data,parity,stop[,hshake]</value>
   </data>
   <data name="TcpOpenError_InvalidHostName" xml:space="preserve">
     <value>Invalid host name: {0}</value>

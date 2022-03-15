@@ -219,6 +219,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr..
+        /// </summary>
+        internal static string Help415_InputSerial {
+            get {
+                return ResourceManager.GetString("Help415_InputSerial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The exit code of the application indicates if the command run with success or there was a problem..
         /// </summary>
         internal static string Help800_ExitCodes {

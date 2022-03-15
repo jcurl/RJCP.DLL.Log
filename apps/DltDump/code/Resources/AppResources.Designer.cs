@@ -295,11 +295,128 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error parsing URI parameters, incomplete escape sequence.
+        /// </summary>
+        internal static string InfraUriError_EscapeCharacter {
+            get {
+                return ResourceManager.GetString("InfraUriError_EscapeCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing URI parameters, quotes must follow entire field.
+        /// </summary>
+        internal static string InfraUriError_QuoteInMiddle {
+            get {
+                return ResourceManager.GetString("InfraUriError_QuoteInMiddle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing URI parameters, quotes don&apos;t match.
+        /// </summary>
+        internal static string InfraUriError_QuotesMismatch {
+            get {
+                return ResourceManager.GetString("InfraUriError_QuotesMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing URI parameters, multiple quotes seen for same field.
+        /// </summary>
+        internal static string InfraUriError_QuotesMultiple {
+            get {
+                return ResourceManager.GetString("InfraUriError_QuotesMultiple", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing URI parameters, quotes not terminated.
+        /// </summary>
+        internal static string InfraUriError_QuotesNotClosed {
+            get {
+                return ResourceManager.GetString("InfraUriError_QuotesNotClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem with the command line..
         /// </summary>
         internal static string OptionsError {
             get {
                 return ResourceManager.GetString("OptionsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot connect to a remote host with ser:.
+        /// </summary>
+        internal static string SerialOpenError_AuthorityNotSupported {
+            get {
+                return ResourceManager.GetString("SerialOpenError_AuthorityNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid baud rate given for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidBaud {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidBaud", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid data bits given for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidDataBits {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidDataBits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid handshake specified for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidHandshake {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidHandshake", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid parity specified for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidParity {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidParity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid port given for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidPort {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid parameter for stop bits for ser:.
+        /// </summary>
+        internal static string SerialOpenError_InvalidStopBits {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidStopBits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid URI specifier for ser:port,baud,data,parity,stop[,hshake].
+        /// </summary>
+        internal static string SerialOpenError_InvalidUri {
+            get {
+                return ResourceManager.GetString("SerialOpenError_InvalidUri", resourceCulture);
             }
         }
         

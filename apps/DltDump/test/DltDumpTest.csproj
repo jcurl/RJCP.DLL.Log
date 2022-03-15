@@ -56,6 +56,7 @@
     <Compile Include="Domain\InputStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\ConnectSuccessEventArgs.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactoryTest.cs" />
+    <Compile Include="Domain\InputStream\DltSerialStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\DltTcpStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\FileOpenError.cs" />
     <Compile Include="Domain\InputStream\InvalidStreamFactory.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Infrastructure\Terminal\VirtualStdOut.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualTerminal.cs" />
     <Compile Include="Infrastructure\Text\FormatTest.cs" />
+    <Compile Include="Infrastructure\Uri\UriExtensionsTest.cs" />
     <Compile Include="Infrastructure\VersionTest.cs" />
     <Compile Include="Resources\ResourcesTest.cs" />
     <Compile Include="TestApplication.cs" />

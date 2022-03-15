@@ -173,6 +173,9 @@
   <data name="Help410_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>
+  <data name="Help415_InputSerial" xml:space="preserve">
+    <value>ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr.</value>
+  </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>
   </data>
