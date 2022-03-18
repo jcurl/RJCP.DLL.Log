@@ -49,15 +49,55 @@
     <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.2">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Constraints\Compiler\BNode.cs" />
+    <Compile Include="Constraints\Compiler\BooleanCompiler.cs" />
+    <Compile Include="Constraints\Compiler\BooleanIlGenerator.cs" />
+    <Compile Include="Constraints\Compiler\BOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchAlwaysOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchBaseOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchTargetOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchTargetSetBoolOperation.cs" />
+    <Compile Include="Constraints\Compiler\BranchTargetSetType.cs" />
+    <Compile Include="Constraints\Compiler\BTree.cs" />
+    <Compile Include="Constraints\Compiler\CheckOperation.cs" />
+    <Compile Include="Constraints\Compiler\ExpressionTreeBuilder.cs" />
+    <Compile Include="Constraints\Compiler\InvertOperation.cs" />
+    <Compile Include="Constraints\Compiler\IOperation.cs" />
+    <Compile Include="Constraints\Compiler\LabelGen.cs" />
+    <Compile Include="Constraints\Compiler\LabelGenFactory.cs" />
+    <Compile Include="Constraints\Compiler\ReturnOperation.cs" />
+    <Compile Include="Constraints\Constraint.cs" />
+    <Compile Include="Constraints\ConstraintCompiled.cs" />
+    <Compile Include="Constraints\ConstraintException.cs" />
+    <Compile Include="Constraints\ConstraintExprTree.cs" />
+    <Compile Include="Constraints\ConstraintList.cs" />
+    <Compile Include="Constraints\ConstraintOptions.cs" />
+    <Compile Include="Constraints\ConstraintTokens.cs" />
+    <Compile Include="Constraints\IConstraintBase.cs" />
+    <Compile Include="Constraints\IMatchConstraint.cs" />
+    <Compile Include="Constraints\InstanceOf.cs" />
+    <Compile Include="Constraints\None.cs" />
+    <Compile Include="Constraints\Null.cs" />
+    <Compile Include="Constraints\TextEquals.cs" />
+    <Compile Include="Constraints\TextIEquals.cs" />
+    <Compile Include="Constraints\TextIRegEx.cs" />
+    <Compile Include="Constraints\TextIString.cs" />
+    <Compile Include="Constraints\TextRegEx.cs" />
+    <Compile Include="Constraints\TextStartsWith.cs" />
+    <Compile Include="Constraints\TextString.cs" />
+    <Compile Include="Constraints\TypeOf.cs" />
     <Compile Include="Decoder\ITraceDecoder.cs" />
     <Compile Include="Decoder\TeraTermDecoder.cs" />
     <Compile Include="Decoder\TextDecoder.cs" />
     <Compile Include="Decoder\TextDecoderBase.cs" />
     <Compile Include="ITraceReader.cs" />
     <Compile Include="ITraceReaderFactory.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="LogTraceLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ITraceLine.cs" />

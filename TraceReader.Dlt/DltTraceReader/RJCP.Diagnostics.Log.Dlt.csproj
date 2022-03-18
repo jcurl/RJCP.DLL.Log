@@ -57,6 +57,14 @@
 
   <ItemGroup>
     <Compile Include="Collections\ReadOnlyArrayList.cs" />
+    <Compile Include="Constraints\Awake.cs" />
+    <Compile Include="Constraints\DltAppId.cs" />
+    <Compile Include="Constraints\DltConstraintExtensions.cs" />
+    <Compile Include="Constraints\DltCtxId.cs" />
+    <Compile Include="Constraints\DltEcuId.cs" />
+    <Compile Include="Constraints\DltIsVerbose.cs" />
+    <Compile Include="Constraints\DltMessageType.cs" />
+    <Compile Include="Constraints\DltSessionId.cs" />
     <Compile Include="Decoder\DltFileTraceDecoder.cs" />
     <Compile Include="Decoder\DltSerialTraceDecoder.cs" />
     <Compile Include="Decoder\DltTraceDecoder.cs" />

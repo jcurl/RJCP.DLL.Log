@@ -50,6 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Constraints\DltConstraintExtensionsTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCommonTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
     <Compile Include="Decoder\LineCacheAccessor.cs" />

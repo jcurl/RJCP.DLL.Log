@@ -52,6 +52,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Constraints\ConstraintTest.cs" />
+    <Compile Include="Constraints\Counter.cs" />
+    <Compile Include="Constraints\InvalidConstraint.cs" />
+    <Compile Include="Constraints\Position.cs" />
     <Compile Include="Decoder\EmptyTraceDecoder.cs" />
     <Compile Include="EmptyTraceReaderFactory.cs" />
     <Compile Include="IO\ReadLimitStream.cs" />
