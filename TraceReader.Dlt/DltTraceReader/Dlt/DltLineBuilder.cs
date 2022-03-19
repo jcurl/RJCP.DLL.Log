@@ -512,7 +512,7 @@
         /// When using this argument list, make sure that a copy is made before modifying the state of this object
         /// again, as the list is reused.
         /// </remarks>
-        public IReadOnlyList<IDltArg> Arguments { get; private set; }
+        public IReadOnlyList<IDltArg> Arguments { get; }
 
         /// <summary>
         /// Adds the given argument to the payload.

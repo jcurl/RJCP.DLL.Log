@@ -25,7 +25,7 @@
         /// Gets the length of the data bytes.
         /// </summary>
         /// <value>The length of the data bytes.</value>
-        public int DataBytesLength { get; private set; }
+        public int DataBytesLength { get; }
 
         /// <summary>
         /// Converts to string.

@@ -30,7 +30,7 @@
         [TestCase(0xFF, "ff")]
         public void OneElement(byte value, string output)
         {
-            byte[] arg = new byte[1] { value };
+            byte[] arg = { value };
             RawDltArg rawArg = new RawDltArg(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
         }
@@ -43,7 +43,7 @@
         [TestCase(0xFF, 0xFE, "ff fe")]
         public void TwoElements(byte v1, byte v2, string output)
         {
-            byte[] arg = new byte[2] { v1, v2 };
+            byte[] arg = { v1, v2 };
             RawDltArg rawArg = new RawDltArg(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
         }

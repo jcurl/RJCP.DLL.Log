@@ -65,9 +65,8 @@
 
         private async Task WriteDltPacket(Stream stream)
         {
-            DltTraceLineBase line;
             using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
-                line = await reader.GetLineAsync();
+                DltTraceLineBase line = await reader.GetLineAsync();
                 m_Factory.IsLine1(line, 0, 127);
                 Assert.That(line.Position, Is.EqualTo(0));
             }
@@ -117,10 +116,8 @@
 
         private async Task WriteDltPackets(Stream stream, int[] plen)
         {
-            DltTraceLineBase line;
-
             using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(stream)) {
-                line = await reader.GetLineAsync();
+                DltTraceLineBase line = await reader.GetLineAsync();
                 m_Factory.IsLine1(line, 0, 127);
                 Assert.That(line.Position, Is.EqualTo(0));
 
@@ -140,19 +137,16 @@
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPacketVersion2));
 
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
-                    DltTraceLineBase line;
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
 
-                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
-                        line = await reader.GetLineAsync();
+                    // The DLT packet is unknown, so it is skipped, looking for a valid packet, of which none can be
+                    // found. See the white paper `DLT.Format.Problems.md` which describes the problems and why
+                    // decoding this packet is almost hopeless and that decoding packets after this one is
+                    // implementation defined.
 
-                        // The DLT packet is unknown, so it is skipped, looking for a valid packet, of which none can be
-                        // found. See the white paper `DLT.Format.Problems.md` which describes the problems and why
-                        // decoding this packet is almost hopeless and that decoding packets after this one is
-                        // implementation defined.
-
-                        m_Factory.IsSkippedLine(line, DltTime.Default, l1);
-                    }
+                    m_Factory.IsSkippedLine(line, DltTime.Default, l1);
                 }
             }
         }
@@ -168,20 +162,18 @@
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltInvalidDataAtEnd));
 
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
-                    DltTraceLineBase line;
-                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
-                        line = await reader.GetLineAsync();
-                        m_Factory.IsLine2(line, 0, 127);
-                        Assert.That(line.Position, Is.EqualTo(0));
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+                    m_Factory.IsLine2(line, 0, 127);
+                    Assert.That(line.Position, Is.EqualTo(0));
 
-                        line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2, d);
-                        Assert.That(line.Position, Is.EqualTo(p1));
+                    line = await reader.GetLineAsync();
+                    m_Factory.IsSkippedLine(line, DltTestData.Time2, d);
+                    Assert.That(line.Position, Is.EqualTo(p1));
 
-                        line = await reader.GetLineAsync();
-                        Assert.That(line, Is.Null);
-                    }
+                    line = await reader.GetLineAsync();
+                    Assert.That(line, Is.Null);
                 }
             }
         }
@@ -197,20 +189,18 @@
                 if (maxBytes == 0) await m_Factory.WriteAsync(writer, nameof(WriteDltPartialDataAtEnd));
 
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
-                    DltTraceLineBase line;
-                    using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
-                        line = await reader.GetLineAsync();
-                        m_Factory.IsLine2(line, 0, 127);
-                        Assert.That(line.Position, Is.EqualTo(0));
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+                    m_Factory.IsLine2(line, 0, 127);
+                    Assert.That(line.Position, Is.EqualTo(0));
 
-                        line = await reader.GetLineAsync();
-                        m_Factory.IsSkippedLine(line, DltTestData.Time2, l2);
-                        Assert.That(line.Position, Is.EqualTo(l1));
+                    line = await reader.GetLineAsync();
+                    m_Factory.IsSkippedLine(line, DltTestData.Time2, l2);
+                    Assert.That(line.Position, Is.EqualTo(l1));
 
-                        line = await reader.GetLineAsync();
-                        Assert.That(line, Is.Null);
-                    }
+                    line = await reader.GetLineAsync();
+                    Assert.That(line, Is.Null);
                 }
             }
         }
@@ -224,13 +214,12 @@
             byte[] data = new byte[16 * 1024 * 1024];
             new Random().NextBytes(data);
 
-            using (Stream readStream = new ReadLimitStream(data, maxBytes)) {
+            using (Stream readStream = new ReadLimitStream(data, maxBytes))
+            using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                 DltTraceLineBase line;
-                using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
-                    do {
-                        line = await reader.GetLineAsync();
-                    } while (line != null);
-                }
+                do {
+                    line = await reader.GetLineAsync();
+                } while (line != null);
             }
         }
     }

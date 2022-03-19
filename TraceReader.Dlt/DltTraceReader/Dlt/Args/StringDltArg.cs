@@ -33,7 +33,7 @@
         /// Gets the DLT coding used when decoded, equivalently the coding to use for encoding.
         /// </summary>
         /// <value>The DLT coding for the string.</value>
-        public StringEncodingType Coding { get; private set; }
+        public StringEncodingType Coding { get; }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.

@@ -13,7 +13,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.
         /// </summary>
-        public DltSerialTraceDecoder() : base() { }
+        public DltSerialTraceDecoder() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.

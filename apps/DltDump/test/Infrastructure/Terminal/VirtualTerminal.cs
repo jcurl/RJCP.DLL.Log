@@ -7,20 +7,17 @@
     /// </summary>
     public class VirtualTerminal : ITerminal
     {
-        private readonly ITerminalOut m_TestErr = new VirtualStdErr();
-        private readonly ITerminalOut m_TestOut = new VirtualStdOut();
-
         /// <summary>
         /// The Standard Error test output writer.
         /// </summary>
         /// <value>The standard error test output writer.</value>
-        public ITerminalOut StdErr { get { return m_TestErr; } }
+        public ITerminalOut StdErr { get; } = new VirtualStdErr();
 
         /// <summary>
         /// The Standard Output, test output writer.
         /// </summary>
         /// <value>The standard output, test output writer.</value>
-        public ITerminalOut StdOut { get { return m_TestOut; } }
+        public ITerminalOut StdOut { get; } = new VirtualStdOut();
 
         /// <summary>
         /// Gets the width of the terminal.

@@ -60,9 +60,8 @@
 
         private static async Task<DltTraceLineBase> WriteDltPacket(DltFactory factory, Stream stream)
         {
-            DltTraceLineBase line;
             using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
-                line = await reader.GetLineAsync();
+                DltTraceLineBase line = await reader.GetLineAsync();
 
                 // This is the only way to check the length, that this was the only packet decoded.
                 DltTraceLineBase lastLine = await reader.GetLineAsync();

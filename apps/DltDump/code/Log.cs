@@ -8,7 +8,7 @@
 
     public static class Log
     {
-        public static LogSource App { get; private set; }
+        public static LogSource App { get; }
 
         static Log()
         {

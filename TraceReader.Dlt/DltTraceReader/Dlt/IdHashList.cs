@@ -21,9 +21,9 @@
 
         private struct IdEntry
         {
-            public int Identifier { get; private set; }
+            public int Identifier { get; }
 
-            public string Value { get; private set; }
+            public string Value { get; }
 
             public IdEntry(int identifier, string value)
             {

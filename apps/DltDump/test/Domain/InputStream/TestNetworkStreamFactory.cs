@@ -27,9 +27,7 @@
             if (!createArgs.Succeed) throw new InputStreamException("TestNetworkStream creation failed");
 
             TestNetworkStream inputStream = new TestNetworkStream();
-            inputStream.ConnectEvent += (s, e) => {
-                OnConnectEvent(s, e);
-            };
+            inputStream.ConnectEvent += OnConnectEvent;
             return inputStream;
         }
     }

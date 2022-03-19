@@ -25,18 +25,18 @@
         /// This is a string, that should normally present the text log that was emitted by the device being logged.
         /// That is, all metadata, such as timestamps, severity and other information is not present in this string.
         /// </value>
-        public string Text { get; private set; }
+        public string Text { get; }
 
         /// <summary>
         /// The current line in the log file.
         /// </summary>
         /// <value>This is the line number that this line of text was found on.</value>
-        public int Line { get; private set; }
+        public int Line { get; }
 
         /// <summary>
         /// The position in the file.
         /// </summary>
         /// <value>This is the offset in the file where the line begins.</value>
-        public long Position { get; private set; }
+        public long Position { get; }
     }
 }

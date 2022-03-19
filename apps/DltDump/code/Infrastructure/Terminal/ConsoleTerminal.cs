@@ -8,8 +8,6 @@
     public class ConsoleTerminal : ITerminal
     {
         private readonly bool m_IsRedirected;
-        private readonly ITerminalOut m_StdOut = new StdOut();
-        private readonly ITerminalOut m_StdErr = new StdErr();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleTerminal"/> class.
@@ -23,13 +21,13 @@
         /// The Standard Output, output writer.
         /// </summary>
         /// <value>The standard output, output writer.</value>
-        public ITerminalOut StdOut { get { return m_StdOut; } }
+        public ITerminalOut StdOut { get; } = new StdOut();
 
         /// <summary>
         /// The Standard Error output writer.
         /// </summary>
         /// <value>The standard error output writer.</value>
-        public ITerminalOut StdErr { get { return m_StdErr; } }
+        public ITerminalOut StdErr { get; } = new StdErr();
 
         /// <summary>
         /// Gets the width of the terminal.

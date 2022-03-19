@@ -15,7 +15,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
         /// </summary>
-        public DltFileTraceDecoder() : base() { }
+        public DltFileTraceDecoder() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.

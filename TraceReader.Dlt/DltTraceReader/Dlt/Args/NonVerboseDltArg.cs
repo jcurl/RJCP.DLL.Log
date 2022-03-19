@@ -25,7 +25,7 @@
         /// Gets the message identifier.
         /// </summary>
         /// <value>The message identifier.</value>
-        public int MessageId { get; private set; }
+        public int MessageId { get; }
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.
