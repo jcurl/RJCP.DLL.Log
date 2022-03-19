@@ -62,6 +62,7 @@
     <Compile Include="Constraints\DltConstraintExtensions.cs" />
     <Compile Include="Constraints\DltCtxId.cs" />
     <Compile Include="Constraints\DltEcuId.cs" />
+    <Compile Include="Constraints\DltIsControl.cs" />
     <Compile Include="Constraints\DltIsVerbose.cs" />
     <Compile Include="Constraints\DltMessageType.cs" />
     <Compile Include="Constraints\DltSessionId.cs" />

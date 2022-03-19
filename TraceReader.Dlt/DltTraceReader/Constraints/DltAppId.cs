@@ -6,7 +6,7 @@
     /// <summary>
     /// A check constraint against a DLT Application Identifier <see cref="DltTraceLineBase.ApplicationId"/>.
     /// </summary>
-    public class DltAppId : IMatchConstraint
+    public sealed class DltAppId : IMatchConstraint
     {
         private readonly string m_AppId;
 

@@ -73,6 +73,16 @@
         }
 
         /// <summary>
+        /// A check constraint against the DLT Type <see cref="DltType"/> of control messages.
+        /// </summary>
+        /// <param name="constraint">The <see cref="Constraint"/> to apply the expression for.</param>
+        /// <returns>The <see cref="Constraint"/> object for chaining.</returns>
+        public static Constraint DltIsControl(this Constraint constraint)
+        {
+            return constraint.Expr(new DltIsControl());
+        }
+
+        /// <summary>
         /// A check constraint against the DLT <see cref="DltTraceLineBase.SessionId"/> flag.
         /// </summary>
         /// <param name="constraint">The <see cref="Constraint"/> to apply the expression for.</param>

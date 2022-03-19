@@ -5,7 +5,7 @@
     /// <summary>
     /// A check constraint against a DLT Application Identifier <see cref="DltTraceLineBase.SessionId"/>.
     /// </summary>
-    public class DltSessionId : IMatchConstraint
+    public sealed class DltSessionId : IMatchConstraint
     {
         private readonly int m_SessionId;
 

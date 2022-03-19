@@ -6,7 +6,7 @@
     /// <summary>
     /// A check constraint against a DLT ECU Id <see cref="DltTraceLineBase.EcuId"/>.
     /// </summary>
-    public class DltEcuId : IMatchConstraint
+    public sealed class DltEcuId : IMatchConstraint
     {
         private readonly string m_EcuId;
 

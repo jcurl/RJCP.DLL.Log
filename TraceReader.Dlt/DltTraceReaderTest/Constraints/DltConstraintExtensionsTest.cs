@@ -148,10 +148,41 @@
                 .SetEcuId("ECUX")
                 .SetApplicationId("APP1")
                 .SetContextId("CTX1")
+                .SetDltType(DltType.CONTROL_RESPONSE)
                 .SetControlPayload(new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "20w34.1"))
                 .GetResult();
             Constraint c = new Constraint().DltIsVerbose(isVerbose);
             Assert.That(c.Check(line), Is.EqualTo(match));
+        }
+
+        [Test]
+        public void DltIsControl()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            DltTraceLineBase line = builder
+                .SetEcuId("ECUX")
+                .SetApplicationId("APP1")
+                .SetContextId("CTX1")
+                .SetDltType(DltType.CONTROL_RESPONSE)
+                .SetControlPayload(new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "20w34.1"))
+                .GetResult();
+            Constraint c = new Constraint().DltIsControl();
+            Assert.That(c.Check(line), Is.True);
+        }
+
+        [Test]
+        public void DltIsControlFalse()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            DltTraceLineBase line = builder
+                .SetEcuId("ECUX")
+                .SetApplicationId("APP1")
+                .SetContextId("CTX1")
+                .SetDltType(DltType.LOG_FATAL)
+                .SetIsVerbose(true)
+                .GetResult();
+            Constraint c = new Constraint().DltIsControl();
+            Assert.That(c.Check(line), Is.False);
         }
 
         [Test]

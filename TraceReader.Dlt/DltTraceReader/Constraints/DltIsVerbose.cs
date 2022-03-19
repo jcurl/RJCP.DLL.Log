@@ -5,7 +5,7 @@
     /// <summary>
     /// A check constraint against the DLT <see cref="DltLineFeatures.IsVerbose"/> flag.
     /// </summary>
-    public class DltIsVerbose : IMatchConstraint
+    public sealed class DltIsVerbose : IMatchConstraint
     {
         private readonly bool m_IsVerbose;
 

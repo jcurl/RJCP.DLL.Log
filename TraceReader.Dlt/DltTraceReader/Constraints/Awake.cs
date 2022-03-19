@@ -6,7 +6,7 @@
     /// <summary>
     /// Constraint to check if the device has been awake for a number of milliseconds.
     /// </summary>
-    public class Awake : IMatchConstraint
+    public sealed class Awake : IMatchConstraint
     {
         private readonly int m_AwakeMilliseconds;
 
