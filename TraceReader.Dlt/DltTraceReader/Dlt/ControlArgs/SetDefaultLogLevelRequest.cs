@@ -48,9 +48,9 @@
         public override string ToString()
         {
             if (string.IsNullOrEmpty(ComInterface))
-                return string.Format("[set_default_log_level] {0}", LogLevelExtension.GetDescription(LogLevel));
+                return string.Format("[set_default_log_level] {0}", LogLevel.GetDescription());
 
-            return string.Format("[set_default_log_level] {0} {1}", LogLevelExtension.GetDescription(LogLevel), ComInterface);
+            return string.Format("[set_default_log_level] {0} {1}", LogLevel.GetDescription(), ComInterface);
         }
     }
 }

@@ -73,17 +73,17 @@
         {
             if (string.IsNullOrEmpty(ComInterface)) {
                 if (string.IsNullOrEmpty(ApplicationId) && string.IsNullOrEmpty(ContextId))
-                    return string.Format("[set_log_level] {0}", LogLevelExtension.GetDescription(LogLevel));
+                    return string.Format("[set_log_level] {0}", LogLevel.GetDescription());
 
                 return string.Format("[set_log_level] {0} {1} ({2})",
-                    LogLevelExtension.GetDescription(LogLevel), ApplicationId, ContextId);
+                    LogLevel.GetDescription(), ApplicationId, ContextId);
             }
 
             if (string.IsNullOrEmpty(ApplicationId) && string.IsNullOrEmpty(ContextId))
-                return string.Format("[set_log_level] {0} {1}", LogLevelExtension.GetDescription(LogLevel), ComInterface);
+                return string.Format("[set_log_level] {0} {1}", LogLevel.GetDescription(), ComInterface);
 
             return string.Format("[set_log_level] {0} {1} ({2}) {3}",
-                LogLevelExtension.GetDescription(LogLevel), ApplicationId, ContextId, ComInterface);
+                LogLevel.GetDescription(), ApplicationId, ContextId, ComInterface);
         }
     }
 }

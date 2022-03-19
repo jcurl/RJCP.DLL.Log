@@ -35,7 +35,7 @@
         public override string ToString()
         {
             return string.Format("[get_default_log_level {0}] {1}",
-                ToString(Status), LogLevelExtension.GetDescription(LogLevel));
+                ToString(Status), LogLevel.GetDescription());
         }
     }
 }
