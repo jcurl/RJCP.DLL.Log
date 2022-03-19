@@ -77,9 +77,9 @@
         private static string ToString(TimeSpan timeSpan)
         {
             if (timeSpan.Ticks < 0)
-                return string.Format("-{0}", timeSpan.ToString(@"hh\:mm"));
+                return string.Format("-{0:hh\\:mm}", timeSpan);
 
-            return string.Format("+{0}", timeSpan.ToString(@"hh\:mm"));
+            return string.Format("+{0:hh\\:mm}", timeSpan);
         }
     }
 }
