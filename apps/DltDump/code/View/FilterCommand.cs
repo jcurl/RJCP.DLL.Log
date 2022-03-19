@@ -34,6 +34,11 @@
 
         private static void BuildFilter(CmdOptions options, FilterConfig config)
         {
+            if (options.None) {
+                config.None();
+                return;
+            }
+
             HashSet<string> identifiers = new HashSet<string>();
             HashSet<int> sessionids = new HashSet<int>();
 

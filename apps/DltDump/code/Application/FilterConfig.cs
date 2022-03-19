@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Infrastructure.Constraints;
     using Infrastructure.Dlt;
     using RJCP.Diagnostics.Log.Constraints;
 
@@ -55,6 +56,7 @@
         private bool m_Verbose;
         private bool m_NonVerbose;
         private bool m_Control;
+        private bool m_None;
 
         private static Constraint AddConstraint(Constraint constraint, IMatchConstraint match)
         {
@@ -169,6 +171,14 @@
         }
 
         /// <summary>
+        /// Filter so that no messages match.
+        /// </summary>
+        public void None()
+        {
+            m_None = true;
+        }
+
+        /// <summary>
         /// Gets the filter set from the other filter methods.
         /// </summary>
         /// <returns>
@@ -177,9 +187,10 @@
         /// </returns>
         public Constraint GetFilter()
         {
-            bool filtered = false;
+            if (m_None) return new Constraint().Expr(new BlockAll());
 
             Constraint constraint = new Constraint();
+            bool filtered = false;
             if (m_EcuId != null) {
                 constraint.Expr(m_EcuId);
                 filtered = true;

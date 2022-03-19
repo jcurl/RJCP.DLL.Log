@@ -828,6 +828,26 @@
                 }), Is.EqualTo(ExitCode.OptionsError));
             }
         }
+
+        [Test]
+        public void FilterNone()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("none"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.None, Is.True);
+            }
+        }
         #endregion
     }
 }

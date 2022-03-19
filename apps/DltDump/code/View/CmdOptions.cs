@@ -162,6 +162,15 @@
         public bool ControlMessage { get; private set; }
 
         /// <summary>
+        /// Gets a value indicating if all messages should be discarded.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if all messages should be discarded; ptoerwise <see langword="false"/>.
+        /// </value>
+        [Option("none")]
+        public bool None { get; private set; }
+
+        /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
         /// <value>The input DLT streams to read.</value>
