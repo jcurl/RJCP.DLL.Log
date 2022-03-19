@@ -14,7 +14,7 @@
             private bool m_HasStandardHeader;
             private bool m_HasExtendedHeader;
 
-            private static readonly byte[] SerialMarker = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
+            private static readonly byte[] SerialMarker = { 0x44, 0x4C, 0x53, 0x01 };
             private readonly byte[] m_StorageHeader = new byte[16];
             private readonly byte[] m_Packet = new byte[PacketSize];
             private int m_ExtendedHeaderPos = 0;

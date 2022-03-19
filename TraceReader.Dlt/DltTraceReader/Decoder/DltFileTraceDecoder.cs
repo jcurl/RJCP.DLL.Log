@@ -36,7 +36,7 @@
         public DltFileTraceDecoder(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
             : base(verboseDecoder, nonVerboseDecoder, controlDecoder, lineBuilder) { }
 
-        private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x54, 0x01 };
+        private readonly static byte[] marker = { 0x44, 0x4C, 0x54, 0x01 };
 
         /// <summary>
         /// Searches for the start of the DLT frame.

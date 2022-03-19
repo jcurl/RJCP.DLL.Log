@@ -5,7 +5,7 @@
 
     internal static class HexConvert
     {
-        private readonly static string[] FirstByteConvert = new string[] {
+        private readonly static string[] FirstByteConvert = {
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c", "0d", "0e", "0f",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "1a", "1b", "1c", "1d", "1e", "1f",
             "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "2a", "2b", "2c", "2d", "2e", "2f",
@@ -23,7 +23,7 @@
             "e0", "e1", "e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "ea", "eb", "ec", "ed", "ee", "ef",
             "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff"};
 
-        private readonly static string[] ByteConvert = new string[] {
+        private readonly static string[] ByteConvert = {
             " 00", " 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09", " 0a", " 0b", " 0c", " 0d", " 0e", " 0f",
             " 10", " 11", " 12", " 13", " 14", " 15", " 16", " 17", " 18", " 19", " 1a", " 1b", " 1c", " 1d", " 1e", " 1f",
             " 20", " 21", " 22", " 23", " 24", " 25", " 26", " 27", " 28", " 29", " 2a", " 2b", " 2c", " 2d", " 2e", " 2f",
@@ -41,7 +41,7 @@
             " e0", " e1", " e2", " e3", " e4", " e5", " e6", " e7", " e8", " e9", " ea", " eb", " ec", " ed", " ee", " ef",
             " f0", " f1", " f2", " f3", " f4", " f5", " f6", " f7", " f8", " f9", " fa", " fb", " fc", " fd", " fe", " ff"};
 
-        private readonly static string[] FirstByteConvertUpper = new string[] {
+        private readonly static string[] FirstByteConvertUpper = {
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "0D", "0E", "0F",
             "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "1A", "1B", "1C", "1D", "1E", "1F",
             "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "2A", "2B", "2C", "2D", "2E", "2F",
@@ -59,7 +59,7 @@
             "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9", "EA", "EB", "EC", "ED", "EE", "EF",
             "F0", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "FA", "FB", "FC", "FD", "FE", "FF"};
 
-        private readonly static string[] ByteConvertUpper = new string[] {
+        private readonly static string[] ByteConvertUpper = {
             " 00", " 01", " 02", " 03", " 04", " 05", " 06", " 07", " 08", " 09", " 0A", " 0B", " 0C", " 0D", " 0E", " 0F",
             " 10", " 11", " 12", " 13", " 14", " 15", " 16", " 17", " 18", " 19", " 1A", " 1B", " 1C", " 1D", " 1E", " 1F",
             " 20", " 21", " 22", " 23", " 24", " 25", " 26", " 27", " 28", " 29", " 2A", " 2B", " 2C", " 2D", " 2E", " 2F",

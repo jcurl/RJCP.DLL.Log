@@ -16,7 +16,7 @@
         // to test (the marker is used to find the next packet, instead of the content of a packet potentially being
         // interpreted as the start of a new packet).
 
-        private static readonly int[] ReadChunks = new[] { 0, 1, 2, 3, 5, 10, 100 };
+        private static readonly int[] ReadChunks = { 0, 1, 2, 3, 5, 10, 100 };
         private readonly DltFactory m_Factory;
 
         public DltTraceDecoderCorruptTest(DltFactoryType factoryType)
@@ -99,7 +99,7 @@
                 await m_Factory.WriteAsync(writer, nameof(InvalidLengthTooShort));
 
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, new int[] { 4, 16, 4, 500 })) {
+                using (Stream readStream = new ReadLimitStream(stream, new[] { 4, 16, 4, 500 })) {
                     DltTraceLineBase line;
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();
@@ -131,7 +131,7 @@
                 await m_Factory.WriteAsync(writer, nameof(InvalidLengthTooLong));
 
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, new int[] { 4, 16, 4, 500 })) {
+                using (Stream readStream = new ReadLimitStream(stream, new[] { 4, 16, 4, 500 })) {
                     DltTraceLineBase line;
                     using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                         line = await reader.GetLineAsync();

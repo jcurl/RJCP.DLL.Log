@@ -41,7 +41,7 @@
                 CommandFactorySetup(cmd => { command = cmd; });
 
                 // We don't need to test the different types, that's done in CommandLineTest.
-                CommandLine.Run(new string[] { LongOpt("help") });
+                CommandLine.Run(new[] { LongOpt("help") });
                 Assert.That(command, Is.TypeOf<HelpCommand>());
 
                 HelpCommand helpCommand = (HelpCommand)command;
@@ -57,7 +57,7 @@
                 CommandFactorySetup(cmd => { command = cmd; });
 
                 // We don't need to test the different types, that's done in CommandLineTest.
-                CommandLine.Run(new string[] { LongOpt("version") });
+                CommandLine.Run(new[] { LongOpt("version") });
                 Assert.That(command, Is.TypeOf<HelpCommand>());
 
                 HelpCommand helpCommand = (HelpCommand)command;
@@ -74,7 +74,7 @@
                 ICommand command = null;
                 CommandFactorySetup(cmd => { command = cmd; });
 
-                CommandLine.Run(new string[] { EmptyFile });
+                CommandLine.Run(new[] { EmptyFile });
                 Assert.That(command, Is.TypeOf<FilterCommand>());
             }
         }

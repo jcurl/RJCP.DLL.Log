@@ -8,7 +8,7 @@
         [Test]
         public void UnknownDltArg()
         {
-            byte[] data = new byte[] { 0x01, 0x23, 0x45, 0x67, 0x89 };
+            byte[] data = { 0x01, 0x23, 0x45, 0x67, 0x89 };
             UnknownVerboseDltArg arg = new UnknownVerboseDltArg(data, false);
             Assert.That(arg.Data, Is.EqualTo(data[4..]));
             Assert.That(arg.IsBigEndian, Is.False);

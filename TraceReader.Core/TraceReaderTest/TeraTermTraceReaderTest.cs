@@ -32,7 +32,7 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "TestResources", "TextFiles", "TeraTerm.txt");
             using (ITraceReader<LogTraceLine> reader = await new TeraTermTraceReaderFactory().CreateAsync(path)) {
-                LogTraceLine[] expected = new[] {
+                LogTraceLine[] expected = {
                     new LogTraceLine("login: root", 0, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 861) },
                     new LogTraceLine("Password: ", 1, 0)
@@ -70,7 +70,7 @@
         {
             string path = Path.Combine(Deploy.TestDirectory, "TestResources", "TextFiles", "TextFile.txt");
             using (ITraceReader<LogTraceLine> reader = await new TeraTermTraceReaderFactory().CreateAsync(path)) {
-                LogTraceLine[] expected = new[] {
+                LogTraceLine[] expected = {
                     new LogTraceLine("This is Line 1", 0, 0)
                         { TimeStamp = new DateTime(1970, 1, 1, 0, 0, 0) },
                     new LogTraceLine("And now for Line 2.", 1, 0)

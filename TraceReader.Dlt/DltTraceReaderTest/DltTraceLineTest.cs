@@ -99,7 +99,7 @@
         public void TraceLineWithArgumentsArrayReadOnlyRemove()
         {
             IDltArg arg = new StringDltArg("string");
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg });
+            DltTraceLine line = new DltTraceLine(new[] { arg });
             Assert.That(() => {
                 line.Arguments.Remove(arg);
             }, Throws.TypeOf<NotSupportedException>());
@@ -118,7 +118,7 @@
         public void TraceLineWithArgumentsArrayReadOnlyCopyTo()
         {
             IDltArg arg = new StringDltArg("string");
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg });
+            DltTraceLine line = new DltTraceLine(new[] { arg });
 
             IDltArg[] args = new IDltArg[1];
             line.Arguments.CopyTo(args, 0);
@@ -137,7 +137,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg1, arg2 });
+            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
             Assert.That(line.Arguments.Contains(new BinaryIntDltArg(10, 1)), Is.False);
             Assert.That(line.Arguments.Contains(arg1), Is.True);
             Assert.That(line.Arguments.Contains(arg2), Is.True);
@@ -148,7 +148,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg1, arg2 });
+            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
             Assert.That(line.Arguments.IndexOf(new BinaryIntDltArg(10, 1)), Is.EqualTo(-1));
             Assert.That(line.Arguments.IndexOf(arg1), Is.EqualTo(0));
             Assert.That(line.Arguments.IndexOf(arg2), Is.EqualTo(1));
@@ -159,7 +159,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg1, arg2 });
+            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
             Assert.That(line.Arguments[0], Is.EqualTo(arg1));
             Assert.That(line.Arguments[1], Is.EqualTo(arg2));
         }

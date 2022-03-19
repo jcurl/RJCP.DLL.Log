@@ -43,7 +43,7 @@
 
                 // Ensures that CommandLine.Run calls the factory given the options. It only returns the error code,
                 // because it is not allowed to call the command factory.
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("invalidoption")
                 }), Is.EqualTo(ExitCode.OptionsError));
                 Assert.That(cmdOptions, Is.Null);
@@ -73,7 +73,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("help")
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Help, Is.True);
@@ -88,7 +88,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('?')
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Help, Is.True);
@@ -103,7 +103,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("version")
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Help, Is.False);
@@ -118,7 +118,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("version"), ShortOpt('?')
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Help, Is.True);
@@ -133,7 +133,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("log")
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Log, Is.True);

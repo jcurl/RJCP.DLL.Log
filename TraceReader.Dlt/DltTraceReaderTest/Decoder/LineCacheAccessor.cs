@@ -48,7 +48,7 @@
         public void Append(ReadOnlySpan<byte> buffer)
         {
             var instance = Expression.Constant(PrivateTargetObject);
-            var method = AccType.ReferencedType.GetMethod(nameof(Append), new Type[] { typeof(ReadOnlySpan<byte>) });
+            var method = AccType.ReferencedType.GetMethod(nameof(Append), new[] { typeof(ReadOnlySpan<byte>) });
             var parameter = Expression.Parameter(typeof(ReadOnlySpan<byte>), nameof(buffer));
             var call = Expression.Call(instance, method, parameter);
             var expression = Expression.Lambda<AppendDelegate>(call, parameter);

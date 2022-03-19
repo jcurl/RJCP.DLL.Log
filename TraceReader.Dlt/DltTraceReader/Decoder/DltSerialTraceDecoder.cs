@@ -23,7 +23,7 @@
         /// </param>
         public DltSerialTraceDecoder(bool online) : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
 
-        private readonly static byte[] marker = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
+        private readonly static byte[] marker = { 0x44, 0x4C, 0x53, 0x01 };
 
         /// <summary>
         /// Searches for the start of the DLT frame.

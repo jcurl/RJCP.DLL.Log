@@ -37,12 +37,12 @@
             return Append(sb).ToString();
         }
 
-        private static readonly string[][] Nibble = new[] {
-            new string[] {
+        private static readonly string[][] Nibble = {
+            new[] {
                 "0b0000", "0b0001", "0b0010", "0b0011", "0b0100", "0b0101", "0b0110", "0b0111",
                 "0b1000", "0b1001", "0b1010", "0b1011", "0b1100", "0b1101", "0b1110", "0b1111"
             },
-            new string[] {
+            new[] {
                 " 0000", " 0001", " 0010", " 0011", " 0100", " 0101", " 0110", " 0111",
                 " 1000", " 1001", " 1010", " 1011", " 1100", " 1101", " 1110", " 1111"
             }

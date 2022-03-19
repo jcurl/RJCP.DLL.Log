@@ -58,7 +58,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     file
                 }), Is.EqualTo(ExitCode.NoFilesProcessed));
 
@@ -80,7 +80,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt"
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
@@ -96,7 +96,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
@@ -116,7 +116,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt", "EmptyFile2.dlt"
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(2));
@@ -132,7 +132,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     EmptyFile, EmptyFile2
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(2));
@@ -149,7 +149,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     new Uri(EmptyFile).AbsoluteUri
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
@@ -166,7 +166,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("position"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
@@ -184,7 +184,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
 
@@ -211,7 +211,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", option), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
 
@@ -230,7 +230,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", "foo"), EmptyFile
                 }), Is.EqualTo(ExitCode.OptionsError));
             }
@@ -257,7 +257,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("retries", count.ToString()), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.NoFilesProcessed));
 
@@ -287,7 +287,7 @@
                 CommandFactorySetup(opt => cmdOptions = opt);
 
                 // Tests that a retries of -1 results in infinite retries, even after successful connects.
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("retries", "-1"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
 
@@ -310,7 +310,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -331,7 +331,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, LongOpt("string"), "foo", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -352,7 +352,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -373,7 +373,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, LongOpt("regex"), "^foo$", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -396,7 +396,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, LongOpt("regex"), regex, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -418,7 +418,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, ShortOpt('i'), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -439,7 +439,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -461,7 +461,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), ecuId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -481,7 +481,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -501,7 +501,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), "AAAA,ECU1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -523,7 +523,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), appId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -543,7 +543,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -563,7 +563,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), "AAAA,APP1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -585,7 +585,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), ctxId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -605,7 +605,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -625,7 +625,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), "AAAA,CTX1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -646,7 +646,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), session, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -666,7 +666,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid", "-1"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -686,7 +686,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("verbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -706,7 +706,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("verbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -726,7 +726,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("nonverbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -746,7 +746,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("nonverbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -766,7 +766,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("control"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -786,7 +786,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("control"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
@@ -806,7 +806,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), "abc", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.OptionsError));
             }
@@ -823,7 +823,7 @@
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup(opt => cmdOptions = opt);
 
-                Assert.That(CommandLine.Run(new string[] {
+                Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), "6000000000", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.OptionsError));
             }

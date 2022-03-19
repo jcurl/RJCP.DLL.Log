@@ -18,8 +18,8 @@
         // error conditions here as it is implementation defined, and therefore it makes a difference if there is a
         // marker at the start of the packet or not.
 
-        private static readonly int[] ReadChunks = new[] { 0, 1, 2, 3, 5, 10, 100 };
-        private static readonly int[] ReadChunksMin = new[] { 0, 100 };
+        private static readonly int[] ReadChunks = { 0, 1, 2, 3, 5, 10, 100 };
+        private static readonly int[] ReadChunksMin = { 0, 100 };
         private readonly DltFactory m_Factory;
 
         public DltTraceDecoderCommonTest(DltFactoryType factoryType)
@@ -57,7 +57,7 @@
 
                 m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
                 using (Stream stream = writer.Stream())
-                using (Stream readStream = new ReadLimitStream(stream, new int[] { 4, 12, 10, 4, 2, 1, 1, 5, 1, 1, 1, 1 })) {
+                using (Stream readStream = new ReadLimitStream(stream, new[] { 4, 12, 10, 4, 2, 1, 1, 5, 1, 1, 1, 1 })) {
                     await WriteDltPacket(readStream);
                 }
             }

@@ -15,7 +15,7 @@
     {
         private const string AppResources = "RJCP.App.DltDump.Resources.AppResources";
 
-        private static readonly CultureInfo[] Cultures = new CultureInfo[] {
+        private static readonly CultureInfo[] Cultures = {
             new CultureInfo("en"),
             new CultureInfo("en-US"),    // Doesn't exist - inherit
             new CultureInfo("en-GB"),    // Doesn't exist - inherit

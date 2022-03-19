@@ -32,7 +32,7 @@
         }
 
         [TestCase("Lorem ipsum dolor sit amet, duo accumsan scripserit ad", false, new string[0], TestName = "Console_Write")]
-        [TestCase("Lorem ipsum dolor sit amet, duo accumsan {0} ad", true, new string[] { "scripserit" }, TestName = "Console_WriteFormat")]
+        [TestCase("Lorem ipsum dolor sit amet, duo accumsan {0} ad", true, new[] { "scripserit" }, TestName = "Console_WriteFormat")]
         public void ConsoleWrite(string messageDisplayed, bool format, string[] parameters)
         {
             TextWriter originalOut = GetOriginalOut();
@@ -53,7 +53,7 @@
         }
 
         [TestCase("Lorem ipsum dolor sit amet, duo accumsan scripserit ad", false, new string[0], TestName = "Console_WriteLine")]
-        [TestCase("Lorem ipsum dolor sit amet, duo accumsan {0} ad", true, new string[] { "scripserit" }, TestName = "Console_WriteLineFormat")]
+        [TestCase("Lorem ipsum dolor sit amet, duo accumsan {0} ad", true, new[] { "scripserit" }, TestName = "Console_WriteLineFormat")]
         public void ConsoleWriteLine(string message, bool format, string[] parameters)
         {
             TextWriter originalOut = GetOriginalOut();

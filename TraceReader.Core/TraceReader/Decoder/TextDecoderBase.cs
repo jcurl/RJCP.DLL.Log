@@ -184,7 +184,7 @@
             T line = GetLine(m_LineBuffer.AsSpan(0, m_Offset), m_Position);
             m_Offset = 0;
             m_SkipCrLf = false;
-            return new T[] { line };
+            return new[] { line };
         }
 
         /// <summary>

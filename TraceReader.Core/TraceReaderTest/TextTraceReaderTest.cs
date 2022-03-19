@@ -46,7 +46,7 @@ namespace RJCP.Diagnostics.Log
             Assert.That(line, Is.Null);
         }
 
-        static readonly int[] ReadChunks = new[] { 0, 1, 2, 3, 5, 10, 100 };
+        static readonly int[] ReadChunks = { 0, 1, 2, 3, 5, 10, 100 };
 
         [TestCaseSource(nameof(ReadChunks))]
         public async Task TextStreamLinux(int maxBytes)
@@ -54,7 +54,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\nLine2\nLin3\n");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 6),
                     new TraceLine("Lin3", 2, 12)
@@ -69,7 +69,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\r\nLine2\r\nLin3\r\n");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 7),
                     new TraceLine("Lin3", 2, 14)
@@ -84,7 +84,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\rLine2\rLin3\r");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 6),
                     new TraceLine("Lin3", 2, 12)
@@ -99,7 +99,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\rLine2\nLin3\r\n");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 6),
                     new TraceLine("Lin3", 2, 12)
@@ -114,7 +114,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\nLine2\r\nLin3\r");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 6),
                     new TraceLine("Lin3", 2, 13)
@@ -129,7 +129,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
@@ -142,7 +142,7 @@ namespace RJCP.Diagnostics.Log
             byte[] readBuffer = Encoding.UTF8.GetBytes("Line1\r\nLine2");
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 7)
                 };
@@ -154,7 +154,7 @@ namespace RJCP.Diagnostics.Log
         public async Task TextStreamWindowsIso8859_15(int maxBytes)
         {
             Encoding encoding = Encoding.GetEncoding("iso-8859-15");
-            byte[] readBuffer = new byte[] {
+            byte[] readBuffer = {
                 0x4c, 0x69, 0x6e, 0x65, 0x31, 0x0d, 0x0a, 0x4c,
                 0x69, 0x6e, 0x65, 0x32, 0x0d, 0x0a, 0x4c, 0x69,
                 0x6e, 0xa4, 0x33, 0x0d, 0x0a
@@ -164,7 +164,7 @@ namespace RJCP.Diagnostics.Log
                     Encoding = encoding
                 };
                 ITraceReader<TraceLine> reader = await factory.CreateAsync(stream);
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine("Line1", 0, 0),
                     new TraceLine("Line2", 1, 7),
                     new TraceLine("Lin€3", 2, 14)
@@ -192,7 +192,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("bb", 1, BufferLength)
                 };
@@ -218,7 +218,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
@@ -242,7 +242,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
@@ -270,7 +270,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("bb", 1, BufferLength)
                 };
@@ -300,7 +300,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("bb", 1, BufferLength)
                 };
@@ -330,7 +330,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("bb", 1, BufferLength)
                 };
@@ -359,7 +359,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("", 1, BufferLength),
                     new TraceLine("bbbb", 2, BufferLength + 1)
@@ -390,7 +390,7 @@ namespace RJCP.Diagnostics.Log
 
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
-                TraceLine[] expectedLines = new[] {
+                TraceLine[] expectedLines = {
                     new TraceLine(firstLine, 0, 0),
                     new TraceLine("", 1, BufferLength),
                     new TraceLine("bbbb", 2, BufferLength + 2)
