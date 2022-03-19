@@ -89,7 +89,7 @@
         /// <summary>
         /// Decodes the specified decoder type.
         /// </summary>
-        /// <param name="decoderType">Type of the control message.</param>
+        /// <param name="dltType">Type of the control message.</param>
         /// <param name="data">The data.</param>
         /// <param name="fileName">For the <see cref="DecoderType.Line"/>, specify the file name to write to.</param>
         /// <param name="service">The service.</param>

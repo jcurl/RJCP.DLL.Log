@@ -76,17 +76,17 @@
         /// <param name="buffer">
         /// The array buffer that contains the preinitialized data to read via a memory stream.
         /// </param>
-        /// <param name="sequenceLength">
+        /// <param name="lengthSequence">
         /// Defines the sequences that are returned when reading data. Can be used to test boundary conditions for
         /// streams that are being read.
         /// </param>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="stream"/> is <see langword="null"/>
+        /// <paramref name="buffer"/> is <see langword="null"/>
         /// <para>- or -</para>
-        /// <paramref name="sequenceLength"/> is <see langword="null"/>.
+        /// <paramref name="lengthSequence"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentException"><paramref name="sequenceLength"/> is of zero length.</exception>
+        /// <exception cref="ArgumentException"><paramref name="lengthSequence"/> is of zero length.</exception>
         public ReadLimitStream(byte[] buffer, int[] lengthSequence)
             : this(new MemoryStream(buffer), lengthSequence) { }
 
@@ -294,7 +294,7 @@
         /// <see cref="CancellationToken.None"/>.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous read operation. The value of the <paramref name="TResult"/>
+        /// A task that represents the asynchronous read operation. The value of the result
         /// parameter contains the total number of bytes read into the buffer. The result value can be less than the
         /// number of bytes requested if the number of bytes currently available is less than the requested number, or
         /// it can be 0 (zero) if the end of the stream has been reached.
@@ -325,7 +325,7 @@
         }
 
         /// <summary>
-        /// Begins an asynchronous read operation. (Consider using <see cref="ReadAsync(byte[], int, int)"/> instead.)
+        /// Begins an asynchronous read operation. (Consider using <see cref="ReadAsync"/> instead.)
         /// </summary>
         /// <param name="buffer">The buffer to read the data into.</param>
         /// <param name="offset">
@@ -429,7 +429,7 @@
         }
 
         /// <summary>
-        /// Begins an asynchronous write operation. (Consider using <see cref="WriteAsync(byte[], int, int)"/> instead.)
+        /// Begins an asynchronous write operation. (Consider using <see cref="WriteAsync"/> instead.)
         /// </summary>
         /// <param name="buffer">The buffer to write data from.</param>
         /// <param name="offset">The byte offset in <paramref name="buffer"/> from which to begin writing.</param>

@@ -367,11 +367,11 @@
         /// The token to monitor for cancellation requests. The default value is <see cref="CancellationToken.None"/>.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous read operation. The value of the <paramref name="TResult"/>
-        /// parameter contains the total number of bytes read into the buffer. The result value can be less than the
-        /// number of bytes requested if the number of bytes currently available is less than the requested number, or
-        /// it can be 0 (zero) if the end of the stream has been reached. It may also return zero (0) if there is a
-        /// timeout within <see cref="ReadTimeout"/> or <see cref="DisconnectTimeout"/>.
+        /// A task that represents the asynchronous read operation. The value of the result parameter contains the total
+        /// number of bytes read into the buffer. The result value can be less than the number of bytes requested if the
+        /// number of bytes currently available is less than the requested number, or it can be 0 (zero) if the end of
+        /// the stream has been reached. It may also return zero (0) if there is a timeout within
+        /// <see cref="ReadTimeout"/> or <see cref="DisconnectTimeout"/>.
         /// </returns>
         /// <exception cref="ObjectDisposedException">TcpClientStream is disposed.</exception>
         /// <exception cref="InvalidOperationException">
@@ -403,11 +403,11 @@
         /// The token to monitor for cancellation requests. The default value is <see cref="CancellationToken.None"/>.
         /// </param>
         /// <returns>
-        /// A task that represents the asynchronous read operation. The value of its <see cref="ValueTask{int}.Result"/>
-        /// property contains the total number of bytes read into the buffer. The result value can be less than the
-        /// number of bytes allocated in the buffer if that many bytes are not currently available, or it can be 0
-        /// (zero) if the end of the stream has been reached. It may also return zero (0) if there is a timeout within
-        /// <see cref="ReadTimeout"/> or <see cref="DisconnectTimeout"/>.
+        /// A task that represents the asynchronous read operation. The value of its result property contains the total
+        /// number of bytes read into the buffer. The result value can be less than the number of bytes allocated in the
+        /// buffer if that many bytes are not currently available, or it can be 0 (zero) if the end of the stream has
+        /// been reached. It may also return zero (0) if there is a timeout within <see cref="ReadTimeout"/> or
+        /// <see cref="DisconnectTimeout"/>.
         /// </returns>
         /// <exception cref="ObjectDisposedException">TcpClientStream is disposed.</exception>
         /// <exception cref="InvalidOperationException">
