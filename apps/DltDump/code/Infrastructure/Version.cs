@@ -12,7 +12,7 @@
                 typeof(AssemblyInformationalVersionAttribute)) is AssemblyInformationalVersionAttribute infoVersion) {
                 return infoVersion.InformationalVersion;
             }
-            return assembly.GetName().Version.ToString();
+            return assembly.GetName().Version?.ToString() ?? string.Empty;
         }
 
         public static string GetAssemblyCopyright(Type type)
