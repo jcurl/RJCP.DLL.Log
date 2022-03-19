@@ -798,7 +798,7 @@
         [Test]
         public void InvalidSessionIdString()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
@@ -815,7 +815,7 @@
         [Test]
         public void InvalidSessionIdLarge()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);

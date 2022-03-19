@@ -17,9 +17,9 @@
             private static readonly byte[] SerialMarker = { 0x44, 0x4C, 0x53, 0x01 };
             private readonly byte[] m_StorageHeader = new byte[16];
             private readonly byte[] m_Packet = new byte[PacketSize];
-            private int m_ExtendedHeaderPos = 0;
-            private int m_PayLoadPos = 0;
-            private int m_PacketLength = 0;
+            private int m_ExtendedHeaderPos;
+            private int m_PayLoadPos;
+            private int m_PacketLength;
             private int m_OverrideLength = -1;
 
             internal Packet() { }

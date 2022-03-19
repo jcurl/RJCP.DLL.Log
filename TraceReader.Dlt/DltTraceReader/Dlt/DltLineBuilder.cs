@@ -23,7 +23,7 @@
     /// </remarks>
     public class DltLineBuilder : IDltLineBuilder
     {
-        private int m_Line = 0;
+        private int m_Line;
         private readonly bool m_Online;
         private readonly List<IDltArg> m_Arguments = new List<IDltArg>();
 

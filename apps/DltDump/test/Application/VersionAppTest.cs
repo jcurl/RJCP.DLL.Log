@@ -9,7 +9,7 @@
         [Test]
         public void GetVersionString()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (new TestApplication()) {
                 string version = VersionApp.GetVersion();
                 Console.WriteLine("Version: {0}", version);
 

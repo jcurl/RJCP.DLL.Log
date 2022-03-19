@@ -21,7 +21,7 @@
         private readonly IControlDltDecoder m_ControlDecoder;
         private readonly IDltLineBuilder m_DltLineBuilder;
 
-        private bool m_ValidHeaderFound = false;
+        private bool m_ValidHeaderFound;
         private int m_ExpectedLength;
 
         /// <summary>

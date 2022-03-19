@@ -13,7 +13,7 @@
         [Test]
         public void NoListener()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
                 /* Do nothing, just let it dispose */
             }
         }
