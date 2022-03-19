@@ -55,7 +55,7 @@
             bool allTranslation = true;
             allTranslation &= CheckMissingResources(AppResources, typeof(Program).Assembly, culture);
 
-            Assert.That(allTranslation, Is.True, "Some translations missing for {0}", culture.ToString());
+            Assert.That(allTranslation, Is.True, "Some translations missing for {0}", culture);
         }
 
         private static bool CheckMissingResources(string baseName, Assembly assembly, CultureInfo culture)
@@ -79,7 +79,7 @@
                 }
             }
 
-            Console.WriteLine("Resource: {0}; Culture: {1}; Parent: {2}", baseName, culture.ToString(), culture.Parent.ToString());
+            Console.WriteLine("Resource: {0}; Culture: {1}; Parent: {2}", baseName, culture, culture.Parent);
             List<string> missing = new List<string>();
             foreach (DictionaryEntry entry in invariant) {
                 string key = entry.Key.ToString();
