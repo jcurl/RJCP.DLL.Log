@@ -203,7 +203,7 @@
                     0x00, 0x01, 0x41, 0x50, 0x50, 0x31, 0x00, 0x01, 0x43, 0x54, 0x58, 0x31,
                     0x65, 0x74, 0x68, 0x30
                 };
-            Decode(DltType.CONTROL_RESPONSE, payload, $"0x03_GetLogInfoResponse_03", out IControlArg service);
+            Decode(DltType.CONTROL_RESPONSE, payload, "0x03_GetLogInfoResponse_03", out IControlArg service);
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo("[get_log_info 3] APP1 (CTX1); eth0"));
