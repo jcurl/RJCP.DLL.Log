@@ -204,7 +204,7 @@
                         // could be incorrect, and hence look for the next packet. This may result in additional packets
                         // at the end of the stream if data within a packet could be interpreted as a new DLT packet.
                         bytes -= MinimumDiscard;
-                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, flush, "Flushing packets at end of stream");
+                        decodeBuffer = SkipBytes(MinimumDiscard, decodeBuffer, true, "Flushing packets at end of stream");
                         m_ValidHeaderFound = false;
                         continue;
                     }
