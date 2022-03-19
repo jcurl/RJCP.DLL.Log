@@ -59,6 +59,16 @@
             Write(4, 6, HelpResources.Help325_InputFormatSerial);
             Write(4, 6, HelpResources.Help325_InputFormatNetwork);
             Write(2, 4, HelpResources.Help330_Retries);
+            Write(2, 4, HelpResources.Help335_StringSearch);
+            Write(2, 4, HelpResources.Help340_RegexSearch);
+            Write(2, 4, HelpResources.Help345_IgnoreCase);
+            Write(2, 4, HelpResources.Help350_EcuId);
+            Write(2, 4, HelpResources.Help355_AppId);
+            Write(2, 4, HelpResources.Help360_CtxId);
+            Write(2, 4, HelpResources.Help365_SessionId);
+            Write(2, 4, HelpResources.Help370_Verbose);
+            Write(2, 4, HelpResources.Help375_NonVerbose);
+            Write(2, 4, HelpResources.Help380_Control);
             Write();
             Write(HelpResources.Help400_Input);
             Write();

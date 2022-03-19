@@ -51,8 +51,7 @@
         public bool Position { get; private set; }
 
         [OptionArguments]
-        [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set by reflection")]
-        private List<string> m_Arguments = new List<string>();
+        private readonly List<string> m_Arguments = new List<string>();
 
         [Option("format")]
         [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set by reflection")]
@@ -73,6 +72,94 @@
         /// <value>The connect retries.</value>
         [Option("retries")]
         public int ConnectRetries { get; private set; }
+
+        /// <summary>
+        /// Gets the search string.
+        /// </summary>
+        /// <value>The search string.</value>
+        [Option('s', "string")]
+        private readonly List<string> m_SearchString = new List<string>();
+
+        public IReadOnlyList<string> SearchString { get { return m_SearchString; } }
+
+        /// <summary>
+        /// Gets the search regular expression.
+        /// </summary>
+        /// <value>The search regular expression.</value>
+        [Option('r', "regex")]
+        private readonly List<string> m_SearchRegex = new List<string>();
+
+        public IReadOnlyList<string> SearchRegex { get { return m_SearchRegex; } }
+
+        /// <summary>
+        /// Gets a value indicating whether case should be ignored when searching
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if case should be ignored when searching; otherwise, <see langword="false"/>.
+        /// </value>
+        [Option('i', "ignorecase")]
+        public bool IgnoreCase { get; private set; }
+
+        [Option("ecuid")]
+        private readonly List<string> m_EcuId = new List<string>();
+
+        /// <summary>
+        /// A list of ECU IDs that should match.
+        /// </summary>
+        public IReadOnlyList<string> EcuId { get { return m_EcuId; } }
+
+        [Option("appid")]
+        private readonly List<string> m_AppId = new List<string>();
+
+        /// <summary>
+        /// A list of Application IDs that should match.
+        /// </summary>
+        public IReadOnlyList<string> AppId { get { return m_AppId; } }
+
+        [Option("ctxid")]
+        private readonly List<string> m_CtxId = new List<string>();
+
+        /// <summary>
+        /// A list of Context IDs that should match.
+        /// </summary>
+        public IReadOnlyList<string> CtxId { get { return m_CtxId; } }
+
+        [Option("sessionid")]
+        private readonly List<int> m_SessionId = new List<int>();
+
+        /// <summary>
+        /// A list of Session IDs that should match for lines that have a session identifier.
+        /// </summary>
+        public IReadOnlyList<int> SessionId { get { return m_SessionId; } }
+
+        /// <summary>
+        /// Gets a value indicating whether verbose messages should be filtered.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if verbose messages should be filtered; otherwise, <see langword="false"/>.
+        /// </value>
+        [Option("verbose")]
+        public bool VerboseMessage { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether verbose messages should be filtered.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if non-verbose messages should be filtered; otherwise, <see langword="false"/>.
+        /// This does not include control messages.
+        /// </value>
+        [Option("nonverbose")]
+        public bool NonVerboseMessage { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether verbose messages should be filtered.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if control messages should be filtered; otherwise, <see langword="false"/>. This
+        /// does not include control messages.
+        /// </value>
+        [Option("control")]
+        public bool ControlMessage { get; private set; }
 
         /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.

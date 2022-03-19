@@ -71,7 +71,7 @@ have access to the original packet data.
 The history is used if context before or after a filter is required, and outputs
 the lines that should be recorded. The filter is used on the decoded trace line
 to identify if it should be recorded or not. The Console Output and File Output
-both contain the history and filter, which differs essentially in where it is
+both contain the context and filter, which differs essentially in where it is
 instantiated and used, rather than the functionality.
 
 The Console output just writes the output to the console.
@@ -139,7 +139,7 @@ execute use cases. Elements of the domain model can be:
 * Decoders: Know how to read the input streams
 * Filters: Determine if a line matches a user filter
 * Output: Knows how to write the output, either console or binary
-* History: Keeps buffers of lines for showing context on a filter match
+* Context: Keeps buffers of lines for showing context on a filter match
 
 Each element of the domain model on its own is independent, and has minimal
 input on other elements of the domain model. The Application layer ties the
@@ -211,7 +211,7 @@ Filter Options (within the Filter)
 * `--control`: Filter for control messages only.
 * `--nonverbose`: Filter for non-verbose messages only.
 
-History Options, affecting how lines are printed before and after a filter
+Context Options, affecting how lines are printed before and after a filter
 match:
 
 * `-A=n` or `--after-context`: Provide context for `n` lines after the match
@@ -255,7 +255,7 @@ objects necessary for:
   * The filter portion handles the `--string`, `--regex`, `--ignorecase` if
     filtering strings or regexes, `--ecuid`, `--appid`, `--ctxid`, `--session`,
     `--verbose`, `--control`, `--nonverbose` options
-  * The history portion is required for `--after-context` or `--before-context`
+  * The context portion is required for `--after-context` or `--before-context`
   * This must be before the binary writer or the console writer.
 * a binary writer that can split and rename files as necessary if writing to a
   file
@@ -381,7 +381,7 @@ The context and filter are used for matching. They are two separate blocks, very
 closely related and to be managed as a single unit.
 
 The `Filter` application receives the trace line when writing to the console,
-therefore it maintains the `Context` history for this use case.
+therefore it maintains the `Context` for this use case.
 
 For writing to a file, this is maintained in the context of the decoder. The
 decoder needs some glue logic around the `Context` block, which can be part of

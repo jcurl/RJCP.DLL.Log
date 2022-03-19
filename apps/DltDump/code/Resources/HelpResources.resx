@@ -164,6 +164,46 @@
     <value>{1}retries{2}&lt;count&gt;
   For input URIs that need a connection (e.g. tcp), specify the number of retries when connecting. When the retries is negative, attempts go on forever. When the retries is more than zero, it tries 'n' times again. If retries are enabled, an attempt to reconnect after the stream is closed is always made until the connection attempts fails. This allows for connecting to remote targets that reset forever, and ending only if the remote target doesn't recover.</value>
   </data>
+  <data name="Help335_StringSearch" xml:space="preserve">
+    <value>{0}s | {1}string{2}&lt;string&gt;
+  Search for lines that have the text content containing &lt;string&gt;.</value>
+  </data>
+  <data name="Help340_RegexSearch" xml:space="preserve">
+    <value>{0}r | {1}regex{2}&lt;regex&gt;
+  Search for lines that match the .NET regular expression for &lt;regex&gt;</value>
+  </data>
+  <data name="Help345_IgnoreCase" xml:space="preserve">
+    <value>{0}i | {1}ignorecase
+  If provided, the searches are made case insensitive</value>
+  </data>
+  <data name="Help350_EcuId" xml:space="preserve">
+    <value>{1}ecuid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+  Specify a list of ECU Identifiers that should match</value>
+  </data>
+  <data name="Help355_AppId" xml:space="preserve">
+    <value>{1}appid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+  Specify a list of Application Identifiers that should match</value>
+  </data>
+  <data name="Help360_CtxId" xml:space="preserve">
+    <value>{1}ctxid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+  Specify a list of context identifiers that should match</value>
+  </data>
+  <data name="Help365_SessionId" xml:space="preserve">
+    <value>{1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+  Specify a list of session identifiers that should match. Lines that don't have a session identifier do not match</value>
+  </data>
+  <data name="Help370_Verbose" xml:space="preserve">
+    <value>{1}verbose
+  Match lines that are verbose (have an extended header and the verbose bit is set)</value>
+  </data>
+  <data name="Help375_NonVerbose" xml:space="preserve">
+    <value>{1}nonverbose
+  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message)</value>
+  </data>
+  <data name="Help380_Control" xml:space="preserve">
+    <value>{1}control
+  Match lines that are a control message (including the timing message)</value>
+  </data>
   <data name="Help400_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>

@@ -8,6 +8,7 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using TestResources;
     using static Infrastructure.OptionsGen;
 
     [TestFixture]
@@ -48,6 +49,7 @@
         private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
         private readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
 
+        #region Input File
         [Test]
         public void InputFileMissing()
         {
@@ -154,7 +156,9 @@
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(new Uri(EmptyFile).AbsoluteUri));
             }
         }
+        #endregion
 
+        #region Position option
         [Test]
         public void ShowPosition()
         {
@@ -170,7 +174,9 @@
                 Assert.That(cmdOptions.Position, Is.True);
             }
         }
+        #endregion
 
+        #region Input Format
         [Test]
         public void DefaultSetInputFormatFile()
         {
@@ -229,7 +235,9 @@
                 }), Is.EqualTo(ExitCode.OptionsError));
             }
         }
+        #endregion
 
+        #region Retry option
         [TestCase(1)]
         [TestCase(0)]
         [TestCase(10)]
@@ -287,5 +295,539 @@
                 Assert.That(actualCreate, Is.EqualTo(21));
             }
         }
+        #endregion
+
+        #region Filter Options
+        [TestCase("Message", 1)]
+        [TestCase("xxx", 0)]
+        public void SearchString(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('s'), search, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase("Message", 1)]
+        [TestCase("xxx", 0)]
+        public void SearchMultiString(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('s'), search, LongOpt("string"), "foo", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(2));
+            }
+        }
+
+        [TestCase(@"s+age\s+\d+", 1)]
+        [TestCase(@"\S+\s+$", 0)]
+        public void SearchRegEx(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('r'), search, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase(@"s+age\s+\d+", 1)]
+        [TestCase(@"\S+\s+$", 0)]
+        public void SearchMultiRegEx(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('r'), search, LongOpt("regex"), "^foo$", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(2));
+            }
+        }
+
+        [TestCase("xxx", @"s+age\s+\d+", 1)]
+        [TestCase("xxx", @"\S+\s+$", 0)]
+        [TestCase("Message", @"s+age\s+\d+", 1)]
+        [TestCase("Message", @"\S+\s+$", 1)]
+        public void SearchRegExString(string search, string regex, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('s'), search, LongOpt("regex"), regex, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase("message", 1)]
+        [TestCase("xxx", 0)]
+        public void SearchStringIgnoreCase(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('s'), search, ShortOpt('i'), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase(@"s+age\s+\d+", 1)]
+        [TestCase(@"\S+\s+$", 0)]
+        public void SearchRegExIgnoreCase(string search, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    ShortOpt('r'), search, LongOpt("ignorecase"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase("ECU1", 1)]
+        [TestCase("ecu1", 0)]
+        [TestCase("xxx", 0)]
+        public void SearchEcuId(string ecuId, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ecuid"), ecuId, LongOpt("ignorecase"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchEcuIdMultiNoMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ecuid"), "AAAA,BBBB", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void SearchEcuIdMultiMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ecuid"), "AAAA,ECU1", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [TestCase("APP1", 1)]
+        [TestCase("app1", 0)]
+        [TestCase("xxx", 0)]
+        public void SearchAppId(string appId, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("appid"), appId, LongOpt("ignorecase"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchAppIdMultiNoMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("appid"), "AAAA,BBBB", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void SearchAppIdMultiMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("appid"), "AAAA,APP1", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [TestCase("CTX1", 1)]
+        [TestCase("ctx1", 0)]
+        [TestCase("xxx", 0)]
+        public void SearchCtxId(string ctxId, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ctxid"), ctxId, LongOpt("ignorecase"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchCtxIdMultiNoMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ctxid"), "AAAA,BBBB", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void SearchCtxIdMultiMatch()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("ctxid"), "AAAA,CTX1", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [TestCase("127", 1)]
+        [TestCase("128", 0)]
+        public void SearchSessionId(string session, int count)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("sessionid"), session, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
+                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchNegativeSessionId()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("sessionid", "-1"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchVerbose()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("verbose"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.VerboseMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void SearchVerboseNotPresent()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("verbose"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.VerboseMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void SearchNoneVerbose()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("nonverbose"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.NonVerboseMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void SearchNonVerboseNotPresent()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("nonverbose"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.NonVerboseMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void SearchControl()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Control);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("control"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.ControlMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void SearchControlNotPresent()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("control"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(cmdOptions.ControlMessage, Is.True);
+            }
+        }
+
+        [Test]
+        public void InvalidSessionIdString()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("sessionid"), "abc", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [Test]
+        public void InvalidSessionIdLarge()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new string[] {
+                    LongOpt("sessionid"), "6000000000", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+        #endregion
     }
 }

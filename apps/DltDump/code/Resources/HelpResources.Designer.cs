@@ -192,6 +192,106 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}s | {1}string{2}&lt;string&gt;
+        ///  Search for lines that have the text content containing &lt;string&gt;..
+        /// </summary>
+        internal static string Help335_StringSearch {
+            get {
+                return ResourceManager.GetString("Help335_StringSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}r | {1}regex{2}&lt;regex&gt;
+        ///  Search for lines that match the .NET regular expression for &lt;regex&gt;.
+        /// </summary>
+        internal static string Help340_RegexSearch {
+            get {
+                return ResourceManager.GetString("Help340_RegexSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}i | {1}ignorecase
+        ///  If provided, the searches are made case insensitive.
+        /// </summary>
+        internal static string Help345_IgnoreCase {
+            get {
+                return ResourceManager.GetString("Help345_IgnoreCase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}ecuid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+        ///  Specify a list of ECU Identifiers that should match.
+        /// </summary>
+        internal static string Help350_EcuId {
+            get {
+                return ResourceManager.GetString("Help350_EcuId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}appid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+        ///  Specify a list of Application Identifiers that should match.
+        /// </summary>
+        internal static string Help355_AppId {
+            get {
+                return ResourceManager.GetString("Help355_AppId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}ctxid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+        ///  Specify a list of context identifiers that should match.
+        /// </summary>
+        internal static string Help360_CtxId {
+            get {
+                return ResourceManager.GetString("Help360_CtxId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
+        ///  Specify a list of session identifiers that should match. Lines that don&apos;t have a session identifier do not match.
+        /// </summary>
+        internal static string Help365_SessionId {
+            get {
+                return ResourceManager.GetString("Help365_SessionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}verbose
+        ///  Match lines that are verbose (have an extended header and the verbose bit is set).
+        /// </summary>
+        internal static string Help370_Verbose {
+            get {
+                return ResourceManager.GetString("Help370_Verbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}nonverbose
+        ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message).
+        /// </summary>
+        internal static string Help375_NonVerbose {
+            get {
+                return ResourceManager.GetString("Help375_NonVerbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}control
+        ///  Match lines that are a control message (including the timing message).
+        /// </summary>
+        internal static string Help380_Control {
+            get {
+                return ResourceManager.GetString("Help380_Control", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
         internal static string Help400_Input {

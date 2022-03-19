@@ -7,6 +7,7 @@
     using Infrastructure.Dlt;
     using Resources;
     using RJCP.Diagnostics.Log;
+    using RJCP.Diagnostics.Log.Constraints;
     using RJCP.Diagnostics.Log.Dlt;
     using Services;
 
@@ -26,6 +27,7 @@
             if (!CheckInputs())
                 return ExitCode.InputError;
 
+            Constraint filter = m_Config.GetFilter();
             int processed = 0;
             foreach (string uri in m_Config.Input) {
                 bool retries;
@@ -49,10 +51,13 @@
                             do {
                                 line = await decoder.GetLineAsync();
                                 if (line != null) {
-                                    if (m_Config.ShowPosition) {
-                                        Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
-                                    } else {
-                                        Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                                    bool print = filter == null || filter.Check(line);
+                                    if (print) {
+                                        if (m_Config.ShowPosition) {
+                                            Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
+                                        } else {
+                                            Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                                        }
                                     }
                                 }
                             } while (line != null);
