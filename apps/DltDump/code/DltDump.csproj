@@ -67,6 +67,7 @@
     <Compile Include="Application\FilterConfig.cs" />
     <Compile Include="Application\HelpApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
+    <Compile Include="Domain\Context.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />

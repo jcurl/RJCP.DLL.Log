@@ -204,6 +204,14 @@
     <value>{1}control
   Match lines that are a control message (including the timing message)</value>
   </data>
+  <data name="Help385_BeforeContext" xml:space="preserve">
+    <value>{0}B | {1}before-context{2}&lt;lines&gt;
+  On a match, print &lt;lines&gt; of text before the match.</value>
+  </data>
+  <data name="Help390_AfterContext" xml:space="preserve">
+    <value>{0}A | {1}after-context{2}&lt;lines&gt;
+  On a match, print &lt;lines&gt; of text after the match.</value>
+  </data>
   <data name="Help400_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>

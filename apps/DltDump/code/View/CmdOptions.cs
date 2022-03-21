@@ -171,6 +171,20 @@
         public bool None { get; private set; }
 
         /// <summary>
+        /// Gets the number of lines to print before a match.
+        /// </summary>
+        /// <value>The number of lines to print before a match.</value>
+        [Option('B', "before-context")]
+        public int BeforeContext { get; private set; }
+
+        /// <summary>
+        /// Gets the number of lines to print after a match.
+        /// </summary>
+        /// <value>The number of lines to print after a match.</value>
+        [Option('A', "after-context")]
+        public int AfterContext { get; private set; }
+
+        /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
         /// <value>The input DLT streams to read.</value>
@@ -197,6 +211,11 @@
                     throw new OptionFormatException("format");
                 }
             }
+
+            if (BeforeContext < 0)
+                throw new OptionFormatException("before-context");
+            if (AfterContext < 0)
+                throw new OptionFormatException("after-context");
         }
 
         public void Usage()

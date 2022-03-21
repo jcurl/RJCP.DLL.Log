@@ -22,7 +22,9 @@
             FilterConfig config = new FilterConfig(m_Options.Arguments) {
                 ShowPosition = m_Options.Position,
                 InputFormat = m_Options.InputFormat,
-                ConnectRetries = m_Options.ConnectRetries
+                ConnectRetries = m_Options.ConnectRetries,
+                BeforeContext = m_Options.BeforeContext,
+                AfterContext = m_Options.AfterContext
             };
             BuildFilter(m_Options, config);
             FilterApp app = new FilterApp(config);

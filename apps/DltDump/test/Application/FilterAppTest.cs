@@ -9,9 +9,7 @@
     using Infrastructure.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-    using RJCP.Diagnostics.Log;
-    using RJCP.Diagnostics.Log.Dlt;
-    using RJCP.Diagnostics.Log.Dlt.Args;
+    using TestResources;
 
     [TestFixture]
     public class FilterAppTest
@@ -305,25 +303,11 @@
             }
         }
 
-        private readonly DltTraceLine line1 = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
-            EcuId = "ECU1",
-            ApplicationId = "APP1",
-            ContextId = "CTX1",
-            Position = 3,
-            Line = 0,
-            Count = 127,
-            Type = DltType.LOG_INFO,
-            TimeStamp = DateTime.UtcNow,
-            DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
-            Features = DltLineFeatures.VerboseFeature + DltLineFeatures.MessageTypeFeature +
-                DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
-        };
-
         [Test]
         public async Task ShowSingleLine()
         {
             using (TestApplication global = new TestApplication()) {
-                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(line1);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
                 FilterConfig config = new FilterConfig(new[] { EmptyFile });
                 FilterApp app = new FilterApp(config);
@@ -332,8 +316,8 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose 1 Message 1",
-                    line1.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
@@ -342,7 +326,7 @@
         public async Task ShowSingleLinePosition()
         {
             using (TestApplication global = new TestApplication()) {
-                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(line1);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
                 FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
                     ShowPosition = true
@@ -353,8 +337,8 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 0 log info verbose 1 Message 1",
-                    line1.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
@@ -401,6 +385,117 @@
 
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
                 Assert.That(Global.Instance.DltReaderFactory.OnlineMode, Is.False);
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public async Task BeforeContext()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    InputFormat = InputFormat.Automatic,
+                    BeforeContext = 1,
+                };
+                config.AddAppId("APP2");
+
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+
+                // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(2));
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public async Task BeforeContextNone()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    InputFormat = InputFormat.Automatic,
+                    BeforeContext = 2,
+                };
+                config.AddAppId("APP2");
+
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+
+                // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public async Task AfterContext()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    InputFormat = InputFormat.Automatic,
+                    AfterContext = 2,
+                };
+                config.AddAppId("APP2");
+
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+
+                // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(3));
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public async Task AfterContextNone()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    InputFormat = InputFormat.Automatic,
+                    AfterContext = 2,
+                };
+                config.AddAppId("APP2");
+
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+
+                // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }

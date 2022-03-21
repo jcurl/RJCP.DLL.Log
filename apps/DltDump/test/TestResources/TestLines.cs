@@ -25,6 +25,23 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
+        public static readonly DltTraceLine Verbose2 = new DltTraceLine(new[] { new StringDltArg("Message 2") }) {
+            EcuId = "ECU1",
+            ApplicationId = "APP2",
+            ContextId = "CTX2",
+            Position = 3,
+            Line = 0,
+            Count = 127,
+            Type = DltType.LOG_INFO,
+            TimeStamp = DateTime.UtcNow,
+            SessionId = 127,
+            DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
+            Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
+                       DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                       DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
+                       DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+        };
+
         public static readonly DltTraceLine NoEcuId = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
             ApplicationId = "APP1",
             ContextId = "CTX1",

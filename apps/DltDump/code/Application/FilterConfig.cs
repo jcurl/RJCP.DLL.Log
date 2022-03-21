@@ -244,5 +244,17 @@
             return constraint.End();
         }
         #endregion
+
+        /// <summary>
+        /// Gets the number of lines to print before a match.
+        /// </summary>
+        /// <value>The number of lines to print before a match.</value>
+        public int BeforeContext { get; set; }
+
+        /// <summary>
+        /// Gets the number of lines to print after a match.
+        /// </summary>
+        /// <value>The number of lines to print after a match.</value>
+        public int AfterContext { get; set; }
     }
 }

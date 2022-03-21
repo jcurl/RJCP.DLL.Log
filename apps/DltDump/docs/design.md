@@ -34,6 +34,7 @@ implementation in an incremental manner).
       - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
       - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
     - [2.4.3. The Filter and the Context](#243-the-filter-and-the-context)
+      - [2.4.3.1 Implementation](#2431-implementation)
     - [2.4.4. Decoder Extension on Line Decoding](#244-decoder-extension-on-line-decoding)
     - [2.4.5. Binary Writer](#245-binary-writer)
       - [2.4.5.1. On Flush](#2451-on-flush)
@@ -545,6 +546,43 @@ impact on the garbage collector.
 
 If the line has no time stamp, the context must add the time stamp at the time
 the message is recorded.
+
+##### 2.4.3.1 Implementation
+
+The `Context` class implements checking the filter and notifying of changes. It
+must necessarily have copy operations for the duration of the history given by
+the `before-context` option.
+
+The correct implementation is given in `FilterApp.LoopContext`:
+
+```csharp
+do {
+    line = await decoder.GetLineAsync();
+    if (line == null) continue;
+
+    if (context.Check(line)) {
+        foreach (DltTraceLineBase beforeLine in context.GetBeforeContext()) {
+            WriteLine(beforeLine, m_Config.ShowPosition);
+        }
+        WriteLine(line, m_Config.ShowPosition);
+    } else if (context.IsAfterContext()) {
+        WriteLine(line, m_Config.ShowPosition);
+    }
+} while (line != null);
+```
+
+It works by performing a check for each line. If there is a match, given by the
+result of `context.Check(line)` being true, the history buffer must be printed.
+The method `context.GetBeforeContext()` returns an `IEnumerable` to iterate over
+the history. While iterating, no calls to `context.Check()` are allowed, as the
+enumerator and the context buffer share the same buffer to avoid copy
+operations. If there is no history, the enumerator is empty.
+
+Then the current line must be printed.
+
+On further iteration and new lines, the history buffer is not updated, while
+`context.IsAfterContext()` is true, which also decrements the internal counter
+for how many lines should be printed.
 
 #### 2.4.4. Decoder Extension on Line Decoding
 

@@ -849,5 +849,163 @@
             }
         }
         #endregion
+
+        #region Context
+        [Test]
+        public void BeforeContextLongOptNo()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('s', "string"), LongOpt("before-context", "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
+                Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void BeforeContextShortOpt()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('s', "string"), ShortOpt('B', "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
+                Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void BeforeContextNoFilter()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('B', "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public void BeforeContextNegative()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('B', "-1"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [Test]
+        public void BeforeContextInvalid()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('B', "xx"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [Test]
+        public void AfterContextLongOptNo()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('s', "string"), LongOpt("after-context", "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void AfterContextShortOpt()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('s', "string"), ShortOpt('A', "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
+                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void AfterContextNoFilter()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('A', "1"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public void AfterContextNegative()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('A', "-1"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [Test]
+        public void AfterContextInvalid()
+        {
+            using (new TestApplication()) {
+                // It checks that the file actually exists
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('A', "xx"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+        #endregion
     }
 }

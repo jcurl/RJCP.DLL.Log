@@ -292,6 +292,26 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}B | {1}before-context{2}&lt;lines&gt;
+        ///  On a match, print &lt;lines&gt; of text before the match..
+        /// </summary>
+        internal static string Help385_BeforeContext {
+            get {
+                return ResourceManager.GetString("Help385_BeforeContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}A | {1}after-context{2}&lt;lines&gt;
+        ///  On a match, print &lt;lines&gt; of text after the match..
+        /// </summary>
+        internal static string Help390_AfterContext {
+            get {
+                return ResourceManager.GetString("Help390_AfterContext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
         internal static string Help400_Input {

@@ -69,6 +69,8 @@
             Write(2, 4, HelpResources.Help370_Verbose);
             Write(2, 4, HelpResources.Help375_NonVerbose);
             Write(2, 4, HelpResources.Help380_Control);
+            Write(2, 4, HelpResources.Help385_BeforeContext);
+            Write(2, 4, HelpResources.Help390_AfterContext);
             Write();
             Write(HelpResources.Help400_Input);
             Write();
