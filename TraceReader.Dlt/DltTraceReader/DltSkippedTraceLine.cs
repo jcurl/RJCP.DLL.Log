@@ -10,7 +10,9 @@
     /// </summary>
     public class DltSkippedTraceLine : DltTraceLine
     {
-        private static readonly DltLineFeatures SkippedLineFeatures = DltLineFeatures.VerboseFeature;
+        private static readonly DltLineFeatures SkippedLineFeatures =
+            DltLineFeatures.EcuIdFeature + DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature +
+            DltLineFeatures.VerboseFeature + DltLineFeatures.MessageTypeFeature;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSkippedTraceLine"/> class.
@@ -23,8 +25,8 @@
         public DltSkippedTraceLine(long bytes, string reason)
         {
             EcuId = string.Empty;
-            ApplicationId = string.Empty;
-            ContextId = string.Empty;
+            ApplicationId = "SKIP";
+            ContextId = "SKIP";
             Count = InvalidCounter;
             DeviceTimeStamp = new TimeSpan(0);
             Type = DltType.LOG_WARN;

@@ -11,8 +11,8 @@
         {
             DltSkippedTraceLine line = new DltSkippedTraceLine(10, "none");
             Assert.That(line.Arguments.Count, Is.EqualTo(4));
-            Assert.That(line.ApplicationId, Is.EqualTo(string.Empty));
-            Assert.That(line.ContextId, Is.EqualTo(string.Empty));
+            Assert.That(line.ApplicationId, Is.EqualTo("SKIP"));
+            Assert.That(line.ContextId, Is.EqualTo("SKIP"));
             Assert.That(line.EcuId, Is.EqualTo(string.Empty));
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
@@ -25,14 +25,14 @@
             Assert.That(line.BytesSkipped, Is.EqualTo(10));
             Assert.That(line.Reason, Is.EqualTo("none"));
 
-            Assert.That(line.Features.ApplicationId, Is.False);
-            Assert.That(line.Features.ContextId, Is.False);
-            Assert.That(line.Features.EcuId, Is.False);
+            Assert.That(line.Features.ApplicationId, Is.True);
+            Assert.That(line.Features.ContextId, Is.True);
+            Assert.That(line.Features.EcuId, Is.True);
             Assert.That(line.Features.BigEndian, Is.False);
             Assert.That(line.Features.IsVerbose, Is.True);
             Assert.That(line.Features.DeviceTimeStamp, Is.False);
             Assert.That(line.Features.TimeStamp, Is.False);
-            Assert.That(line.Features.MessageType, Is.False);
+            Assert.That(line.Features.MessageType, Is.True);
             Assert.That(line.Features.SessionId, Is.False);
 
             Assert.That(line.Arguments.IsReadOnly, Is.True);
