@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application;
+    using RJCP.Diagnostics.Log.Dlt;
 
     public class FilterCommand : ICommand
     {
@@ -43,6 +44,7 @@
 
             HashSet<string> identifiers = new HashSet<string>();
             HashSet<int> sessionids = new HashSet<int>();
+            HashSet<DltType> types = new HashSet<DltType>();
 
             foreach (string ecuId in options.EcuId) {
                 if (identifiers.Contains(ecuId)) continue;
@@ -71,6 +73,13 @@
                 sessionids.Add(session);
             }
             sessionids.Clear();
+
+            foreach (DltType type in options.DltTypeFilters) {
+                if (types.Contains(type)) continue;
+                config.AddMessageType(type);
+                types.Add(type);
+            }
+            types.Clear();
 
             foreach (string search in options.SearchString) {
                 config.AddSearchString(search, options.IgnoreCase);

@@ -159,6 +159,7 @@ Various search filters shall be supported
   * `--appid=A`: Filter for one or more APP IDs.
   * `--ctxid=A`: Filter for one or more Context IDs.
   * `--session=n`: Filter for one or more Session IDs.
+  * `--type=T`: Filter for one or more DLT message types.
 * These may be combined
   * `--verbose`: Filter for verbose messages only.
   * `--control`: Filter for control messages only.

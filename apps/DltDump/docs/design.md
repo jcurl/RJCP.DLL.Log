@@ -208,6 +208,7 @@ Filter Options (within the Filter)
 * `--appid=A`: Filter for one or more APP IDs.
 * `--ctxid=A`: Filter for one or more Context IDs.
 * `--session=n`: Filter for one or more Session IDs.
+* `--type=T`: Filter for one or more DLT types.
 * `--verbose`: Filter for verbose messages only.
 * `--control`: Filter for control messages only.
 * `--nonverbose`: Filter for non-verbose messages only.
@@ -255,7 +256,7 @@ objects necessary for:
 * a filter for a trace line and also maintains context if required
   * The filter portion handles the `--string`, `--regex`, `--ignorecase` if
     filtering strings or regexes, `--ecuid`, `--appid`, `--ctxid`, `--session`,
-    `--verbose`, `--control`, `--nonverbose` options
+    `--type`, `--verbose`, `--control`, `--nonverbose` options
   * The context portion is required for `--after-context` or `--before-context`
   * This must be before the binary writer or the console writer.
 * a binary writer that can split and rename files as necessary if writing to a

@@ -66,11 +66,12 @@
             Write(2, 4, HelpResources.Help355_AppId);
             Write(2, 4, HelpResources.Help360_CtxId);
             Write(2, 4, HelpResources.Help365_SessionId);
-            Write(2, 4, HelpResources.Help370_Verbose);
-            Write(2, 4, HelpResources.Help375_NonVerbose);
-            Write(2, 4, HelpResources.Help380_Control);
-            Write(2, 4, HelpResources.Help385_BeforeContext);
-            Write(2, 4, HelpResources.Help390_AfterContext);
+            Write(2, 4, HelpResources.Help370_DltTypes);
+            Write(2, 4, HelpResources.Help375_Verbose);
+            Write(2, 4, HelpResources.Help380_NonVerbose);
+            Write(2, 4, HelpResources.Help385_Control);
+            Write(2, 4, HelpResources.Help390_BeforeContext);
+            Write(2, 4, HelpResources.Help395_AfterContext);
             Write();
             Write(HelpResources.Help400_Input);
             Write();

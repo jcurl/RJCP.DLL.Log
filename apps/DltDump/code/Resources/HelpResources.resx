@@ -192,23 +192,32 @@
     <value>{1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
   Specify a list of session identifiers that should match. Lines that don't have a session identifier do not match</value>
   </data>
-  <data name="Help370_Verbose" xml:space="preserve">
+  <data name="Help370_DltTypes" xml:space="preserve">
+    <value>{0}type{2}&lt;types&gt;
+  Filter for specific message types. Types are:
+  * Log: fatal,error,warn,info,debug,verbose
+  * Network: ipc,can,flexray,network,ethernet.someip,user1,..,user9
+  * Control: request,response,time
+  * Trace: variable,functionin,functionout,state,vfb
+  You can use an integer 0-254 for comparison for other values, e.g. 48 is the same as 'warn'.</value>
+  </data>
+  <data name="Help375_Verbose" xml:space="preserve">
     <value>{1}verbose
   Match lines that are verbose (have an extended header and the verbose bit is set)</value>
   </data>
-  <data name="Help375_NonVerbose" xml:space="preserve">
+  <data name="Help380_NonVerbose" xml:space="preserve">
     <value>{1}nonverbose
   Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message)</value>
   </data>
-  <data name="Help380_Control" xml:space="preserve">
+  <data name="Help385_Control" xml:space="preserve">
     <value>{1}control
   Match lines that are a control message (including the timing message)</value>
   </data>
-  <data name="Help385_BeforeContext" xml:space="preserve">
+  <data name="Help390_BeforeContext" xml:space="preserve">
     <value>{0}B | {1}before-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text before the match.</value>
   </data>
-  <data name="Help390_AfterContext" xml:space="preserve">
+  <data name="Help395_AfterContext" xml:space="preserve">
     <value>{0}A | {1}after-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text after the match.</value>
   </data>

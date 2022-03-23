@@ -5,6 +5,7 @@
     using Infrastructure.Constraints;
     using Infrastructure.Dlt;
     using RJCP.Diagnostics.Log.Constraints;
+    using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
     /// Configuration for the <see cref="FilterApp"/>.
@@ -53,6 +54,7 @@
         private Constraint m_CtxId;
         private Constraint m_Search;
         private Constraint m_Session;
+        private Constraint m_MessageType;
         private bool m_Verbose;
         private bool m_NonVerbose;
         private bool m_Control;
@@ -147,6 +149,15 @@
         }
 
         /// <summary>
+        /// Adds the message type to the filter.
+        /// </summary>
+        /// <param name="dltType">The message type to add to the filter.</param>
+        public void AddMessageType(DltType dltType)
+        {
+            m_MessageType = AddConstraint(m_MessageType, new DltMessageType(dltType));
+        }
+
+        /// <summary>
         /// Filter for non-control messages that have the verbose flag set.
         /// </summary>
         public void SetVerbose()
@@ -213,6 +224,11 @@
 
             if (m_Search != null) {
                 constraint.Expr(m_Search);
+                filtered = true;
+            }
+
+            if (m_MessageType != null) {
+                constraint.Expr(m_MessageType);
                 filtered = true;
             }
 

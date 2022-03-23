@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using Diagnostics.Log.Dlt;
     using Domain;
     using Domain.InputStream;
     using Infrastructure.Dlt;
@@ -846,6 +847,89 @@
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
                 Assert.That(cmdOptions.None, Is.True);
+            }
+        }
+
+        [TestCase("fatal", DltType.LOG_FATAL)]
+        [TestCase("error", DltType.LOG_ERROR)]
+        [TestCase("warn", DltType.LOG_WARN)]
+        [TestCase("info", DltType.LOG_INFO)]
+        [TestCase("debug", DltType.LOG_DEBUG)]
+        [TestCase("verbose", DltType.LOG_VERBOSE)]
+        [TestCase("ipc", DltType.NW_TRACE_IPC)]
+        [TestCase("can", DltType.NW_TRACE_CAN)]
+        [TestCase("flexray", DltType.NW_TRACE_FLEXRAY)]
+        [TestCase("most", DltType.NW_TRACE_MOST)]
+        [TestCase("ethernet", DltType.NW_TRACE_ETHERNET)]
+        [TestCase("someip", DltType.NW_TRACE_SOMEIP)]
+        [TestCase("user1", DltType.NW_TRACE_USER_DEFINED_0)]
+        [TestCase("user2", DltType.NW_TRACE_USER_DEFINED_1)]
+        [TestCase("user3", DltType.NW_TRACE_USER_DEFINED_2)]
+        [TestCase("user4", DltType.NW_TRACE_USER_DEFINED_3)]
+        [TestCase("user5", DltType.NW_TRACE_USER_DEFINED_4)]
+        [TestCase("user6", DltType.NW_TRACE_USER_DEFINED_5)]
+        [TestCase("user7", DltType.NW_TRACE_USER_DEFINED_6)]
+        [TestCase("user8", DltType.NW_TRACE_USER_DEFINED_7)]
+        [TestCase("user9", DltType.NW_TRACE_USER_DEFINED_8)]
+        [TestCase("request", DltType.CONTROL_REQUEST)]
+        [TestCase("response", DltType.CONTROL_RESPONSE)]
+        [TestCase("time", DltType.CONTROL_TIME)]
+        [TestCase("variable", DltType.APP_TRACE_VARIABLE)]
+        [TestCase("functionin", DltType.APP_TRACE_FUNCTION_IN)]
+        [TestCase("functionout", DltType.APP_TRACE_FUNCTION_OUT)]
+        [TestCase("state", DltType.APP_TRACE_STATE)]
+        [TestCase("vfb", DltType.APP_TRACE_VFB)]
+        [TestCase("48", DltType.LOG_WARN)]
+        public void SearchDltType(string dltFilterType, DltType result)
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("type", dltFilterType), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                Assert.That(cmdOptions.DltTypeFilters.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.DltTypeFilters[0], Is.EqualTo(result));
+            }
+        }
+
+        [Test]
+        public void SearchDltTypeInfo()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("type", "info"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchDltTypeWarn()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("type", "warn"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
             }
         }
         #endregion

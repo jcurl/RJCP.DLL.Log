@@ -113,6 +113,7 @@
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />
     <Compile Include="View\CrashCommand.cs" />
+    <Compile Include="View\DltTypeFilter.cs" />
     <Compile Include="View\FilterCommand.cs" />
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />

@@ -3,8 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using Infrastructure.Dlt;
+    using Resources;
     using RJCP.Core.CommandLine;
+    using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
     /// Defines the options available for DltDump.
@@ -132,6 +135,17 @@
         /// </summary>
         public IReadOnlyList<int> SessionId { get { return m_SessionId; } }
 
+        [Option("type")]
+        private readonly List<string> m_DltTypeFilters = new List<string>();
+
+        private readonly List<DltType> m_DltType = new List<DltType>();
+
+        /// <summary>
+        /// Gets the list of DLT filter types to filter for.
+        /// </summary>
+        /// <value>The DLT type filters to filter for.</value>
+        public IReadOnlyList<DltType> DltTypeFilters { get { return m_DltType; } }
+
         /// <summary>
         /// Gets a value indicating whether verbose messages should be filtered.
         /// </summary>
@@ -216,6 +230,64 @@
                 throw new OptionFormatException("before-context");
             if (AfterContext < 0)
                 throw new OptionFormatException("after-context");
+
+            try {
+                // Interpret the strings and convert to the correct DltType.
+                foreach (string dltTypeFilter in m_DltTypeFilters) {
+                    m_DltType.Add(GetDltType(dltTypeFilter));
+                }
+            } catch (ArgumentException ex) {
+                throw new OptionFormatException("type", ex.Message, ex);
+            }
+        }
+
+        private static DltType GetDltType(string dltTypeFilter)
+        {
+            if (int.TryParse(dltTypeFilter,
+                    NumberStyles.Number, CultureInfo.InvariantCulture,
+                    out int value)) {
+                return (DltType)value;
+            }
+
+            if (!Enum.TryParse<DltTypeFilter>(dltTypeFilter, true, out DltTypeFilter typeFilter)) {
+                string msg = string.Format(AppResources.OptionInvalidFilterType, dltTypeFilter);
+                throw new ArgumentException(msg, nameof(dltTypeFilter));
+            }
+
+            switch (typeFilter) {
+            case DltTypeFilter.Fatal: return DltType.LOG_FATAL;
+            case DltTypeFilter.Error: return DltType.LOG_ERROR;
+            case DltTypeFilter.Warn: return DltType.LOG_WARN;
+            case DltTypeFilter.Info: return DltType.LOG_INFO;
+            case DltTypeFilter.Debug: return DltType.LOG_DEBUG;
+            case DltTypeFilter.Verbose: return DltType.LOG_VERBOSE;
+            case DltTypeFilter.IPC: return DltType.NW_TRACE_IPC;
+            case DltTypeFilter.CAN: return DltType.NW_TRACE_CAN;
+            case DltTypeFilter.FlexRay: return DltType.NW_TRACE_FLEXRAY;
+            case DltTypeFilter.MOST: return DltType.NW_TRACE_MOST;
+            case DltTypeFilter.Ethernet: return DltType.NW_TRACE_ETHERNET;
+            case DltTypeFilter.SomeIP: return DltType.NW_TRACE_SOMEIP;
+            case DltTypeFilter.User1: return DltType.NW_TRACE_USER_DEFINED_0;
+            case DltTypeFilter.User2: return DltType.NW_TRACE_USER_DEFINED_1;
+            case DltTypeFilter.User3: return DltType.NW_TRACE_USER_DEFINED_2;
+            case DltTypeFilter.User4: return DltType.NW_TRACE_USER_DEFINED_3;
+            case DltTypeFilter.User5: return DltType.NW_TRACE_USER_DEFINED_4;
+            case DltTypeFilter.User6: return DltType.NW_TRACE_USER_DEFINED_5;
+            case DltTypeFilter.User7: return DltType.NW_TRACE_USER_DEFINED_6;
+            case DltTypeFilter.User8: return DltType.NW_TRACE_USER_DEFINED_7;
+            case DltTypeFilter.User9: return DltType.NW_TRACE_USER_DEFINED_8;
+            case DltTypeFilter.Request: return DltType.CONTROL_REQUEST;
+            case DltTypeFilter.Response: return DltType.CONTROL_RESPONSE;
+            case DltTypeFilter.Time: return DltType.CONTROL_TIME;
+            case DltTypeFilter.Variable: return DltType.APP_TRACE_VARIABLE;
+            case DltTypeFilter.FunctionIn: return DltType.APP_TRACE_FUNCTION_IN;
+            case DltTypeFilter.FunctionOut: return DltType.APP_TRACE_FUNCTION_OUT;
+            case DltTypeFilter.State: return DltType.APP_TRACE_STATE;
+            case DltTypeFilter.VFB: return DltType.APP_TRACE_VFB;
+            default:
+                string msg = string.Format(AppResources.OptionInvalidFilterType, dltTypeFilter);
+                throw new ArgumentException(msg, nameof(dltTypeFilter));
+            }
         }
 
         public void Usage()

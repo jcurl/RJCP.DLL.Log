@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
+    using Diagnostics.Log.Dlt;
     using Infrastructure.Dlt;
     using NUnit.Framework;
     using TestResources;
@@ -358,6 +359,27 @@
             }, Throws.InstanceOf<ArgumentException>());
 
             Assert.That(config.GetFilter(), Is.Null);
+        }
+
+        [TestCase(DltType.LOG_INFO, true)]
+        [TestCase(DltType.LOG_WARN, false)]
+        public void FilterDltTypeVerboseInfo(DltType dltType, bool result)
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageType(dltType);
+
+            Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
+        }
+
+        [TestCase(DltType.CONTROL_REQUEST, false)]
+        [TestCase(DltType.CONTROL_RESPONSE, true)]
+        [TestCase(DltType.LOG_WARN, false)]
+        public void FilterDltTypeControlResponse(DltType dltType, bool result)
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageType(dltType);
+
+            Assert.That(config.GetFilter().Check(TestLines.Control), Is.EqualTo(result));
         }
     }
 }

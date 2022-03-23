@@ -262,12 +262,27 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}type{2}&lt;types&gt;
+        ///  Filter for specific message types. Types are:
+        ///  * Log: fatal,error,warn,info,debug,verbose
+        ///  * Network: ipc,can,flexray,network,ethernet.someip,user1,..,user9
+        ///  * Control: request,response,time
+        ///  * Trace: variable,functionin,functionout,state,vfb
+        ///  You can use an integer 0-254 for comparison for other values, e.g. 48 is the same as &apos;warn&apos;..
+        /// </summary>
+        internal static string Help370_DltTypes {
+            get {
+                return ResourceManager.GetString("Help370_DltTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {1}verbose
         ///  Match lines that are verbose (have an extended header and the verbose bit is set).
         /// </summary>
-        internal static string Help370_Verbose {
+        internal static string Help375_Verbose {
             get {
-                return ResourceManager.GetString("Help370_Verbose", resourceCulture);
+                return ResourceManager.GetString("Help375_Verbose", resourceCulture);
             }
         }
         
@@ -275,9 +290,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {1}nonverbose
         ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message).
         /// </summary>
-        internal static string Help375_NonVerbose {
+        internal static string Help380_NonVerbose {
             get {
-                return ResourceManager.GetString("Help375_NonVerbose", resourceCulture);
+                return ResourceManager.GetString("Help380_NonVerbose", resourceCulture);
             }
         }
         
@@ -285,9 +300,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {1}control
         ///  Match lines that are a control message (including the timing message).
         /// </summary>
-        internal static string Help380_Control {
+        internal static string Help385_Control {
             get {
-                return ResourceManager.GetString("Help380_Control", resourceCulture);
+                return ResourceManager.GetString("Help385_Control", resourceCulture);
             }
         }
         
@@ -295,9 +310,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {0}B | {1}before-context{2}&lt;lines&gt;
         ///  On a match, print &lt;lines&gt; of text before the match..
         /// </summary>
-        internal static string Help385_BeforeContext {
+        internal static string Help390_BeforeContext {
             get {
-                return ResourceManager.GetString("Help385_BeforeContext", resourceCulture);
+                return ResourceManager.GetString("Help390_BeforeContext", resourceCulture);
             }
         }
         
@@ -305,9 +320,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {0}A | {1}after-context{2}&lt;lines&gt;
         ///  On a match, print &lt;lines&gt; of text after the match..
         /// </summary>
-        internal static string Help390_AfterContext {
+        internal static string Help395_AfterContext {
             get {
-                return ResourceManager.GetString("Help390_AfterContext", resourceCulture);
+                return ResourceManager.GetString("Help395_AfterContext", resourceCulture);
             }
         }
         

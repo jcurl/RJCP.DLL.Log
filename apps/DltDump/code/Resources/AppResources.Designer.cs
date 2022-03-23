@@ -340,6 +340,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown filter type &apos;{0}&apos;..
+        /// </summary>
+        internal static string OptionInvalidFilterType {
+            get {
+                return ResourceManager.GetString("OptionInvalidFilterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem with the command line..
         /// </summary>
         internal static string OptionsError {

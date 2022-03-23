@@ -1,0 +1,35 @@
+﻿namespace RJCP.App.DltDump.View
+{
+    public enum DltTypeFilter
+    {
+        Fatal,
+        Error,
+        Warn,
+        Info,
+        Debug,
+        Verbose,
+        IPC,
+        CAN,
+        FlexRay,
+        MOST,
+        Ethernet,
+        SomeIP,
+        User1,
+        User2,
+        User3,
+        User4,
+        User5,
+        User6,
+        User7,
+        User8,
+        User9,
+        Request,
+        Response,
+        Time,
+        Variable,
+        FunctionIn,
+        FunctionOut,
+        State,
+        VFB
+    }
+}
