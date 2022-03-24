@@ -84,6 +84,8 @@
 
         public static void ConvertToHex(StringBuilder strBuilder, ReadOnlySpan<byte> buffer, bool upper)
         {
+            if (buffer.Length == 0) return;
+
             string[] firstByte = upper ? FirstByteConvertUpper : FirstByteConvert;
             string[] byteConvert = upper ? ByteConvertUpper : ByteConvert;
             strBuilder.EnsureCapacity(strBuilder.Length + buffer.Length * 3);

@@ -48,9 +48,9 @@
                             builder[offset + i] = '-';
                         }
                     }
+                    builder.Append('|');
+                    HexConvert.ConvertToHex(builder, Data.AsSpan());
                 }
-                builder.Append('|');
-                HexConvert.ConvertToHex(builder, Data.AsSpan());
                 m_NonVerboseArg = builder.ToString();
             }
             return m_NonVerboseArg;
