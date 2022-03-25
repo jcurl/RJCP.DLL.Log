@@ -87,6 +87,7 @@
         {
             IDltLineBuilder lineBuilder = new DltLineBuilder();
             lineBuilder.SetDltType(DltType.LOG_INFO);
+            lineBuilder.SetNumberOfArgs(1);
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
             IVerboseDltDecoder dltDecoder = new VerboseDltDecoder(new VerboseArgDecoder());

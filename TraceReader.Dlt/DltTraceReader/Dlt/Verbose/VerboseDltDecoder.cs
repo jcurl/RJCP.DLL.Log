@@ -33,9 +33,12 @@
         /// <summary>
         /// Decodes the specified buffer as a verbose payload.
         /// </summary>
-        /// <param name="buffer">The buffer that should be decoded.</param>
+        /// <param name="buffer">
+        /// The buffer that should be decoded. The packet starts where the verbose payload starts.
+        /// </param>
         /// <param name="lineBuilder">
-        /// The line builder providing information from the standard header, and where the decoded packets will be placed.
+        /// The line builder providing information from the standard header, and where the decoded packets will be
+        /// placed.
         /// </param>
         /// <returns>The length of all the decoded verbose arguments in the buffer.</returns>
         /// <remarks>
@@ -45,10 +48,9 @@
         public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
             try {
-                int argCount = 0;
                 int payloadLength = 0;
 
-                do {
+                for (int argCount = 0; argCount < lineBuilder.NumberOfArgs; argCount++) {
                     if (buffer.Length < 4) {
                         lineBuilder.SetErrorMessage(
                             "Verbose message with insufficient buffer length decoding arg {0} of {1}",
@@ -73,9 +75,9 @@
 
                     lineBuilder.AddArgument(argument);
                     buffer = buffer[argLength..];
-                    argCount++;
                     payloadLength += argLength;
-                } while (argCount < lineBuilder.NumberOfArgs);
+                }
+
                 return payloadLength;
             } catch (Exception ex) {
                 Log.Dlt.TraceException(ex, nameof(Decode), "Verbose decoding exception");

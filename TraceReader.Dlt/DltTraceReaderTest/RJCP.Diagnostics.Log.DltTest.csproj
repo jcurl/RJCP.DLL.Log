@@ -159,13 +159,13 @@
     <Compile Include="Dlt\IdHashListTest.cs" />
     <Compile Include="Dlt\Verbose\BoolArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\FloatArgDecoderTest.cs" />
-    <Compile Include="Dlt\Verbose\ArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\RawArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\SignedIntArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\StringArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\UnsignedIntArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\VerboseArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\VerboseDecoderTestBase.cs" />
+    <Compile Include="Dlt\Verbose\VerboseDltDecoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
     <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>
