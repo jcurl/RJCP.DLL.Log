@@ -29,8 +29,6 @@
         }
 
         [TestCase(0x00, "[sync_timestamp ok] 2022-01-05 09:48:46.55685Z")]
-        [TestCase(0x01, "[sync_timestamp not_supported] 2022-01-05 09:48:46.55685Z")]
-        [TestCase(0x02, "[sync_timestamp error] 2022-01-05 09:48:46.55685Z")]
         public void DecodeResponse(byte status, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -53,8 +51,6 @@
         }
 
         [TestCase(0x00, "[sync_timestamp ok] 2039-01-10 04:37:18.00143Z")]
-        [TestCase(0x01, "[sync_timestamp not_supported] 2039-01-10 04:37:18.00143Z")]
-        [TestCase(0x02, "[sync_timestamp error] 2039-01-10 04:37:18.00143Z")]
         public void DecodeResponseLargeDate(byte status, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -74,6 +70,21 @@
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.TimeStamp, Is.EqualTo(new DateTime(2039, 1, 10, 4, 37, 18, DateTimeKind.Utc).AddTicks(14384)));
+        }
+
+        [TestCase(0x01, "[sync_timestamp not_supported]")]
+        [TestCase(0x02, "[sync_timestamp error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x24, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x24, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x24_SyncTimeStampResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x24));
+            Assert.That(response.Status, Is.EqualTo(status));
+            Assert.That(response.ToString(), Is.EqualTo(result));
         }
     }
 }

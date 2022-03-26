@@ -45,11 +45,6 @@
         public const int StatusOverflow = 9;
 
         /// <summary>
-        /// Response data overflow code.
-        /// </summary>
-        public const int StatusResponseDataOverflow = 9;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="GetLogInfoResponse"/> class.
         /// </summary>
         /// <param name="status">The status.</param>

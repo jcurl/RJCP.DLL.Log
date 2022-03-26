@@ -34,7 +34,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            return string.Format("[get_software_version {0}] {1}", ToString(Status), SwVersion);
+            return Status == StatusOk ?
+                string.Format("[get_software_version {0}] {1}", ToString(Status), SwVersion) :
+                string.Format("[get_software_version {0}]", ToString(Status));
         }
     }
 }

@@ -36,10 +36,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (Status == StatusOk)
-                return string.Format("[get_trace_status {0}] {1}", ToString(Status), Enabled ? "on" : "off");
-
-            return string.Format("[get_trace_status {0}]", ToString(Status));
+            return Status == StatusOk ?
+                string.Format("[get_trace_status {0}] {1}", ToString(Status), Enabled ? "on" : "off") :
+                string.Format("[get_trace_status {0}]", ToString(Status));
         }
     }
 }

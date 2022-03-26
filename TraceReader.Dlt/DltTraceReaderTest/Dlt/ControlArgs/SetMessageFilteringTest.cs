@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetMessageFilteringResponse.StatusOk, "[set_message_filtering ok]")]
-        [TestCase(SetMessageFilteringResponse.StatusNotSupported, "[set_message_filtering not_supported]")]
-        [TestCase(SetMessageFilteringResponse.StatusError, "[set_message_filtering error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_message_filtering ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_message_filtering not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_message_filtering error]")]
         [TestCase(100, "[set_message_filtering status=100]")]
         public void SetMessageFilteringResp(int status, string result)
         {

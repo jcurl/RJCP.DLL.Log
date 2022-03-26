@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "use_extended_header");
+                return 5;
+            }
+
             service = new SetUseExtendedHeaderResponse(status);
             return 5;
         }

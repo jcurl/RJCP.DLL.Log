@@ -30,12 +30,6 @@
         [TestCase(0x00, 0x00, "[get_use_ecu_id ok] off")]
         [TestCase(0x00, 0x01, "[get_use_ecu_id ok] on")]
         [TestCase(0x00, 0xFF, "[get_use_ecu_id ok] on")]
-        [TestCase(0x01, 0x00, "[get_use_ecu_id not_supported]")]
-        [TestCase(0x01, 0x01, "[get_use_ecu_id not_supported]")]
-        [TestCase(0x01, 0xFF, "[get_use_ecu_id not_supported]")]
-        [TestCase(0x02, 0x00, "[get_use_ecu_id error]")]
-        [TestCase(0x02, 0x01, "[get_use_ecu_id error]")]
-        [TestCase(0x02, 0xFF, "[get_use_ecu_id error]")]
         public void DecodeResponse(byte status, byte enabled, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -47,6 +41,21 @@
             Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.Enabled, Is.EqualTo(enabled != 0));
+        }
+
+        [TestCase(0x01, "[get_use_ecu_id not_supported]")]
+        [TestCase(0x02, "[get_use_ecu_id error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x1B, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x1B, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x1B_GetUseEcuIdResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x1B));
+            Assert.That(response.ToString(), Is.EqualTo(result));
+            Assert.That(response.Status, Is.EqualTo(status));
         }
     }
 }

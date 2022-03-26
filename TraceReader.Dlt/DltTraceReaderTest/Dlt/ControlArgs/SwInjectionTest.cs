@@ -16,9 +16,9 @@
             Assert.That(arg.Payload, Is.EqualTo(payload));
         }
 
-        [TestCase(0xFFF, SwInjectionResponse.StatusOk, "[ ok]")]
-        [TestCase(0xFFF, SwInjectionResponse.StatusNotSupported, "[ not_supported]")]
-        [TestCase(0xFFF, SwInjectionResponse.StatusError, "[ error]")]
+        [TestCase(0xFFF, ControlResponse.StatusOk, "[ ok]")]
+        [TestCase(0xFFF, ControlResponse.StatusNotSupported, "[ not_supported]")]
+        [TestCase(0xFFF, ControlResponse.StatusError, "[ error]")]
         [TestCase(0xFFF, SwInjectionResponse.StatusPending, "[ pending]")]
         [TestCase(0xFFF, 100, "[ status=100]")]
         public void SwInjectionResp(int serviceId, int status, string result)

@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetVerboseModeResponse.StatusOk, "[set_verbose_mode ok]")]
-        [TestCase(SetVerboseModeResponse.StatusNotSupported, "[set_verbose_mode not_supported]")]
-        [TestCase(SetVerboseModeResponse.StatusError, "[set_verbose_mode error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_verbose_mode ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_verbose_mode not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_verbose_mode error]")]
         [TestCase(100, "[set_verbose_mode status=100]")]
         public void SetVerboseModeResp(int status, string result)
         {

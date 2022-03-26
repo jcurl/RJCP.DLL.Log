@@ -67,7 +67,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x11, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x11_SetDefaultLogLevelResponse_{status:x2}", out IControlArg service);
 
-            SetDefaultLogLevelResponse response = (SetDefaultLogLevelResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x11));
             Assert.That(response.Status, Is.EqualTo((int)status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

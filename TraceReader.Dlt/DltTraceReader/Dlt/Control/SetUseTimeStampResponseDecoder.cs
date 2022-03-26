@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "use_timestamp");
+                return 5;
+            }
+
             service = new SetUseTimeStampResponse(status);
             return 5;
         }

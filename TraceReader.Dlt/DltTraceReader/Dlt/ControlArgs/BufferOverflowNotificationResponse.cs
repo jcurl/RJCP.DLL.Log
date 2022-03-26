@@ -34,7 +34,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            return string.Format("[buffer_overflow {0}] {1}", ToString(Status), unchecked((uint)Counter));
+            return Status == StatusOk ?
+                string.Format("[buffer_overflow {0}] {1}", ToString(Status), unchecked((uint)Counter)) :
+                string.Format("[buffer_overflow {0}]", ToString(Status));
         }
     }
 }

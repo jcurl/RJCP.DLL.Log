@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetUseTimeStampResponse.StatusOk, "[use_timestamp ok]")]
-        [TestCase(SetUseTimeStampResponse.StatusNotSupported, "[use_timestamp not_supported]")]
-        [TestCase(SetUseTimeStampResponse.StatusError, "[use_timestamp error]")]
+        [TestCase(ControlResponse.StatusOk, "[use_timestamp ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[use_timestamp not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[use_timestamp error]")]
         [TestCase(100, "[use_timestamp status=100]")]
         public void SetUseTimeStampResp(int status, string result)
         {

@@ -14,10 +14,10 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_default_log_level]"));
         }
 
-        [TestCase(GetSoftwareVersionResponse.StatusOk, "[get_default_log_level ok] block_all")]
-        [TestCase(GetSoftwareVersionResponse.StatusNotSupported, "[get_default_log_level not_supported] block_all")]
-        [TestCase(GetSoftwareVersionResponse.StatusError, "[get_default_log_level error] block_all")]
-        [TestCase(100, "[get_default_log_level status=100] block_all")]
+        [TestCase(ControlResponse.StatusOk, "[get_default_log_level ok] block_all")]
+        [TestCase(ControlResponse.StatusNotSupported, "[get_default_log_level not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[get_default_log_level error]")]
+        [TestCase(100, "[get_default_log_level status=100]")]
         public void GetDefaultLogLevelResp(int status, string result)
         {
             GetDefaultLogLevelResponse arg = new GetDefaultLogLevelResponse(status, 0);

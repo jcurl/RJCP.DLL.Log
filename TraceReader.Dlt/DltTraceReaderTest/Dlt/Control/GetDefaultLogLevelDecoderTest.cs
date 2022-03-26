@@ -28,23 +28,36 @@
         }
 
         [TestCase(0x00, 0x00, "[get_default_log_level ok] block_all")]
-        [TestCase(0x01, 0x00, "[get_default_log_level not_supported] block_all")]
-        [TestCase(0x02, 0x00, "[get_default_log_level error] block_all")]
         [TestCase(0x00, 0x01, "[get_default_log_level ok] fatal")]
-        [TestCase(0x01, 0x01, "[get_default_log_level not_supported] fatal")]
-        [TestCase(0x02, 0x01, "[get_default_log_level error] fatal")]
         [TestCase(0x00, 0xFF, "[get_default_log_level ok] default")]
-        [TestCase(0x01, 0xFF, "[get_default_log_level not_supported] default")]
-        [TestCase(0x02, 0xFF, "[get_default_log_level error] default")]
         public void DecodeResponse(byte status, byte logLevel, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
                 new byte[] { 0x04, 0x00, 0x00, 0x00, status, logLevel } :
                 new byte[] { 0x00, 0x00, 0x00, 0x04, status, logLevel };
-            Decode(DltType.CONTROL_RESPONSE, payload, $"0x04_GetDefaultLogLevelResponse_{logLevel:x2}_{status:x2}", out IControlArg service);
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x04_GetDefaultLogLevelResponse_{status:x2}_{logLevel:x2}", out IControlArg service);
 
             GetDefaultLogLevelResponse response = (GetDefaultLogLevelResponse)service;
             Assert.That(response.LogLevel, Is.EqualTo((LogLevel)unchecked((sbyte)logLevel)));
+            Assert.That(response.Status, Is.EqualTo(status));
+            Assert.That(response.ToString(), Is.EqualTo(result));
+        }
+
+        [TestCase(0x01, "[get_default_log_level not_supported]")]
+        [TestCase(0x02, "[get_default_log_level error]")]
+        [TestCase(0x01, "[get_default_log_level not_supported]")]
+        [TestCase(0x02, "[get_default_log_level error]")]
+        [TestCase(0x01, "[get_default_log_level not_supported]")]
+        [TestCase(0x02, "[get_default_log_level error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x04, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x04, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x04_GetDefaultLogLevelResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x04));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

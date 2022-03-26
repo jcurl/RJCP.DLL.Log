@@ -34,8 +34,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            return string.Format("[get_default_log_level {0}] {1}",
-                ToString(Status), LogLevel.GetDescription());
+            return Status == StatusOk ?
+                string.Format("[get_default_log_level {0}] {1}", ToString(Status), LogLevel.GetDescription()) :
+                string.Format("[get_default_log_level {0}]", ToString(Status));
         }
     }
 }

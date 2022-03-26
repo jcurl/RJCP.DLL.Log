@@ -131,9 +131,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
         }
 
-        [TestCase(GetLogInfoResponse.StatusOk, "[get_log_info ok]")]
-        [TestCase(GetLogInfoResponse.StatusNotSupported, "[get_log_info not_supported]")]
-        [TestCase(GetLogInfoResponse.StatusError, "[get_log_info error]")]
+        [TestCase(ControlResponse.StatusOk, "[get_log_info ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[get_log_info not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[get_log_info error]")]
         [TestCase(GetLogInfoResponse.StatusNoLogNoTrace, "[get_log_info 3]")]
         [TestCase(GetLogInfoResponse.StatusWithLogNoTrace, "[get_log_info 4]")]
         [TestCase(GetLogInfoResponse.StatusNoLogWithTrace, "[get_log_info 5]")]
@@ -151,9 +151,9 @@
             Assert.That(arg.AppIds.Count, Is.EqualTo(0));
         }
 
-        [TestCase(GetLogInfoResponse.StatusOk, "[get_log_info ok]")]
-        [TestCase(GetLogInfoResponse.StatusNotSupported, "[get_log_info not_supported]")]
-        [TestCase(GetLogInfoResponse.StatusError, "[get_log_info error]")]
+        [TestCase(ControlResponse.StatusOk, "[get_log_info ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[get_log_info not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[get_log_info error]")]
         [TestCase(GetLogInfoResponse.StatusNoLogNoTrace, "[get_log_info 3]")]
         [TestCase(GetLogInfoResponse.StatusWithLogNoTrace, "[get_log_info 4]")]
         [TestCase(GetLogInfoResponse.StatusNoLogWithTrace, "[get_log_info 5]")]

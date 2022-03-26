@@ -14,10 +14,10 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_software_version]"));
         }
 
-        [TestCase(GetSoftwareVersionResponse.StatusOk, "[get_software_version ok] Version")]
-        [TestCase(GetSoftwareVersionResponse.StatusNotSupported, "[get_software_version not_supported] Version")]
-        [TestCase(GetSoftwareVersionResponse.StatusError, "[get_software_version error] Version")]
-        [TestCase(100, "[get_software_version status=100] Version")]
+        [TestCase(ControlResponse.StatusOk, "[get_software_version ok] Version")]
+        [TestCase(ControlResponse.StatusNotSupported, "[get_software_version not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[get_software_version error]")]
+        [TestCase(100, "[get_software_version status=100]")]
         public void GetSoftwareVersionResp(int status, string result)
         {
             GetSoftwareVersionResponse arg = new GetSoftwareVersionResponse(status, "Version");

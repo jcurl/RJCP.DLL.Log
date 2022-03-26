@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "reset_to_factory_default");
+                return 5;
+            }
+
             service = new ResetFactoryDefaultResponse(status);
             return 5;
         }

@@ -26,6 +26,18 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
+            if (buffer.Length < 5)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
+
+            int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "get_software_version");
+                return 5;
+            }
+
             const int VersionStringOffset = 4 + VersionHeaderLength;
 
             if (buffer.Length < VersionStringOffset)
@@ -48,7 +60,6 @@
             if (buffer[VersionStringOffset + versionLength - 1] == '\0')
                 versionLength--;
 
-            int status = buffer[4];
             int cu = Iso8859_1.Convert(buffer[VersionStringOffset..(VersionStringOffset + versionLength)], m_CharResult);
             string swVersion = new string(m_CharResult, 0, cu);
 

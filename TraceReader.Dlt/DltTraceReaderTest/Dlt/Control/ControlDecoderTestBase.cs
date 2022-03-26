@@ -118,7 +118,9 @@
                 Assert.That(service.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
                 break;
             case DltType.CONTROL_RESPONSE:
-                Assert.That(service, Is.TypeOf(m_ResponseType));
+                Assert.That(service, Is.TypeOf(m_ResponseType).Or.TypeOf<ControlErrorNotSupported>());
+                if (service is ControlErrorNotSupported notSupported)
+                    Assert.That(notSupported.Status, Is.Not.EqualTo(ControlResponse.StatusOk));
                 Assert.That(service.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
                 break;
             case DltType.CONTROL_TIME:
@@ -187,7 +189,7 @@
                 length = argDecoder.Decode(serviceId, data.AsSpan()[0..i], isBig, out IControlArg testService);
                 Assert.That(length, Is.EqualTo(-1).Or.EqualTo(i));
                 if (length == -1) {
-                    Assert.That(testService, Is.Null.Or.TypeOf<ControlError>());
+                    Assert.That(testService, Is.Null.Or.TypeOf<ControlDecodeError>());
                 } else {
                     Assert.That(testService, Is.Not.Null);
                 }

@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetUseExtendedHeaderResponse.StatusOk, "[use_extended_header ok]")]
-        [TestCase(SetUseExtendedHeaderResponse.StatusNotSupported, "[use_extended_header not_supported]")]
-        [TestCase(SetUseExtendedHeaderResponse.StatusError, "[use_extended_header error]")]
+        [TestCase(ControlResponse.StatusOk, "[use_extended_header ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[use_extended_header not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[use_extended_header error]")]
         [TestCase(100, "[use_extended_header status=100]")]
         public void SetUseExtendedHeaderResp(int status, string result)
         {

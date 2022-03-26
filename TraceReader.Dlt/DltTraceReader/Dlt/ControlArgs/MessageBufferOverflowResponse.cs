@@ -37,10 +37,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (Status == StatusOk)
-                return string.Format("[message_buffer_overflow {0}] {1}", ToString(Status), Overflow ? "true" : "false");
-
-            return string.Format("[message_buffer_overflow {0}]", ToString(Status));
+            return Status == StatusOk ?
+                string.Format("[message_buffer_overflow {0}] {1}", ToString(Status), Overflow ? "true" : "false") :
+                string.Format("[message_buffer_overflow {0}]", ToString(Status));
         }
     }
 }

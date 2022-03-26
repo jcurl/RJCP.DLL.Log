@@ -21,12 +21,23 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 6)
+            if (buffer.Length < 5)
                 return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
                     "'GetDefaultLogLevelResponse' with insufficient buffer length of {0}", buffer.Length,
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "get_default_log_level");
+                return 5;
+            }
+
+            if (buffer.Length < 6)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'GetDefaultLogLevelResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
+
             int logLevel = unchecked((sbyte)buffer[5]);
             service = new GetDefaultLogLevelResponse(status, (LogLevel)logLevel);
             return 6;

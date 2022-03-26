@@ -5,9 +5,9 @@
     [TestFixture]
     public class CustomUnregisterContextTest
     {
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok] APP1 (CTX1) eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1) eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error] APP1 (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok] APP1 (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error] APP1 (CTX1) eth0")]
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1) eth0")]
         public void CustomUnregisterContextRes(int status, string result)
         {
@@ -20,9 +20,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
         }
 
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok] APP1 (CTX1)")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1)")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error] APP1 (CTX1)")]
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1)")]
         public void CustomUnregisterContextRes_NoComId(int status, string result)
         {
@@ -35,9 +35,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
         }
 
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok] APP1 (CTX1)")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1)")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported] APP1 (CTX1)")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error] APP1 (CTX1)")]
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1)")]
         public void CustomUnregisterContextRes_NullComId(int status, string result)
         {
@@ -50,9 +50,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
         }
 
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok]  (CTX1) eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported]  (CTX1) eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error]  (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok]  (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported]  (CTX1) eth0")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error]  (CTX1) eth0")]
         [TestCase(100, "[unregister_context status=100]  (CTX1) eth0")]
         public void CustomUnregisterContextRes_NoAppId(int status, string result)
         {
@@ -65,9 +65,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
         }
 
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok] eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported] eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error] eth0")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok] eth0")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported] eth0")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error] eth0")]
         [TestCase(100, "[unregister_context status=100] eth0")]
         public void CustomUnregisterContextRes_NoAppIdCtxId(int status, string result)
         {
@@ -80,9 +80,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
         }
 
-        [TestCase(CustomUnregisterContextResponse.StatusOk, "[unregister_context ok] APP1 () eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusNotSupported, "[unregister_context not_supported] APP1 () eth0")]
-        [TestCase(CustomUnregisterContextResponse.StatusError, "[unregister_context error] APP1 () eth0")]
+        [TestCase(ControlResponse.StatusOk, "[unregister_context ok] APP1 () eth0")]
+        [TestCase(ControlResponse.StatusNotSupported, "[unregister_context not_supported] APP1 () eth0")]
+        [TestCase(ControlResponse.StatusError, "[unregister_context error] APP1 () eth0")]
         [TestCase(100, "[unregister_context status=100] APP1 () eth0")]
         public void CustomUnregisterContextRes_NoCtxId(int status, string result)
         {

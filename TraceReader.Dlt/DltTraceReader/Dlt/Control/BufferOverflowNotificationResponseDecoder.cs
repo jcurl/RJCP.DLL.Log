@@ -22,12 +22,23 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 9)
+            if (buffer.Length < 5)
                 return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
                     "'BufferOverflowNotificationResponse' with insufficient buffer length of {0}", buffer.Length,
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "buffer_overflow");
+                return 5;
+            }
+
+            if (buffer.Length < 9)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'BufferOverflowNotificationResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
+
             int counter = BitOperations.To32Shift(buffer[5..9], !msbf);
 
             service = new BufferOverflowNotificationResponse(status, counter);

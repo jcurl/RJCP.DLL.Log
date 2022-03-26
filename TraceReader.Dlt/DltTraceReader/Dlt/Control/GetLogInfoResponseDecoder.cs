@@ -24,17 +24,26 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 9)
+            if (buffer.Length < 5)
                 return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
                     "'GetLogInfoResponse' with insufficient buffer length of {0}", buffer.Length,
                     out service);
 
             int status = buffer[4];
+            switch (status) {
+            case ControlResponse.StatusNotSupported:
+            case ControlResponse.StatusError:
+                service = new ControlErrorNotSupported(serviceId, status, "get_log_info");
+                return 5;
+            }
+
+            if (buffer.Length < 9)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'GetLogInfoResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
 
             switch (status) {
-            case GetLogInfoResponse.StatusOk:
-            case GetLogInfoResponse.StatusNotSupported:
-            case GetLogInfoResponse.StatusError:
+            case ControlResponse.StatusOk:
             case GetLogInfoResponse.StatusNoMatch:
             case GetLogInfoResponse.StatusOverflow:
                 int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);

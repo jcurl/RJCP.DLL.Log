@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "get_local_time");
+                return 5;
+            }
+
             service = new GetLocalTimeResponse(status);
             return 5;
         }

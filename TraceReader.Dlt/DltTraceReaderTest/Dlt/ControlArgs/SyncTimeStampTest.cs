@@ -15,9 +15,9 @@
             Assert.That(arg.ToString(), Is.EqualTo("[sync_timestamp]"));
         }
 
-        [TestCase(SyncTimeStampResponse.StatusOk, "[sync_timestamp ok] 2022-01-05 10:28:34.55600Z")]
-        [TestCase(SyncTimeStampResponse.StatusNotSupported, "[sync_timestamp not_supported] 2022-01-05 10:28:34.55600Z")]
-        [TestCase(SyncTimeStampResponse.StatusError, "[sync_timestamp error] 2022-01-05 10:28:34.55600Z")]
+        [TestCase(ControlResponse.StatusOk, "[sync_timestamp ok] 2022-01-05 10:28:34.55600Z")]
+        [TestCase(ControlResponse.StatusNotSupported, "[sync_timestamp not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[sync_timestamp error]")]
         public void GetLocalTimeRes(int status, string result)
         {
             SyncTimeStampResponse arg = new SyncTimeStampResponse(status, new DateTime(2022, 1, 5, 10, 28, 34, 556, DateTimeKind.Utc));

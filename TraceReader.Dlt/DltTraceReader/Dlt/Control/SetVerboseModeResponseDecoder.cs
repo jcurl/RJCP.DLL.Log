@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "set_verbose_mode");
+                return 5;
+            }
+
             service = new SetVerboseModeResponse(status);
             return 5;
         }

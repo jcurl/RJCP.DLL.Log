@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, string.Empty);
+                return 5;
+            }
+
             service = new SwInjectionResponse(serviceId, status);
             return 5;
         }

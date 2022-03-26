@@ -41,9 +41,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo(comInterface));
         }
 
-        [TestCase(SetDefaultLogLevelResponse.StatusOk, "[set_default_log_level ok]")]
-        [TestCase(SetDefaultLogLevelResponse.StatusNotSupported, "[set_default_log_level not_supported]")]
-        [TestCase(SetDefaultLogLevelResponse.StatusError, "[set_default_log_level error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_default_log_level ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_default_log_level not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_default_log_level error]")]
         public void SetDefaultLogLevelRes(int status, string result)
         {
             SetDefaultLogLevelResponse arg = new SetDefaultLogLevelResponse(status);

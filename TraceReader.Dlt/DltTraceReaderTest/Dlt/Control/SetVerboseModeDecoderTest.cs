@@ -39,7 +39,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x09, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x09_SetVerboseModeResponse_{status:x2}", out IControlArg service);
 
-            SetVerboseModeResponse response = (SetVerboseModeResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x09));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

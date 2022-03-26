@@ -27,6 +27,12 @@
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "use_session_id");
+                return 5;
+            }
+
             service = new SetUseSessionIdResponse(status);
             return 5;
         }

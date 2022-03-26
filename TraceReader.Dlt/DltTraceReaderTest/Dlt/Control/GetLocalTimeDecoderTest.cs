@@ -28,8 +28,6 @@
         }
 
         [TestCase(0x00, "[get_local_time ok]")]
-        [TestCase(0x01, "[get_local_time not_supported]")]
-        [TestCase(0x02, "[get_local_time error]")]
         public void DecodeResponse(byte status, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -38,6 +36,21 @@
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x0C_GetLocalTimeResponse_{status:x2}", out IControlArg service);
 
             GetLocalTimeResponse response = (GetLocalTimeResponse)service;
+            Assert.That(response.Status, Is.EqualTo(status));
+            Assert.That(response.ToString(), Is.EqualTo(result));
+        }
+
+        [TestCase(0x01, "[get_local_time not_supported]")]
+        [TestCase(0x02, "[get_local_time error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x0C, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x0C, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x0C_GetLocalTimeResponse_{status:x2}", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x0C));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

@@ -39,7 +39,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x0D, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x0D_SetUseEcuIdResponse_{status:x2}", out IControlArg service);
 
-            SetUseEcuIdResponse response = (SetUseEcuIdResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x0D));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

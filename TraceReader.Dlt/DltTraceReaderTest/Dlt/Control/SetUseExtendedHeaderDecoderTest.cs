@@ -39,7 +39,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x10, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x10_SetUseExtendedHeaderResponse_{status:x2}", out IControlArg service);
 
-            SetUseExtendedHeaderResponse response = (SetUseExtendedHeaderResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x10));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

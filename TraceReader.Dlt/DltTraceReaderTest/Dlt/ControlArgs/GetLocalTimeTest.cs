@@ -14,9 +14,9 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_local_time]"));
         }
 
-        [TestCase(GetLocalTimeResponse.StatusOk, "[get_local_time ok]")]
-        [TestCase(GetLocalTimeResponse.StatusNotSupported, "[get_local_time not_supported]")]
-        [TestCase(GetLocalTimeResponse.StatusError, "[get_local_time error]")]
+        [TestCase(ControlResponse.StatusOk, "[get_local_time ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[get_local_time not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[get_local_time error]")]
         public void GetLocalTimeRes(int status, string result)
         {
             GetLocalTimeResponse arg = new GetLocalTimeResponse(status);

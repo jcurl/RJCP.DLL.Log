@@ -37,7 +37,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x06, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x06_ResetFactoryDefaultsResponse_{status:x2}", out IControlArg service);
 
-            ResetFactoryDefaultResponse response = (ResetFactoryDefaultResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x06));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

@@ -27,11 +27,11 @@
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="defaultType">The default type.</param>
         /// <param name="message">The message that is part of the decode error.</param>
-        /// <param name="service">The <see cref="ControlError"/> object indicating an error.</param>
+        /// <param name="service">The <see cref="ControlDecodeError"/> object indicating an error.</param>
         /// <returns>A decoder error, which is -1.</returns>
         protected static int DecodeError(int serviceId, DltType defaultType, string message, out IControlArg service)
         {
-            service = new ControlError(serviceId, defaultType, message);
+            service = new ControlDecodeError(serviceId, defaultType, message);
             return -1;
         }
 
@@ -42,11 +42,11 @@
         /// <param name="defaultType">The default type.</param>
         /// <param name="format">The format message that is part of the decode error.</param>
         /// <param name="arg1">The first argument to format.</param>
-        /// <param name="service">The <see cref="ControlError"/> object indicating an error.</param>
+        /// <param name="service">The <see cref="ControlDecodeError"/> object indicating an error.</param>
         /// <returns>A decoder error, which is -1.</returns>
         protected static int DecodeError(int serviceId, DltType defaultType, string format, object arg1, out IControlArg service)
         {
-            service = new ControlError(serviceId, defaultType, string.Format(format, arg1));
+            service = new ControlDecodeError(serviceId, defaultType, string.Format(format, arg1));
             return -1;
         }
 
@@ -58,11 +58,11 @@
         /// <param name="format">The format message that is part of the decode error.</param>
         /// <param name="arg1">The first argument to format.</param>
         /// <param name="arg2">The second argument to format.</param>
-        /// <param name="service">The <see cref="ControlError"/> object indicating an error.</param>
+        /// <param name="service">The <see cref="ControlDecodeError"/> object indicating an error.</param>
         /// <returns>A decoder error, which is -1.</returns>
         protected static int DecodeError(int serviceId, DltType defaultType, string format, object arg1, object arg2, out IControlArg service)
         {
-            service = new ControlError(serviceId, defaultType, string.Format(format, arg1, arg2));
+            service = new ControlDecodeError(serviceId, defaultType, string.Format(format, arg1, arg2));
             return -1;
         }
     }

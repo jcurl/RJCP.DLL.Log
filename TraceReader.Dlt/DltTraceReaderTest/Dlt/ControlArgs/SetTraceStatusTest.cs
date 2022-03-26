@@ -86,9 +86,9 @@
             Assert.That(arg.TraceStatus, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetTraceStatusResponse.StatusOk, "[set_trace_status ok]")]
-        [TestCase(SetTraceStatusResponse.StatusNotSupported, "[set_trace_status not_supported]")]
-        [TestCase(SetTraceStatusResponse.StatusError, "[set_trace_status error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_trace_status ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_trace_status not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_trace_status error]")]
         [TestCase(100, "[set_trace_status status=100]")]
         public void SetTraceStatusResp(int status, string result)
         {

@@ -110,9 +110,9 @@
             Assert.That(arg.LogLevel, Is.EqualTo(logLevel));
         }
 
-        [TestCase(SetLogLevelResponse.StatusOk, "[set_log_level ok]")]
-        [TestCase(SetLogLevelResponse.StatusNotSupported, "[set_log_level not_supported]")]
-        [TestCase(SetLogLevelResponse.StatusError, "[set_log_level error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_log_level ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_log_level not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_log_level error]")]
         [TestCase(100, "[set_log_level status=100]")]
         public void SetLogLevelResp(int status, string result)
         {

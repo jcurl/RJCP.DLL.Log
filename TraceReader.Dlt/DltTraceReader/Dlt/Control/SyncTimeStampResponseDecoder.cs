@@ -22,12 +22,23 @@
         /// <returns>The number of bytes decoded, or -1 upon error.</returns>
         public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 15)
+            if (buffer.Length < 5)
                 return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
                     "'SyncTimeStampResponse' with insufficient buffer length of {0}", buffer.Length,
                     out service);
 
             int status = buffer[4];
+            if (status == ControlResponse.StatusError ||
+                status == ControlResponse.StatusNotSupported) {
+                service = new ControlErrorNotSupported(serviceId, status, "sync_timestamp");
+                return 5;
+            }
+
+            if (buffer.Length < 15)
+                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
+                    "'SyncTimeStampResponse' with insufficient buffer length of {0}", buffer.Length,
+                    out service);
+
             uint ns = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             uint secLow = unchecked((uint)BitOperations.To32Shift(buffer[9..13], !msbf));
             uint secHigh = unchecked((ushort)BitOperations.To16Shift(buffer[13..15], !msbf));

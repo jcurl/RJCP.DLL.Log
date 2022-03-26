@@ -130,7 +130,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x02, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x02_SetTraceStatusResponse_{status:x2}", out IControlArg service);
 
-            SetTraceStatusResponse response = (SetTraceStatusResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x02));
             Assert.That(response.Status, Is.EqualTo((int)status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

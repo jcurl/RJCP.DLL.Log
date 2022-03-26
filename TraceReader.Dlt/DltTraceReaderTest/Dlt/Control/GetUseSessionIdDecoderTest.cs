@@ -30,12 +30,6 @@
         [TestCase(0x00, 0x00, "[get_use_session_id ok] off")]
         [TestCase(0x00, 0x01, "[get_use_session_id ok] on")]
         [TestCase(0x00, 0xFF, "[get_use_session_id ok] on")]
-        [TestCase(0x01, 0x00, "[get_use_session_id not_supported]")]
-        [TestCase(0x01, 0x01, "[get_use_session_id not_supported]")]
-        [TestCase(0x01, 0xFF, "[get_use_session_id not_supported]")]
-        [TestCase(0x02, 0x00, "[get_use_session_id error]")]
-        [TestCase(0x02, 0x01, "[get_use_session_id error]")]
-        [TestCase(0x02, 0xFF, "[get_use_session_id error]")]
         public void DecodeResponse(byte status, byte enabled, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -47,6 +41,21 @@
             Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.Enabled, Is.EqualTo(enabled != 0));
+        }
+
+        [TestCase(0x01, "[get_use_session_id not_supported]")]
+        [TestCase(0x02, "[get_use_session_id error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x1C, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x1C, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x1C_GetUseSessionIdResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x1C));
+            Assert.That(response.ToString(), Is.EqualTo(result));
+            Assert.That(response.Status, Is.EqualTo(status));
         }
     }
 }

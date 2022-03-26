@@ -37,7 +37,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x05, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x05_StoreConfigurationResponse_{status:x2}", out IControlArg service);
 
-            StoreConfigurationResponse response = (StoreConfigurationResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x05));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

@@ -171,8 +171,6 @@
         }
 
         [TestCase(0x00, "[get_log_info ok]")]
-        [TestCase(0x01, "[get_log_info not_supported]")]
-        [TestCase(0x02, "[get_log_info error]")]
         [TestCase(0x08, "[get_log_info no_matching_context_id]")]
         [TestCase(0x09, "[get_log_info overflow]")]
         public void DecodeResponse(byte status, string result)
@@ -186,6 +184,21 @@
             Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.AppIds.Count, Is.EqualTo(0));
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
+            Assert.That(response.Status, Is.EqualTo(status));
+        }
+
+        [TestCase(0x01, "[get_log_info not_supported]")]
+        [TestCase(0x02, "[get_log_info error]")]
+        public void DecodeResponseNotSupported(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x03, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x03, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x03_GetLogInfoResponse_{status:x2}", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x03));
+            Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.Status, Is.EqualTo(status));
         }
 

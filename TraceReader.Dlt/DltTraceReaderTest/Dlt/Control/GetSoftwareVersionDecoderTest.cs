@@ -55,5 +55,20 @@
             Assert.That(response.Status, Is.EqualTo(0));
             Assert.That(response.ToString(), Is.EqualTo("[get_software_version ok] Version"));
         }
+
+        [TestCase(0x01, "[get_software_version not_supported]")]
+        [TestCase(0x02, "[get_software_version error]")]
+        public void DecodeResponseError(byte status, string version)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x13, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x13, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x13_GetSoftwareVersionResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x13));
+            Assert.That(response.Status, Is.EqualTo(status));
+            Assert.That(response.ToString(), Is.EqualTo(version));
+        }
     }
 }

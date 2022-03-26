@@ -5,9 +5,9 @@
     [TestFixture]
     public class CustomMarkerTest
     {
-        [TestCase(CustomMarkerResponse.StatusOk, "MARKER")]
-        [TestCase(CustomMarkerResponse.StatusNotSupported, "MARKER")]
-        [TestCase(CustomMarkerResponse.StatusError, "MARKER")]
+        [TestCase(ControlResponse.StatusOk, "MARKER")]
+        [TestCase(ControlResponse.StatusNotSupported, "MARKER")]
+        [TestCase(ControlResponse.StatusError, "MARKER")]
         [TestCase(100, "MARKER")]
         public void CustomMarkerRes(int status, string result)
         {

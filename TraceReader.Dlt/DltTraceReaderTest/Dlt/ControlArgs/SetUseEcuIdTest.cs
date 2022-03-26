@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetUseEcuIdResponse.StatusOk, "[use_ecu_id ok]")]
-        [TestCase(SetUseEcuIdResponse.StatusNotSupported, "[use_ecu_id not_supported]")]
-        [TestCase(SetUseEcuIdResponse.StatusError, "[use_ecu_id error]")]
+        [TestCase(ControlResponse.StatusOk, "[use_ecu_id ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[use_ecu_id not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[use_ecu_id error]")]
         [TestCase(100, "[use_ecu_id status=100]")]
         public void SetUseEcuIdResp(int status, string result)
         {

@@ -149,7 +149,7 @@
                 .SetApplicationId("APP1")
                 .SetContextId("CTX1")
                 .SetDltType(DltType.CONTROL_RESPONSE)
-                .SetControlPayload(new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "20w34.1"))
+                .SetControlPayload(new GetSoftwareVersionResponse(ControlResponse.StatusOk, "20w34.1"))
                 .GetResult();
             Constraint c = new Constraint().DltIsVerbose(isVerbose);
             Assert.That(c.Check(line), Is.EqualTo(match));
@@ -164,7 +164,7 @@
                 .SetApplicationId("APP1")
                 .SetContextId("CTX1")
                 .SetDltType(DltType.CONTROL_RESPONSE)
-                .SetControlPayload(new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "20w34.1"))
+                .SetControlPayload(new GetSoftwareVersionResponse(ControlResponse.StatusOk, "20w34.1"))
                 .GetResult();
             Constraint c = new Constraint().DltIsControl();
             Assert.That(c.Check(line), Is.True);

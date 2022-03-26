@@ -125,7 +125,8 @@
                 new byte[] { 0x00, 0x00, 0x00, 0x01, status };
             Decode(DltType.CONTROL_RESPONSE, payload, $"0x01_SetLogLevel_Response_{status:x2}", out IControlArg service);
 
-            SetLogLevelResponse response = (SetLogLevelResponse)service;
+            ControlResponse response = (ControlResponse)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x01));
             Assert.That(response.Status, Is.EqualTo((int)status));
             Assert.That(response.ToString(), Is.EqualTo(result));
         }

@@ -227,7 +227,7 @@
             try {
                 int decoded = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
                 if (decoded == -1 || service == null) {
-                    if (service is ControlError controlError) {
+                    if (service is ControlDecodeError controlError) {
                         lineBuilder.SetErrorMessage(
                             "Control Message {0} Service 0x{1:x} {2}",
                             lineBuilder.DltType, serviceId, controlError.Message);

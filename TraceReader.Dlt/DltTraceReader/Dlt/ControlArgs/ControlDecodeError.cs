@@ -3,26 +3,26 @@
     /// <summary>
     /// This class represents a decoder error, with the message in the argument string.
     /// </summary>
-    public class ControlError : IControlArg
+    public sealed class ControlDecodeError : IControlArg
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ControlError" /> class.
+        /// Initializes a new instance of the <see cref="ControlDecodeError" /> class.
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="defaultType">The control message type.</param>
-        public ControlError(int serviceId, DltType defaultType)
+        public ControlDecodeError(int serviceId, DltType defaultType)
         {
             ServiceId = serviceId;
             DefaultType = defaultType;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ControlError" /> class.
+        /// Initializes a new instance of the <see cref="ControlDecodeError" /> class.
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="defaultType">The control message type.</param>
         /// <param name="message">The message describing the error.</param>
-        public ControlError(int serviceId, DltType defaultType, string message)
+        public ControlDecodeError(int serviceId, DltType defaultType, string message)
         {
             ServiceId = serviceId;
             DefaultType = defaultType;
@@ -30,13 +30,13 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ControlError"/> class.
+        /// Initializes a new instance of the <see cref="ControlDecodeError"/> class.
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="defaultType">The control message type.</param>
         /// <param name="format">The format message describing the error.</param>
         /// <param name="args">The arguments for the format.</param>
-        public ControlError(int serviceId, DltType defaultType, string format, params object[] args)
+        public ControlDecodeError(int serviceId, DltType defaultType, string format, params object[] args)
         {
             ServiceId = serviceId;
             DefaultType = defaultType;

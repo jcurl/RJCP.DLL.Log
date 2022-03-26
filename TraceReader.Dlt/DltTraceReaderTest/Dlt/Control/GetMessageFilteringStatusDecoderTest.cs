@@ -30,12 +30,6 @@
         [TestCase(0x00, 0x00, "[get_message_filtering ok] off")]
         [TestCase(0x00, 0x01, "[get_message_filtering ok] on")]
         [TestCase(0x00, 0xFF, "[get_message_filtering ok] on")]
-        [TestCase(0x01, 0x00, "[get_message_filtering not_supported]")]
-        [TestCase(0x01, 0x01, "[get_message_filtering not_supported]")]
-        [TestCase(0x01, 0xFF, "[get_message_filtering not_supported]")]
-        [TestCase(0x02, 0x00, "[get_message_filtering error]")]
-        [TestCase(0x02, 0x01, "[get_message_filtering error]")]
-        [TestCase(0x02, 0xFF, "[get_message_filtering error]")]
         public void DecodeResponse(byte status, byte enabled, string result)
         {
             byte[] payload = Endian == Endianness.Little ?
@@ -47,6 +41,21 @@
             Assert.That(response.ToString(), Is.EqualTo(result));
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.Enabled, Is.EqualTo(enabled != 0));
+        }
+
+        [TestCase(0x01, "[get_message_filtering not_supported]")]
+        [TestCase(0x02, "[get_message_filtering error]")]
+        public void DecodeResponseError(byte status, string result)
+        {
+            byte[] payload = Endian == Endianness.Little ?
+                new byte[] { 0x1A, 0x00, 0x00, 0x00, status } :
+                new byte[] { 0x00, 0x00, 0x00, 0x1A, status };
+            Decode(DltType.CONTROL_RESPONSE, payload, $"0x1A_GetMessageFilteringStatusResponse_{status:x2}_Error", out IControlArg service);
+
+            ControlErrorNotSupported response = (ControlErrorNotSupported)service;
+            Assert.That(response.ServiceId, Is.EqualTo(0x1A));
+            Assert.That(response.ToString(), Is.EqualTo(result));
+            Assert.That(response.Status, Is.EqualTo(status));
         }
     }
 }

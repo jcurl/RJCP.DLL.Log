@@ -14,9 +14,9 @@
             Assert.That(arg.ToString(), Is.EqualTo("[store_config]"));
         }
 
-        [TestCase(StoreConfigurationResponse.StatusOk, "[store_config ok]")]
-        [TestCase(StoreConfigurationResponse.StatusNotSupported, "[store_config not_supported]")]
-        [TestCase(StoreConfigurationResponse.StatusError, "[store_config error]")]
+        [TestCase(ControlResponse.StatusOk, "[store_config ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[store_config not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[store_config error]")]
         public void StoreConfigurationRes(int status, string result)
         {
             StoreConfigurationResponse arg = new StoreConfigurationResponse(status);

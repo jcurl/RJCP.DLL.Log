@@ -36,8 +36,9 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            return string.Format("[sync_timestamp {0}] {1:yyyy-MM-dd HH\\:mm\\:ss\\.fffffK}",
-                ToString(Status), TimeStamp);
+            return Status == StatusOk ?
+                string.Format("[sync_timestamp {0}] {1:yyyy-MM-dd HH\\:mm\\:ss\\.fffffK}", ToString(Status), TimeStamp) :
+                string.Format("[sync_timestamp {0}]", ToString(Status));
         }
     }
 }

@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetUseSessionIdResponse.StatusOk, "[use_session_id ok]")]
-        [TestCase(SetUseSessionIdResponse.StatusNotSupported, "[use_session_id not_supported]")]
-        [TestCase(SetUseSessionIdResponse.StatusError, "[use_session_id error]")]
+        [TestCase(ControlResponse.StatusOk, "[use_session_id ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[use_session_id not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[use_session_id error]")]
         [TestCase(100, "[use_session_id status=100]")]
         public void SetUseSessionIdResp(int status, string result)
         {

@@ -16,9 +16,9 @@
             Assert.That(arg.Enabled, Is.EqualTo(enabled));
         }
 
-        [TestCase(SetTimingPacketsResponse.StatusOk, "[set_timing_packets ok]")]
-        [TestCase(SetTimingPacketsResponse.StatusNotSupported, "[set_timing_packets not_supported]")]
-        [TestCase(SetTimingPacketsResponse.StatusError, "[set_timing_packets error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_timing_packets ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_timing_packets not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_timing_packets error]")]
         [TestCase(100, "[set_timing_packets status=100]")]
         public void SetVerboseModeResp(int status, string result)
         {

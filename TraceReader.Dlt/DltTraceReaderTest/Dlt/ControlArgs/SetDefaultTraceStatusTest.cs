@@ -28,9 +28,9 @@
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
         }
 
-        [TestCase(SetDefaultTraceStatusResponse.StatusOk, "[set_default_trace_status ok]")]
-        [TestCase(SetDefaultTraceStatusResponse.StatusNotSupported, "[set_default_trace_status not_supported]")]
-        [TestCase(SetDefaultTraceStatusResponse.StatusError, "[set_default_trace_status error]")]
+        [TestCase(ControlResponse.StatusOk, "[set_default_trace_status ok]")]
+        [TestCase(ControlResponse.StatusNotSupported, "[set_default_trace_status not_supported]")]
+        [TestCase(ControlResponse.StatusError, "[set_default_trace_status error]")]
         [TestCase(100, "[set_default_trace_status status=100]")]
         public void SetTraceStatusResp(int status, string result)
         {
