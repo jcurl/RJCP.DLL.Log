@@ -518,15 +518,12 @@
             int mstp = messageInfo & DltConstants.MessageInfo.MessageTypeMaskMstp;
             switch (mstp) {
             case DltConstants.MessageInfo.MessageTypeLog:
-                if (mtin > (6 << DltConstants.MessageInfo.MessageTypeMaskMtinShift))
-                    return DltType.UNKNOWN;
+            case DltConstants.MessageInfo.MessageTypeAppTrace:
+            case DltConstants.MessageInfo.MessageTypeNwTrace:
                 break;
             case DltConstants.MessageInfo.MessageTypeControl:
                 if (mtin > (3 << DltConstants.MessageInfo.MessageTypeMaskMtinShift))
                     return DltType.UNKNOWN;
-                break;
-            case DltConstants.MessageInfo.MessageTypeAppTrace:
-            case DltConstants.MessageInfo.MessageTypeNwTrace:
                 break;
             default:
                 return DltType.UNKNOWN;
