@@ -25,21 +25,25 @@ implementation in an incremental manner).
       - [2.3.2.2. Instantiating a Stream from the Input Path](#2322-instantiating-a-stream-from-the-input-path)
         - [2.3.2.2.1. Implementing a IInputStreamFactory](#23221-implementing-a-iinputstreamfactory)
       - [2.3.2.3. Decoder Factory](#2323-decoder-factory)
-      - [2.3.2.4. Context and Filter](#2324-context-and-filter)
-      - [2.3.2.5. Console Output](#2325-console-output)
-      - [2.3.2.6. File Output](#2326-file-output)
+      - [2.3.2.4. The Output Stream, Context and Filter](#2324-the-output-stream-context-and-filter)
   - [2.4. Domain](#24-domain)
     - [2.4.1. InputStreamFactory and InputStream](#241-inputstreamfactory-and-inputstream)
     - [2.4.2. Decoders (and PCAP, PCAPNG formats)](#242-decoders-and-pcap-pcapng-formats)
       - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
       - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
-    - [2.4.3. The Filter and the Context](#243-the-filter-and-the-context)
-      - [2.4.3.1 Implementation](#2431-implementation)
-    - [2.4.4. Decoder Extension on Line Decoding](#244-decoder-extension-on-line-decoding)
-    - [2.4.5. Binary Writer](#245-binary-writer)
-      - [2.4.5.1. On Flush](#2451-on-flush)
-      - [2.4.5.2. Online Mode](#2452-online-mode)
-      - [2.4.5.3. The Time Stamp](#2453-the-time-stamp)
+    - [2.4.3. Trace Output](#243-trace-output)
+      - [2.4.3.1. Console Output](#2431-console-output)
+      - [2.4.3.2. Text File Output](#2432-text-file-output)
+      - [2.4.3.3. DLT File Output](#2433-dlt-file-output)
+      - [2.4.3.4. File Templates for DLT and Text Output](#2434-file-templates-for-dlt-and-text-output)
+      - [2.4.3.5. Logic for Splitting and Concatenating Output Files](#2435-logic-for-splitting-and-concatenating-output-files)
+      - [2.4.3.6. IOutputStream Object Lifetime](#2436-ioutputstream-object-lifetime)
+      - [2.4.3.7. On Flush](#2437-on-flush)
+    - [2.4.4. The Filter and the Context](#244-the-filter-and-the-context)
+      - [2.4.4.1. Output Chaining](#2441-output-chaining)
+      - [2.4.4.2. Context Implementation](#2442-context-implementation)
+    - [2.4.5. Decoder Extension on Line Decoding](#245-decoder-extension-on-line-decoding)
+      - [DltTraceDecoder writing to IOutputStream](#dlttracedecoder-writing-to-ioutputstream)
   - [2.5. Infrastructure](#25-infrastructure)
     - [2.5.1. Version Information](#251-version-information)
 
@@ -287,13 +291,12 @@ The next stages describe the following stages:
 
 The View layer handles the user interface and has the list of inputs. It shall
 interpret the input commands and construct a `FilterConfig` object which
-describes how the application `Filter` should configure itself. Most of the
-options from the command line will be copied to the `FilterConfig` object.
+describes how the `FilterApp` should configure itself. Most of the options from
+the command line will be copied to the `FilterConfig` object.
 
 ![Filter Initialization](out/diagrams/appfilterinit/App.Filter.Initialization.svg)
 
-The `Filter` application initializes all objects it needs from the `Domain`
-layer.
+The `FilterApp` initializes all objects it needs from the `Domain` layer.
 
 It will loop over all the inputs given in the `FilterConfig`. The
 `InputStreamFactory` knows how to take the input file which is a URI string, and
@@ -373,64 +376,32 @@ which it has presumably received from the `IInputStream`.
 * Creates a decoder based on TCP, Serial, File. Online mode or not.
 * Handles PCAP and UDP streams
 
-Before instantiating the decoder, the output must also be known, so that the
-`BinaryWriter` can be used directly from the decoder itself. This is covered
-later in section for File Output.
+##### 2.3.2.4. The Output Stream, Context and Filter
 
-##### 2.3.2.4. Context and Filter
+The `IOutputStream` is a simple interface that knows how to write the output DLT
+line. It has a `Write` methods, one that takes a `DltTraceLineBase` and
+optionally a `ReadOnlySpan<byte>` which describes the packet.
 
-The context and filter are used for matching. They are two separate blocks, very
-closely related and to be managed as a single unit.
+The various output streams may be one of:
 
-The `Filter` application receives the trace line when writing to the console,
-therefore it maintains the `Context` for this use case.
+* To the console; or
+* To a text file; or
+* To a binary file.
 
-For writing to a file, this is maintained in the context of the decoder. The
-decoder needs some glue logic around the `Context` block, which can be part of
-the overridden decoder. The glue logic in this case must also record the input
-buffer byte stream, optionally create a storage header, and if there is a filter
-match, then write this stream to a file.
+The output can be prefixed by another object implementing the `IOutputStream`
+which can filter the data, and optionally provide context. This allows the
+`FilterApp` to abstract and not care about the output stage, while being
+flexible about what and how the data is written. This is the Filter and Context
+information.
 
-##### 2.3.2.5. Console Output
+Text output, that doesn't require the original binary packet, can be written
+from the `FilterApp` after getting a line from the decoder.
 
-The console writer is maintained by the `Filter` application, which is given the
-output from the `Context` block. The context block is an array of lines so it
-can maintain context.
-
-##### 2.3.2.6. File Output
-
-The binary writer block needs information from the `Filter` layer to be able to
-substitute and write the output file:
-
-* Knowing the name of the input file. This is only known by the application
-  layer. The binary writer must be told of the input file name after a file is
-  closed and before a new file is written.
-* The size when splitting the output must be communicated from the `Filter`
-  application.
-* If it should append to the file if it exists, or create a new file (i.e the
-  first input would require a new file, subsequent would append if the output
-  file name does not change)
-* If it should overwrite the file or raise an error (dependent on the `--force`
-  flag).
-
-The other elements:
-
-* The first time stamp after a new file is created is provided by the Decoder.
-* The counter for the number of files written can be handled by the Binary
-  Writer itself.
-
-Because the application runs in a loop, the lifetime of the input stream is for
-the duration of one iteration of the loop, which means the lifetime of the
-decoder is also for the duration of one iteration of the loop. When the input
-stream is closed, the decoder flushes its output, which can write the output to
-the binary writer.
-
-That means the information such as the force flag, input file name, split size,
-can be given to the decoder factory. There might be other information in the
-future that the application could apply, which can be used in the template,
-which is static for the duration of the loop. Thus, there should be a template
-block given to the factory. The template block is a dictionary mapping an input
-string to another string (such as the file name).
+Output that must write data using binary packets must be run in the thread that
+is doing the decoding, i.e. as part of the decoder, because a `DltTraceLineBase`
+does not maintain the raw binary data. The decoder must call the `IOutputStream`
+to pass the information, and so the `FilterApp` must provide the details to the
+decoder factory.
 
 ### 2.4. Domain
 
@@ -459,7 +430,7 @@ returns a stream and other metadata:
 | `ser:..`             | `DLS\1`                           | No       | Local (online mode)      |
 | `tcp://...`          | DLT                               | Yes      | Local (online mode)      |
 
-Connecting the stream should be done by the `Filter` application in an
+Connecting the stream should be done by the `FilterApp` application in an
 asynchronous manner before giving to the decoder.
 
 #### 2.4.2. Decoders (and PCAP, PCAPNG formats)
@@ -509,12 +480,183 @@ Notably what will not be supported in this first version will be
 * 802.1q double tagging
 * Additional filtering based on PCAP
 
-#### 2.4.3. The Filter and the Context
+#### 2.4.3. Trace Output
 
-There are two use cases
+There are multiple output sinks, each shall also implement the `IOutputStream`.
+The sinks are:
 
-* No context. Apply the filter and decide stateless if the line matches or not.
-* With context. If there is a match, context may also need to be logged.
+* The console; or
+* A text file (UTF8); or
+* A binary DLT output
+
+It shall be easy to extend with further sinks. A diagram of how the
+`IOutputStream` object is to be created:
+
+![IOutputStreamFactory](out/diagrams/outputstream/Domain.OutputStreamFactory.svg)
+
+A mapping of the `OutputFormat` to the object:
+
+| OutputFormat | Output Object    | Supports Binary |
+| ------------- | ---------------- | --------------- |
+| `Console`     | Console Output   | False           |
+| `Text`        | Text File Output | False           |
+| `Dlt`         | Dlt File Output  | True            |
+
+If `OutputFormat.Automatic` is chosen, it should choose the output object based
+on the output file name:
+
+* `null` reference, `CON:` or `/dev/stdout`: Console Output
+* `*.dlt`: DLT File Output
+* Any other file name: Text File Output
+
+##### 2.4.3.1. Console Output
+
+This class knows only how to output the DLT trace line to the console. The
+construction of this object must know if the position should be printed or not.
+
+##### 2.4.3.2. Text File Output
+
+For consistent output to a text file in UTF8 format, it is possible to write to
+a text file output. When using shell redirection on Windows Power Shell, the
+output is written as UCS2 and can generate large files. The same program used on
+the Windows Command Shell prints output using the current code page. As such,
+console output can provide inconsistent results.
+
+The construction of this object must know if the position should be printed or
+not.
+
+It must maintain a text stream, the file name of the output, automatically split
+the output on each line as required by the inputs.
+
+##### 2.4.3.3. DLT File Output
+
+The DLT file output writer implements both methods for writing data, one only
+containing the DLT line, the other containing the DLT line with the binary
+packet data.
+
+If the binary packet data is not available, it must construct the packet and
+write the data. It can be limited so that it only writes strings and signed
+integers to the output. It may limit itself to first converting the payload to a
+single string and writing this. This is typically used to write skipped data
+that was not part of the original input.
+
+If the binary packet data is available, it shall write this. The input data may,
+or may not contain a storage header. If the storage header is missing, one shall
+be constructed and written.
+
+This output writer also maintains a binary stream, the file name based on a
+template, the size of the output stream on when to split.
+
+##### 2.4.3.4. File Templates for DLT and Text Output
+
+The functionality for writing DLT and text files have components in common, such
+as:
+
+* Mapping the input template to an output file name
+  * `%FILE%`. Knowing the name of the input file. This is only known by the
+    application layer. The binary writer must be told of the input file name
+    after a file is closed and before a new file is written.
+  * `%CDATE%`, `%CTIME%`, `%CDATETIME%`. Take the timestamp from the
+    `DltTraceLineBase` message if this is the first line to write. This implies
+    delayed opening of the file if it contains one of these elements in the
+    output template.
+  * `%CTR%`. The counter for the number of files written can be handled by the
+    writer itself.
+* The size when splitting the output must be communicated from the `FilterApp`
+  application.
+* If it should append to the file if it exists, or create a new file (i.e the
+  first input would require a new file, subsequent would append if the output
+  file name does not change)
+* If it should overwrite the file or raise an error (dependent on the `--force`
+  flag).
+
+On initialization, the `OutputStreamFactory` instantiates a `IOutputStream`. For
+the `DltOutput` and `TextOutput`, it gives also the `Split` and `Force`
+properties. The object is alive for all inputs. This allows the ability to
+effectively concatenate files if the output template file name suggests so.
+
+When the `FilterApp` opens a file, it tells the `IOutputStream` of a new file
+through `SetInput`. If there is a file being processed, this is passed through
+to the `OutputStream.Close()` which closes the current file. In all cases, the
+name of the input file is remembered in the `IOutputStream` object.
+
+On the first call to `IOutputWrite.Write`, the `OutputStream` is opened, which
+contains the name of the input file name as remembered, and the time stamp of
+the log message that is being written. The file name maps to `%FILE%` and the
+time stamp of the log line maps to `%CDATE%`, `%CTIME%`, `%CDATETIME%`. If the
+file as converted already exists, the `Force` flag is checked if it should be
+overwritten, or an exception is raised.
+
+As each packet is written, the `Length` of the stream is read, and compared to
+the `Split()`. It can be checked before a `Write()` to make sure the file
+doesn't exceed the `Size`. If a new file must be created, the `Split()` method
+is called, which increases the `%CTR%`. If the file name didn't change, then the
+`Split()` has no effect and returns `false`, and the file will grow. If it is
+expected that the file could split at some time, the `IOutputStream` can try
+again on its next `Write()` method invocation.
+
+The `OutputStream` should also map any `%VAR%` to the environment variable
+`VAR`. This allows the current user, home path, etc. to be expanded. If the
+resultant path name is relative, it is then relative to the current working
+directory. If the environment variable doesn't exist, it is replaced with an
+empty string.
+
+##### 2.4.3.5. Logic for Splitting and Concatenating Output Files
+
+The `OutputStream` should maintain a dictionary of all files it has created. If
+the file being opened doesn't exist on the file system, it is opened without
+error.
+
+If the file exists, and the file is not created by this instance previously, the
+`Force` flag is used if it should be overwritten, or if `false` then an
+exception should be thrown.
+
+If the file was created by this instance, and it is the *last* file name as
+given by a call to `Split()`, it should always append, regardless of the `Force`
+flag. This allows to concatenate files.
+
+If the file was created previously by this instance and it is not the *last*
+name, it should abort with an error indicating a file name conflict which would
+overwrite a file just created. This rule is important, as a split file can still
+be logically thought of as a single file, and one shouldn't start appending to
+the middle of the file, which is likely to confuse the user.
+
+Note, the `OutputStream` is not responsible for modifying the packet data. If
+different data than what was decoded must be written (e.g. to add a storage
+header, or to remove a marker), this must be done by the `IOutputStream`. The
+instruction to split so that a packet is not split in between is the
+responsibility of the `IOutputStream`.
+
+##### 2.4.3.6. IOutputStream Object Lifetime
+
+As indicated above, it is important that this object is created once and used
+for all input files as in the previous section on concatenating output files.
+The `IOutputStream` is then used directly by the `FilterApp` or used by the
+decoder. But the `FilterApp` always calls when a new file is processed, between
+instantiations of the decoder.
+
+##### 2.4.3.7. On Flush
+
+When the input stream has reached end of file, or the decoder is closed, the
+`DltDecoder` has the method `Flush()` called. This should result in the
+remaining data in the packet being written to the `IOutputStream`. The
+`IOutputStream` must not be `Dispose()`d of, as this would close the underlying
+stream, thus causing problems as in the previous section about the object
+lifetime.
+
+#### 2.4.4. The Filter and the Context
+
+The filter is used for matching conditions of a trace line, as given by user
+input. The context maintains information for when a filter matches, so that
+previous lines that didn't match can be printed. They are two separate blocks,
+very closely related and to be managed as a single unit.
+
+There are three use cases:
+
+* No filter. Dump all the output lines.
+* Filter with no context. Apply the filter and decide stateless if the line
+  matches or not.
+* Filter with context. If there is a match, context may also need to be logged.
 
 The flow for no context is simple:
 
@@ -531,30 +673,36 @@ required. The `Context` object maintains:
 * A history of lines for the `--before-context` option
 * A counter of how many lines should be given for the `--after-context` option
 
-The line is also given to the `Filter` object which tests the object if there is
-a match or not. If there is a match, the `Context` object is told, so that it
-can pass its output.
+##### 2.4.4.1. Output Chaining
 
-The actual class implementation would be slightly different to what is depicted
-here. A single class would maintain the context and the filter, with a single
-function call that takes the trace line as an input. The output is an array of
-objects which contain the trace lines to output, and the buffers for the output.
+The filter and the context shall implement the `IOutputStream` interface. It
+shall have a constructor allowing another `IOutputStream`, which the filter and
+the context can write to.
 
-This class does not have to be thread safe. It runs in the context of the
+The output from decoding a line is given immediately to an object of type
+`IOutputStream`. The Filter and the Context can be implemented so that the check
+and filter the input, and if there is a match, outputs to the next
+`IOutputStream` object, which is described in the sections earlier.
+
+These classes does not have to be thread safe. It runs in the context of the
 application thread for the console output, or in the context of the decoder
 thread. The construction of the class defines the array upfront to minimize
 impact on the garbage collector.
 
-If the line has no time stamp, the context must add the time stamp at the time
-the message is recorded.
+![Output Filter](out/diagrams/outputstreamfilter/Domain.OutputStreamFilter.svg)
 
-##### 2.4.3.1 Implementation
+From this we see that any output stage can be filtered prior, allowing
+separation of the output format from the filtering.
+
+The property `SupportsBinary` and the method `SetInput` are a passthrough.
+
+##### 2.4.4.2. Context Implementation
 
 The `Context` class implements checking the filter and notifying of changes. It
 must necessarily have copy operations for the duration of the history given by
 the `before-context` option.
 
-The correct implementation is given in `FilterApp.LoopContext`:
+The `Context` class is expected to be used in the following manner:
 
 ```csharp
 do {
@@ -585,77 +733,44 @@ On further iteration and new lines, the history buffer is not updated, while
 `context.IsAfterContext()` is true, which also decrements the internal counter
 for how many lines should be printed.
 
-#### 2.4.4. Decoder Extension on Line Decoding
+#### 2.4.5. Decoder Extension on Line Decoding
 
-The DLT decoder must enable the ability (through inheritance or other means)
-that application functionality can be called after decoding each line. While in
-the use case for console output, the line is given by the result of
+The property `IOutputStream.SupportsBinary` can be used to determine if the
+`IOutputStream` object should be given to a `DltTraceDecoder`, or be parsed by
+the `FilterApp`.
+
+##### DltTraceDecoder writing to IOutputStream
+
+While in the use case for console output, the line is given by the result of
 `GetLineAsync()`, the ability to write to a file requires knowledge of the DLT
 packet that was just decoded if it needs to be written to a file (so that the
 binary contents of the packet are not modified when writing).
 
-Functionality already exists in the decoder to process skipped data and trace
-lines (by at least adding them to an internal list, that can be enumerated by
-the generic trace decoder for all file formats). This can be extended to be
-virtual so that classes can override this and extend functionality. The information
-needed to write a file is:
+The `DltTraceDecoderFactory` can be given the `IOutputStream` and use this to
+determine if it should instantiate an object from `RJCP.DLL.Log` library, or if
+it should instantiate it's own library which derives from `RJCP.DLL.Log` that
+uses the `IOutputStream` to write the packet.
 
-* The trace line. Required to apply a filter
-* The `IDltLineBuilder`. Required to know if there is a storage header or not.
-  If there is, the storage header can be written as is, else, one must be
-  generated by the derived class (the creation of the storage header will then
-  be part of the binary writer)
-* The `ReadOnlySpan<byte>` for the packet, that if it is written, an exact copy
-  of the input data is written, ensuring potential compatibility with other
-  programs.
+The `RJCP.DLL.Log` doesn't write to the packet itself, as this is an extension
+to decoding. It only offers the ability through inheritance to extend the
+functionality which is to be done by the `DltDump` application.
 
-![Binary Writer](out/diagrams/domaindecoder/Domain.Decoder.Writer.svg)
+![Packet Writer](out/diagrams/domaindecoder/Domain.Decoder.Writer.svg)
 
-#### 2.4.5. Binary Writer
+The `RJCP.DLL.Log` must be extended to support the cases when:
 
-The binary writer is a combination of two components
+* A valid packet is found, then the decoded line and the binary packet data
+  should be written. Because the `FilterApp` instantiates `IOutputStream` and
+  also `DltTraceDecoder`, it knows the input format, and can instruct the
+  `IOutputStream` to remove headers, or add a storage header without knowledge
+  from the decoder itself (the decoder doesn't have to know how to write the
+  output).
+* Invalid data is found, and skipped data is to be written. In this case, only a
+  `DltTraceLineBase` is provided, for which the `IOutputStream` must construct
+  the binary data from only the line and write to the output file.
 
-* Mapping a template string, which is used to name the final output file; and
-* Writing to the output stream.
-
-It is responsible for knowing when the current file is too large and must be
-split, the name of the new file and adding a storage header if required. It
-obtains the logic for this information from the `BinaryWriterConfig`, which is
-passed to the `BinaryWriter`.
-
-##### 2.4.5.1. On Flush
-
-When the input stream has reached end of file, or the decoder is closed, the
-`DltDecoder` has the method `Flush()` called, which is a trigger to the
-`BinaryWriter` to close the output file. It shall:
-
-* Close the output stream
-* Rename the output stream if the name was not known at the time it was opened
-
-##### 2.4.5.2. Online Mode
-
-The original packet given to the `BinaryWriter` from the `DltDecoder` does not
-contain a storage header. The `DltTraceLineBase` contains the device time stamp
-which is calculated by the decoder by the `IDltLineBuilder` which is in online
-mode, so the `BinaryWriter` does not need to calculate the time stamp. It must
-however take the time stamp and create the 16-byte storage header in addition to
-the rest of the packet. If the original packet contains a serial header, this
-should be stripped. The offsets are already part of the derived classes to where
-the storage header starts.
-
-##### 2.4.5.3. The Time Stamp
-
-If the template to write the file contains the string `%CDATE%`, `%CTIME%` or
-`%CDATETIME%`, then the name of the file is not known at the time it is opened.
-There are two options:
-
-* Delay the creation of the file until the first line appears.
-* Create the file immediately and rename the file on close when it is set.
-
-That this variable must be substituted with the time stamp of the first line
-that is written to the file (and not the time stamp of the first line read), it
-is possible that the creation of the file is delayed until the first line
-arrives. This implies that file has the correct name immediately.
+The `IOutputStream` already applies filtering and context management through
+chaining described earlier.
 
 ### 2.5. Infrastructure
 

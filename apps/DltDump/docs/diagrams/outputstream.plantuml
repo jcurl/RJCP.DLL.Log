@@ -1,0 +1,57 @@
+@startuml Domain.OutputStreamFactory
+
+enum OutputFormat {
+    Automatic
+    Console
+    Text
+    Dlt
+}
+
+interface IOutputStreamFactory {
+    Split: int
+    Force: bool
+    Create(fileType: OutputFormat, string outputFile): IOutputStream
+}
+
+OutputStreamFactory -r-> DltOutput : <<instantiates>>
+OutputStreamFactory -r-> TextOutput : <<instantiates>>
+OutputStreamFactory -r-> ConsoleOutput : <<instantiates>>
+
+IOutputStreamFactory -u- OutputFormat
+
+class OutputStreamFactory
+IOutputStreamFactory <|.d. OutputStreamFactory
+
+interface IOutputStream {
+    SupportsBinary: bool
+    Write(line: DltTraceLineBase)
+    Write(line: DltTraceLineBase, packet: ReadOnlySpan<byte>)
+    SetInput(fileName: string, inputFormat: InputFormat)
+}
+
+IOutputStream .u.|> IDispose
+
+class ConsoleOutput
+IOutputStream <|.d. ConsoleOutput
+
+class TextOutput
+IOutputStream <|.d. TextOutput
+
+class DltOutput
+IOutputStream <|.d. DltOutput
+
+class OutputStream {
+    Split: int
+    Force: bool
+    Open(fileName: string, timeStamp: DateTime)
+    Split(): bool
+    Close()
+}
+
+TextOutput *-d- OutputStream
+
+DltOutput *-d- OutputStream
+
+Stream -r-* OutputStream
+
+@enduml

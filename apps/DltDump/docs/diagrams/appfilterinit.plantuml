@@ -25,12 +25,14 @@ namespace Application {
     FilterApp *-d- Domain.InputStreamFactory
     FilterApp *-d- Domain.DltTraceDecoderFactory
     FilterApp o-d- Domain.IInputStream
+    FilterApp *-d- Domain.IOutputStream
 }
 
 namespace Domain {
     class InputStreamFactory
     interface IInputStream
     class DltTraceDecoderFactory
+    interface IOutputStream
 
     InputStreamFactory -r-> IInputStream : <<instantiates>>
 }

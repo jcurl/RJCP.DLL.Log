@@ -2,29 +2,21 @@
 
 namespace Domain {
   class DltTraceDecoderFactory
-  class DltDecoder
-  class BinaryWriter
-  class Filter
-  class BinaryWriterConfig
+  interface IOutputStream
 
-  DltTraceDecoderFactory .r.> DltDecoder : <<instantiates>>
-  DltDecoder *-d- Filter
-  DltDecoder *-d- BinaryWriter
-  DltDecoder *-d- BinaryWriterConfig
+  DltTraceDecoderFactory -r-> DltFileTraceFilterDecoder : <<instantiates>>
 
-  BinaryWriterConfig -r-o BinaryWriter
+  class DltFileTraceFilterDecoder
+  DltFileTraceFilterDecoder -r-|> RJCP.Diagnostics.Log.Decoder.DltFileTraceDecoder
+  DltFileTraceFilterDecoder o-d- IOutputStream
 }
 
-namespace Framework {
-    namespace System.IO {
-        class Stream
+namespace RJCP.Diagnostics.Log.Decoder {
+    class DltTraceDecoderBase {
+        #OnPacket(line: DltTraceLineBase,\n ReadOnlySpan<byte> buffer, int headerOffset)
     }
-
-    namespace RJCP.Diagnostics.Log.Decoder {
-        class DltTraceDecoderBase
-    }
-
-    Domain.BinaryWriter *-- System.IO.Stream
-    Domain.DltDecoder --|> RJCP.Diagnostics.Log.Decoder.DltTraceDecoderBase
+    class DltFileTraceDecoder
+   DltTraceDecoderBase <|-d- DltFileTraceDecoder
 }
+
 @enduml
