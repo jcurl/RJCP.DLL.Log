@@ -68,6 +68,7 @@
     <Compile Include="Application\HelpApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\Context.cs" />
+    <Compile Include="Domain\ContextPacket.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
@@ -79,6 +80,10 @@
     <Compile Include="Domain\InputStream\DltTcpStreamFactory.cs" />
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
+    <Compile Include="Domain\IOutputStream.cs" />
+    <Compile Include="Domain\OutputStream\ConsoleOutput.cs" />
+    <Compile Include="Domain\OutputStream\ContextOutput.cs" />
+    <Compile Include="Domain\OutputStream\FilterOutput.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />

@@ -71,7 +71,7 @@
             int matches = 0;
             foreach (DltTraceLineBase line in Lines) {
                 if (m_Context.Check(line)) {
-                    foreach (DltTraceLineBase beforeLine in m_Context.GetBeforeContext()) {
+                    foreach (ContextPacket beforeLine in m_Context.GetBeforeContext()) {
                         matches++;
                     }
                     matches++;
