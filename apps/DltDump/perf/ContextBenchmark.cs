@@ -2,7 +2,7 @@
 {
     using System;
     using BenchmarkDotNet.Attributes;
-    using Domain;
+    using Domain.OutputStream;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Constraints;
     using RJCP.Diagnostics.Log.Dlt;
@@ -58,30 +58,19 @@
             Verbose
         };
 
-        private readonly Context m_Context;
+        private readonly ContextOutput m_Context;
 
         public ContextBenchmark()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            m_Context = new Context(filter, 4, 2);
+            m_Context = new ContextOutput(filter, 4, 2, new NullOutput());
         }
 
         private void Filter()
         {
-            int matches = 0;
             foreach (DltTraceLineBase line in Lines) {
-                if (m_Context.Check(line)) {
-                    foreach (ContextPacket beforeLine in m_Context.GetBeforeContext()) {
-                        matches++;
-                    }
-                    matches++;
-                } else if (m_Context.IsAfterContext()) {
-                    matches++;
-                }
+                m_Context.Write(line);
             }
-
-            if (matches != 7)
-                throw new InvalidOperationException($"Matches is {matches}, expected 7");
         }
 
         [Benchmark]
