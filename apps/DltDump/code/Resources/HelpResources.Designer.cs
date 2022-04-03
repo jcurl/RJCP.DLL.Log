@@ -327,38 +327,48 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}o | {1}output{2}&lt;filename&gt;
+        ///  Write the output to the file specified. If not provided, write to the console..
+        /// </summary>
+        internal static string Help400_OutputFileName {
+            get {
+                return ResourceManager.GetString("Help400_OutputFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
-        internal static string Help400_Input {
+        internal static string Help500_Input {
             get {
-                return ResourceManager.GetString("Help400_Input", resourceCulture);
+                return ResourceManager.GetString("Help500_Input", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available..
         /// </summary>
-        internal static string Help405_InputFile {
+        internal static string Help505_InputFile {
             get {
-                return ResourceManager.GetString("Help405_InputFile", resourceCulture);
+                return ResourceManager.GetString("Help505_InputFile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer..
         /// </summary>
-        internal static string Help410_InputTcp {
+        internal static string Help510_InputTcp {
             get {
-                return ResourceManager.GetString("Help410_InputTcp", resourceCulture);
+                return ResourceManager.GetString("Help510_InputTcp", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr..
         /// </summary>
-        internal static string Help415_InputSerial {
+        internal static string Help515_InputSerial {
             get {
-                return ResourceManager.GetString("Help415_InputSerial", resourceCulture);
+                return ResourceManager.GetString("Help515_InputSerial", resourceCulture);
             }
         }
         
@@ -413,6 +423,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help813_PartialFilesProcessed {
             get {
                 return ResourceManager.GetString("Help813_PartialFilesProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 5 - There was a problem creating the output file.
+        /// </summary>
+        internal static string Help814_OutputError {
+            get {
+                return ResourceManager.GetString("Help814_OutputError", resourceCulture);
             }
         }
         

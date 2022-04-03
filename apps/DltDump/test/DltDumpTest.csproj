@@ -53,12 +53,14 @@
     <Compile Include="Application\FilterAppTest.cs" />
     <Compile Include="Application\FilterConfigTest.cs" />
     <Compile Include="Application\HelpAppTest.cs" />
+    <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
     <Compile Include="Domain\ContextTest.cs" />
     <Compile Include="Domain\OutputStream\ContextOutputTest.cs" />
     <Compile Include="Domain\OutputStream\FilterOutputTest.cs" />
     <Compile Include="Domain\OutputStream\MemoryOutput.cs" />
     <Compile Include="Domain\OutputStream\OutputPacket.cs" />
+    <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="TestResources\TestLines.cs" />
     <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Domain\InputStreamFactoryTest.cs" />

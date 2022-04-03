@@ -23,7 +23,7 @@
                 HelpApp.ShowHelp();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.GreaterThanOrEqualTo(71));
+                Assert.That(global.StdOut.Lines.Count, Is.GreaterThanOrEqualTo(74));
             }
         }
     }

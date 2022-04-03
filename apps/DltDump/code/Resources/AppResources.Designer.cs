@@ -88,6 +88,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output factory type {0} is unknown.
+        /// </summary>
+        internal static string DomainOutputStreamFactoryUnknown {
+            get {
+                return ResourceManager.GetString("DomainOutputStreamFactoryUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {
@@ -219,6 +228,24 @@ namespace RJCP.App.DltDump.Resources {
         internal static string FilterOpenError_Retry {
             get {
                 return ResourceManager.GetString("FilterOpenError_Retry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create the output {0}. {1}.
+        /// </summary>
+        internal static string FilterOutputError {
+            get {
+                return ResourceManager.GetString("FilterOutputError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create the output {0}. Don&apos;t know how to write this file format..
+        /// </summary>
+        internal static string FilterOutputError_UnknownOutput {
+            get {
+                return ResourceManager.GetString("FilterOutputError_UnknownOutput", resourceCulture);
             }
         }
         

@@ -64,6 +64,13 @@
 #pragma warning restore CS0649
 
         /// <summary>
+        /// Gets the name of the output file, or <see langword="null"/> if none.
+        /// </summary>
+        /// <value>The name of the output file, or <see langword="null"/> if none.</value>
+        [Option('o', "output")]
+        public string OutputFileName { get; private set; }
+
+        /// <summary>
         /// Gets the input format.
         /// </summary>
         /// <value>The input format.</value>

@@ -221,16 +221,20 @@
     <value>{0}A | {1}after-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text after the match.</value>
   </data>
-  <data name="Help400_Input" xml:space="preserve">
+  <data name="Help400_OutputFileName" xml:space="preserve">
+    <value>{0}o | {1}output{2}&lt;filename&gt;
+  Write the output to the file specified. If not provided, write to the console.</value>
+  </data>
+  <data name="Help500_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>
-  <data name="Help405_InputFile" xml:space="preserve">
+  <data name="Help505_InputFile" xml:space="preserve">
     <value>file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available.</value>
   </data>
-  <data name="Help410_InputTcp" xml:space="preserve">
+  <data name="Help510_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>
-  <data name="Help415_InputSerial" xml:space="preserve">
+  <data name="Help515_InputSerial" xml:space="preserve">
     <value>ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr.</value>
   </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
@@ -250,6 +254,9 @@
   </data>
   <data name="Help813_PartialFilesProcessed" xml:space="preserve">
     <value>4 - Not all of the files could be processed (partial error)</value>
+  </data>
+  <data name="Help814_OutputError" xml:space="preserve">
+    <value>5 - There was a problem creating the output file</value>
   </data>
   <data name="Help899_UnknownError" xml:space="preserve">
     <value>255 - An unhandled exception occurred</value>

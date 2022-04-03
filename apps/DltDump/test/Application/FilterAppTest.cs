@@ -10,6 +10,7 @@
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
     using TestResources;
+    using Moq;
 
     [TestFixture]
     public class FilterAppTest
@@ -497,6 +498,74 @@
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
+            }
+        }
+
+        [Test]
+        public async Task OutputToConsole()
+        {
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "/dev/stdout"
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+
+                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
+            }
+        }
+
+        [Test]
+        public async Task OutputError()
+        {
+            var factoryMock = new Mock<IOutputStreamFactory>();
+            factoryMock.Setup(m => m.Create(It.IsAny<OutputFormat>(), It.IsAny<string>()))
+                .Returns((OutputFormat fmt, string name) => {
+                    return null;
+                });
+
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = factoryMock.Object;
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile });
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.OutputError));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void OutputUnhandledException()
+        {
+            var factoryMock = new Mock<IOutputStreamFactory>();
+            factoryMock.Setup(m => m.Create(It.IsAny<OutputFormat>(), It.IsAny<string>()))
+                .Returns((OutputFormat fmt, string name) => {
+                    throw new NotSupportedException();
+                });
+
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = factoryMock.Object;
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile });
+                FilterApp app = new FilterApp(config);
+                Assert.That(async () => {
+                    _ = await app.Run();
+                }, Throws.TypeOf<NotSupportedException>());
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
             }
         }
     }

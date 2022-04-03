@@ -31,6 +31,11 @@
         PartialFilesProcessed = 4,
 
         /// <summary>
+        /// There was a problem creating the output file.
+        /// </summary>
+        OutputError = 5,
+
+        /// <summary>
         /// An unknown error occurred (an unhandled exception).
         /// </summary>
         UnknownError = 255

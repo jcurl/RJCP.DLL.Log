@@ -1091,5 +1091,92 @@
             }
         }
         #endregion
+
+        #region Output Files
+        [Test]
+        public void OutputFileEmpty()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("output", ""), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void OutputFileConsole()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "CON:"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("CON:"));
+            }
+        }
+
+        [Test]
+        public void OutputFileConsoleStdOut()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "/dev/stdout"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("/dev/stdout"));
+            }
+        }
+
+        [Test]
+        public void OutputTextFileName()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+            }
+        }
+
+        [Test]
+        public void OutputDltFileName()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.dlt"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.dlt"));
+            }
+        }
+        #endregion
     }
 }

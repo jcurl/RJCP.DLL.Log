@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Domain;
     using Infrastructure.Constraints;
     using Infrastructure.Dlt;
     using RJCP.Diagnostics.Log.Constraints;
@@ -41,6 +42,18 @@
         /// </summary>
         /// <value>The input format for reading the input stream.</value>
         public InputFormat InputFormat { get; set; } = InputFormat.Automatic;
+
+        /// <summary>
+        /// Gets or sets the name of the output file.
+        /// </summary>
+        /// <value>The name of the output file.</value>
+        public string OutputFileName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output format.
+        /// </summary>
+        /// <value>The output format.</value>
+        public OutputFormat OutputFormat { get; set; } = OutputFormat.Automatic;
 
         /// <summary>
         /// Gets or sets the connect retries for input stream types that require a connection.

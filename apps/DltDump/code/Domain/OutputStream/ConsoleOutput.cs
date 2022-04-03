@@ -9,8 +9,6 @@
     /// </summary>
     public sealed class ConsoleOutput : IOutputStream
     {
-        private readonly bool m_ShowPosition;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleOutput"/> class.
         /// </summary>
@@ -22,8 +20,16 @@
         /// <param name="showPosition">Write the position of the timestamp if <see langword="true"/>.</param>
         public ConsoleOutput(bool showPosition)
         {
-            m_ShowPosition = showPosition;
+            ShowPosition = showPosition;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the output should contain the position.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if the console output should show the position; otherwise <see langword="false"/>.
+        /// </value>
+        public bool ShowPosition { get; set; }
 
         /// <summary>
         /// Indicates if this output stream can write binary data.
@@ -55,7 +61,7 @@
         /// <returns>This method always writes the output, so returns <see langword="true"/>.</returns>
         public bool Write(DltTraceLineBase line)
         {
-            if (m_ShowPosition) {
+            if (ShowPosition) {
                 Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
             } else {
                 Global.Instance.Terminal.StdOut.WriteLine(line.ToString());

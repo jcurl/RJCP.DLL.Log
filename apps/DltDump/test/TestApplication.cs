@@ -29,6 +29,7 @@
             Global.Instance.CommandFactory = null;
             Global.Instance.Terminal = new VirtualTerminal();
             Global.Instance.InputStreamFactory = new TestInputStreamFactory();
+            Global.Instance.OutputStreamFactory = new TestOutputStreamFactory();
             Global.Instance.DltReaderFactory = new TestDltTraceReaderFactory();
         }
 

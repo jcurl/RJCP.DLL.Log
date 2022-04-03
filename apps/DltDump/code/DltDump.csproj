@@ -81,6 +81,9 @@
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
     <Compile Include="Domain\IOutputStream.cs" />
+    <Compile Include="Domain\IOutputStreamFactory.cs" />
+    <Compile Include="Domain\OutputFormat.cs" />
+    <Compile Include="Domain\OutputStreamFactory.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutput.cs" />
     <Compile Include="Domain\OutputStream\ContextOutput.cs" />
     <Compile Include="Domain\OutputStream\FilterOutput.cs" />

@@ -30,6 +30,8 @@
 
             int processed = 0;
             using (IOutputStream output = GetOutputStream()) {
+                if (output == null) return ExitCode.OutputError;
+
                 foreach (string uri in m_Config.Input) {
                     bool retries;
                     bool connected = false;
@@ -136,23 +138,34 @@
 
         private IOutputStream GetOutputStream()
         {
-            IOutputStream consoleStream = null;
-
+            IOutputStream output = null;
             try {
-                consoleStream = new ConsoleOutput(m_Config.ShowPosition);
+                output = Global.Instance.OutputStreamFactory.Create(m_Config.OutputFormat, m_Config.OutputFileName);
+                if (output == null) {
+                    Terminal.WriteLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");
+                    return null;
+                }
+
+                // Configure the output streams depending on the options.
+                if (output is ConsoleOutput consoleOutput) {
+                    consoleOutput.ShowPosition = m_Config.ShowPosition;
+                }
 
                 Constraint filter = m_Config.GetFilter();
-                if (filter == null) return consoleStream;
+                if (filter == null) return output;
 
                 if (m_Config.BeforeContext > 0 || m_Config.AfterContext > 0) {
                     return new ContextOutput(filter,
-                        m_Config.BeforeContext, m_Config.AfterContext, consoleStream);
+                        m_Config.BeforeContext, m_Config.AfterContext, output);
                 } else {
-                    return new FilterOutput(filter, consoleStream);
+                    return new FilterOutput(filter, output);
                 }
-            } catch {
-                if (consoleStream != null) consoleStream.Dispose();
+            } catch (Exception ex) {
+                if (output != null) output.Dispose();
 
+                Terminal.WriteLine(AppResources.FilterOutputError,
+                    m_Config.OutputFileName ?? "(none)",
+                    ex.Message);
                 throw;
             }
         }

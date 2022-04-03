@@ -126,6 +126,9 @@
   <data name="DomainInputStreamNotOpen" xml:space="preserve">
     <value>Cannot connect, input stream has not been opened</value>
   </data>
+  <data name="DomainOutputStreamFactoryUnknown" xml:space="preserve">
+    <value>Output factory type {0} is unknown</value>
+  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>
@@ -170,6 +173,14 @@
   </data>
   <data name="FilterOpenError_Retry" xml:space="preserve">
     <value>Couldn't connect to {0}. Retry {1}...</value>
+  </data>
+  <data name="FilterOutputError" xml:space="preserve">
+    <value>Couldn't create the output {0}. {1}</value>
+    <comment>Occurs on exception on create</comment>
+  </data>
+  <data name="FilterOutputError_UnknownOutput" xml:space="preserve">
+    <value>Couldn't create the output {0}. Don't know how to write this file format.</value>
+    <comment>Occurs because Automatic can't guess the output format</comment>
   </data>
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>

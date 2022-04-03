@@ -72,12 +72,13 @@
             Write(2, 4, HelpResources.Help385_Control);
             Write(2, 4, HelpResources.Help390_BeforeContext);
             Write(2, 4, HelpResources.Help395_AfterContext);
+            Write(2, 4, HelpResources.Help400_OutputFileName);
             Write();
-            Write(HelpResources.Help400_Input);
+            Write(HelpResources.Help500_Input);
             Write();
-            Write(2, 4, HelpResources.Help405_InputFile);
-            Write(2, 4, HelpResources.Help410_InputTcp);
-            Write(2, 4, HelpResources.Help415_InputSerial);
+            Write(2, 4, HelpResources.Help505_InputFile);
+            Write(2, 4, HelpResources.Help510_InputTcp);
+            Write(2, 4, HelpResources.Help515_InputSerial);
             Write();
             Write(HelpResources.Help800_ExitCodes);
             Write();
@@ -86,6 +87,7 @@
             Write(2, 4, HelpResources.Help811_InputUnknown);
             Write(2, 4, HelpResources.Help812_NoFilesProcessed);
             Write(2, 4, HelpResources.Help813_PartialFilesProcessed);
+            Write(2, 4, HelpResources.Help814_OutputError);
             Write(2, 4, HelpResources.Help899_UnknownError);
             Write();
         }
