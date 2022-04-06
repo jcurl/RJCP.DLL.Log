@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using OutputStream;
     using Resources;
 
@@ -40,6 +41,8 @@
             switch (outFormat) {
             case OutputFormat.Console:
                 return new ConsoleOutput();
+            case OutputFormat.Text:
+                return new TextOutput(outFileName, Force);
             default:
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainOutputStreamFactoryUnknown, outFormat.ToString());
                 return null;
@@ -52,8 +55,11 @@
             if (outFileName.Equals("CON:", StringComparison.OrdinalIgnoreCase)) return OutputFormat.Console;
             if (outFileName.Equals("/dev/stdout", StringComparison.OrdinalIgnoreCase)) return OutputFormat.Console;
 
-            // We don't know how to interpret this.
-            return OutputFormat.Automatic;
+            // We don't know how to write DLT files
+            if (Path.GetExtension(outFileName).Equals(".dlt", StringComparison.InvariantCultureIgnoreCase))
+                return OutputFormat.Automatic;
+
+            return OutputFormat.Text;
         }
     }
 }

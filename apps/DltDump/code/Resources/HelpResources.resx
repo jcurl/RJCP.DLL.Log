@@ -223,7 +223,7 @@
   </data>
   <data name="Help400_OutputFileName" xml:space="preserve">
     <value>{0}o | {1}output{2}&lt;filename&gt;
-  Write the output to the file specified. If not provided, write to the console.</value>
+  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream.</value>
   </data>
   <data name="Help500_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>

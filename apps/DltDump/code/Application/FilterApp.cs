@@ -41,15 +41,15 @@
                                 retries = false;
                                 continue;
                             }
-                            output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
 
                             retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
-
                             using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
                                 if (decoder == null) {
                                     retries = false;
                                     continue;
                                 }
+
+                                output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
 
                                 connected = true;
                                 DltTraceLineBase line;
@@ -149,6 +149,8 @@
                 // Configure the output streams depending on the options.
                 if (output is ConsoleOutput consoleOutput) {
                     consoleOutput.ShowPosition = m_Config.ShowPosition;
+                } else if (output is TextOutput textOutput) {
+                    textOutput.ShowPosition = m_Config.ShowPosition;
                 }
 
                 Constraint filter = m_Config.GetFilter();

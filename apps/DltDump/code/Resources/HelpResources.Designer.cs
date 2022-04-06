@@ -328,7 +328,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}o | {1}output{2}&lt;filename&gt;
-        ///  Write the output to the file specified. If not provided, write to the console..
+        ///  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream..
         /// </summary>
         internal static string Help400_OutputFileName {
             get {

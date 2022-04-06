@@ -13,6 +13,11 @@
         /// <summary>
         /// Write the output to the console.
         /// </summary>
-        Console
+        Console,
+
+        /// <summary>
+        /// Write the output to a text file.
+        /// </summary>
+        Text
     }
 }

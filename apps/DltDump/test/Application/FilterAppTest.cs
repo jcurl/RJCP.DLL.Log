@@ -525,6 +525,31 @@
         }
 
         [Test]
+        public async Task OutputToTextFile()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file.txt"
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+
+                Assert.That(File.Exists("file.txt"));
+
+                FileInfo fileInfo = new FileInfo("file.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(10 + TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [Test]
         public async Task OutputError()
         {
             var factoryMock = new Mock<IOutputStreamFactory>();
