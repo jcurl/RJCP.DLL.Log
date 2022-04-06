@@ -1,5 +1,7 @@
 @startuml Domain.OutputStreamFactory
 
+interface IDisposable
+
 enum OutputFormat {
     Automatic
     Console
@@ -24,12 +26,13 @@ IOutputStreamFactory <|.d. OutputStreamFactory
 
 interface IOutputStream {
     SupportsBinary: bool
+    SetInput(fileName: string, inputFormat: InputFormat)
     Write(line: DltTraceLineBase)
     Write(line: DltTraceLineBase, packet: ReadOnlySpan<byte>)
-    SetInput(fileName: string, inputFormat: InputFormat)
+    Flush()
 }
 
-IOutputStream .u.|> IDispose
+IOutputStream .r.|> IDisposable
 
 class ConsoleOutput
 IOutputStream <|.d. ConsoleOutput
@@ -40,18 +43,34 @@ IOutputStream <|.d. TextOutput
 class DltOutput
 IOutputStream <|.d. DltOutput
 
-class OutputStream {
-    Split: int
+class OutputBase {
     Force: bool
-    Open(fileName: string, timeStamp: DateTime)
-    Split(): bool
-    Close()
+    Split: int
+    SetInput(fileName: string)
+    Write(timeStamp: DateTime, line: string)
+    Write(timeStamp: DateTime, buffer: ReadOnlySpan<byte>)
+    Write(timeStamp: DateTime, header: ReadOnlySpan<byte>, buffer: ReadOnlySpan<byte>)
+    Flush()
+    Dispose()
 }
 
-TextOutput *-d- OutputStream
+class OutputWriter {
+    Length: long
+    IsOpen: bool
+    Open(fileName: string, mode: FileMode)
+    Write(buffer: ReadOnlySpan<byte>)
+    Flush()
+    Close()
+    Dispose()
+}
+OutputWriter .u.|> IDisposable
+OutputBase .u.|> IDisposable
 
-DltOutput *-d- OutputStream
+TextOutput -d-|> OutputBase
+DltOutput -d-|> OutputBase
 
-Stream -r-* OutputStream
+OutputBase *-d- OutputWriter
+OutputWriter *-r- FileStream
+FileStream .u.|> IDisposable
 
 @enduml

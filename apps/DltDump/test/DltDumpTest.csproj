@@ -59,7 +59,11 @@
     <Compile Include="Domain\OutputStream\ContextOutputTest.cs" />
     <Compile Include="Domain\OutputStream\FilterOutputTest.cs" />
     <Compile Include="Domain\OutputStream\MemoryOutput.cs" />
+    <Compile Include="Domain\OutputStream\OutputBaseTest.cs" />
     <Compile Include="Domain\OutputStream\OutputPacket.cs" />
+    <Compile Include="Domain\OutputStream\OutputWriterTest.cs" />
+    <Compile Include="Domain\OutputStream\TestOutputBase.cs" />
+    <Compile Include="Domain\OutputStream\TextOutputTest.cs" />
     <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="TestResources\TestLines.cs" />
     <Compile Include="Application\VersionAppTest.cs" />

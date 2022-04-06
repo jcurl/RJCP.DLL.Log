@@ -97,6 +97,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OutputWriter File is not open..
+        /// </summary>
+        internal static string DomainOutputWriterNotOpen {
+            get {
+                return ResourceManager.GetString("DomainOutputWriterNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputWriter File is already open..
+        /// </summary>
+        internal static string DomainOutputWriterOpen {
+            get {
+                return ResourceManager.GetString("DomainOutputWriterOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {
@@ -120,6 +138,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string FileOpenError_DirectoryNotFound {
             get {
                 return ResourceManager.GetString("FileOpenError_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name is invalid.
+        /// </summary>
+        internal static string FileOpenError_EmptyName {
+            get {
+                return ResourceManager.GetString("FileOpenError_EmptyName", resourceCulture);
             }
         }
         

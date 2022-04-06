@@ -7,10 +7,10 @@
     using Domain;
     using Domain.InputStream;
     using Infrastructure.Dlt;
+    using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
     using TestResources;
-    using Moq;
 
     [TestFixture]
     public class FilterAppTest

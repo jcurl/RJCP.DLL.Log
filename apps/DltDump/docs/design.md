@@ -549,8 +549,8 @@ template, the size of the output stream on when to split.
 
 ##### 2.4.3.4. File Templates for DLT and Text Output
 
-The functionality for writing DLT and text files have components in common, such
-as:
+The functionality for writing DLT and text files have components in common and
+should be implemented in the `OutputBase`:
 
 * Mapping the input template to an output file name
   * `%FILE%`. Knowing the name of the input file. This is only known by the
@@ -572,60 +572,59 @@ as:
 
 On initialization, the `OutputStreamFactory` instantiates a `IOutputStream`. For
 the `DltOutput` and `TextOutput`, it gives also the `Split` and `Force`
-properties. The object is alive for all inputs. This allows the ability to
+properties which are used to initialize the base object `OutputBase`. The
+`IOutputStream` object is alive for all inputs. This allows the ability to
 effectively concatenate files if the output template file name suggests so.
 
-When the `FilterApp` opens a file, it tells the `IOutputStream` of a new file
-through `SetInput`. If there is a file being processed, this is passed through
-to the `OutputStream.Close()` which closes the current file. In all cases, the
-name of the input file is remembered in the `IOutputStream` object.
+When the `FilterApp` opens a file for reading, it tells the `IOutputStream` of a
+potentially new file to write through `SetInput`. The `InputFormat` is used so
+the `IOutputStream` knows how to write the header and the packet if needed.
 
-On the first call to `IOutputWrite.Write`, the `OutputStream` is opened, which
-contains the name of the input file name as remembered, and the time stamp of
-the log message that is being written. The file name maps to `%FILE%` and the
-time stamp of the log line maps to `%CDATE%`, `%CTIME%`, `%CDATETIME%`. If the
-file as converted already exists, the `Force` flag is checked if it should be
-overwritten, or an exception is raised.
+The `OutputBase` is responsible for parsing the file name as a template. It gets
+the `%FILE%` from `SetInput`, the `%CDATE%`, `%CTIME%` and `%CDATETIME%` from
+the first `Write` just before opening the file. The `%CTR%` is maintained
+internally.
 
-As each packet is written, the `Length` of the stream is read, and compared to
-the `Split()`. It can be checked before a `Write()` to make sure the file
-doesn't exceed the `Size`. If a new file must be created, the `Split()` method
-is called, which increases the `%CTR%`. If the file name didn't change, then the
-`Split()` has no effect and returns `false`, and the file will grow. If it is
-expected that the file could split at some time, the `IOutputStream` can try
-again on its next `Write()` method invocation.
+On the first call to `IOutputStream.Write`, the `OutputBase` will see that
+`OutputWriter.IsOpen` is `false`, and open the file with `OutputWriter.Open`. It
+is at this time the output file template can be evaluated by `OutputBase` (such
+as the time stamp in the `Write` call, and a previous call to `SetInput` for the
+file name). Subsequent writes just write to the file.
 
-The `OutputStream` should also map any `%VAR%` to the environment variable
-`VAR`. This allows the current user, home path, etc. to be expanded. If the
-resultant path name is relative, it is then relative to the current working
-directory. If the environment variable doesn't exist, it is replaced with an
-empty string.
+The `DltOutput` will consider the `InputFormat` and either write the packet (if
+it is already `InputFormat.File`) or add a storage header and then write the
+packet.
+
+On disposing the `IOutputStream`, the underlying `OutputWriter` is also
+disposed.
 
 ##### 2.4.3.5. Logic for Splitting and Concatenating Output Files
 
-The `OutputStream` should maintain a dictionary of all files it has created. If
-the file being opened doesn't exist on the file system, it is opened without
-error.
+The `OutputBase` should maintain a list files it has created. If the file being
+opened doesn't exist on the file system, it is opened without error.
 
 If the file exists, and the file is not created by this instance previously, the
-`Force` flag is used if it should be overwritten, or if `false` then an
-exception should be thrown.
+`Force` flag is used if it should be overwritten with `FileMode.Create`, or if
+`false` then an exception should be thrown when `FileMode.CreateNew` is used.
 
-If the file was created by this instance, and it is the *last* file name as
-given by a call to `Split()`, it should always append, regardless of the `Force`
-flag. This allows to concatenate files.
+After writing with `OutputBase`, it checks the length of data written with
+`OutputWriter.Length`, and if it exceeds the `Split` value, it can close the
+`OutputWriter` and increment the counter used for `%CTR%`. When a call to
+`SetInput` is given, the counter should be checked if it should be reset. If the
+new input template does not have a reference to `%FILE%` or `%CDATETIME%`, etc.,
+then the counter should remain. Otherwise it should be reset to a value of one.
+This allows an input such as `file_%CTR%.txt`, which concatenates files and
+maintains an ever increasing counter.
 
-If the file was created previously by this instance and it is not the *last*
-name, it should abort with an error indicating a file name conflict which would
-overwrite a file just created. This rule is important, as a split file can still
-be logically thought of as a single file, and one shouldn't start appending to
-the middle of the file, which is likely to confuse the user.
-
-Note, the `OutputStream` is not responsible for modifying the packet data. If
-different data than what was decoded must be written (e.g. to add a storage
-header, or to remove a marker), this must be done by the `IOutputStream`. The
-instruction to split so that a packet is not split in between is the
-responsibility of the `IOutputStream`.
+After `OutputBase` splits the file, and then opening the file a second time
+(which is by a subsequent `Write`), it should look up if the file to write was
+already created by this object. If it was, it should check if this was the
+*last* file in a chain and append to the file with `FileMode.Append`. It it did
+exist and is not the last file, it should abort as a file just created would
+appear if it was added in the middle (regardless of the `Force` flag). Note,
+some pathological cases could be made that lead to some confusing behavior, we
+rely on the users intuition here to not specify an order of inputs that confuse
+outputs. This use case allows to concatenate files.
 
 ##### 2.4.3.6. IOutputStream Object Lifetime
 
