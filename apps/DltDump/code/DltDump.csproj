@@ -88,6 +88,7 @@
     <Compile Include="Domain\OutputStream\ContextOutput.cs" />
     <Compile Include="Domain\OutputStream\FilterOutput.cs" />
     <Compile Include="Domain\OutputStream\OutputBase.cs" />
+    <Compile Include="Domain\OutputStream\OutputStreamException.cs" />
     <Compile Include="Domain\OutputStream\OutputWriter.cs" />
     <Compile Include="Domain\OutputStream\TextOutput.cs" />
     <Compile Include="ExitCode.cs" />

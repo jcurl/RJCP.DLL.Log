@@ -33,41 +33,50 @@
                 if (output == null) return ExitCode.OutputError;
 
                 foreach (string uri in m_Config.Input) {
-                    bool retries;
-                    bool connected = false;
-                    do {
-                        using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
-                            if (inputStream == null) {
-                                retries = false;
-                                continue;
-                            }
-
-                            retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
-                            using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
-                                if (decoder == null) {
-                                    retries = false;
-                                    continue;
-                                }
-
-                                output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
-
-                                connected = true;
-                                DltTraceLineBase line;
-                                do {
-                                    line = await decoder.GetLineAsync();
-                                    if (line != null) output.Write(line);
-                                } while (line != null);
-                            }
-                        }
-                    } while (retries);
-
-                    if (connected) processed++;
+                    try {
+                        bool connected = await ProcessInput(uri, output);
+                        if (connected) processed++;
+                    } catch (OutputStreamException ex) {
+                        Terminal.WriteLine(ex.Message);
+                    }
                 }
             }
 
             if (processed == 0) return ExitCode.NoFilesProcessed;
             if (processed != m_Config.Input.Count) return ExitCode.PartialFilesProcessed;
             return ExitCode.Success;
+        }
+
+        private async Task<bool> ProcessInput(string uri, IOutputStream output)
+        {
+            bool retries;
+            bool connected = false;
+            do {
+                using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
+                    if (inputStream == null) {
+                        retries = false;
+                        continue;
+                    }
+
+                    retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
+                    using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
+                        if (decoder == null) {
+                            retries = false;
+                            continue;
+                        }
+
+                        output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
+
+                        connected = true;
+                        DltTraceLineBase line;
+                        do {
+                            line = await decoder.GetLineAsync();
+                            if (line != null) output.Write(line);
+                        } while (line != null);
+                    }
+                }
+            } while (retries);
+            return connected;
         }
 
         private bool CheckInputs()

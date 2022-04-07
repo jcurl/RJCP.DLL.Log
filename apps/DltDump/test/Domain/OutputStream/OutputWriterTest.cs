@@ -226,7 +226,7 @@
 
                 Assert.That(() => {
                     writer.Open("File.txt");
-                }, Throws.TypeOf<IOException>());
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
                 Assert.That(writer.IsOpen, Is.False);
             }
         }

@@ -29,6 +29,7 @@
         /// <param name="fileName">Name of the file.</param>
         /// <exception cref="ObjectDisposedException"><see cref="OutputWriter"/> is disposed.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Open(string fileName)
         {
             Open(fileName, FileMode.CreateNew);
@@ -41,15 +42,23 @@
         /// <param name="mode">The mode to use when opening the file, to allow overwriting and appending.</param>
         /// <exception cref="ObjectDisposedException"><see cref="OutputWriter"/> is disposed.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Open(string fileName, FileMode mode)
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             if (m_FileStream != null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
 
-            m_FileStream = new FileStream(fileName, mode, FileAccess.Write, FileShare.Read);
-            m_FileStream.Seek(0, SeekOrigin.End);
-            Length = m_FileStream.Position;
+            try {
+                m_FileStream = new FileStream(fileName, mode, FileAccess.Write, FileShare.Read);
+                m_FileStream.Seek(0, SeekOrigin.End);
+                Length = m_FileStream.Position;
+            } catch (Exception ex) {
+                if (m_FileStream != null) m_FileStream.Dispose();
+                m_FileStream = null;
+                Length = 0;
+                throw new OutputStreamException(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -65,15 +74,24 @@
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="offset"/> or <paramref name="count"/> is negative.
         /// </exception>
-        /// <exception cref="IOException">An I/O error occurred.</exception>
+        /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Write(byte[] buffer, int offset, int count)
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
 
             Stream stream = m_FileStream;
             if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
-            stream.Write(buffer, offset, count);
-            Length += count;
+            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
+            if (offset > buffer.Length - count) throw new ArgumentException("The length and offset would exceed the boundaries of the array/buffer");
+
+            try {
+                stream.Write(buffer, offset, count);
+                Length += count;
+            } catch (Exception ex) {
+                throw new OutputStreamException(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -89,8 +107,12 @@
 
             Stream stream = m_FileStream;
             if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
-            stream.Write(buffer);
-            Length += buffer.Length;
+            try {
+                stream.Write(buffer);
+                Length += buffer.Length;
+            } catch (Exception ex) {
+                throw new OutputStreamException(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -104,7 +126,11 @@
 
             Stream stream = m_FileStream;
             if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
-            stream.Flush();
+            try {
+                stream.Flush();
+            } catch (Exception ex) {
+                throw new OutputStreamException(ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -129,7 +155,9 @@
         public void Dispose()
         {
             if (!m_Disposed) {
-                Close();
+                try {
+                    Close();
+                } catch { /* Don't throw exceptions in Dispose */ }
                 m_Disposed = true;
             }
         }

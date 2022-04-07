@@ -320,7 +320,7 @@
                     Assert.That(() => {
                         // Will fail, because the file already exists
                         output.Write(TestLines.Verbose);
-                    }, Throws.TypeOf<IOException>());
+                    }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
                 }
             }
         }

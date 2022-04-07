@@ -550,6 +550,60 @@
         }
 
         [Test]
+        public async Task OutputToTextFileExists()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                using (Stream file = new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+                    /* Do nothing, just create the file */
+                }
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file.txt"
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
+
+                Assert.That(File.Exists("file.txt"));
+
+                FileInfo fileInfo = new FileInfo("file.txt");
+                Assert.That(fileInfo.Length, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public async Task OutputToTextFileInUse()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                using (Stream file = new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+                    FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                        ShowPosition = true,
+                        OutputFileName = "file.txt"
+                    };
+                    FilterApp app = new FilterApp(config);
+                    ExitCode result = await app.Run();
+
+                    Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
+                }
+
+                Assert.That(File.Exists("file.txt"));
+
+                FileInfo fileInfo = new FileInfo("file.txt");
+                Assert.That(fileInfo.Length, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
         public async Task OutputError()
         {
             var factoryMock = new Mock<IOutputStreamFactory>();
