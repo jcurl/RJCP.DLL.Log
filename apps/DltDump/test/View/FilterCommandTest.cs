@@ -1177,6 +1177,24 @@
                 Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.dlt"));
             }
         }
+
+        [Test]
+        public void OutputTextFileNameForce()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("force"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Force, Is.True);
+            }
+        }
         #endregion
     }
 }

@@ -44,6 +44,14 @@
         public InputFormat InputFormat { get; set; } = InputFormat.Automatic;
 
         /// <summary>
+        /// Allows force overwrite of the output file.
+        /// </summary>
+        /// <value>
+        /// Force overwrite if <see langword="true"/>; otherwise, raise errors with <see langword="false"/>.
+        /// </value>
+        public bool Force { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the output file.
         /// </summary>
         /// <value>The name of the output file.</value>

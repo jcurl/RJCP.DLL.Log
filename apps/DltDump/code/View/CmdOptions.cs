@@ -71,6 +71,15 @@
         public string OutputFileName { get; private set; }
 
         /// <summary>
+        /// Allows force overwrite of the output file.
+        /// </summary>
+        /// <value>
+        /// Force overwrite if <see langword="true"/>; otherwise, raise errors with <see langword="false"/>.
+        /// </value>
+        [Option('f', "force")]
+        public bool Force { get; private set; }
+
+        /// <summary>
         /// Gets the input format.
         /// </summary>
         /// <value>The input format.</value>

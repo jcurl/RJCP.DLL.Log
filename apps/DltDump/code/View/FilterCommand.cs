@@ -25,6 +25,7 @@
                 ShowPosition = m_Options.Position,
                 InputFormat = m_Options.InputFormat,
                 OutputFileName = m_Options.OutputFileName,
+                Force = m_Options.Force,
                 OutputFormat = OutputFormat.Automatic,
                 ConnectRetries = m_Options.ConnectRetries,
                 BeforeContext = m_Options.BeforeContext,

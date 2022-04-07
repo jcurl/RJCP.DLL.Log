@@ -127,7 +127,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}position
-        ///  Show the offset of the stream on text output.
+        ///  Show the offset of the stream on text output..
         /// </summary>
         internal static string Help320_Position {
             get {
@@ -146,7 +146,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * automatic|auto - choose based on the URI, or the file name extension.
+        ///   Looks up a localized string similar to * automatic|auto - choose based on the URI, or the file name extension..
         /// </summary>
         internal static string Help325_InputFormatAuto {
             get {
@@ -155,7 +155,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * file - interpret the URI as a file with a storage header.
+        ///   Looks up a localized string similar to * file - interpret the URI as a file with a storage header..
         /// </summary>
         internal static string Help325_InputFormatFile {
             get {
@@ -164,7 +164,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * network|net - interpret the URI as a network stream, each packet starting with the standard header.
+        ///   Looks up a localized string similar to * network|net - interpret the URI as a network stream, each packet starting with the standard header..
         /// </summary>
         internal static string Help325_InputFormatNetwork {
             get {
@@ -173,7 +173,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header.
+        ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header..
         /// </summary>
         internal static string Help325_InputFormatSerial {
             get {
@@ -203,7 +203,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}r | {1}regex{2}&lt;regex&gt;
-        ///  Search for lines that match the .NET regular expression for &lt;regex&gt;.
+        ///  Search for lines that match the .NET regular expression for &lt;regex&gt;..
         /// </summary>
         internal static string Help340_RegexSearch {
             get {
@@ -213,7 +213,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}i | {1}ignorecase
-        ///  If provided, the searches are made case insensitive.
+        ///  If provided, the searches are made case insensitive..
         /// </summary>
         internal static string Help345_IgnoreCase {
             get {
@@ -223,7 +223,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}ecuid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of ECU Identifiers that should match.
+        ///  Specify a list of ECU Identifiers that should match..
         /// </summary>
         internal static string Help350_EcuId {
             get {
@@ -233,7 +233,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}appid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of Application Identifiers that should match.
+        ///  Specify a list of Application Identifiers that should match..
         /// </summary>
         internal static string Help355_AppId {
             get {
@@ -243,7 +243,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}ctxid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of context identifiers that should match.
+        ///  Specify a list of context identifiers that should match..
         /// </summary>
         internal static string Help360_CtxId {
             get {
@@ -253,7 +253,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of session identifiers that should match. Lines that don&apos;t have a session identifier do not match.
+        ///  Specify a list of session identifiers that should match. Lines that don&apos;t have a session identifier do not match..
         /// </summary>
         internal static string Help365_SessionId {
             get {
@@ -278,7 +278,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}verbose
-        ///  Match lines that are verbose (have an extended header and the verbose bit is set).
+        ///  Match lines that are verbose (have an extended header and the verbose bit is set)..
         /// </summary>
         internal static string Help375_Verbose {
             get {
@@ -288,7 +288,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}nonverbose
-        ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message).
+        ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message)..
         /// </summary>
         internal static string Help380_NonVerbose {
             get {
@@ -298,7 +298,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}control
-        ///  Match lines that are a control message (including the timing message).
+        ///  Match lines that are a control message (including the timing message)..
         /// </summary>
         internal static string Help385_Control {
             get {
@@ -333,6 +333,16 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help400_OutputFileName {
             get {
                 return ResourceManager.GetString("Help400_OutputFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}f | {1}force
+        ///  When using {1}output, overwrite the output file if it already exists..
+        /// </summary>
+        internal static string Help405_Force {
+            get {
+                return ResourceManager.GetString("Help405_Force", resourceCulture);
             }
         }
         
@@ -382,7 +392,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0 - The program ran successfully.
+        ///   Looks up a localized string similar to 0 - The program ran successfully..
         /// </summary>
         internal static string Help805_Success {
             get {
@@ -391,7 +401,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 - There was an error processing the options.
+        ///   Looks up a localized string similar to 1 - There was an error processing the options..
         /// </summary>
         internal static string Help810_OptionError {
             get {
@@ -400,7 +410,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2 - There was an error parsing the input URIs.
+        ///   Looks up a localized string similar to 2 - There was an error parsing the input URIs..
         /// </summary>
         internal static string Help811_InputUnknown {
             get {
@@ -409,7 +419,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 3 - None of the input files could be processed.
+        ///   Looks up a localized string similar to 3 - None of the input files could be processed..
         /// </summary>
         internal static string Help812_NoFilesProcessed {
             get {
@@ -418,7 +428,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4 - Not all of the files could be processed (partial error).
+        ///   Looks up a localized string similar to 4 - Not all of the files could be processed (partial error)..
         /// </summary>
         internal static string Help813_PartialFilesProcessed {
             get {
@@ -427,7 +437,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 5 - There was a problem creating the output file.
+        ///   Looks up a localized string similar to 5 - There was a problem creating the output file..
         /// </summary>
         internal static string Help814_OutputError {
             get {
@@ -436,7 +446,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 255 - An unhandled exception occurred.
+        ///   Looks up a localized string similar to 255 - An unhandled exception occurred..
         /// </summary>
         internal static string Help899_UnknownError {
             get {
