@@ -129,6 +129,7 @@
                     Count = Count,
                     DeviceTimeStamp = DeviceTimeStamp,
                     Type = DltType,
+                    Length = Length
                 };
                 line.Features += Features;
             } else {
@@ -150,7 +151,8 @@
                     Count = Count,
                     DeviceTimeStamp = DeviceTimeStamp,
                     Type = DltType,
-                    Features = Features
+                    Features = Features,
+                    Length = Length
                 };
             }
             m_Line++;
@@ -210,7 +212,8 @@
             DltSkippedTraceLine line = new DltSkippedTraceLine(SkippedBytes, m_SkippedReason) {
                 Line = m_Line,
                 Position = Position,
-                TimeStamp = m_LastValidTimeStamp
+                TimeStamp = m_LastValidTimeStamp,
+                Length = SkippedBytes
             };
 
             if (m_Online || m_LastValidTimeStamp.Ticks != DltConstants.DefaultTimeStamp.Ticks)
@@ -456,6 +459,23 @@
         public IDltLineBuilder SetPosition(long position)
         {
             Position = position;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets size of the packet.
+        /// </summary>
+        /// <value>The size of the packet.</value>
+        public long Length { get; private set; }
+
+        /// <summary>
+        /// Sets the length of the packet as decoded in the string.
+        /// </summary>
+        /// <param name="length">The length of the packet.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        public IDltLineBuilder SetLength(long length)
+        {
+            Length = length;
             return this;
         }
 

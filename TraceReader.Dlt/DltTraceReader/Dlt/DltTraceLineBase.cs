@@ -39,6 +39,12 @@ namespace RJCP.Diagnostics.Log.Dlt
         public long Position { get; set; }
 
         /// <summary>
+        /// Gets or sets size of the packet.
+        /// </summary>
+        /// <value>The size of the packet.</value>
+        public long Length { get; set; }
+
+        /// <summary>
         /// Describes the features which are available on this trace line.
         /// </summary>
         /// <value>The features available on this trace line.</value>

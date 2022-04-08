@@ -241,6 +241,19 @@
         IDltLineBuilder SetPosition(long position);
 
         /// <summary>
+        /// Gets size of the packet.
+        /// </summary>
+        /// <value>The size of the packet.</value>
+        long Length { get; }
+
+        /// <summary>
+        /// Sets the length of the packet as decoded in the string.
+        /// </summary>
+        /// <param name="length">The length of the packet.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder SetLength(long length);
+
+        /// <summary>
         /// Gets a value indicating whether arguments are encoded as big endian.
         /// </summary>
         /// <value>

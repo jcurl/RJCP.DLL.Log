@@ -237,6 +237,7 @@
                 if (m_DltLineBuilder.SkippedBytes > 0)
                     m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                 m_DltLineBuilder.SetPosition(m_PosMap.Position);
+                m_DltLineBuilder.SetLength(StandardHeaderOffset + m_ExpectedLength);
                 m_Lines.Add(m_DltLineBuilder.GetResult());
                 m_DltLineBuilder.Reset();
 

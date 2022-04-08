@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release</Configurations>
+    <NeutralLanguage>en-US</NeutralLanguage>
+
+    <AssemblyName>dltcount</AssemblyName>
+    <AssemblyTitle>RJCP.App.DltCount</AssemblyTitle>
+    <Product>RJCP.DLL.Log</Product>
+    <RootNamespace>RJCP.App.DltCount</RootNamespace>
+
+    <Authors>Jason Curl</Authors>
+    <Copyright>(C) 2022, Jason Curl</Copyright>
+    <Company></Company>
+
+    <Description>A command line tool to read a DLT file and print statistics.</Description>
+    <Version>0.1.0</Version>
+
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>Default</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <RevisionControl>git</RevisionControl>
+    <RevisionControlLabel>release/dltcount/v$(Version)</RevisionControlLabel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <RevisionControlStrict>true</RevisionControlStrict>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.22" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.22" />
+    <ProjectReference Include="..\..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
+    <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
+    <ProjectReference Include="..\..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json" />
+  </ItemGroup>
+
+  <Target Name="CopyAppConfig" AfterTargets="AfterBuild" Condition="Exists('appsettings.json')">
+    <Delete Files="$(OutDir)$(TargetFileName).json" />
+    <Copy SourceFiles="$(ProjectDir)appsettings.json" DestinationFiles="$(OutDir)$(TargetFileName).json" />
+  </Target>
+</Project>
