@@ -344,5 +344,19 @@
                 }
             }
         }
+
+        [Test]
+        public void TemplateEnvironmentVar()
+        {
+            Environment.SetEnvironmentVariable("TESTVAR", "testVar");
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("File_%TESTVAR%.txt", false)) {
+                output.SetInput("input.dlt", InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                Assert.That(File.Exists("File_testVar.txt"), Is.True);
+            }
+        }
     }
 }

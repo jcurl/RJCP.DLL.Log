@@ -14,6 +14,7 @@
     public abstract class OutputBase : IDisposable
     {
         private readonly OutputWriter m_Writer = new OutputWriter();
+        private readonly Template m_Template;
         private readonly string m_FileName;
 
         /// <summary>
@@ -25,7 +26,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file to write to.</param>
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
@@ -35,7 +36,8 @@
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 
-            m_FileName = fileName;
+            m_Template = new Template(fileName);
+            m_FileName = m_Template.ToString();
             Force = force;
 
             m_Encoding = Encoding.UTF8;

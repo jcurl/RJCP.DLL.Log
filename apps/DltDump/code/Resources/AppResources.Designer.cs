@@ -115,6 +115,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Empty variable provided.
+        /// </summary>
+        internal static string DomainTemplateEmptyVar {
+            get {
+                return ResourceManager.GetString("DomainTemplateEmptyVar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {

@@ -135,6 +135,9 @@
   <data name="DomainOutputWriterOpen" xml:space="preserve">
     <value>OutputWriter File is already open.</value>
   </data>
+  <data name="DomainTemplateEmptyVar" xml:space="preserve">
+    <value>Empty variable provided</value>
+  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>
