@@ -36,14 +36,16 @@ implementation in an incremental manner).
       - [2.4.3.2. Text File Output](#2432-text-file-output)
       - [2.4.3.3. DLT File Output](#2433-dlt-file-output)
       - [2.4.3.4. File Templates for DLT and Text Output](#2434-file-templates-for-dlt-and-text-output)
-      - [2.4.3.5. Logic for Splitting and Concatenating Output Files](#2435-logic-for-splitting-and-concatenating-output-files)
-      - [2.4.3.6. IOutputStream Object Lifetime](#2436-ioutputstream-object-lifetime)
-      - [2.4.3.7. On Flush](#2437-on-flush)
+      - [2.4.3.5. Input File Concatenation](#2435-input-file-concatenation)
+      - [2.4.3.6. Splitting Output Files](#2436-splitting-output-files)
+      - [2.4.3.7. Detailed Logic for Splitting and Concatenating Files](#2437-detailed-logic-for-splitting-and-concatenating-files)
+      - [2.4.3.8. IOutputStream Object Lifetime](#2438-ioutputstream-object-lifetime)
+      - [2.4.3.9. On Flush](#2439-on-flush)
     - [2.4.4. The Filter and the Context](#244-the-filter-and-the-context)
       - [2.4.4.1. Output Chaining](#2441-output-chaining)
       - [2.4.4.2. Context Implementation](#2442-context-implementation)
     - [2.4.5. Decoder Extension on Line Decoding](#245-decoder-extension-on-line-decoding)
-      - [DltTraceDecoder writing to IOutputStream](#dlttracedecoder-writing-to-ioutputstream)
+      - [2.4.5.1. DltTraceDecoder writing to IOutputStream](#2451-dlttracedecoder-writing-to-ioutputstream)
   - [2.5. Infrastructure](#25-infrastructure)
     - [2.5.1. Version Information](#251-version-information)
 
@@ -497,10 +499,10 @@ It shall be easy to extend with further sinks. A diagram of how the
 A mapping of the `OutputFormat` to the object:
 
 | OutputFormat | Output Object    | Supports Binary |
-| ------------- | ---------------- | --------------- |
-| `Console`     | Console Output   | False           |
-| `Text`        | Text File Output | False           |
-| `Dlt`         | Dlt File Output  | True            |
+| ------------ | ---------------- | --------------- |
+| `Console`    | Console Output   | False           |
+| `Text`       | Text File Output | False           |
+| `Dlt`        | Dlt File Output  | True            |
 
 If `OutputFormat.Automatic` is chosen, it should choose the output object based
 on the output file name:
@@ -554,8 +556,8 @@ should be implemented in the `OutputBase`:
 
 * Mapping the input template to an output file name
   * `%FILE%`. Knowing the name of the input file. This is only known by the
-    application layer. The binary writer must be told of the input file name
-    after a file is closed and before a new file is written.
+    application layer. The output writer must be told of the input file name
+    before a new file is written.
   * `%CDATE%`, `%CTIME%`, `%CDATETIME%`. Take the timestamp from the
     `DltTraceLineBase` message if this is the first line to write. This implies
     delayed opening of the file if it contains one of these elements in the
@@ -585,48 +587,100 @@ the `%FILE%` from `SetInput`, the `%CDATE%`, `%CTIME%` and `%CDATETIME%` from
 the first `Write` just before opening the file. The `%CTR%` is maintained
 internally.
 
-On the first call to `IOutputStream.Write`, the `OutputBase` will see that
-`OutputWriter.IsOpen` is `false`, and open the file with `OutputWriter.Open`. It
-is at this time the output file template can be evaluated by `OutputBase` (such
-as the time stamp in the `Write` call, and a previous call to `SetInput` for the
-file name). Subsequent writes just write to the file.
+##### 2.4.3.5. Input File Concatenation
 
-The `DltOutput` will consider the `InputFormat` and either write the packet (if
-it is already `InputFormat.File`) or add a storage header and then write the
-packet.
+Input files shall be concatenated if the output file name is independent of the
+input file name. All inputs will be processed one after the other, and split as
+necessary.
 
-On disposing the `IOutputStream`, the underlying `OutputWriter` is also
-disposed.
+That means, if the template does not contain anything that is dependent on the
+input file name, then concatenation is allowed. Otherwise, it is expected for
+every input, there is a separate output file.
 
-##### 2.4.3.5. Logic for Splitting and Concatenating Output Files
+Rule: `AllowConcatenation = !%FILE%`
 
-The `OutputBase` should maintain a list files it has created. If the file being
-opened doesn't exist on the file system, it is opened without error.
+##### 2.4.3.6. Splitting Output Files
 
-If the file exists, and the file is not created by this instance previously, the
-`Force` flag is used if it should be overwritten with `FileMode.Create`, or if
-`false` then an exception should be thrown when `FileMode.CreateNew` is used.
+If the `Split` option is provided so that files should be split, then files will
+be split and dependent on the variables `%CTR%` and `%CDATETIME%`, `%CDATE%`,
+`%CTIME%`. If after a split the file name has not changed (say for example, it's
+based on the time stamp which hasn't changed), the current file will still be
+written to. Using the `%CTR%` ensures that the file will be split.
 
-After writing with `OutputBase`, it checks the length of data written with
-`OutputWriter.Length`, and if it exceeds the `Split` value, it can close the
-`OutputWriter` and increment the counter used for `%CTR%`. When a call to
-`SetInput` is given, the counter should be checked if it should be reset. If the
-new input template does not have a reference to `%FILE%` or `%CDATETIME%`, etc.,
-then the counter should remain. Otherwise it should be reset to a value of one.
-This allows an input such as `file_%CTR%.txt`, which concatenates files and
-maintains an ever increasing counter.
+If the template doesn't contain any variable that is expected to change as a
+file is parsed, then splitting is unnecessary. That is, it must have one of the
+above mentioned variables.
 
-After `OutputBase` splits the file, and then opening the file a second time
-(which is by a subsequent `Write`), it should look up if the file to write was
-already created by this object. If it was, it should check if this was the
-*last* file in a chain and append to the file with `FileMode.Append`. It it did
-exist and is not the last file, it should abort as a file just created would
-appear if it was added in the middle (regardless of the `Force` flag). Note,
-some pathological cases could be made that lead to some confusing behavior, we
-rely on the users intuition here to not specify an order of inputs that confuse
-outputs. This use case allows to concatenate files.
+Rule: `AllowSplit = %CTR% || %CDATE% || %CTIME% || %CDATETIME%`
 
-##### 2.4.3.6. IOutputStream Object Lifetime
+##### 2.4.3.7. Detailed Logic for Splitting and Concatenating Files
+
+To handle the logic of input files being converted to output files, it is split
+into two logical paths, depending on `AllowConcatenation`. For the current
+output, instead of considering it a single file, we consider a list of Segments,
+which are a list of files written to the output, which when considered together,
+is the output stream. If `AllowConcatenation` is `true`, there is only one
+output stream (so one list of Segments), otherwise, a list of Segments per
+input.
+
+The following table summarizes the above sections
+
+| %FILE% | %CTR% | %CDATETIME% | AllowSplit | AllowConcat | Example                                                                      |
+| ------ | ----- | ----------- | ---------- | ----------- | ---------------------------------------------------------------------------- |
+| N      | N     | N           | N          | Y           | f1.dlt, f2.dlt => out.txt                                                    |
+| N      | Y     | N           | Y          | Y           | f1.dlt, f2.dlt => out_001.txt, out_002.txt, out_003.txt                      |
+| N      | Y     | Y           | Y          | Y           | f1.dlt, f2.dlt => out_001_{time}.txt, out_002_{time}.txt, out_003_{time}.txt |
+| N      | N     | Y           | Y          | Y           | f1.dlt, f2.dlt => out_{time}.txt, out_{time}.txt, out_{time}.txt             |
+| Y      | N     | N           | N          | N           | f1.dlt, f2.dlt => f1.txt, f2.txt                                             |
+| Y      | Y     | N           | Y          | N           | f1.dlt, f2.dlt => f1_001.txt, f1_002.txt, f2_001.txt                         |
+| Y      | Y     | Y           | Y          | N           | f1.dlt, f2.dlt => f1_001_{time}.txt, f1_002_{time}.txt, f2_001_{time}.txt    |
+| Y      | N     | Y           | Y          | N           | f1.dlt, f2.dlt => f1_{time}.txt, f1_{time}.txt, f2_{time}.txt                |
+
+The following logic applies to satisfy the rules above:
+
+* `OutputBase.SetInput(input: string)`:
+  * If `!AllowConcatenation`:
+    * Closes the current file.
+    * Sets the Segments list to `null`.
+  * If `AllowConcatenation`, then the file isn't closed as we join the inputs
+    together.
+  * Updates the variable `%FILE%` based on the new input file name.
+  * The file format is used by only `DltOutput`.
+* `OutputBase.Write()`:
+  * If `!OutputWriter.IsOpen()`:
+    * This is a new file, or was closed because the last split was too large.
+    * Set the time stamp variables `%CDATETIME%`, `%CDATE%`, `%CTIME%`.
+    * Open a new file (or append an existing) with OutputWriter (see below).
+  * Write the line (in text or binary form).
+  * If `SplitAllowed`, and the file length > split size:
+    * Close the file
+    * Increment `%CTR%`
+
+The logic in getting the output file name and mode and about to open a new file,
+which is handled by `OutputBase` to be common for any `IOutputStream` that
+writes files.
+
+* If the Segments list is `null`, this is the first line we're writing (for this
+  input):
+  * `%CTR%` is set to `001`.
+  * Generate the file name from the template.
+    * If we've created this file before, even for a different input, then we
+      raise an error.
+    * If the file is in the list of inputs, then generate an error.
+  * Create a new Segments list, add this file name.
+  * `FileMode = Force ? CreateNew : Create`
+* If the Segments list is not `null`, then we closed the file due to split size
+  (but not due to a new input file):
+  * Generate the file name from the template. The `%CTR%` has already been
+    incremented.
+    * If we've created this file before, and it's not the same as the last file
+      in the Segments list, then we raise an error (which would otherwise result
+      in data converted being destroyed);
+      * `FileMode = Append`
+    * Otherwise, add to the Segments list.
+      * `FileMode = Force ? CreateNew : Create`
+
+##### 2.4.3.8. IOutputStream Object Lifetime
 
 As indicated above, it is important that this object is created once and used
 for all input files as in the previous section on concatenating output files.
@@ -634,7 +688,7 @@ The `IOutputStream` is then used directly by the `FilterApp` or used by the
 decoder. But the `FilterApp` always calls when a new file is processed, between
 instantiations of the decoder.
 
-##### 2.4.3.7. On Flush
+##### 2.4.3.9. On Flush
 
 When the input stream has reached end of file, or the decoder is closed, the
 `DltDecoder` has the method `Flush()` called. This should result in the
@@ -738,7 +792,7 @@ The property `IOutputStream.SupportsBinary` can be used to determine if the
 `IOutputStream` object should be given to a `DltTraceDecoder`, or be parsed by
 the `FilterApp`.
 
-##### DltTraceDecoder writing to IOutputStream
+##### 2.4.5.1. DltTraceDecoder writing to IOutputStream
 
 While in the use case for console output, the line is given by the result of
 `GetLineAsync()`, the ability to write to a file requires knowledge of the DLT
