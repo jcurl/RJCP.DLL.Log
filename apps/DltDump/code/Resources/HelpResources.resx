@@ -237,6 +237,9 @@
   <data name="Help404_OutputTime" xml:space="preserve">
     <value>* %CTIME% - use the local time of the first line</value>
   </data>
+  <data name="Help405_OutputSplit" xml:space="preserve">
+    <value>* %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;</value>
+  </data>
   <data name="Help410_Force" xml:space="preserve">
     <value>{0}f | {1}force
   When using {1}output, overwrite the output file if it already exists.</value>

@@ -16,7 +16,7 @@
             Line = 0,
             Count = 127,
             Type = DltType.LOG_INFO,
-            TimeStamp = DateTime.UtcNow,
+            TimeStamp = DateTime.UtcNow - TimeSpan.FromSeconds(2),
             SessionId = 127,
             DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
             Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +

@@ -15,7 +15,8 @@
     [TestFixture]
     public class FilterAppTest
     {
-        private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
+        private readonly string EmptyFile =
+            Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
 
         // Most of the functionality of FilterApp is tested through the FilterCommandTest. This is because it takes a
         // CmdOptions as input which requires the CommandLine.Run() method to be called. Anything that can't be tested
@@ -152,9 +153,9 @@
         [TestCase(ConnectTestMode.RetryThenFail)]
         public async Task OpenConnectErrorRetries(ConnectTestMode mode)
         {
-            const int RetryOption = 7;      // Option given to FilterApp
-            const int CreateCount = 2;      // Our test case fails to connect after this count
-            const int RetryCount = 4;       // Our test case connects after this many retries
+            const int RetryOption = 7; // Option given to FilterApp
+            const int CreateCount = 2; // Our test case fails to connect after this count
+            const int RetryCount = 4; // Our test case connects after this many retries
 
             ExitCode expectedResult;
             int retries = RetryCount;
@@ -174,7 +175,7 @@
                     expectedConnects = RetryOption + 1;
                     break;
                 case ConnectTestMode.RetryThenCreateFail:
-                    int creates = CreateCount + 1;  // First create is to check
+                    int creates = CreateCount + 1; // First create is to check
                     // For loop 1, it fails the first two times and then connects.
                     // For loop 2, it fails the first two times and then connects.
                     // For loop 3, the connection has an error.
@@ -200,7 +201,7 @@
                         Console.WriteLine("ConnectEvent");
                         actualConnects++;
                         --retries;
-                        e.Succeed = retries < 0 && loop > 0;  // Here is 1, because first create has no connect.
+                        e.Succeed = retries < 0 && loop > 0; // Here is 1, because first create has no connect.
                         if (e.Succeed) {
                             retries = RetryCount;
                             --loop;
@@ -213,6 +214,7 @@
                     Assert.Fail("Unknown test case");
                     return;
                 }
+
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
@@ -318,7 +320,8 @@
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
                 string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
-                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                    TestLines.Verbose.TimeStamp.ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
@@ -338,8 +341,10 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
-                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                string expectedLine = string.Format(
+                    "00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
@@ -518,8 +523,10 @@
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
-                string expectedLine = string.Format("00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
-                    TestLines.Verbose.TimeStamp.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                string expectedLine = string.Format(
+                    "00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
@@ -541,7 +548,7 @@
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
 
-                Assert.That(File.Exists("file.txt"));
+                Assert.That(File.Exists("file.txt"), Is.True);
 
                 FileInfo fileInfo = new FileInfo("file.txt");
                 Assert.That(fileInfo.Length,
@@ -558,7 +565,8 @@
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                using (Stream file = new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+                using (Stream file =
+                       new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
                     /* Do nothing, just create the file */
                 }
 
@@ -580,7 +588,7 @@
                         Is.EqualTo(10 + TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
                 }
 
-                Assert.That(File.Exists("file.txt"));
+                Assert.That(File.Exists("file.txt"), Is.True);
             }
         }
 
@@ -592,7 +600,8 @@
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                using (Stream file = new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
+                using (Stream file =
+                       new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
                     FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
                         ShowPosition = true,
                         OutputFileName = "file.txt"
@@ -603,7 +612,7 @@
                     Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
                 }
 
-                Assert.That(File.Exists("file.txt"));
+                Assert.That(File.Exists("file.txt"), Is.True);
 
                 FileInfo fileInfo = new FileInfo("file.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(0));
@@ -652,6 +661,76 @@
 
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public async Task OutputSplitNone()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file.txt",
+                    Split = 1
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(File.Exists("file.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public async Task OutputSplitCtr()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file_%CTR%.txt",
+                    Split = 1
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(File.Exists("file_001.txt"), Is.True);
+                Assert.That(File.Exists("file_002.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public async Task OutputSplitDateTime()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file_%CDATETIME%.txt",
+                    Split = 1
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                string line1 = TestLines.Verbose.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
+                string line2 = TestLines.Verbose2.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+                Assert.That(File.Exists($"file_{line1}.txt"), Is.True);
+                Assert.That(File.Exists($"file_{line2}.txt"), Is.True);
             }
         }
     }

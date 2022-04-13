@@ -11,7 +11,9 @@
     {
         public TestOutputBase(string fileName) : base(fileName) { }
 
-        public TestOutputBase(string fileName, bool force) : base(fileName, force) { }
+        public TestOutputBase(string fileName, bool force) : base(fileName, 0, force) { }
+
+        public TestOutputBase(string fileName, long split, bool force) : base(fileName, split, force) { }
 
         public bool SupportsBinary { get { return true; } }
 

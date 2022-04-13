@@ -6,7 +6,7 @@
     {
         public bool Force { get; set; }
 
-        public int Split { get; set; }
+        public long Split { get; set; }
 
         public IOutputStream Create(OutputFormat outFormat, string outFileName)
         {

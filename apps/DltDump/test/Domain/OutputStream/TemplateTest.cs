@@ -142,6 +142,7 @@
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
             Assert.That(template.AllowConcatenation, Is.False);
+            Assert.That(template.SupportsSplit, Is.False);
         }
 
         [Test]
@@ -152,6 +153,50 @@
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
             Assert.That(template.AllowConcatenation, Is.True);
+        }
+
+        [Test]
+        public void SupportsSplitDate()
+        {
+            Template template = new Template("file_%CDATE%.txt");
+            template.Variables["FILE"] = "input";
+            template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
+
+            Assert.That(template.AllowConcatenation, Is.True);
+            Assert.That(template.SupportsSplit, Is.True);
+        }
+
+        [Test]
+        public void SupportsSplitTime()
+        {
+            Template template = new Template("file_%CTIME%.txt");
+            template.Variables["FILE"] = "input";
+            template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
+
+            Assert.That(template.AllowConcatenation, Is.True);
+            Assert.That(template.SupportsSplit, Is.True);
+        }
+
+        [Test]
+        public void SupportsSplitDateTime()
+        {
+            Template template = new Template("file_%CDATETIME%.txt");
+            template.Variables["FILE"] = "input";
+            template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
+
+            Assert.That(template.AllowConcatenation, Is.True);
+            Assert.That(template.SupportsSplit, Is.True);
+        }
+
+        [Test]
+        public void SupportsSplitCounter()
+        {
+            Template template = new Template("file_%CTR%.txt");
+            template.Variables["FILE"] = "input";
+            template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
+
+            Assert.That(template.AllowConcatenation, Is.True);
+            Assert.That(template.SupportsSplit, Is.True);
         }
     }
 }

@@ -77,6 +77,7 @@
             Write(4, 6, HelpResources.Help402_OutputDateTime);
             Write(4, 6, HelpResources.Help403_OuputDate);
             Write(4, 6, HelpResources.Help404_OutputTime);
+            Write(4, 6, HelpResources.Help405_OutputSplit);
             Write(2, 4, HelpResources.Help410_Force);
             Write(2, 4, HelpResources.Help415_Split);
             Write();

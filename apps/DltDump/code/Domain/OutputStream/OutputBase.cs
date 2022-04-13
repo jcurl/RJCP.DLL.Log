@@ -18,21 +18,27 @@
         private readonly Template m_Template;
         private readonly HashSet<string> m_OutputFiles = new HashSet<string>();
         private List<string> m_Segments;
+        private readonly long m_Split;
+        private long m_NextSplit;
+        private int m_SplitCounter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        protected OutputBase(string fileName) : this(fileName, false) { }
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        protected OutputBase(string fileName) : this(fileName, 0, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
         /// </summary>
         /// <param name="fileName">Name of the file to write to.</param>
+        /// <param name="split">The number of bytes to write before splitting.</param>
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        protected OutputBase(string fileName, bool force)
+        protected OutputBase(string fileName, long split, bool force)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             if (string.IsNullOrEmpty(fileName))
@@ -40,6 +46,8 @@
 
             m_Template = new Template(fileName);
             Force = force;
+            m_Split = split;
+            ResetSplit();
 
             m_Encoding = Encoding.UTF8;
             m_Encoder = m_Encoding.GetEncoder();
@@ -113,6 +121,7 @@
             m_Encoder.Convert(line, m_Buffer, true, out int _, out int bytes, out bool _);
             m_Writer.Write(m_Buffer, 0, bytes);
             m_Writer.Write(m_NewLine, 0, m_NewLine.Length);
+            CheckSplit();
         }
 
         /// <summary>
@@ -131,6 +140,7 @@
             m_Encoder.Convert(line, m_Buffer, true, out int _, out int bytes, out bool _);
             m_Writer.Write(m_Buffer, 0, bytes);
             m_Writer.Write(m_NewLine, 0, m_NewLine.Length);
+            CheckSplit();
         }
 
         /// <summary>
@@ -145,6 +155,7 @@
             OpenWriter(timeStamp);
 
             m_Writer.Write(buffer);
+            CheckSplit();
         }
 
         /// <summary>
@@ -161,6 +172,7 @@
 
             m_Writer.Write(header);
             m_Writer.Write(buffer);
+            CheckSplit();
         }
 
         private void OpenWriter(DateTime timeStamp)
@@ -169,6 +181,8 @@
 
             SetTimeStamp(timeStamp);
             if (m_Segments == null) {
+                ResetSplit();
+
                 string fileName = m_Template.ToString();
                 if (!Path.IsPathRooted(fileName))
                     fileName = Path.Combine(Environment.CurrentDirectory, fileName);
@@ -186,9 +200,48 @@
                 m_Segments = new List<string>() { fileName };
                 m_OutputFiles.Add(fileName);
             } else {
-                // File is split. Not yet implemented.
-                throw new NotImplementedException();
+                string fileName = m_Template.ToString();
+                if (!Path.IsPathRooted(fileName))
+                    fileName = Path.Combine(Environment.CurrentDirectory, fileName);
+
+                FileMode mode;
+                if (m_Segments[^1].Equals(fileName, StringComparison.Ordinal)) {
+                    mode = FileMode.Append;
+                    m_Writer.Open(fileName, mode);
+                    if (m_Writer.Length > m_NextSplit) {
+                        m_NextSplit += m_Split / 5;
+                    }
+                } else {
+                    mode = Force ? FileMode.Create : FileMode.CreateNew;
+                    m_Writer.Open(fileName, mode);
+                    m_Segments.Add(fileName);
+                    m_OutputFiles.Add(fileName);
+                }
             }
+        }
+
+        private void CheckSplit()
+        {
+            if (!m_Template.SupportsSplit || m_NextSplit == 0) return;
+
+            if (m_Writer.Length >= m_NextSplit) {
+                // The next write will open and append to this file, or write to the next one.
+                m_Writer.Close();
+                SplitIncrement();
+            }
+        }
+
+        private void ResetSplit()
+        {
+            m_SplitCounter = 1;
+            m_NextSplit = m_Split;
+            m_Template.Variables["CTR"] = m_SplitCounter.ToString("D3");
+        }
+
+        private void SplitIncrement()
+        {
+            m_SplitCounter++;
+            m_Template.Variables["CTR"] = m_SplitCounter.ToString("D3");
         }
 
         private void SetTimeStamp(DateTime timeStamp)
@@ -206,7 +259,7 @@
         public void Flush()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
-            m_Writer.Flush();
+            if (m_Writer.IsOpen) m_Writer.Flush();
         }
 
         /// <summary>

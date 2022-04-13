@@ -74,6 +74,8 @@
             if (template == null) throw new ArgumentNullException(nameof(template));
             Parse(template);
             AllowConcatenation = !m_Found.Contains("FILE");
+            SupportsSplit = m_Found.Contains("CTR") || m_Found.Contains("CDATE") ||
+                m_Found.Contains("CTIME") || m_Found.Contains("CDATETIME");
         }
 
         /// <summary>
@@ -89,6 +91,12 @@
         /// Is <see langword="true"/> if file concatenation is allwoed; otherwise, <see langword="false"/>.
         /// </value>
         public bool AllowConcatenation { get; }
+
+        /// <summary>
+        /// Gets a value indicating that the template supports splitting files.
+        /// </summary>
+        /// <value>Is <see langword="true"/> if split is supported; otherwise, <see langword="false"/>.</value>
+        public bool SupportsSplit { get; }
 
         private void Parse(string template)
         {

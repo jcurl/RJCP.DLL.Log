@@ -28,6 +28,9 @@
             if (!CheckInputs())
                 return ExitCode.InputError;
 
+            Global.Instance.OutputStreamFactory.Force = m_Config.Force;
+            Global.Instance.OutputStreamFactory.Split = m_Config.Split;
+
             int processed = 0;
             using (IOutputStream output = GetOutputStream()) {
                 if (output == null) return ExitCode.OutputError;
@@ -149,7 +152,6 @@
         {
             IOutputStream output = null;
             try {
-                Global.Instance.OutputStreamFactory.Force = m_Config.Force;
                 output = Global.Instance.OutputStreamFactory.Create(m_Config.OutputFormat, m_Config.OutputFileName);
                 if (output == null) {
                     Terminal.WriteLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");

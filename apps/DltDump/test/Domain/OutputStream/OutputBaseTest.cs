@@ -521,5 +521,219 @@
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateSplitNone(bool force)
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file.txt", 1, force)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                long expectedLength =
+                    TestLines.Verbose.ToString().Length + Environment.NewLine.Length +
+                    TestLines.Verbose2.ToString().Length + Environment.NewLine.Length;
+                FileInfo fileInfo = new FileInfo("file.txt");
+                Assert.That(fileInfo.Length, Is.EqualTo(expectedLength));
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateSplitCtr(bool force)
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, force)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                Assert.That(fileInfo1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                Assert.That(fileInfo2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateSplitDateTime(bool force)
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file_%CDATETIME%.txt", 1, force)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                string date1 = TestLines.Verbose.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
+                string date2 = TestLines.Verbose2.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
+
+                FileInfo fileInfo1 = new FileInfo($"file_{date1}.txt");
+                Assert.That(fileInfo1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2 = new FileInfo($"file_{date2}.txt");
+                Assert.That(fileInfo2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateSplitDateSame(bool force)
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file_%CDATE%.txt", 1, force)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                string date = TestLines.Verbose.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd");
+
+                long expectedLength =
+                    TestLines.Verbose.ToString().Length + Environment.NewLine.Length;
+                FileInfo fileInfo1 = new FileInfo($"file_{date}.txt");
+                Assert.That(fileInfo1.Length, Is.EqualTo(expectedLength * 2));
+            }
+        }
+
+        [Test]
+        public void TemplateSplitCtrExistsForce()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, true)) {
+                using (Stream newFile = new FileStream("file_002.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                Assert.That(fileInfo1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                Assert.That(fileInfo2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [Test]
+        public void TemplateSplitCtrExistsNoForce()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, false)) {
+                using (Stream newFile = new FileStream("file_002.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                Assert.That(() => {
+                    output.Write(TestLines.Verbose2);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
+                Assert.That(() => {
+                    output.Write(TestLines.Verbose2);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
+                output.Flush();
+
+                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                Assert.That(fileInfo1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                Assert.That(fileInfo2.Length, Is.EqualTo(0));  // File was not overwritten
+
+                // And we didn't get to create the third file.
+                Assert.That(File.Exists("file_003.txt"), Is.False);
+            }
+        }
+
+        [Test]
+        public void TemplateSplitMultipleFiles()
+        {
+            string inputFile1 = Platform.IsWinNT() ? @"c:\input1.dlt" : "/input1.dlt";
+            string inputFile2 = Platform.IsWinNT() ? @"c:\input2.dlt" : "/input2.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%_%CTR%.txt", 1, false)) {
+                output.SetInput(inputFile1, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                output.SetInput(inputFile2, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                FileInfo fileInfo1_1 = new FileInfo("input1_001.txt");
+                Assert.That(fileInfo1_1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo1_2 = new FileInfo("input1_002.txt");
+                Assert.That(fileInfo1_2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+
+                FileInfo fileInfo2_1 = new FileInfo("input2_001.txt");
+                Assert.That(fileInfo2_1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2_2 = new FileInfo("input2_002.txt");
+                Assert.That(fileInfo2_2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [Test]
+        public void TemplateSplitMultipleFilesInput1Exists()
+        {
+            string inputFile1 = Platform.IsWinNT() ? @"c:\input1.dlt" : "/input1.dlt";
+            string inputFile2 = Platform.IsWinNT() ? @"c:\input2.dlt" : "/input2.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%_%CTR%.txt", 1, false)) {
+                using (Stream newFile = new FileStream("input1_002.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                output.SetInput(inputFile1, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                Assert.That(() => {
+                    output.Write(TestLines.Verbose2);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
+                output.Flush();
+
+                output.SetInput(inputFile2, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Write(TestLines.Verbose2);
+                output.Flush();
+
+                FileInfo fileInfo1_1 = new FileInfo("input1_001.txt");
+                Assert.That(fileInfo1_1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo1_2 = new FileInfo("input1_002.txt");
+                Assert.That(fileInfo1_2.Length, Is.EqualTo(0));
+
+                FileInfo fileInfo2_1 = new FileInfo("input2_001.txt");
+                Assert.That(fileInfo2_1.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+                FileInfo fileInfo2_2 = new FileInfo("input2_002.txt");
+                Assert.That(fileInfo2_2.Length,
+                    Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
+            }
+        }
     }
 }

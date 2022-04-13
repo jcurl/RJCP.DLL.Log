@@ -24,7 +24,7 @@
         /// Gets or sets the split.
         /// </summary>
         /// <value>The number of bytes each file should grow to before splitting.</value>
-        public int Split { get; set; }
+        public long Split { get; set; }
 
         /// <summary>
         /// Creates the output stream based on the output format.
@@ -42,7 +42,7 @@
             case OutputFormat.Console:
                 return new ConsoleOutput();
             case OutputFormat.Text:
-                return new TextOutput(outFileName, Force);
+                return new TextOutput(outFileName, Split, Force);
             default:
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainOutputStreamFactoryUnknown, outFormat.ToString());
                 return null;

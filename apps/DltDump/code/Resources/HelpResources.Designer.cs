@@ -373,6 +373,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to * %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;.
+        /// </summary>
+        internal static string Help405_OutputSplit {
+            get {
+                return ResourceManager.GetString("Help405_OutputSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}f | {1}force
         ///  When using {1}output, overwrite the output file if it already exists..
         /// </summary>

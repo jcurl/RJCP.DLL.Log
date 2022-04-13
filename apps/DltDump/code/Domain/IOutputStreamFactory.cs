@@ -18,7 +18,7 @@
         /// Gets or sets the split.
         /// </summary>
         /// <value>The number of bytes each file should grow to before splitting.</value>
-        int Split { get; set; }
+        long Split { get; set; }
 
         /// <summary>
         /// Creates the output stream based on the output format.

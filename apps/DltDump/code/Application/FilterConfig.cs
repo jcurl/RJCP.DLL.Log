@@ -52,6 +52,12 @@
         public bool Force { get; set; }
 
         /// <summary>
+        /// Gets or sets the split.
+        /// </summary>
+        /// <value>The number of bytes each file should grow to before splitting.</value>
+        public long Split { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the output file.
         /// </summary>
         /// <value>The name of the output file.</value>

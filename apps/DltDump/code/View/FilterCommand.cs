@@ -26,6 +26,7 @@
                 InputFormat = m_Options.InputFormat,
                 OutputFileName = m_Options.OutputFileName,
                 Force = m_Options.Force,
+                Split = m_Options.Split,
                 OutputFormat = OutputFormat.Automatic,
                 ConnectRetries = m_Options.ConnectRetries,
                 BeforeContext = m_Options.BeforeContext,

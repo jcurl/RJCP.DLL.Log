@@ -13,14 +13,28 @@
         /// Initializes a new instance of the <see cref="TextOutput"/> class.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         public TextOutput(string fileName) : base(fileName) { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextOutput"/> class.
+        /// Initializes a new instance of the <see cref="TextOutput" /> class.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
-        public TextOutput(string fileName, bool force) : base(fileName, force) { }
+        /// <param name="force">Force overwrite the file if <see langword="true" />.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        public TextOutput(string fileName, bool force) : base(fileName, 0, force) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextOutput" /> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="split">The number of bytes to write before splitting.</param>
+        /// <param name="force">Force overwrite the file if <see langword="true" />.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        public TextOutput(string fileName, long split, bool force) : base(fileName, split, force) { }
 
         /// <summary>
         /// Gets or sets a value indicating whether the output should contain the position.

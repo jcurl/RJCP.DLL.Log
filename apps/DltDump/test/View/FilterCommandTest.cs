@@ -1251,6 +1251,10 @@
                 // properly generated.
                 Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
                 Assert.That(cmdOptions.Split, Is.EqualTo(value));
+
+                // When the `FilterApp` runs, it gets the split, and gives it to the factory. Here we see that the value
+                // was converted from the command line and given to the `FilterApp`.
+                Assert.That(Global.Instance.OutputStreamFactory.Split, Is.EqualTo(value));
             }
         }
 
