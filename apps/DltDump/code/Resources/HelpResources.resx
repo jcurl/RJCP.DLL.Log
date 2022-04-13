@@ -228,7 +228,16 @@
   <data name="Help401_OutputFile" xml:space="preserve">
     <value>* %FILE% - use the name of the input file</value>
   </data>
-  <data name="Help405_Force" xml:space="preserve">
+  <data name="Help402_OutputDateTime" xml:space="preserve">
+    <value>* %CDATETIME% - use the local date/time of the first line</value>
+  </data>
+  <data name="Help403_OuputDate" xml:space="preserve">
+    <value>* %CDATE% - use the local date of the first line</value>
+  </data>
+  <data name="Help404_OutputTime" xml:space="preserve">
+    <value>* %CTIME% - use the local time of the first line</value>
+  </data>
+  <data name="Help410_Force" xml:space="preserve">
     <value>{0}f | {1}force
   When using {1}output, overwrite the output file if it already exists.</value>
   </data>

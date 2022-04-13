@@ -108,7 +108,7 @@
         protected void Write(DateTime timeStamp, string line)
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
-            OpenWriter();
+            OpenWriter(timeStamp);
 
             m_Encoder.Convert(line, m_Buffer, true, out int _, out int bytes, out bool _);
             m_Writer.Write(m_Buffer, 0, bytes);
@@ -125,7 +125,7 @@
         protected void Write(DateTime timeStamp, string message, params object[] args)
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
-            OpenWriter();
+            OpenWriter(timeStamp);
 
             string line = string.Format(message, args);
             m_Encoder.Convert(line, m_Buffer, true, out int _, out int bytes, out bool _);
@@ -142,7 +142,7 @@
         protected void Write(DateTime timeStamp, ReadOnlySpan<byte> buffer)
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
-            OpenWriter();
+            OpenWriter(timeStamp);
 
             m_Writer.Write(buffer);
         }
@@ -157,16 +157,17 @@
         protected void Write(DateTime timeStamp, ReadOnlySpan<byte> header, ReadOnlySpan<byte> buffer)
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
-            OpenWriter();
+            OpenWriter(timeStamp);
 
             m_Writer.Write(header);
             m_Writer.Write(buffer);
         }
 
-        private void OpenWriter()
+        private void OpenWriter(DateTime timeStamp)
         {
             if (m_Writer.IsOpen) return;
 
+            SetTimeStamp(timeStamp);
             if (m_Segments == null) {
                 string fileName = m_Template.ToString();
                 if (!Path.IsPathRooted(fileName))
@@ -188,6 +189,14 @@
                 // File is split. Not yet implemented.
                 throw new NotImplementedException();
             }
+        }
+
+        private void SetTimeStamp(DateTime timeStamp)
+        {
+            DateTime local = timeStamp.ToLocalTime();
+            m_Template.Variables["CDATE"] = local.ToString("yyyyMMdd");
+            m_Template.Variables["CTIME"] = local.ToString("HHmmss");
+            m_Template.Variables["CDATETIME"] = local.ToString("yyyyMMdd\\THHmmss");
         }
 
         /// <summary>

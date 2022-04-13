@@ -346,12 +346,39 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to * %CDATETIME% - use the local date/time of the first line.
+        /// </summary>
+        internal static string Help402_OutputDateTime {
+            get {
+                return ResourceManager.GetString("Help402_OutputDateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CDATE% - use the local date of the first line.
+        /// </summary>
+        internal static string Help403_OuputDate {
+            get {
+                return ResourceManager.GetString("Help403_OuputDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CTIME% - use the local time of the first line.
+        /// </summary>
+        internal static string Help404_OutputTime {
+            get {
+                return ResourceManager.GetString("Help404_OutputTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}f | {1}force
         ///  When using {1}output, overwrite the output file if it already exists..
         /// </summary>
-        internal static string Help405_Force {
+        internal static string Help410_Force {
             get {
-                return ResourceManager.GetString("Help405_Force", resourceCulture);
+                return ResourceManager.GetString("Help410_Force", resourceCulture);
             }
         }
         

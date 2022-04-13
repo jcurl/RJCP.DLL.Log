@@ -464,5 +464,62 @@
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
+
+        [Test]
+        public void TemplateDateTime()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%CDATETIME%.txt", true)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                string fileName = string.Format("{0:yyyyMMdd\\THHmmss}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
+
+                FileInfo fileInfo = new FileInfo(fileName);
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [Test]
+        public void TemplateDate()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%CDATE%.txt", true)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                string fileName = string.Format("{0:yyyyMMdd}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
+
+                FileInfo fileInfo = new FileInfo(fileName);
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [Test]
+        public void TemplateTime()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%CTIME%.txt", true)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                string fileName = string.Format("{0:HHmmss}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
+
+                FileInfo fileInfo = new FileInfo(fileName);
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+            }
+        }
     }
 }
