@@ -88,6 +88,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not overwriting previously created file {0}..
+        /// </summary>
+        internal static string DomainOutputNoOverwrite {
+            get {
+                return ResourceManager.GetString("DomainOutputNoOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output factory type {0} is unknown.
         /// </summary>
         internal static string DomainOutputStreamFactoryUnknown {

@@ -73,6 +73,7 @@
             Write(2, 4, HelpResources.Help390_BeforeContext);
             Write(2, 4, HelpResources.Help395_AfterContext);
             Write(2, 4, HelpResources.Help400_OutputFileName);
+            Write(4, 6, HelpResources.Help401_OutputFile);
             Write(2, 4, HelpResources.Help405_Force);
             Write();
             Write(HelpResources.Help500_Input);

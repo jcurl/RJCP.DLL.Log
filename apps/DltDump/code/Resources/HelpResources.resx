@@ -223,7 +223,10 @@
   </data>
   <data name="Help400_OutputFileName" xml:space="preserve">
     <value>{0}o | {1}output{2}&lt;filename&gt;
-  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted.</value>
+  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:</value>
+  </data>
+  <data name="Help401_OutputFile" xml:space="preserve">
+    <value>* %FILE% - use the name of the input file</value>
   </data>
   <data name="Help405_Force" xml:space="preserve">
     <value>{0}f | {1}force

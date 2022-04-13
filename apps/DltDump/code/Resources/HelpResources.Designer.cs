@@ -328,11 +328,20 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}o | {1}output{2}&lt;filename&gt;
-        ///  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted..
+        ///  Write the output to the file specified. If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:.
         /// </summary>
         internal static string Help400_OutputFileName {
             get {
                 return ResourceManager.GetString("Help400_OutputFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %FILE% - use the name of the input file.
+        /// </summary>
+        internal static string Help401_OutputFile {
+            get {
+                return ResourceManager.GetString("Help401_OutputFile", resourceCulture);
             }
         }
         

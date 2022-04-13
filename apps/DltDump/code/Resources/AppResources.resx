@@ -126,6 +126,9 @@
   <data name="DomainInputStreamNotOpen" xml:space="preserve">
     <value>Cannot connect, input stream has not been opened</value>
   </data>
+  <data name="DomainOutputNoOverwrite" xml:space="preserve">
+    <value>Not overwriting previously created file {0}.</value>
+  </data>
   <data name="DomainOutputStreamFactoryUnknown" xml:space="preserve">
     <value>Output factory type {0} is unknown</value>
   </data>

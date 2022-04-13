@@ -6,6 +6,7 @@
     using Infrastructure.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.CodeQuality.OSInfo;
     using TestResources;
 
     [TestFixture]
@@ -356,6 +357,111 @@
                 output.Flush();
 
                 Assert.That(File.Exists("File_testVar.txt"), Is.True);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateFile(bool force)
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", force)) {
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                Assert.That(File.Exists("input.txt"), Is.True);
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void TemplateFileCollision(bool force)
+        {
+            string inputFile1 = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+            string inputFile2 = Platform.IsWinNT() ? @"c:\foo\input.dlt" : "/foo/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", force)) {
+                output.SetInput(inputFile1, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                Assert.That(() => {
+                    output.SetInput(inputFile2, InputFormat.File);
+
+                    // The 'Write' causes the exceptions as opens are delayed to know the time stamp, etc. The exception
+                    // should occur regardless if the file exists or not.
+                    output.Write(TestLines.Verbose);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.Null);
+
+                Assert.That(File.Exists("input.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public void TemplateFileExistsNoForce()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                Assert.That(() => {
+                    output.SetInput(inputFile, InputFormat.File);
+
+                    // The 'Write' causes the exceptions as opens are delayed to know the time stamp, etc. The file
+                    // already exists, and so opening it should result in an exception.
+                    output.Write(TestLines.Verbose);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
+
+                Assert.That(File.Exists("input.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public void TemplateFileExistsNoForceTwoInputs()
+        {
+            string inputFile1 = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+            string inputFile2 = Platform.IsWinNT() ? @"c:\other.dlt" : "/other.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                Assert.That(() => {
+                    output.SetInput(inputFile1, InputFormat.File);
+
+                    // The 'Write' causes the exceptions as opens are delayed to know the time stamp, etc. The file
+                    // already exists, and so opening it should result in an exception.
+                    output.Write(TestLines.Verbose);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
+
+                output.SetInput(inputFile2, InputFormat.File);
+                output.Write(TestLines.Verbose);
+
+                Assert.That(File.Exists("input.txt"), Is.True);
+                Assert.That(File.Exists("other.txt"), Is.True);
+            }
+        }
+
+        [Test]
+        public void TemplateFileExistsForce()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", true)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                output.SetInput(inputFile, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                FileInfo fileInfo = new FileInfo("input.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
     }

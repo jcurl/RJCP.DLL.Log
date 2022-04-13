@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.OutputStream
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using Resources;
@@ -15,7 +16,8 @@
     {
         private readonly OutputWriter m_Writer = new OutputWriter();
         private readonly Template m_Template;
-        private readonly string m_FileName;
+        private readonly HashSet<string> m_OutputFiles = new HashSet<string>();
+        private List<string> m_Segments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
@@ -37,7 +39,6 @@
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 
             m_Template = new Template(fileName);
-            m_FileName = m_Template.ToString();
             Force = force;
 
             m_Encoding = Encoding.UTF8;
@@ -87,7 +88,12 @@
         /// <param name="fileName">Name of the input file.</param>
         protected void SetInput(string fileName)
         {
-            /* The file name is not used */
+            if (!m_Template.AllowConcatenation) {
+                m_Segments = null;
+                if (m_Writer.IsOpen) m_Writer.Close();
+            }
+
+            m_Template.Variables["FILE"] = Path.GetFileNameWithoutExtension(fileName);
         }
 
         // Defines the maximum line length.
@@ -161,8 +167,27 @@
         {
             if (m_Writer.IsOpen) return;
 
-            FileMode mode = Force ? FileMode.Create : FileMode.CreateNew;
-            m_Writer.Open(m_FileName, mode);
+            if (m_Segments == null) {
+                string fileName = m_Template.ToString();
+                if (!Path.IsPathRooted(fileName))
+                    fileName = Path.Combine(Environment.CurrentDirectory, fileName);
+
+                if (m_OutputFiles.Contains(fileName)) {
+                    // This is an error, we can't create the file.
+                    string message = string.Format(AppResources.DomainOutputNoOverwrite, m_Template.ToString());
+                    throw new OutputStreamException(message);
+                }
+
+                // Open the file first, then add to segments. If the file couldn't be opened, it doesn't exist and we
+                // don't define a new segment list.
+                FileMode mode = Force ? FileMode.Create : FileMode.CreateNew;
+                m_Writer.Open(fileName, mode);
+                m_Segments = new List<string>() { fileName };
+                m_OutputFiles.Add(fileName);
+            } else {
+                // File is split. Not yet implemented.
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
