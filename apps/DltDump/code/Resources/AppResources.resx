@@ -239,8 +239,20 @@
   <data name="OptionInvalidFilterType" xml:space="preserve">
     <value>Unknown filter type '{0}'.</value>
   </data>
+  <data name="OptionInvalidSplit" xml:space="preserve">
+    <value>Option 'split' provided with unrecognized format '{0}'</value>
+  </data>
+  <data name="OptionInvalidSplitRange" xml:space="preserve">
+    <value>Option 'split' value out of range</value>
+  </data>
+  <data name="OptionInvalidSplitTooSmall" xml:space="preserve">
+    <value>The output file size limit cannot be less than 64kB</value>
+  </data>
   <data name="OptionsError" xml:space="preserve">
     <value>Problem with the command line.</value>
+  </data>
+  <data name="OptionSplitParseError" xml:space="preserve">
+    <value>Unexpected modifier when parsing the split</value>
   </data>
   <data name="SerialOpenError_AuthorityNotSupported" xml:space="preserve">
     <value>Cannot connect to a remote host with ser:</value>

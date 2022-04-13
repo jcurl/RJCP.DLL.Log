@@ -383,6 +383,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}split{2}&lt;bytes&gt;
+        ///  Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB..
+        /// </summary>
+        internal static string Help415_Split {
+            get {
+                return ResourceManager.GetString("Help415_Split", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
         internal static string Help500_Input {

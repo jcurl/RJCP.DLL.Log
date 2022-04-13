@@ -1196,5 +1196,125 @@
             }
         }
         #endregion
+
+        #region Split
+        [Test]
+        public void SplitInteger()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "102400"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Split, Is.EqualTo(102400));
+            }
+        }
+
+        [TestCase("65536", 65536)]
+        [TestCase("65536b", 65536)]
+        [TestCase("65536B", 65536)]
+        [TestCase("100k", 100 << 10)]
+        [TestCase("100K", 100 << 10)]
+        [TestCase("100kB", 100 << 10)]
+        [TestCase("100kb", 100 << 10)]
+        [TestCase("100KB", 100 << 10)]
+        [TestCase("100Kb", 100 << 10)]
+        [TestCase("10m", 10 << 20)]
+        [TestCase("10M", 10 << 20)]
+        [TestCase("10mB", 10 << 20)]
+        [TestCase("10mb", 10 << 20)]
+        [TestCase("10MB", 10 << 20)]
+        [TestCase("10Mb", 10 << 20)]
+        [TestCase("2g", (long)2 << 30)]
+        [TestCase("2G", (long)2 << 30)]
+        [TestCase("2gB", (long)2 << 30)]
+        [TestCase("2gb", (long)2 << 30)]
+        [TestCase("2GB", (long)2 << 30)]
+        [TestCase("2Gb", (long)2 << 30)]
+        public void SplitIntegerModifier(string split, long value)
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", split), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Split, Is.EqualTo(value));
+            }
+        }
+
+        [Test]
+        public void SplitNegativeInteger()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "-102400"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [Test]
+        public void SplitUnknownModifier()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "10E"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [TestCase("0")]
+        [TestCase("10")]
+        [TestCase("65535")]
+        public void SplitTooSmall(string value)
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", value), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [Test]
+        public void SplitOverflow()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "99999999999999999999999999999999999999999"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+        #endregion
     }
 }

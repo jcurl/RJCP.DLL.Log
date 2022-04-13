@@ -241,6 +241,10 @@
     <value>{0}f | {1}force
   When using {1}output, overwrite the output file if it already exists.</value>
   </data>
+  <data name="Help415_Split" xml:space="preserve">
+    <value>{1}split{2}&lt;bytes&gt;
+  Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB.</value>
+  </data>
   <data name="Help500_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>

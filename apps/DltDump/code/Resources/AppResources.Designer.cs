@@ -421,11 +421,47 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option &apos;split&apos; provided with unrecognized format &apos;{0}&apos;.
+        /// </summary>
+        internal static string OptionInvalidSplit {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;split&apos; value out of range.
+        /// </summary>
+        internal static string OptionInvalidSplitRange {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplitRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output file size limit cannot be less than 64kB.
+        /// </summary>
+        internal static string OptionInvalidSplitTooSmall {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplitTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem with the command line..
         /// </summary>
         internal static string OptionsError {
             get {
                 return ResourceManager.GetString("OptionsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected modifier when parsing the split.
+        /// </summary>
+        internal static string OptionSplitParseError {
+            get {
+                return ResourceManager.GetString("OptionSplitParseError", resourceCulture);
             }
         }
         
