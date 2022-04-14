@@ -129,6 +129,9 @@
   <data name="DomainOutputNoOverwrite" xml:space="preserve">
     <value>Not overwriting previously created file {0}.</value>
   </data>
+  <data name="DomainOutputNoOverwriteInput" xml:space="preserve">
+    <value>Not overwriting the input file {0}.</value>
+  </data>
   <data name="DomainOutputStreamFactoryUnknown" xml:space="preserve">
     <value>Output factory type {0} is unknown</value>
   </data>
@@ -200,6 +203,9 @@
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>
   </data>
+  <data name="InfraFileNotFound" xml:space="preserve">
+    <value>File not found</value>
+  </data>
   <data name="InfraFormatHangingIndentException" xml:space="preserve">
     <value>Hanging Indent must be zero or more</value>
   </data>
@@ -211,6 +217,9 @@
   </data>
   <data name="InfraFormatWidthException" xml:space="preserve">
     <value>Width should be at least 10 characters including indent</value>
+  </data>
+  <data name="InfraIoFileInfoInvalidState" xml:space="preserve">
+    <value>Class is in an undefined state</value>
   </data>
   <data name="InfraNetTcpStream_NotConnected" xml:space="preserve">
     <value>Not connected</value>

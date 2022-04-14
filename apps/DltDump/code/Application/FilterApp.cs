@@ -35,6 +35,13 @@
             using (IOutputStream output = GetOutputStream()) {
                 if (output == null) return ExitCode.OutputError;
 
+                // Ensure our inputs are not overwritten.
+                if (output is OutputBase outputBase) {
+                    foreach (string uri in m_Config.Input) {
+                        outputBase.AddProtectedFile(uri);
+                    }
+                }
+
                 foreach (string uri in m_Config.Input) {
                     try {
                         bool connected = await ProcessInput(uri, output);

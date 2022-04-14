@@ -729,5 +729,57 @@
                 Assert.That(File.Exists($"file_{line2}.txt"), Is.True);
             }
         }
+
+        [Test]
+        public async Task OutputProtectedFiles()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                pad.DeployEmptyFile("input.txt");
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                FilterConfig config = new FilterConfig(new[] { "input.txt" }) {
+                    OutputFileName = "%FILE%.txt",
+                    Force = true
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
+
+                FileInfo info = new FileInfo("input.txt");
+                Assert.That(info.Length, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public async Task OutputProtectedFilesPartial()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                pad.DeployEmptyFile("input_002.txt");
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
+
+                // Try to overwrite `input_002.txt`
+                FilterConfig config = new FilterConfig(new[] { "input_002.txt" }) {
+                    OutputFileName = "input_%CTR%.txt",
+                    Force = true,
+                    Split = 1
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                global.WriteStd();
+                Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
+
+                FileInfo info = new FileInfo("input_002.txt");
+                Assert.That(info.Length, Is.EqualTo(0));
+            }
+        }
     }
 }

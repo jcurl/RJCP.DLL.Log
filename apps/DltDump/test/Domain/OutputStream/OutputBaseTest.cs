@@ -729,5 +729,44 @@
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
         }
+
+        [Test]
+        public void ProtectedFiles()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", 1, true)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+                output.AddProtectedFile("input.txt");
+
+                output.SetInput(inputFile, InputFormat.File);
+                Assert.That(() => {
+                    output.Write(TestLines.Verbose);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.Null);
+                output.Flush();
+
+            }
+        }
+
+        [Test]
+        [Platform(Include = "Win32")]
+        public void ProtectedFilesCaseInsensitive()
+        {
+            string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", 1, true)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+                output.AddProtectedFile("INPUT.txt");
+
+                output.SetInput(inputFile, InputFormat.File);
+                Assert.That(() => {
+                    output.Write(TestLines.Verbose);
+                }, Throws.TypeOf<OutputStreamException>().With.InnerException.Null);
+                output.Flush();
+
+            }
+        }
     }
 }

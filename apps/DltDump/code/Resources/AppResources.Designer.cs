@@ -97,6 +97,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not overwriting the input file {0}..
+        /// </summary>
+        internal static string DomainOutputNoOverwriteInput {
+            get {
+                return ResourceManager.GetString("DomainOutputNoOverwriteInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output factory type {0} is unknown.
         /// </summary>
         internal static string DomainOutputStreamFactoryUnknown {
@@ -304,6 +313,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File not found.
+        /// </summary>
+        internal static string InfraFileNotFound {
+            get {
+                return ResourceManager.GetString("InfraFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hanging Indent must be zero or more.
         /// </summary>
         internal static string InfraFormatHangingIndentException {
@@ -336,6 +354,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string InfraFormatWidthException {
             get {
                 return ResourceManager.GetString("InfraFormatWidthException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class is in an undefined state.
+        /// </summary>
+        internal static string InfraIoFileInfoInvalidState {
+            get {
+                return ResourceManager.GetString("InfraIoFileInfoInvalidState", resourceCulture);
             }
         }
         

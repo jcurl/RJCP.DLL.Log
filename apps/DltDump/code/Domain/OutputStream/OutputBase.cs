@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
+    using Infrastructure.IO;
     using Resources;
 
     /// <summary>
@@ -16,7 +17,8 @@
     {
         private readonly OutputWriter m_Writer = new OutputWriter();
         private readonly Template m_Template;
-        private readonly HashSet<string> m_OutputFiles = new HashSet<string>();
+        private readonly HashSet<DetailedFileInfo> m_OutputFiles = new HashSet<DetailedFileInfo>();
+        private readonly HashSet<DetailedFileInfo> m_ProtectedFiles = new HashSet<DetailedFileInfo>();
         private List<string> m_Segments;
         private readonly long m_Split;
         private long m_NextSplit;
@@ -88,6 +90,68 @@
                     throw;
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds a file name that should be protected from writing.
+        /// </summary>
+        /// <param name="fileName">Name of the file that should be protected.</param>
+        /// <remarks>
+        /// Any files set here will prevent from being overwritten, even if forced. This could be, for example, the file
+        /// is an input file.
+        /// </remarks>
+        public void AddProtectedFile(string fileName)
+        {
+            fileName = Path.GetFullPath(fileName);
+            if (!File.Exists(fileName)) return;
+
+            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            m_ProtectedFiles.Add(file);
+        }
+
+        private void CheckIsProtectedFile(string fileName)
+        {
+            if (IsProtectedFile(fileName)) {
+                // We don't overwrite protected files.
+                string message = string.Format(AppResources.DomainOutputNoOverwriteInput, m_Template.ToString());
+                throw new OutputStreamException(message);
+            }
+        }
+
+        private bool IsProtectedFile(string fileName)
+        {
+            fileName = Path.GetFullPath(fileName);
+            if (!File.Exists(fileName)) return false;
+
+            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            return m_ProtectedFiles.Contains(file);
+        }
+
+        private void AddOutputFile(string fileName)
+        {
+            fileName = Path.GetFullPath(fileName);
+            if (!File.Exists(fileName)) return;
+
+            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            m_OutputFiles.Add(file);
+        }
+
+        private void CheckIsOutputFile(string fileName)
+        {
+            if (IsOutputFile(fileName)) {
+                // We don't overwrite files that we've just created.
+                string message = string.Format(AppResources.DomainOutputNoOverwrite, m_Template.ToString());
+                throw new OutputStreamException(message);
+            }
+        }
+
+        private bool IsOutputFile(string fileName)
+        {
+            fileName = Path.GetFullPath(fileName);
+            if (!File.Exists(fileName)) return false;
+
+            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            return m_OutputFiles.Contains(file);
         }
 
         /// <summary>
@@ -183,26 +247,19 @@
             if (m_Segments == null) {
                 ResetSplit();
 
-                string fileName = m_Template.ToString();
-                if (!Path.IsPathRooted(fileName))
-                    fileName = Path.Combine(Environment.CurrentDirectory, fileName);
-
-                if (m_OutputFiles.Contains(fileName)) {
-                    // This is an error, we can't create the file.
-                    string message = string.Format(AppResources.DomainOutputNoOverwrite, m_Template.ToString());
-                    throw new OutputStreamException(message);
-                }
+                string fileName = Path.GetFullPath(m_Template.ToString());
+                CheckIsProtectedFile(fileName);
+                CheckIsOutputFile(fileName);
 
                 // Open the file first, then add to segments. If the file couldn't be opened, it doesn't exist and we
                 // don't define a new segment list.
                 FileMode mode = Force ? FileMode.Create : FileMode.CreateNew;
                 m_Writer.Open(fileName, mode);
                 m_Segments = new List<string>() { fileName };
-                m_OutputFiles.Add(fileName);
+                AddOutputFile(fileName);
             } else {
-                string fileName = m_Template.ToString();
-                if (!Path.IsPathRooted(fileName))
-                    fileName = Path.Combine(Environment.CurrentDirectory, fileName);
+                string fileName = Path.GetFullPath(m_Template.ToString());
+                CheckIsProtectedFile(fileName);
 
                 FileMode mode;
                 if (m_Segments[^1].Equals(fileName, StringComparison.Ordinal)) {
@@ -212,10 +269,11 @@
                         m_NextSplit += m_Split / 5;
                     }
                 } else {
+                    CheckIsOutputFile(fileName);
                     mode = Force ? FileMode.Create : FileMode.CreateNew;
                     m_Writer.Open(fileName, mode);
                     m_Segments.Add(fileName);
-                    m_OutputFiles.Add(fileName);
+                    AddOutputFile(fileName);
                 }
             }
         }
