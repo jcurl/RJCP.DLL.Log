@@ -565,11 +565,7 @@
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                using (Stream file =
-                       new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
-                    /* Do nothing, just create the file */
-                }
-
+                pad.DeployEmptyFile("file.txt");
                 FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
                     ShowPosition = true,
                     Force = force,

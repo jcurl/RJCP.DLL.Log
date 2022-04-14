@@ -406,8 +406,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
-                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("input.txt");
                 Assert.That(() => {
                     output.SetInput(inputFile, InputFormat.File);
 
@@ -428,8 +427,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
-                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("input.txt");
                 Assert.That(() => {
                     output.SetInput(inputFile1, InputFormat.File);
 
@@ -453,8 +451,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("%FILE%.txt", true)) {
-                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("input.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
@@ -619,8 +616,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, true)) {
-                using (Stream newFile = new FileStream("file_002.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("file_002.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
@@ -642,8 +638,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, false)) {
-                using (Stream newFile = new FileStream("file_002.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("file_002.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 Assert.That(() => {
@@ -707,8 +702,7 @@
 
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TestOutputBase output = new TestOutputBase("%FILE%_%CTR%.txt", 1, false)) {
-                using (Stream newFile = new FileStream("input1_002.txt", FileMode.CreateNew)) { /* Empty File */ }
-
+                pad.DeployEmptyFile("input1_002.txt");
                 output.SetInput(inputFile1, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 Assert.That(() => {
