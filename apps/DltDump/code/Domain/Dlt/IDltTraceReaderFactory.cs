@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump.Infrastructure.Dlt
+﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;

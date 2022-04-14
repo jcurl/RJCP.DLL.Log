@@ -2,8 +2,8 @@
 {
     using System;
     using System.IO;
-    using Infrastructure.Dlt;
-    using InputStream;
+    using Domain.Dlt;
+    using Domain.InputStream;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 

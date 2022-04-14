@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
     using TestResources;

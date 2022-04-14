@@ -1,7 +1,7 @@
 ﻿namespace RJCP.App.DltDump
 {
     using Domain;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using Infrastructure.Terminal;
     using View;
 

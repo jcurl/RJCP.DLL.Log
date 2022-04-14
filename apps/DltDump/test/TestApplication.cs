@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Domain;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using Infrastructure.Terminal;
 
     /// <summary>

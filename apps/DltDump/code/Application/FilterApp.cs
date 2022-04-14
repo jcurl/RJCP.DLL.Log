@@ -3,9 +3,9 @@
     using System;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Dlt;
     using Domain.InputStream;
     using Domain.OutputStream;
-    using Infrastructure.Dlt;
     using Resources;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Constraints;

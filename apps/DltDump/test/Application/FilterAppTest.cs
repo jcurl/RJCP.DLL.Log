@@ -5,8 +5,8 @@
     using System.IO;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Dlt;
     using Domain.InputStream;
-    using Infrastructure.Dlt;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;

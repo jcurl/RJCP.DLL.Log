@@ -55,6 +55,10 @@
     <Compile Include="Application\HelpAppTest.cs" />
     <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Domain\Dlt\DltFileTraceFilterDecoderTest.cs" />
+    <Compile Include="Domain\Dlt\DltTraceReaderFactoryTest.cs" />
+    <Compile Include="Domain\Dlt\LineTraceReader.cs" />
+    <Compile Include="Domain\Dlt\TestDltTraceReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\TraceReaderAccessor.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
     <Compile Include="Domain\ContextTest.cs" />
@@ -83,10 +87,6 @@
     <Compile Include="Domain\InputStream\TestNetworkStream.cs" />
     <Compile Include="Domain\InputStream\TestNetworkStreamFactory.cs" />
     <Compile Include="Domain\TestInputStreamFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\DltTraceReaderFactoryTest.cs" />
-    <Compile Include="Infrastructure\Dlt\LineTraceReader.cs" />
-    <Compile Include="Infrastructure\Dlt\TestDltTraceReaderFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\TraceReaderAccessor.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />

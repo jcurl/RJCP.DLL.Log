@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using Domain;
+    using Domain.Dlt;
     using Infrastructure.Constraints;
-    using Infrastructure.Dlt;
     using RJCP.Diagnostics.Log.Constraints;
     using RJCP.Diagnostics.Log.Dlt;
 

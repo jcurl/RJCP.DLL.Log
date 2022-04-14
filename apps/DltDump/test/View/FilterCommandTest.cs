@@ -4,8 +4,8 @@
     using System.IO;
     using Diagnostics.Log.Dlt;
     using Domain;
+    using Domain.Dlt;
     using Domain.InputStream;
-    using Infrastructure.Dlt;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;

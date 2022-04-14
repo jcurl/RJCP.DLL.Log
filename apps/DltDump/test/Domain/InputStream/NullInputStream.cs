@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
 
     public class NullInputStream : IInputStream
     {

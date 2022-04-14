@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Text;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
     using RJCP.CodeQuality.OSInfo;

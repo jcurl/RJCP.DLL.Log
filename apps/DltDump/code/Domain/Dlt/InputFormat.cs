@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump.Infrastructure.Dlt
+﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     /// <summary>
     /// Defines the format for reading the input stream.

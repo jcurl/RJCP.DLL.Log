@@ -5,7 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using Resources;
     using RJCP.Core.CommandLine;
     using RJCP.Diagnostics.Log.Dlt;

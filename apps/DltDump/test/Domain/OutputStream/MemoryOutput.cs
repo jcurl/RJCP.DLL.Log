@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using RJCP.Diagnostics.Log.Dlt;
 
     public sealed class MemoryOutput : IOutputStream

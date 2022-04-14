@@ -69,7 +69,10 @@
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\Context.cs" />
     <Compile Include="Domain\ContextPacket.cs" />
+    <Compile Include="Domain\Dlt\DltDumpTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\DltFileTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\IDltTraceReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\InputFormat.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
@@ -98,9 +101,6 @@
     <Compile Include="Global.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />
-    <Compile Include="Infrastructure\Dlt\DltDumpTraceReaderFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
