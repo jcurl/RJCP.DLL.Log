@@ -61,6 +61,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OutputStream doesn&apos;t support binary.
+        /// </summary>
+        internal static string DomainDecoderInvalidOutputStream {
+            get {
+                return ResourceManager.GetString("DomainDecoderInvalidOutputStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input URI {0} not unknown.
         /// </summary>
         internal static string DomainInputStreamFactoryUnknown {

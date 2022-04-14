@@ -237,10 +237,13 @@
                 if (m_DltLineBuilder.SkippedBytes > 0)
                     m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
                 m_DltLineBuilder.SetPosition(m_PosMap.Position);
-                m_Lines.Add(m_DltLineBuilder.GetResult());
-                m_DltLineBuilder.Reset();
 
                 int packetLen = StandardHeaderOffset + m_ExpectedLength;
+                DltTraceLineBase line = m_DltLineBuilder.GetResult();
+                if (CheckLine(line, dltPacket[..packetLen]))
+                    m_Lines.Add(line);
+                m_DltLineBuilder.Reset();
+
                 bytes -= packetLen;
                 decodeBuffer = Consume(packetLen, decodeBuffer, flush);
                 m_ValidHeaderFound = false;
@@ -530,6 +533,19 @@
             }
 
             return (DltType)(messageInfo & DltConstants.MessageInfo.MessageTypeInfoMask);
+        }
+
+        /// <summary>
+        /// Checks the line before adding to the list of data that can be parsed.
+        /// </summary>
+        /// <param name="line">The line that should be checked.</param>
+        /// <param name="packet">The raw packet data.</param>
+        /// <returns>
+        /// Returns <see langword="true"/> if the line should be added, <see langword="false"/> otherwise.
+        /// </returns>
+        protected virtual bool CheckLine(DltTraceLineBase line, ReadOnlySpan<byte> packet)
+        {
+            return true;
         }
 
         /// <summary>

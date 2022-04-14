@@ -54,6 +54,7 @@
     <Compile Include="Application\FilterConfigTest.cs" />
     <Compile Include="Application\HelpAppTest.cs" />
     <Compile Include="Application\VersionAppTest.cs" />
+    <Compile Include="Domain\Dlt\DltFileTraceFilterDecoderTest.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
     <Compile Include="Domain\ContextTest.cs" />

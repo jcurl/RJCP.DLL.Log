@@ -69,6 +69,7 @@
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\Context.cs" />
     <Compile Include="Domain\ContextPacket.cs" />
+    <Compile Include="Domain\Dlt\DltFileTraceFilterDecoder.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
