@@ -53,10 +53,12 @@
     <Compile Include="Application\FilterAppTest.cs" />
     <Compile Include="Application\FilterConfigTest.cs" />
     <Compile Include="Application\HelpAppTest.cs" />
+    <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
     <Compile Include="Domain\ContextTest.cs" />
     <Compile Include="Domain\OutputStream\ContextOutputTest.cs" />
+    <Compile Include="Domain\OutputStream\DltOutputTest.cs" />
     <Compile Include="Domain\OutputStream\FilterOutputTest.cs" />
     <Compile Include="Domain\OutputStream\MemoryOutput.cs" />
     <Compile Include="Domain\OutputStream\OutputBaseTest.cs" />
@@ -66,9 +68,6 @@
     <Compile Include="Domain\OutputStream\TextOutputTest.cs" />
     <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="Domain\OutputStream\TemplateTest.cs" />
-    <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
-    <Compile Include="TestResources\TestLines.cs" />
-    <Compile Include="Application\VersionAppTest.cs" />
     <Compile Include="Domain\InputStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\ConnectSuccessEventArgs.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactoryTest.cs" />
@@ -87,10 +86,12 @@
     <Compile Include="Infrastructure\Dlt\LineTraceReader.cs" />
     <Compile Include="Infrastructure\Dlt\TestDltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\TraceReaderAccessor.cs" />
+    <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpServer.cs" />
     <Compile Include="Infrastructure\Net\TcpServerTest.cs" />
+    <Compile Include="Infrastructure\OptionsGen.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalOutTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalTest.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualOutBase.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Infrastructure\VersionTest.cs" />
     <Compile Include="Resources\ResourcesTest.cs" />
     <Compile Include="TestApplication.cs" />
-    <Compile Include="Infrastructure\OptionsGen.cs" />
+    <Compile Include="TestResources\TestLines.cs" />
     <Compile Include="View\CommandFactoryTest.cs" />
     <Compile Include="View\CommandLineTest.cs" />
     <Compile Include="View\FilterCommandTest.cs" />

@@ -86,11 +86,13 @@
     <Compile Include="Domain\OutputStreamFactory.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutput.cs" />
     <Compile Include="Domain\OutputStream\ContextOutput.cs" />
+    <Compile Include="Domain\OutputStream\DltOutput.cs" />
     <Compile Include="Domain\OutputStream\FilterOutput.cs" />
     <Compile Include="Domain\OutputStream\OutputBase.cs" />
     <Compile Include="Domain\OutputStream\OutputStreamException.cs" />
     <Compile Include="Domain\OutputStream\OutputWriter.cs" />
     <Compile Include="Domain\OutputStream\TextOutput.cs" />
+    <Compile Include="Domain\OutputStream\Template.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -98,7 +100,6 @@
     <Compile Include="Infrastructure\Dlt\DltDumpTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
-    <Compile Include="Domain\OutputStream\Template.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
