@@ -7,6 +7,7 @@
     using Domain;
     using Domain.Dlt;
     using Domain.InputStream;
+    using Domain.OutputStream;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -779,6 +780,32 @@
 
                 FileInfo info = new FileInfo("input_002.txt");
                 Assert.That(info.Length, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public async Task OutputToDltFile()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    ShowPosition = true,
+                    OutputFileName = "file.dlt"
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+
+                // The FilterApp sets this output. so that the factory knows to create the correct TraceReader
+                // that writes DLT.
+                Assert.That(Global.Instance.DltReaderFactory.OutputStream, Is.TypeOf<DltOutput>());
+
+                // The TraceReader would write this file. As the TestDltTraceReaderFactory instantiates a
+                // BinaryTraceReader and never generates output, this file is never created
+                Assert.That(File.Exists("file.dlt"), Is.False);
             }
         }
     }

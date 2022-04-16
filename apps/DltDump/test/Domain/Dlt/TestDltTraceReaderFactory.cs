@@ -33,6 +33,17 @@
         public bool OnlineMode { get; set; }
 
         /// <summary>
+        /// Gets or sets the output stream to use when instantiating.
+        /// </summary>
+        /// <value>The output stream.</value>
+        /// <remarks>
+        /// When instantiating via <see cref="CreateAsync(string)"/>, the <see cref="IOutputStream.SupportsBinary"/> is
+        /// used to determine if this object should be injected or not. If this object is <see langword="null"/>, then
+        /// no <see cref="IOutputStream"/> is used.
+        /// </remarks>
+        public IOutputStream OutputStream { get; set; }
+
+        /// <summary>
         /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -56,7 +67,10 @@
 
         private ITraceReader<DltTraceLineBase> GetTraceReader()
         {
-            return new LineTraceReader<DltTraceLineBase>(Lines);
+            if (OutputStream == null || !OutputStream.SupportsBinary)
+                return new LineTraceReader<DltTraceLineBase>(Lines);
+
+            return new BinaryTraceReader<DltTraceLineBase>(OutputStream);
         }
     }
 }

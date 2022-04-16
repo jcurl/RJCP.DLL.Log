@@ -18,6 +18,11 @@
         /// <summary>
         /// Write the output to a text file.
         /// </summary>
-        Text
+        Text,
+
+        /// <summary>
+        /// Write the output to a DLT file.
+        /// </summary>
+        Dlt
     }
 }

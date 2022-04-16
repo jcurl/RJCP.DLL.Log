@@ -34,6 +34,7 @@
             int processed = 0;
             using (IOutputStream output = GetOutputStream()) {
                 if (output == null) return ExitCode.OutputError;
+                Global.Instance.DltReaderFactory.OutputStream = output;
 
                 // Ensure our inputs are not overwritten.
                 if (output is OutputBase outputBase) {

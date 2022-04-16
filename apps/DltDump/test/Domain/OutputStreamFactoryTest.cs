@@ -55,17 +55,6 @@
         }
 
         [Test]
-        public void CreateUnkonwn()
-        {
-            // This test case will become obsolete when files are supported for writing.
-
-            IOutputStreamFactory factory = new OutputStreamFactory();
-            using (IOutputStream output = factory.Create(OutputFormat.Automatic, "file.dlt")) {
-                Assert.That(output, Is.Null);
-            }
-        }
-
-        [Test]
         public void CreateTextOutputWithNull()
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
@@ -81,6 +70,25 @@
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, "file.txt")) {
                 Assert.That(output, Is.TypeOf<TextOutput>());
+            }
+        }
+
+        [Test]
+        public void CreateDltOutputWithNull()
+        {
+            IOutputStreamFactory factory = new OutputStreamFactory();
+            Assert.That(() => {
+                _ = factory.Create(OutputFormat.Dlt, null);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [TestCase(OutputFormat.Automatic)]
+        [TestCase(OutputFormat.Dlt)]
+        public void CreateDltOutputWithFile(OutputFormat outputFormat)
+        {
+            IOutputStreamFactory factory = new OutputStreamFactory();
+            using (IOutputStream output = factory.Create(outputFormat, "file.dlt")) {
+                Assert.That(output, Is.TypeOf<DltOutput>());
             }
         }
     }

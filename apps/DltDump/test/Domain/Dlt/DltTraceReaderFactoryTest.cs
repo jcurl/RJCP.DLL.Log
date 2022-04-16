@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Threading.Tasks;
+    using Domain.OutputStream;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
     using RJCP.Diagnostics.Log;
@@ -28,6 +29,19 @@
         }
 
         [Test]
+        public async Task GetFileFilterDecoder()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.File,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltFileTraceFilterDecoder>());
+        }
+
+        [Test]
         public async Task GetTcpDecoderOnline()
         {
             DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
@@ -51,6 +65,32 @@
 
             TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetSerialDecoderOnline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Serial,
+                OnlineMode = true
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetSerialDecoderOffline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Serial,
+                OnlineMode = false
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceDecoder>());
         }
     }
 }

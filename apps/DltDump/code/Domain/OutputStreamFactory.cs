@@ -43,6 +43,8 @@
                 return new ConsoleOutput();
             case OutputFormat.Text:
                 return new TextOutput(outFileName, Split, Force);
+            case OutputFormat.Dlt:
+                return new DltOutput(outFileName, Split, Force);
             default:
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainOutputStreamFactoryUnknown, outFormat.ToString());
                 return null;
@@ -57,7 +59,7 @@
 
             // We don't know how to write DLT files
             if (Path.GetExtension(outFileName).Equals(".dlt", StringComparison.InvariantCultureIgnoreCase))
-                return OutputFormat.Automatic;
+                return OutputFormat.Dlt;
 
             return OutputFormat.Text;
         }
