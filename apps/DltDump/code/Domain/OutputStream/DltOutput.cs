@@ -67,9 +67,6 @@
             if (inputFormat == InputFormat.Automatic)
                 throw new ArgumentOutOfRangeException(nameof(inputFormat));
 
-            if (inputFormat == InputFormat.Serial)
-                throw new NotImplementedException();
-
             m_InputFormat = inputFormat;
             SetInput(fileName);
         }
@@ -125,6 +122,11 @@
             case InputFormat.Network:
                 BuildStorageHeader(line);
                 Write(line.TimeStamp, m_StorageHeader, packet);
+                return true;
+            case InputFormat.Serial:
+                // Remove the `DLS\1` header.
+                BuildStorageHeader(line);
+                Write(line.TimeStamp, m_StorageHeader, packet[4..]);
                 return true;
             }
             return false;

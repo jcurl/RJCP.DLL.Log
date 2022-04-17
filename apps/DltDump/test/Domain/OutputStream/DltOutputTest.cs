@@ -22,6 +22,10 @@
             0x3D, 0x7F, 0x00, 0x2B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x30, 0x16, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x82, 0x00, 0x00, 0x0B, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
         };
 
+        private static readonly byte[] SerData = new byte[] {
+            0x44, 0x4C, 0x53, 0x01, 0x3D, 0x7F, 0x00, 0x2B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x30, 0x16, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x82, 0x00, 0x00, 0x0B, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
+        };
+
         [Test]
         public void NullFileName()
         {
@@ -115,6 +119,25 @@
                 // The data is written exactly as the packet says. A storage header is added.
                 FileInfo fileInfo = new FileInfo("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
+            }
+        }
+
+        [Test]
+        public void WriteLineAsPacketSer()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File.dlt")) {
+                Assert.That(File.Exists("File.dlt"), Is.False);
+
+                output.SetInput("input.ser", InputFormat.Serial);
+                output.Write(TestLines.Verbose, SerData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File.dlt"), Is.True);
+
+                // The data is written exactly as the packet says. A storage header is added, and the serial header is removed.
+                FileInfo fileInfo = new FileInfo("File.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(SerData.Length + 12));
             }
         }
 

@@ -120,5 +120,33 @@
             TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceDecoder>());
         }
+
+        [Test]
+        public async Task GetSerialFilterDecoderOnline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Serial,
+                OnlineMode = true,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceFilterDecoder>());
+        }
+
+        [Test]
+        public async Task GetSerialFilterDecoderOffline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Serial,
+                OnlineMode = false,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceFilterDecoder>());
+        }
     }
 }
