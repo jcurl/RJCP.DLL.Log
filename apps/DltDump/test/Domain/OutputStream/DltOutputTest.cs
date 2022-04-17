@@ -329,6 +329,39 @@
         }
 
         [Test]
+        public void WriteLineEmptyEcuId()
+        {
+            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+                Count = 50,
+                Type = DltType.LOG_INFO,
+                EcuId = "",
+                TimeStamp = new DateTime(2022, 4, 16, 18, 47, 23, 387, DateTimeKind.Utc),
+                Features = DltLineFeatures.LogTimeStampFeature + DltLineFeatures.EcuIdFeature
+            };
+
+            byte[] expected = {
+                0x44, 0x4C, 0x54, 0x01, 0x3B, 0x0F, 0x5B, 0x62, 0xB8, 0xE7, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, // Storage Header
+                0x25, 0x32, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x00,                                                 // Standard Header
+                0x41, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,                                     // Ext. Header
+                0x00, 0x82, 0x00, 0x00, 0x05, 0x00, 0x54, 0x65, 0x73, 0x74, 0x00                                // Verbose Payload
+            };
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("out.dlt")) {
+                Assert.That(File.Exists("out.dlt"), Is.False);
+                output.SetInput("input.dlt", InputFormat.File);
+                Assert.That(output.Write(line), Is.True);
+                output.Flush();
+
+                using (MemoryStream mem = new MemoryStream())
+                using (FileStream file = new FileStream("out.dlt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                    file.CopyTo(mem);
+                    Assert.That(mem.ToArray(), Is.EqualTo(expected));
+                }
+            }
+        }
+
+        [Test]
         public void WriteLineSessionId()
         {
             DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {

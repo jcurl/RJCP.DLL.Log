@@ -116,8 +116,7 @@
                         if (flush) {
                             m_DltLineBuilder.AddSkippedBytes(bytes, m_PosMap.Position, "End of stream");
                             m_PosMap.Consume(bytes);
-                            if (m_DltLineBuilder.SkippedBytes > 0)
-                                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                            AddSkippedLine();
                             return m_Lines;
                         }
                         AppendFinal(decodeBuffer);
@@ -169,8 +168,7 @@
                             if (bytes < StandardHeaderOffset + 4) {
                                 if (flush) {
                                     m_DltLineBuilder.AddSkippedBytes(bytes, m_PosMap.Position, "End of stream");
-                                    if (m_DltLineBuilder.SkippedBytes > 0)
-                                        m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                                    AddSkippedLine();
                                     return m_Lines;
                                 }
                                 AppendFinal(decodeBuffer);
@@ -234,8 +232,7 @@
                     continue;
                 }
 
-                if (m_DltLineBuilder.SkippedBytes > 0)
-                    m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+                AddSkippedLine();
                 m_DltLineBuilder.SetPosition(m_PosMap.Position);
 
                 int packetLen = StandardHeaderOffset + m_ExpectedLength;
@@ -249,8 +246,7 @@
                 m_ValidHeaderFound = false;
             }
 
-            if (flush && m_DltLineBuilder.SkippedBytes > 0)
-                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+            if (flush) AddSkippedLine();
             return m_Lines;
         }
 
@@ -544,6 +540,27 @@
         /// Returns <see langword="true"/> if the line should be added, <see langword="false"/> otherwise.
         /// </returns>
         protected virtual bool CheckLine(DltTraceLineBase line, ReadOnlySpan<byte> packet)
+        {
+            return true;
+        }
+
+        private void AddSkippedLine()
+        {
+            if (m_DltLineBuilder.SkippedBytes > 0) {
+                DltTraceLineBase line = m_DltLineBuilder.GetSkippedResult();
+                if (CheckSkippedLine(line))
+                    m_Lines.Add(line);
+            }
+        }
+
+        /// <summary>
+        /// Checks the skipped line before adding to the list of data that can be parsed.
+        /// </summary>
+        /// <param name="line">The skipped line that should be checked.</param>
+        /// <returns>
+        /// Returns <see langword="true"/> if the line should be added, <see langword="false"/> otherwise.
+        /// </returns>
+        protected virtual bool CheckSkippedLine(DltTraceLineBase line)
         {
             return true;
         }

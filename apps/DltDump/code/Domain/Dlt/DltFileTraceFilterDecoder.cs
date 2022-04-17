@@ -40,5 +40,18 @@
             m_OutputStream.Write(line, packet);
             return false;
         }
+
+        /// <summary>
+        /// Checks the skipped line before adding to the list of data that can be parsed.
+        /// </summary>
+        /// <param name="line">The skipped line that should be checked.</param>
+        /// <returns>
+        /// Returns <see langword="true"/> if the line should be added, <see langword="false"/> otherwise.
+        /// </returns>
+        protected override bool CheckSkippedLine(DltTraceLineBase line)
+        {
+            m_OutputStream.Write(line);
+            return false;
+        }
     }
 }

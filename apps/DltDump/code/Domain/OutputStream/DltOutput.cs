@@ -125,25 +125,27 @@
                 DateTimeOffset storageTime = line.TimeStamp.ToUniversalTime();
                 long unixSeconds = storageTime.ToUnixTimeSeconds();
                 long uSeconds = (storageTime.Ticks % TimeSpan.TicksPerSecond) / (TimeSpan.TicksPerMillisecond / 1000);
-                BitOperations.Copy32ShiftLittleEndian(unixSeconds, m_StorageHeader.AsSpan(4));
-                BitOperations.Copy32ShiftLittleEndian(uSeconds, m_StorageHeader.AsSpan(8));
+                BitOperations.Copy32ShiftLittleEndian(unixSeconds, m_StorageHeader, 4);
+                BitOperations.Copy32ShiftLittleEndian(uSeconds, m_StorageHeader, 8);
             } else {
-                BitOperations.Copy64ShiftLittleEndian(0, m_StorageHeader.AsSpan(4));
+                BitOperations.DangerousCopy64Pointer(0, m_StorageHeader, 4);
             }
 
             if (line.Features.EcuId) {
-                BitOperations.Copy32ShiftLittleEndian(GetId(line.EcuId), m_StorageHeader.AsSpan(12));
+                WriteId(m_StorageHeader, 12, line.EcuId);
             } else {
-                BitOperations.Copy32ShiftLittleEndian(0, m_StorageHeader.AsSpan(12));
+                BitOperations.DangerousCopy32Pointer(0, m_StorageHeader, 12);
             }
         }
 
-        private static int GetId(string id)
+        private static void WriteId(byte[] buffer, int offset, string id)
         {
-            return (id[0] & 0xFF) |
-                ((id[1] & 0xFF) << 8) |
-                ((id[2] & 0xFF) << 16) |
-                ((id[3] & 0xFF) << 24);
+            int idLen = id.Length;
+
+            buffer[offset] = idLen > 0 ? (byte)(id[0] & 0xFF) : (byte)0;
+            buffer[offset + 1] = idLen > 1 ? (byte)(id[1] & 0xFF) : (byte)0;
+            buffer[offset + 2] = idLen > 2 ? (byte)(id[2] & 0xFF) : (byte)0;
+            buffer[offset + 3] = idLen > 3 ? (byte)(id[3] & 0xFF) : (byte)0;
         }
 
         private int BuildPacket(DltTraceLine line)
@@ -153,20 +155,20 @@
             short length = 4;
 
             if (line.Features.EcuId) {
-                BitOperations.Copy32ShiftLittleEndian(GetId(line.EcuId), m_Packet.AsSpan(length));
+                WriteId(m_Packet, length, line.EcuId);
                 length += 4;
                 htyp |= 0x04;
             }
 
             if (line.Features.SessionId) {
-                BitOperations.Copy32ShiftLittleEndian(line.SessionId, m_Packet.AsSpan(length));
+                BitOperations.Copy32ShiftLittleEndian(line.SessionId, m_Packet, length);
                 length += 4;
                 htyp |= 0x08;
             }
 
             if (line.Features.DeviceTimeStamp) {
                 int timestampValue = unchecked((int)(line.DeviceTimeStamp.Ticks / (TimeSpan.TicksPerMillisecond / 10)));
-                BitOperations.Copy32ShiftBigEndian(timestampValue, m_Packet.AsSpan(length));
+                BitOperations.Copy32ShiftBigEndian(timestampValue, m_Packet, length);
                 length += 4;
                 htyp |= 0x10;
             }
@@ -182,30 +184,31 @@
             length++;
 
             if (line.Features.ApplicationId) {
-                BitOperations.Copy32ShiftLittleEndian(GetId(line.ApplicationId), m_Packet.AsSpan(length));
+                WriteId(m_Packet, length, line.ApplicationId);
             } else {
-                BitOperations.Copy32ShiftLittleEndian(0, m_Packet.AsSpan(length));
+                BitOperations.DangerousCopy32Pointer(0, m_Packet, length);
             }
             length += 4;
 
             if (line.Features.ContextId) {
-                BitOperations.Copy32ShiftLittleEndian(GetId(line.ContextId), m_Packet.AsSpan(length));
+                WriteId(m_Packet, length, line.ContextId);
             } else {
-                BitOperations.Copy32ShiftLittleEndian(0, m_Packet.AsSpan(length));
+                BitOperations.DangerousCopy32Pointer(0, m_Packet, length);
             }
             length += 4;
 
             // Verbose Argument
-            BitOperations.Copy32ShiftLittleEndian(0x8200, m_Packet.AsSpan(length));  // UTF8 String
+            BitOperations.Copy32ShiftLittleEndian(0x8200, m_Packet, length);  // UTF8 String
             length += 4;
 
-            int strLen = System.Text.Encoding.UTF8.GetBytes(line.Text.AsSpan(), m_Packet.AsSpan(length + 2));
-            BitOperations.Copy16ShiftLittleEndian(strLen + 1, m_Packet.AsSpan(length));
+            int maxLen = 65535 - length - 3;
+            int strLen = System.Text.Encoding.UTF8.GetBytes(line.Text.AsSpan(), m_Packet.AsSpan(length + 2, maxLen));
+            BitOperations.Copy16ShiftLittleEndian(strLen + 1, m_Packet, length);
             m_Packet[length + 2 + strLen] = 0;
             length += 3;
             length += (short)strLen;
 
-            BitOperations.Copy16ShiftBigEndian(length, m_Packet.AsSpan(2));
+            BitOperations.Copy16ShiftBigEndian(length, m_Packet, 2);
             return length;
         }
     }
