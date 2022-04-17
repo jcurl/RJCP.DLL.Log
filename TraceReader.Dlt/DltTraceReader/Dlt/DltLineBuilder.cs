@@ -49,15 +49,17 @@
             // actual system clock. This allows data skipped to use the last set time stamp.
             if (m_Online) {
                 Features = DltLineFeatures.LogTimeStampFeature;
+                ResetMask = ~(DltLineFeatures.BigEndianFeature + DltLineFeatures.LogTimeStampFeature);
                 TimeStamp = DateTime.Now;
             } else {
                 Features = DltLineFeatures.NoFeatures;
+                ResetMask = ~DltLineFeatures.BigEndianFeature;
                 TimeStamp = DltConstants.DefaultTimeStamp;
             }
         }
 
         // This defines the set of features that are not reset on the call to Reset()
-        private static readonly DltLineFeatures ResetMask = ~DltLineFeatures.BigEndianFeature;
+        private readonly DltLineFeatures ResetMask;
 
         /// <summary>
         /// Prepare the builder for the construction of a new DLT trace line.
