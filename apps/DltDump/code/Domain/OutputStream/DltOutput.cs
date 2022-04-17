@@ -46,6 +46,8 @@
         /// </value>
         public bool SupportsBinary { get { return true; } }
 
+        private InputFormat m_InputFormat = InputFormat.File;
+
         /// <summary>
         /// Defines the input file name and the format of the input file.
         /// </summary>
@@ -65,9 +67,10 @@
             if (inputFormat == InputFormat.Automatic)
                 throw new ArgumentOutOfRangeException(nameof(inputFormat));
 
-            if (inputFormat != InputFormat.File)
+            if (inputFormat == InputFormat.Serial)
                 throw new NotImplementedException();
 
+            m_InputFormat = inputFormat;
             SetInput(fileName);
         }
 
@@ -115,8 +118,16 @@
         /// <remarks>The output knows of the input format through the method <see cref="SetInput"/>.</remarks>
         public bool Write(DltTraceLineBase line, ReadOnlySpan<byte> packet)
         {
-            Write(line.TimeStamp, packet);
-            return true;
+            switch (m_InputFormat) {
+            case InputFormat.File:
+                Write(line.TimeStamp, packet);
+                return true;
+            case InputFormat.Network:
+                BuildStorageHeader(line);
+                Write(line.TimeStamp, m_StorageHeader, packet);
+                return true;
+            }
+            return false;
         }
 
         private void BuildStorageHeader(DltTraceLineBase line)

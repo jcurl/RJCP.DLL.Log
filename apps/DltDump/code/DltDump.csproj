@@ -72,6 +72,8 @@
     <Compile Include="Domain\Dlt\DltDumpTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\DltFileTraceFilterDecoder.cs" />
     <Compile Include="Domain\Dlt\DltFileTraceFilterReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\DltNetworkTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\DltNetworkTraceFilterReaderFactory.cs" />
     <Compile Include="Domain\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\InputFormat.cs" />
     <Compile Include="Domain\IInputStream.cs" />

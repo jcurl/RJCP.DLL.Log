@@ -57,8 +57,9 @@
             case InputFormat.File:
                 return new DltFileTraceFilterReaderFactory(OutputStream);
             case InputFormat.Serial:
-            case InputFormat.Network:
                 throw new NotImplementedException();
+            case InputFormat.Network:
+                return new DltNetworkTraceFilterReaderFactory(OutputStream, OnlineMode);
             default:
                 throw new InvalidOperationException(AppResources.InfraDltInvalidFormat);
             }

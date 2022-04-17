@@ -14,6 +14,14 @@
     [TestFixture]
     public class DltOutputTest
     {
+        private static readonly byte[] FileData = new byte[] {
+            0x44, 0x4C, 0x54, 0x01, 0xB7, 0xA8, 0xBB, 0x61, 0x20, 0xA0, 0x03, 0x00, 0x45, 0x43, 0x55, 0x31, 0x3D, 0x7F, 0x00, 0x2B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x30, 0x16, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x82, 0x00, 0x00, 0x0B, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
+        };
+
+        private static readonly byte[] TcpData = new byte[] {
+            0x3D, 0x7F, 0x00, 0x2B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x30, 0x16, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x82, 0x00, 0x00, 0x0B, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
+        };
+
         [Test]
         public void NullFileName()
         {
@@ -53,45 +61,60 @@
         }
 
         [Test]
-        public void WriteLineAsPacket()
+        public void WriteLineAsPacketFile()
         {
-            byte[] data = new byte[] { 0x35 };
-
             using (ScratchPad pad = Deploy.ScratchPad())
             using (DltOutput output = new DltOutput("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
-                // If this writes binary data, it would just write 1 byte, not the length.
-                output.Write(TestLines.Verbose, data.AsSpan());
+                output.SetInput("input.dlt", InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
                 output.Flush();
 
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
                 FileInfo fileInfo = new FileInfo("File.dlt");
-                Assert.That(fileInfo.Length, Is.EqualTo(1));
+                Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
             }
         }
 
         [Test]
-        public void WriteLinesAsPacket()
+        public void WriteLinesAsPacketFile()
         {
-            byte[] data = new byte[] { 0x35, 0x00 };
-
             using (ScratchPad pad = Deploy.ScratchPad())
             using (DltOutput output = new DltOutput("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
-                // If this writes binary data, it would just write 1 byte, not the length.
-                output.Write(TestLines.Verbose, data.AsSpan());
-                output.Write(TestLines.Verbose2, data.AsSpan());
+                output.SetInput("input.dlt", InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Write(TestLines.Verbose2, FileData.AsSpan());
                 output.Flush();
 
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
                 FileInfo fileInfo = new FileInfo("File.dlt");
-                Assert.That(fileInfo.Length, Is.EqualTo(4));
+                Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length * 2));
+            }
+        }
+
+        [Test]
+        public void WriteLineAsPacketTcp()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File.dlt")) {
+                Assert.That(File.Exists("File.dlt"), Is.False);
+
+                output.SetInput("input.raw", InputFormat.Network);
+                output.Write(TestLines.Verbose, TcpData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File.dlt"), Is.True);
+
+                // The data is written exactly as the packet says. A storage header is added.
+                FileInfo fileInfo = new FileInfo("File.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
             }
         }
 

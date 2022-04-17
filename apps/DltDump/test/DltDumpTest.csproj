@@ -54,15 +54,16 @@
     <Compile Include="Application\FilterConfigTest.cs" />
     <Compile Include="Application\HelpAppTest.cs" />
     <Compile Include="Application\VersionAppTest.cs" />
+    <Compile Include="Domain\ContextTest.cs" />
     <Compile Include="Domain\Dlt\BinaryTraceReader.cs" />
     <Compile Include="Domain\Dlt\DltFileTraceFilterDecoderTest.cs" />
+    <Compile Include="Domain\Dlt\DltNetworkTraceFilterDecoderTest.cs" />
     <Compile Include="Domain\Dlt\DltTraceReaderFactoryTest.cs" />
     <Compile Include="Domain\Dlt\LineTraceReader.cs" />
     <Compile Include="Domain\Dlt\TestDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\TraceReaderAccessor.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
-    <Compile Include="Domain\ContextTest.cs" />
     <Compile Include="Domain\OutputStream\ContextOutputTest.cs" />
     <Compile Include="Domain\OutputStream\DltOutputTest.cs" />
     <Compile Include="Domain\OutputStream\FilterOutputTest.cs" />
@@ -70,10 +71,9 @@
     <Compile Include="Domain\OutputStream\OutputBaseTest.cs" />
     <Compile Include="Domain\OutputStream\OutputPacket.cs" />
     <Compile Include="Domain\OutputStream\OutputWriterTest.cs" />
+    <Compile Include="Domain\OutputStream\TemplateTest.cs" />
     <Compile Include="Domain\OutputStream\TestOutputBase.cs" />
     <Compile Include="Domain\OutputStream\TextOutputTest.cs" />
-    <Compile Include="Domain\TestOutputStreamFactory.cs" />
-    <Compile Include="Domain\OutputStream\TemplateTest.cs" />
     <Compile Include="Domain\InputStreamFactoryTest.cs" />
     <Compile Include="Domain\InputStream\ConnectSuccessEventArgs.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactoryTest.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Domain\InputStream\TestNetworkStream.cs" />
     <Compile Include="Domain\InputStream\TestNetworkStreamFactory.cs" />
     <Compile Include="Domain\TestInputStreamFactory.cs" />
+    <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />

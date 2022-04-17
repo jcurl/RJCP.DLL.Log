@@ -68,6 +68,34 @@
         }
 
         [Test]
+        public async Task GetTcpFilterDecoderOnline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Network,
+                OnlineMode = true,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltNetworkTraceFilterDecoder>());
+        }
+
+        [Test]
+        public async Task GetTcpFilterDecoderOffline()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Network,
+                OnlineMode = false,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltNetworkTraceFilterDecoder>());
+        }
+
+        [Test]
         public async Task GetSerialDecoderOnline()
         {
             DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
