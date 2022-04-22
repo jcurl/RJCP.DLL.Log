@@ -1,12 +1,16 @@
 @startuml Domain.Decoder.Writer
 
 namespace Domain {
-  class DltTraceDecoderFactory
+  class DltDumpTraceReaderFactory
   interface IOutputStream
 
-  DltTraceDecoderFactory -r-> DltFileTraceFilterDecoder : <<instantiates>>
+  DltDumpTraceReaderFactory -r-> DltFileTraceFilterReaderFactory : <<instantiates>>
 
+  class DltFileTraceFilterReaderFactory
+  class TraceReader<DltTraceLineBase>
   class DltFileTraceFilterDecoder
+  DltFileTraceFilterReaderFactory -d-> TraceReader : <<instantiates>>
+  TraceReader *-d- DltFileTraceFilterDecoder
   DltFileTraceFilterDecoder -r-|> RJCP.Diagnostics.Log.Decoder.DltFileTraceDecoder
   DltFileTraceFilterDecoder o-d- IOutputStream
 }
@@ -16,7 +20,6 @@ namespace RJCP.Diagnostics.Log.Decoder {
         #OnPacket(line: DltTraceLineBase,\n ReadOnlySpan<byte> buffer, int headerOffset)
     }
     class DltFileTraceDecoder
-   DltTraceDecoderBase <|-d- DltFileTraceDecoder
+    DltTraceDecoderBase <|-d- DltFileTraceDecoder
 }
-
 @enduml

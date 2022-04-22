@@ -1,0 +1,28 @@
+@startuml DltPcapTraceReaderFactory
+
+interface ITraceDecoder<DltTraceLineBase>
+class DltPcapTraceDecoder
+
+DltPcapTraceDecoder .u.|> ITraceDecoder
+
+class TraceReader
+class TraceReaderFactory
+class DltPcapTraceReaderFactory
+class TraceReader<DltTraceLineBase>
+
+TraceReader *-r- DltPcapTraceDecoder
+
+DltPcapTraceReaderFactory -u-|> TraceReaderFactory
+DltPcapTraceReaderFactory -r-> TraceReader : <<instantiates>>
+
+class DltDumpTraceReaderFactory
+note top
+    The FilterApp sets the appropriate
+    fields, which decides based on the
+    input format to instantiate a PCAP
+    decoder.
+end note
+
+DltDumpTraceReaderFactory -r-> DltPcapTraceReaderFactory
+
+@enduml

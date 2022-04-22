@@ -23,7 +23,7 @@ namespace Application {
     FilterConfig o-r- FilterApp
 
     FilterApp *-d- Domain.InputStreamFactory
-    FilterApp *-d- Domain.DltTraceDecoderFactory
+    FilterApp *-d- Domain.DltDumpTraceReaderFactory
     FilterApp o-d- Domain.IInputStream
     FilterApp *-d- Domain.IOutputStream
 }
@@ -31,24 +31,10 @@ namespace Application {
 namespace Domain {
     class InputStreamFactory
     interface IInputStream
-    class DltTraceDecoderFactory
+    class DltDumpTraceReaderFactory
     interface IOutputStream
 
     InputStreamFactory -r-> IInputStream : <<instantiates>>
-}
-
-namespace Framework {
-    namespace System.IO {
-        class Stream
-    }
-
-    namespace RJCP.Diagnostics.Log.Decoder {
-        class DltTraceDecoderBase
-    }
-
-    Domain.IInputStream *-d- System.IO.Stream : <<instantiates>>
-    Domain.DltTraceDecoderFactory --> RJCP.Diagnostics.Log.Decoder.DltTraceDecoderBase : <<instantiates>>
-    Domain.DltTraceDecoderFactory o-d- System.IO.Stream
 }
 
 @enduml

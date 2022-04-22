@@ -25,12 +25,15 @@ implementation in an incremental manner).
       - [2.3.2.2. Instantiating a Stream from the Input Path](#2322-instantiating-a-stream-from-the-input-path)
         - [2.3.2.2.1. Implementing a IInputStreamFactory](#23221-implementing-a-iinputstreamfactory)
       - [2.3.2.3. Decoder Factory](#2323-decoder-factory)
+        - [2.3.2.3.1. Adding a new InputFormat](#23231-adding-a-new-inputformat)
       - [2.3.2.4. The Output Stream, Context and Filter](#2324-the-output-stream-context-and-filter)
   - [2.4. Domain](#24-domain)
     - [2.4.1. InputStreamFactory and InputStream](#241-inputstreamfactory-and-inputstream)
     - [2.4.2. Decoders (and PCAP, PCAPNG formats)](#242-decoders-and-pcap-pcapng-formats)
       - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
       - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
+      - [2.4.2.3. Supported Link Types for PCAP and PCAPNG](#2423-supported-link-types-for-pcap-and-pcapng)
+      - [2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding](#2424-unsupported-features-for-pcap--pcapng-decoding)
     - [2.4.3. Trace Output](#243-trace-output)
       - [2.4.3.1. Console Output](#2431-console-output)
       - [2.4.3.2. Text File Output](#2432-text-file-output)
@@ -302,10 +305,10 @@ The `FilterApp` initializes all objects it needs from the `Domain` layer.
 
 It will loop over all the inputs given in the `FilterConfig`. The
 `InputStreamFactory` knows how to take the input file which is a URI string, and
-generates an appropriate stream. This stream could be a file, or a TCP stream.
-The output `IInputStream` provides additional methods which can asynchronously
-connect the stream if it is required (files don't need to be connected, where
-network streams do).
+generates an appropriate stream. This stream could be a file, serial port, or a
+TCP stream. The `IInputStream` provides additional methods which can
+asynchronously connect the stream if it is required (files don't need to be
+connected, where network streams do).
 
 The `IInputStream` provides additional information about how to instantiate a
 decoder. It can indicate if the URI is a "live" stream, where time stamps are
@@ -378,6 +381,25 @@ which it has presumably received from the `IInputStream`.
 * Creates a decoder based on TCP, Serial, File. Online mode or not.
 * Handles PCAP and UDP streams
 
+###### 2.3.2.3.1. Adding a new InputFormat
+
+Adding a new `InputFormat` is a little more work, e.g. reading a WireShark file,
+that contains DLT packets transmitted as UDP. It requires:
+
+* Adding a new element to `InputFormat`.
+* If there are aliases to the `InputFormat`, the `CheckInputFormat` method in
+  `CmdOptions` should handle this.
+* The `FilterApp` should handle the case if the user explicitly specified this
+  format on the command line
+* The `InputStreamFactory` should know how to create the `InputStream`. When
+  reading from a file, you might want to modify `DltFileStream`.
+* All the `IOutputStream` objects should handle this input format. It should
+  know how to construct the binary version of the output packet, e.g.
+  `DltOutput`.
+* The `DltDumpTraceReaderFactory` then creates a specific instance of the
+  factory for reading the input format. You'll need to implement the decoder as
+  well.
+
 ##### 2.3.2.4. The Output Stream, Context and Filter
 
 The `IOutputStream` is a simple interface that knows how to write the output DLT
@@ -437,14 +459,10 @@ asynchronous manner before giving to the decoder.
 
 #### 2.4.2. Decoders (and PCAP, PCAPNG formats)
 
-There are three decoders implemented for reading a stream of bytes and
-interpreting DLT contents, implemented as per the [AutoSAR R20-11
+There are three decoders implemented in the DLT package for reading a stream of
+bytes and interpreting DLT contents, implemented as per the [AutoSAR R20-11
 PRS](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11/AUTOSAR_PRS_LogAndTraceProtocol.pdf)
 standard (DLT version 1).
-
-Additional decoders can be implemented dependent on the `IInputStream` assumed
-format, that derives from the `DltTraceDecoderBase`. For example, reading a
-WireShark file, that contains DLT packets transmitted as UDP.
 
 ##### 2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)
 
@@ -464,23 +482,78 @@ made present to the binary writer.
 
 ##### 2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG
 
-A new DLT Trace Decoder must be written that derives from the existing decoder.
-In particular, when the PCAP decoder receives data to decode, it must first
-unwrap the PCAP packet data. It is not responsible for decoding the DLT data,
-and calls the base decoder to generate the packet data.
+A decoder can be implemented that can decode either a PCAP or PCAPNG file
+format, with detection based on the initial 4 bytes of the file:
 
-The precise specifications may change, but the first version should decode:
+* `0x0A0D0D0A`: A
+  [PCAP-NG](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcapng.html) file
+* `0xA1B2C3D4`: A
+  [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html) file, big
+  endian, with time resolution microseconds
+* `0xA1B23C4D`: A
+  [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html) file, big
+  endian, with time resolution nanoseconds
+* `0xD4C3B2A1`: A
+  [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html) file,
+  little endian, with time resolution of microseconds
+* `0x4D3CB2A1`: A
+  [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html) file,
+  little endian, with time resolution of nanoseconds
 
-* PCAP and PCAPNG formats
-* An integral number of packets stored in a UDP frame with destination port
-  3490, where there is no fragmentation
-* Optionally support 802.1q VLAN
+The decoder derives from `ITraceReader<DltTraceLineBase>`, the same as the other
+DLT decoders. It does not derive from `DltTraceDecoderBase` as the PCAP decoder
+does not implement decoding the DLT protocol, but rather uses composition, and
+decodes only the PCAP packets, passing the DLT data along.
 
-Notably what will not be supported in this first version will be
+![PCAP Factory](out/diagrams/dltpcaptracedecoderfactory/DltPcapTraceReaderFactory.svg)
 
-* Fragmented UDP packets
-* 802.1q double tagging
-* Additional filtering based on PCAP
+The instantiated `DltPcapTraceDecoder` then reads the first four bytes,
+determines the format that should be used to read, instantiating either a
+`DltPcapLegacyDecoder` or a `DltPcapNgDecoder`. These two classes are
+responsible for extracting the Ethernet frames and obtaining the UDP packet
+data.
+
+![PCAP Decoder](out/diagrams/dltpcaptracedecoder/DltPcapTraceDecoder.svg)
+
+The `PacketDecoder` receives a valid PCAP frame. It extracts the time stamp from
+the frame, and decodes the frame dependent on the Link Layer type as determined
+by the relevant PCAP decoder. It should then determine the offset where the
+EtherType starts (e.g. 0x8100 for 802.1q VLAN header, or 0x0800 with the IP
+version of 0x04). It checks that the packet is valid (has the right protocol
+version, e.g. 17 for UDP, the correct destination port, etc.). It may also
+support IP fragmentation, concatenating fragmented frames from the wire and
+sending the complete packet to be decoded.
+
+The `PacketDecoder` has a custom `DltPcapNetworkTraceFilterDecoder` (derived by
+the `DltTraceDecoder` that actually knows how to decode the DLT frame) which has
+the main responsibility setting the logging time stamp on each line (by
+overriding the `ParsePrefixHeader`) and possibly writing to an `IOutputStream`.
+
+The implementation assumes that each packet is complete, that is, it contains an
+integer number of complete DLT packets. As such, after decoding each Ethernet
+frame, the underlying DLT decoder should be flushed.
+
+##### 2.4.2.3. Supported Link Types for PCAP and PCAPNG
+
+The `PacketDecoder` should support the following Link Types defined by [Link
+Type](https://www.tcpdump.org/linktypes.html)
+
+* `LINKTYPE_ETHERNET` = 0x01 (1)
+* `LINKTYPE_LINUX_SLL` = 0x71 (113)
+  * With a 6 byte address, being the MAC of the interface being recorded.
+
+##### 2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding
+
+The following limitations are applied:
+
+* As I don't have examples of the FCS field in the PCAP file, it is expected
+  that this value is not present (the `P` bit is `0`).
+* Filtering will be based on the destination port only, default to 3490.
+* 802.1q double tagging won't be supported.
+* For PCAP-NG, the first interface will be used if there are multiple interfaces
+  present in the file.
+* Only IPv4 will be supported, until real-world examples exist of IPv6 which can
+  be tested with.
 
 #### 2.4.3. Trace Output
 
