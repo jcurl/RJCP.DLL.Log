@@ -40,6 +40,13 @@
             return true;
         }
 
+        public void Clear()
+        {
+            Lines.Clear();
+            FileName = null;
+            InputFormat = InputFormat.Automatic;
+        }
+
         public void Dispose()
         {
             Lines.Clear();

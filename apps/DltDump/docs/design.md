@@ -34,6 +34,7 @@ implementation in an incremental manner).
       - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
       - [2.4.2.3. Supported Link Types for PCAP and PCAPNG](#2423-supported-link-types-for-pcap-and-pcapng)
       - [2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding](#2424-unsupported-features-for-pcap--pcapng-decoding)
+      - [2.4.2.5. Fragmented IP packets](#2425-fragmented-ip-packets)
     - [2.4.3. Trace Output](#243-trace-output)
       - [2.4.3.1. Console Output](#2431-console-output)
       - [2.4.3.2. Text File Output](#2432-text-file-output)
@@ -554,6 +555,18 @@ The following limitations are applied:
   present in the file.
 * Only IPv4 will be supported, until real-world examples exist of IPv6 which can
   be tested with.
+
+##### 2.4.2.5. Fragmented IP packets
+
+The class `PacketDecoder` is responsible for fragmented IP packets. At this
+time, it discards fragmented packets:
+
+* If the IPv4 fragmentation offset is non-zero, it is ignored
+  * In these packets, there are no UDP port information, that is in the first of
+    the fragmented packets
+* If the IPv4 fragmentation offset is zero, but the MF (More Frames) bit is set,
+  it is ignored and a warning is printed in the logs (but no output is put into
+  the decoded traffic).
 
 #### 2.4.3. Trace Output
 

@@ -53,6 +53,7 @@
     <Compile Include="Constraints\DltConstraintExtensionsTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCommonTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
+    <Compile Include="Decoder\DltTraceDecoderTest.cs" />
     <Compile Include="Decoder\LineCacheAccessor.cs" />
     <Compile Include="Decoder\LineCacheTest.cs" />
     <Compile Include="Decoder\PosMapAccessor.cs" />
