@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgErrorBufferTooSmall" xml:space="preserve">
+    <value>Buffer of insufficient size</value>
+  </data>
   <data name="DomainDecoderInvalidOutputStream" xml:space="preserve">
     <value>OutputStream doesn't support binary</value>
   </data>
@@ -143,6 +146,21 @@
   </data>
   <data name="DomainOutputWriterOpen" xml:space="preserve">
     <value>OutputWriter File is already open.</value>
+  </data>
+  <data name="DomainPcapInvalidData" xml:space="preserve">
+    <value>PCAP file is corrupted (contains invalid data)</value>
+  </data>
+  <data name="DomainPcapUnknownBlockType" xml:space="preserve">
+    <value>Unknown PCAP file format, block {0:x8} found</value>
+  </data>
+  <data name="DomainPcapUnknownLinkFormat" xml:space="preserve">
+    <value>PCAP file format with unknown link type data</value>
+  </data>
+  <data name="DomainPcapUnknownMagic" xml:space="preserve">
+    <value>Unknown PCAP file format</value>
+  </data>
+  <data name="DomainPcapUnsupportedVersion" xml:space="preserve">
+    <value>PCAP file format version {0}.{1} unsupported</value>
   </data>
   <data name="DomainTemplateEmptyVar" xml:space="preserve">
     <value>Empty variable provided</value>

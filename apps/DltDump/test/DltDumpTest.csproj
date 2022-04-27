@@ -61,6 +61,8 @@
     <Compile Include="Domain\Dlt\DltSerialTraceFilterDecoderTest.cs" />
     <Compile Include="Domain\Dlt\DltTraceReaderFactoryTest.cs" />
     <Compile Include="Domain\Dlt\LineTraceReader.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Legacy\PcapLegacyDecoderTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\PacketDecoderTest.cs" />
     <Compile Include="Domain\Dlt\TestDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\TraceReaderAccessor.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />

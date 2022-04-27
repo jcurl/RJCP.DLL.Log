@@ -94,13 +94,55 @@
             return Decode(buffer, position, false);
         }
 
-        private IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position, bool flush)
+        /// <summary>
+        /// Decodes data from the buffer, and any data that couldn't be decoded is flushed.
+        /// </summary>
+        /// <param name="buffer">The buffer data that should be decoded.</param>
+        /// <param name="position">The position in the stream where the data begins.</param>
+        /// <param name="flush">If the conversion should be completed.</param>
+        /// <returns>An enumerable collection of the decoded lines.</returns>
+        /// <remarks>
+        /// The <see cref="Decode(ReadOnlySpan{byte}, long, bool)"/> method shall accept any number of bytes for decoding. It
+        /// should also consume all data that is received, so that data which is not processed is buffered locally by
+        /// the decoder.
+        /// <para>
+        /// If the <paramref name="flush"/> is <see langword="true"/>, then any data remaining in the buffer is also
+        /// decoded, as if this is the last set of data in the stream. There will be no data remaining in the cache
+        /// after this call.
+        /// </para>
+        /// <para>
+        /// On return, this method should return a read only collection of trace lines that were fully decoded. If no
+        /// lines were decoded, it should return an empty collection (and avoid <see langword="null"/>).
+        /// </para>
+        /// </remarks>
+        public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position, bool flush)
+        {
+            m_Lines.Clear();
+            if (!flush) return DecodeStream(buffer, position, false);
+
+            // First decode using any data that might still be in the cache.
+            DecodeStream(buffer, position, false);
+
+            // Now we flush data that remains in the cache.
+            if (!m_Cache.IsCached) {
+                if (m_DltLineBuilder.SkippedBytes != 0)
+                    m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
+
+                return m_Lines;
+            }
+
+            ReadOnlySpan<byte> cache = m_Cache.SetFlush();
+            IEnumerable<DltTraceLineBase> lines = DecodeStream(cache, 0, true);
+            m_Cache.Unlock();
+            return lines;
+        }
+
+        private IEnumerable<DltTraceLineBase> DecodeStream(ReadOnlySpan<byte> buffer, long position, bool flush)
         {
             // When flushing, there should be no access to the m_Cache variable. It is expected that the user
             // provides the buffer from m_Cache when flushing.
 
             ReadOnlySpan<byte> decodeBuffer = buffer;
-            m_Lines.Clear();
 
             int bytes = buffer.Length;
             if (!flush) {
@@ -579,13 +621,12 @@
                 if (m_DltLineBuilder.SkippedBytes == 0)
                     return Array.Empty<DltTraceLineBase>();
 
-                m_Lines.Clear();
-                m_Lines.Add(m_DltLineBuilder.GetSkippedResult());
-                return m_Lines;
+                return new DltTraceLineBase[] { m_DltLineBuilder.GetSkippedResult() };
             }
 
+            m_Lines.Clear();
             ReadOnlySpan<byte> buffer = m_Cache.SetFlush();
-            return Decode(buffer, 0, true);
+            return DecodeStream(buffer, 0, true);
         }
 
         /// <summary>

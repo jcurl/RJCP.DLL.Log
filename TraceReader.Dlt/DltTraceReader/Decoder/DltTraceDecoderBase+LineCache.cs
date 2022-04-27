@@ -135,6 +135,14 @@
                 }
             }
 
+            /// <summary>
+            /// Sets in flush mode and lock the cache for modification.
+            /// </summary>
+            /// <returns>Returns a copy of the cached buffer.</returns>
+            /// <remarks>
+            /// Putting this line cache in locked mode adds an additional consistency check when usually flushing a line
+            /// buffer, in case a decoder attempts to use the cache while decoding the cache buffer.
+            /// </remarks>
             public ReadOnlySpan<byte> SetFlush()
             {
                 ReadOnlySpan<byte> buffer = m_Cache.AsSpan(m_CacheStart, m_CacheLength);
@@ -142,6 +150,19 @@
                 m_CacheLength = 0;
                 m_CacheLocked = true;
                 return buffer;
+            }
+
+            /// <summary>
+            /// Unlocks the cache buffer that it can be used again.
+            /// </summary>
+            /// <remarks>
+            /// This method is intended to be called after <see cref="SetFlush"/>. Once the operation on the flushed
+            /// cache is finished, the cache must be unlocked, else an exception will be raised by <see cref="Write"/>,
+            /// <see cref="Consume(int)"/> and <see cref="Append(ReadOnlySpan{byte})"/>.
+            /// </remarks>
+            public void Unlock()
+            {
+                m_CacheLocked = false;
             }
 
             /// <summary>

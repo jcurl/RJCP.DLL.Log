@@ -61,6 +61,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buffer of insufficient size.
+        /// </summary>
+        internal static string ArgErrorBufferTooSmall {
+            get {
+                return ResourceManager.GetString("ArgErrorBufferTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OutputStream doesn&apos;t support binary.
         /// </summary>
         internal static string DomainDecoderInvalidOutputStream {
@@ -138,6 +147,51 @@ namespace RJCP.App.DltDump.Resources {
         internal static string DomainOutputWriterOpen {
             get {
                 return ResourceManager.GetString("DomainOutputWriterOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file is corrupted (contains invalid data).
+        /// </summary>
+        internal static string DomainPcapInvalidData {
+            get {
+                return ResourceManager.GetString("DomainPcapInvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown PCAP file format, block {0:x8} found.
+        /// </summary>
+        internal static string DomainPcapUnknownBlockType {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownBlockType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file format with unknown link type data.
+        /// </summary>
+        internal static string DomainPcapUnknownLinkFormat {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownLinkFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown PCAP file format.
+        /// </summary>
+        internal static string DomainPcapUnknownMagic {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownMagic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file format version {0}.{1} unsupported.
+        /// </summary>
+        internal static string DomainPcapUnsupportedVersion {
+            get {
+                return ResourceManager.GetString("DomainPcapUnsupportedVersion", resourceCulture);
             }
         }
         
