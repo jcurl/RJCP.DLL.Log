@@ -120,6 +120,7 @@
                 Write(line.TimeStamp, packet);
                 return true;
             case InputFormat.Network:
+            case InputFormat.Pcap:
                 BuildStorageHeader(line);
                 Write(line.TimeStamp, m_StorageHeader, packet);
                 return true;

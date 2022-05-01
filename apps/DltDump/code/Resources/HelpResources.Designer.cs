@@ -420,6 +420,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to file.pcap - read a PCAP legacy recorded file. The timestamps are obtained from the packet capture time which are expected to be UTC..
+        /// </summary>
+        internal static string Help506_InputFilePcap {
+            get {
+                return ResourceManager.GetString("Help506_InputFilePcap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer..
         /// </summary>
         internal static string Help510_InputTcp {

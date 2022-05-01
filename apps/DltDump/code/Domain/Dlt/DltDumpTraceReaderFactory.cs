@@ -48,6 +48,8 @@
                     return new DltSerialTraceReaderFactory(OnlineMode);
                 case InputFormat.Network:
                     return new DltTraceReaderFactory(OnlineMode);
+                case InputFormat.Pcap:
+                    return new DltPcapTraceReaderFactory();
                 default:
                     throw new InvalidOperationException(AppResources.InfraDltInvalidFormat);
                 }
@@ -60,6 +62,8 @@
                 return new DltSerialTraceFilterReaderFactory(OutputStream, OnlineMode);
             case InputFormat.Network:
                 return new DltNetworkTraceFilterReaderFactory(OutputStream, OnlineMode);
+            case InputFormat.Pcap:
+                return new DltPcapTraceReaderFactory(OutputStream);
             default:
                 throw new InvalidOperationException(AppResources.InfraDltInvalidFormat);
             }

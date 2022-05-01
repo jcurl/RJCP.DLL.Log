@@ -267,6 +267,10 @@
                 case "ser":
                     InputFormat = InputFormat.Serial;
                     break;
+                case "pcap":
+                case "pcapng":
+                    InputFormat = InputFormat.Pcap;
+                    break;
                 default:
                     throw new OptionFormatException("format");
                 }
