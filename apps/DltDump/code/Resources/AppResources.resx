@@ -317,6 +317,9 @@
   <data name="VersionDltDumpCopyright" xml:space="preserve">
     <value>DltDump Version: {0}, {1}</value>
   </data>
+  <data name="VersionNetRuntime" xml:space="preserve">
+    <value>  Runtime: {0}</value>
+  </data>
   <data name="VersionTraceReader" xml:space="preserve">
     <value>  TraceReader: {0}</value>
   </data>

@@ -30,7 +30,8 @@
         public static void ShowVersion()
         {
             ShowSimpleVersion();
-
+            Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionNetRuntime,
+                System.Environment.Version);
             Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionTraceReader,
                 Version.GetAssemblyVersion(typeof(Diagnostics.Log.TraceLine)));
             Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionTraceReaderDlt,

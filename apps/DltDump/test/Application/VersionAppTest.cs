@@ -37,7 +37,7 @@
                 VersionApp.ShowVersion();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(3));
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(4));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }

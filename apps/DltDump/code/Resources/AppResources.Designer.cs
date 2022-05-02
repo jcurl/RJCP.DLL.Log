@@ -655,6 +655,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to   Runtime: {0}.
+        /// </summary>
+        internal static string VersionNetRuntime {
+            get {
+                return ResourceManager.GetString("VersionNetRuntime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to   TraceReader: {0}.
         /// </summary>
         internal static string VersionTraceReader {
