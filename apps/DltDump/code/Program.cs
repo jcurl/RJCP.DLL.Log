@@ -11,8 +11,17 @@
 
     public static class Program
     {
+        private static readonly DateTime Expire = new DateTime(2022, 7, 1);
+
         public static int Main(string[] args)
         {
+            if (DateTime.Now > Expire) {
+                Console.WriteLine("This software is experimental, and expired on {0}\n\n", Expire.ToShortDateString());
+                return -1;
+            } else {
+                Console.WriteLine("This software is experimental, and will expire on {0}\n\n", Expire.ToShortDateString());
+            }
+
             CrashReporter.SetExceptionHandlers();
 
             Log.App.TraceEvent(TraceEventType.Information, VersionApp.GetVersion());
