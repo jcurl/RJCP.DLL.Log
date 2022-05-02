@@ -92,6 +92,7 @@
     <Compile Include="Domain\InputStream\TestNetworkStreamFactory.cs" />
     <Compile Include="Domain\TestInputStreamFactory.cs" />
     <Compile Include="Domain\TestOutputStreamFactory.cs" />
+    <Compile Include="GlobalLogger.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Resources\ResourcesTest.cs" />
     <Compile Include="TestApplication.cs" />
     <Compile Include="TestResources\TestLines.cs" />
+    <Compile Include="TestSetupFixture.cs" />
     <Compile Include="View\CommandFactoryTest.cs" />
     <Compile Include="View\CommandLineTest.cs" />
     <Compile Include="View\FilterCommandTest.cs" />
