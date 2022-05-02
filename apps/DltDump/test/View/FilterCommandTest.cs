@@ -49,6 +49,7 @@
 
         private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
         private readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
+        private readonly string EmptyPcap = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.pcap");
 
         #region Input File
         [Test]
@@ -206,7 +207,9 @@
         [TestCase("net", InputFormat.Network, InputFormat.Network)]
         [TestCase("automatic", InputFormat.Automatic, InputFormat.File)]
         [TestCase("auto", InputFormat.Automatic, InputFormat.File)]
-        public void SetInputFormat(string option, InputFormat result, InputFormat decodeFormat)
+        [TestCase("pcap", InputFormat.Pcap, InputFormat.Pcap)]
+        [TestCase("pcapng", InputFormat.Pcap, InputFormat.Pcap)]
+        public void SetInputFormatDlt(string option, InputFormat result, InputFormat decodeFormat)
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
@@ -214,6 +217,35 @@
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", option), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                Assert.That(cmdOptions.InputFormat, Is.EqualTo(result));
+
+                // This shows that the DltReaderFactory got the command line option when parsing (it only shows the last
+                // instance that was instantiated).
+                Assert.That(Global.Instance.DltReaderFactory.InputFormat, Is.EqualTo(decodeFormat));
+            }
+        }
+
+        [TestCase("file", InputFormat.File, InputFormat.File)]
+        [TestCase("File", InputFormat.File, InputFormat.File)]
+        [TestCase("FILE", InputFormat.File, InputFormat.File)]
+        [TestCase("serial", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("ser", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("network", InputFormat.Network, InputFormat.Network)]
+        [TestCase("net", InputFormat.Network, InputFormat.Network)]
+        [TestCase("automatic", InputFormat.Automatic, InputFormat.Pcap)]
+        [TestCase("auto", InputFormat.Automatic, InputFormat.Pcap)]
+        [TestCase("pcap", InputFormat.Pcap, InputFormat.Pcap)]
+        [TestCase("pcapng", InputFormat.Pcap, InputFormat.Pcap)]
+        public void SetInputFormatPcap(string option, InputFormat result, InputFormat decodeFormat)
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("format", option), EmptyPcap
                 }), Is.EqualTo(ExitCode.Success));
 
                 Assert.That(cmdOptions.InputFormat, Is.EqualTo(result));

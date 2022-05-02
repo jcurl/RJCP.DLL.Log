@@ -200,6 +200,7 @@
                 Global.Instance.DltReaderFactory.OnlineMode = inputStream.IsLiveStream;
                 break;
             case InputFormat.File:
+            case InputFormat.Pcap:
                 Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
                 Global.Instance.DltReaderFactory.OnlineMode = false;
                 break;

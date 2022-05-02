@@ -48,13 +48,17 @@
             }
         }
 
-        [Test]
-        public void WriteTextLine()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteTextLine(InputFormat inputFormat)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TextOutput output = new TextOutput("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
+                output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
@@ -66,8 +70,11 @@
             }
         }
 
-        [Test]
-        public void WriteTextLineWithPosition()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteTextLineWithPosition(InputFormat inputFormat)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TextOutput output = new TextOutput("File.txt")) {
@@ -75,6 +82,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.False);
 
+                output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
@@ -86,8 +94,11 @@
             }
         }
 
-        [Test]
-        public void WriteTextLineAsPacket()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteTextLineAsPacket(InputFormat inputFormat)
         {
             byte[] data = new byte[] { 0x00 };
 
@@ -95,6 +106,7 @@
             using (TextOutput output = new TextOutput("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
+                output.SetInput("input.dlt", inputFormat);
                 // If this writes binary data, it would just write 1 byte, not the length.
                 output.Write(TestLines.Verbose, data.AsSpan());
                 output.Flush();

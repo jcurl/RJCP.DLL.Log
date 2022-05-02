@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.OutputStream
 {
     using System.Globalization;
+    using Domain.Dlt;
     using NUnit.Framework;
     using TestResources;
 
@@ -15,11 +16,15 @@
             }
         }
 
-        [Test]
-        public void WriteLine()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteLine(InputFormat inputFormat)
         {
             using (TestApplication global = new TestApplication())
             using (IOutputStream output = new ConsoleOutput()) {
+                output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
@@ -29,11 +34,15 @@
             }
         }
 
-        [Test]
-        public void WriteLinePacket()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteLinePacket(InputFormat inputFormat)
         {
             using (TestApplication global = new TestApplication())
             using (IOutputStream output = new ConsoleOutput()) {
+                output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose, new byte[] { 0x01 });
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 
@@ -43,11 +52,15 @@
             }
         }
 
-        [Test]
-        public void WriteLineWithNoPosition()
+        [TestCase(InputFormat.File)]
+        [TestCase(InputFormat.Serial)]
+        [TestCase(InputFormat.Network)]
+        [TestCase(InputFormat.Pcap)]
+        public void WriteLineWithNoPosition(InputFormat inputFormat)
         {
             using (TestApplication global = new TestApplication())
             using (IOutputStream output = new ConsoleOutput(false)) {
+                output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
 

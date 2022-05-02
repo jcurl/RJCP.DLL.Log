@@ -84,6 +84,7 @@
             Write(HelpResources.Help500_Input);
             Write();
             Write(2, 4, HelpResources.Help505_InputFile);
+            Write(2, 4, HelpResources.Help506_InputFilePcap);
             Write(2, 4, HelpResources.Help510_InputTcp);
             Write(2, 4, HelpResources.Help515_InputSerial);
             Write();

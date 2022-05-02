@@ -254,6 +254,9 @@
   <data name="Help505_InputFile" xml:space="preserve">
     <value>file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available.</value>
   </data>
+  <data name="Help506_InputFilePcap" xml:space="preserve">
+    <value>file.pcap - read a PCAP legacy recorded file. The timestamps are obtained from the packet capture time which are expected to be UTC.</value>
+  </data>
   <data name="Help510_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>

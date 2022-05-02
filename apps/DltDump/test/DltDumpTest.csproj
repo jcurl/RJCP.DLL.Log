@@ -118,6 +118,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="TestResources\Input\EmptyFile.pcap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestResources\Input\EmptyFile2.dlt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -148,5 +148,46 @@
             TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceFilterDecoder>());
         }
+
+        [Test]
+        public async Task GetPcapDecoder()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetPcapDecoderFilterWriter()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = new MemoryOutput()
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetPcapDecoderFilter()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = new MemoryOutput(false)
+            };
+            ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
+
+            TraceReaderAccessor<DltTraceLineBase> readerAcc = new TraceReaderAccessor<DltTraceLineBase>(reader);
+            Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
+        }
     }
 }
