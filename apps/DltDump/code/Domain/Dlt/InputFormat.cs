@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump.Infrastructure.Dlt
+﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     /// <summary>
     /// Defines the format for reading the input stream.
@@ -16,13 +16,18 @@
         File,
 
         /// <summary>
-        /// File input stream with a DLS\1 header.
+        /// Serial input stream with a DLS\1 header.
         /// </summary>
         Serial,
 
         /// <summary>
-        /// File input stream starting with a standard header.
+        /// Network input stream starting with a standard header.
         /// </summary>
-        Network
+        Network,
+
+        /// <summary>
+        /// PCAP File.
+        /// </summary>
+        Pcap
     }
 }

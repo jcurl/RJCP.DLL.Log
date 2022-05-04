@@ -670,6 +670,7 @@
             DltTraceLine line1 = (DltTraceLine)builder.GetResult();
             Assert.That(line1.Line, Is.EqualTo(0));
             Assert.That(line1.TimeStamp, Is.GreaterThan(DateTime.Now.AddSeconds(-30)));
+            Assert.That(line1.Features.TimeStamp, Is.True);
             builder.Reset();
 
             Thread.Sleep(100);
@@ -678,6 +679,7 @@
             DltTraceLine line2 = (DltTraceLine)builder.GetResult();
             Assert.That(line2.Line, Is.EqualTo(1));
             Assert.That(line2.TimeStamp, Is.GreaterThanOrEqualTo(line1.TimeStamp));
+            Assert.That(line2.Features.TimeStamp, Is.True);
         }
 
         [Test]

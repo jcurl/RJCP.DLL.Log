@@ -142,23 +142,23 @@
   </data>
   <data name="Help320_Position" xml:space="preserve">
     <value>{1}position
-  Show the offset of the stream on text output</value>
+  Show the offset of the stream on text output.</value>
   </data>
   <data name="Help325_InputFormat" xml:space="preserve">
     <value>{1}format{2}&lt;format&gt;
   Defines the input format. This can be one of the following (by default it is automatic):</value>
   </data>
   <data name="Help325_InputFormatAuto" xml:space="preserve">
-    <value>* automatic|auto - choose based on the URI, or the file name extension</value>
+    <value>* automatic|auto - choose based on the URI, or the file name extension.</value>
   </data>
   <data name="Help325_InputFormatFile" xml:space="preserve">
-    <value>* file - interpret the URI as a file with a storage header</value>
+    <value>* file - interpret the URI as a file with a storage header.</value>
   </data>
   <data name="Help325_InputFormatNetwork" xml:space="preserve">
-    <value>* network|net - interpret the URI as a network stream, each packet starting with the standard header</value>
+    <value>* network|net - interpret the URI as a network stream, each packet starting with the standard header.</value>
   </data>
   <data name="Help325_InputFormatSerial" xml:space="preserve">
-    <value>* serial|ser - interpret the URI as a serial stream with a DLS\1 header</value>
+    <value>* serial|ser - interpret the URI as a serial stream with a DLS\1 header.</value>
   </data>
   <data name="Help330_Retries" xml:space="preserve">
     <value>{1}retries{2}&lt;count&gt;
@@ -170,27 +170,27 @@
   </data>
   <data name="Help340_RegexSearch" xml:space="preserve">
     <value>{0}r | {1}regex{2}&lt;regex&gt;
-  Search for lines that match the .NET regular expression for &lt;regex&gt;</value>
+  Search for lines that match the .NET regular expression for &lt;regex&gt;.</value>
   </data>
   <data name="Help345_IgnoreCase" xml:space="preserve">
     <value>{0}i | {1}ignorecase
-  If provided, the searches are made case insensitive</value>
+  If provided, the searches are made case insensitive.</value>
   </data>
   <data name="Help350_EcuId" xml:space="preserve">
     <value>{1}ecuid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-  Specify a list of ECU Identifiers that should match</value>
+  Specify a list of ECU Identifiers that should match.</value>
   </data>
   <data name="Help355_AppId" xml:space="preserve">
     <value>{1}appid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-  Specify a list of Application Identifiers that should match</value>
+  Specify a list of Application Identifiers that should match.</value>
   </data>
   <data name="Help360_CtxId" xml:space="preserve">
     <value>{1}ctxid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-  Specify a list of context identifiers that should match</value>
+  Specify a list of context identifiers that should match.</value>
   </data>
   <data name="Help365_SessionId" xml:space="preserve">
     <value>{1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-  Specify a list of session identifiers that should match. Lines that don't have a session identifier do not match</value>
+  Specify a list of session identifiers that should match. Lines that don't have a session identifier do not match.</value>
   </data>
   <data name="Help370_DltTypes" xml:space="preserve">
     <value>{0}type{2}&lt;types&gt;
@@ -203,15 +203,15 @@
   </data>
   <data name="Help375_Verbose" xml:space="preserve">
     <value>{1}verbose
-  Match lines that are verbose (have an extended header and the verbose bit is set)</value>
+  Match lines that are verbose (have an extended header and the verbose bit is set).</value>
   </data>
   <data name="Help380_NonVerbose" xml:space="preserve">
     <value>{1}nonverbose
-  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message)</value>
+  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message).</value>
   </data>
   <data name="Help385_Control" xml:space="preserve">
     <value>{1}control
-  Match lines that are a control message (including the timing message)</value>
+  Match lines that are a control message (including the timing message).</value>
   </data>
   <data name="Help390_BeforeContext" xml:space="preserve">
     <value>{0}B | {1}before-context{2}&lt;lines&gt;
@@ -221,37 +221,70 @@
     <value>{0}A | {1}after-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text after the match.</value>
   </data>
-  <data name="Help400_Input" xml:space="preserve">
+  <data name="Help400_OutputFileName" xml:space="preserve">
+    <value>{0}o | {1}output{2}&lt;filename&gt;
+  Write the output to the file specified. The file format is given by the extension (.dlt for DLT with storage header, all others are text files). If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:</value>
+  </data>
+  <data name="Help401_OutputFile" xml:space="preserve">
+    <value>* %FILE% - use the name of the input file</value>
+  </data>
+  <data name="Help402_OutputDateTime" xml:space="preserve">
+    <value>* %CDATETIME% - use the local date/time of the first line</value>
+  </data>
+  <data name="Help403_OuputDate" xml:space="preserve">
+    <value>* %CDATE% - use the local date of the first line</value>
+  </data>
+  <data name="Help404_OutputTime" xml:space="preserve">
+    <value>* %CTIME% - use the local time of the first line</value>
+  </data>
+  <data name="Help405_OutputSplit" xml:space="preserve">
+    <value>* %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;</value>
+  </data>
+  <data name="Help410_Force" xml:space="preserve">
+    <value>{0}f | {1}force
+  When using {1}output, overwrite the output file if it already exists.</value>
+  </data>
+  <data name="Help415_Split" xml:space="preserve">
+    <value>{1}split{2}&lt;bytes&gt;
+  Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB.</value>
+  </data>
+  <data name="Help500_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>
-  <data name="Help405_InputFile" xml:space="preserve">
+  <data name="Help505_InputFile" xml:space="preserve">
     <value>file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available.</value>
   </data>
-  <data name="Help410_InputTcp" xml:space="preserve">
+  <data name="Help506_InputFilePcap" xml:space="preserve">
+    <value>file.pcap - read a PCAP legacy recorded file. The timestamps are obtained from the packet capture time which are expected to be UTC.</value>
+  </data>
+  <data name="Help510_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>
-  <data name="Help415_InputSerial" xml:space="preserve">
+  <data name="Help515_InputSerial" xml:space="preserve">
     <value>ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr.</value>
   </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>
   </data>
   <data name="Help805_Success" xml:space="preserve">
-    <value>0 - The program ran successfully</value>
+    <value>0 - The program ran successfully.</value>
   </data>
   <data name="Help810_OptionError" xml:space="preserve">
-    <value>1 - There was an error processing the options</value>
+    <value>1 - There was an error processing the options.</value>
   </data>
   <data name="Help811_InputUnknown" xml:space="preserve">
-    <value>2 - There was an error parsing the input URIs</value>
+    <value>2 - There was an error parsing the input URIs.</value>
   </data>
   <data name="Help812_NoFilesProcessed" xml:space="preserve">
-    <value>3 - None of the input files could be processed</value>
+    <value>3 - None of the input files could be processed.</value>
   </data>
   <data name="Help813_PartialFilesProcessed" xml:space="preserve">
-    <value>4 - Not all of the files could be processed (partial error)</value>
+    <value>4 - Not all of the files could be processed (partial error).</value>
+  </data>
+  <data name="Help814_OutputError" xml:space="preserve">
+    <value>5 - There was a problem creating the output file.</value>
   </data>
   <data name="Help899_UnknownError" xml:space="preserve">
-    <value>255 - An unhandled exception occurred</value>
+    <value>255 - An unhandled exception occurred.</value>
   </data>
 </root>

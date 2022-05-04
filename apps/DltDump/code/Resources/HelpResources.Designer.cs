@@ -127,7 +127,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}position
-        ///  Show the offset of the stream on text output.
+        ///  Show the offset of the stream on text output..
         /// </summary>
         internal static string Help320_Position {
             get {
@@ -146,7 +146,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * automatic|auto - choose based on the URI, or the file name extension.
+        ///   Looks up a localized string similar to * automatic|auto - choose based on the URI, or the file name extension..
         /// </summary>
         internal static string Help325_InputFormatAuto {
             get {
@@ -155,7 +155,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * file - interpret the URI as a file with a storage header.
+        ///   Looks up a localized string similar to * file - interpret the URI as a file with a storage header..
         /// </summary>
         internal static string Help325_InputFormatFile {
             get {
@@ -164,7 +164,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * network|net - interpret the URI as a network stream, each packet starting with the standard header.
+        ///   Looks up a localized string similar to * network|net - interpret the URI as a network stream, each packet starting with the standard header..
         /// </summary>
         internal static string Help325_InputFormatNetwork {
             get {
@@ -173,7 +173,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header.
+        ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header..
         /// </summary>
         internal static string Help325_InputFormatSerial {
             get {
@@ -203,7 +203,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}r | {1}regex{2}&lt;regex&gt;
-        ///  Search for lines that match the .NET regular expression for &lt;regex&gt;.
+        ///  Search for lines that match the .NET regular expression for &lt;regex&gt;..
         /// </summary>
         internal static string Help340_RegexSearch {
             get {
@@ -213,7 +213,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {0}i | {1}ignorecase
-        ///  If provided, the searches are made case insensitive.
+        ///  If provided, the searches are made case insensitive..
         /// </summary>
         internal static string Help345_IgnoreCase {
             get {
@@ -223,7 +223,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}ecuid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of ECU Identifiers that should match.
+        ///  Specify a list of ECU Identifiers that should match..
         /// </summary>
         internal static string Help350_EcuId {
             get {
@@ -233,7 +233,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}appid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of Application Identifiers that should match.
+        ///  Specify a list of Application Identifiers that should match..
         /// </summary>
         internal static string Help355_AppId {
             get {
@@ -243,7 +243,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}ctxid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of context identifiers that should match.
+        ///  Specify a list of context identifiers that should match..
         /// </summary>
         internal static string Help360_CtxId {
             get {
@@ -253,7 +253,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}sessionid{2}&lt;id1&gt;[,&lt;id2&gt;[,...]]
-        ///  Specify a list of session identifiers that should match. Lines that don&apos;t have a session identifier do not match.
+        ///  Specify a list of session identifiers that should match. Lines that don&apos;t have a session identifier do not match..
         /// </summary>
         internal static string Help365_SessionId {
             get {
@@ -278,7 +278,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}verbose
-        ///  Match lines that are verbose (have an extended header and the verbose bit is set).
+        ///  Match lines that are verbose (have an extended header and the verbose bit is set)..
         /// </summary>
         internal static string Help375_Verbose {
             get {
@@ -288,7 +288,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}nonverbose
-        ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message).
+        ///  Match lines that are nonverbose (have no extended header, or where the verbose bit is not set and is not a control message)..
         /// </summary>
         internal static string Help380_NonVerbose {
             get {
@@ -298,7 +298,7 @@ namespace RJCP.App.DltDump.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to {1}control
-        ///  Match lines that are a control message (including the timing message).
+        ///  Match lines that are a control message (including the timing message)..
         /// </summary>
         internal static string Help385_Control {
             get {
@@ -327,38 +327,122 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}o | {1}output{2}&lt;filename&gt;
+        ///  Write the output to the file specified. The file format is given by the extension (.dlt for DLT with storage header, all others are text files). If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:.
+        /// </summary>
+        internal static string Help400_OutputFileName {
+            get {
+                return ResourceManager.GetString("Help400_OutputFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %FILE% - use the name of the input file.
+        /// </summary>
+        internal static string Help401_OutputFile {
+            get {
+                return ResourceManager.GetString("Help401_OutputFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CDATETIME% - use the local date/time of the first line.
+        /// </summary>
+        internal static string Help402_OutputDateTime {
+            get {
+                return ResourceManager.GetString("Help402_OutputDateTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CDATE% - use the local date of the first line.
+        /// </summary>
+        internal static string Help403_OuputDate {
+            get {
+                return ResourceManager.GetString("Help403_OuputDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CTIME% - use the local time of the first line.
+        /// </summary>
+        internal static string Help404_OutputTime {
+            get {
+                return ResourceManager.GetString("Help404_OutputTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to * %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;.
+        /// </summary>
+        internal static string Help405_OutputSplit {
+            get {
+                return ResourceManager.GetString("Help405_OutputSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}f | {1}force
+        ///  When using {1}output, overwrite the output file if it already exists..
+        /// </summary>
+        internal static string Help410_Force {
+            get {
+                return ResourceManager.GetString("Help410_Force", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}split{2}&lt;bytes&gt;
+        ///  Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB..
+        /// </summary>
+        internal static string Help415_Split {
+            get {
+                return ResourceManager.GetString("Help415_Split", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
-        internal static string Help400_Input {
+        internal static string Help500_Input {
             get {
-                return ResourceManager.GetString("Help400_Input", resourceCulture);
+                return ResourceManager.GetString("Help500_Input", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to file.dlt or file:///home/user/file.dlt - read a specific file. The time stamps are read from the input file if available..
         /// </summary>
-        internal static string Help405_InputFile {
+        internal static string Help505_InputFile {
             get {
-                return ResourceManager.GetString("Help405_InputFile", resourceCulture);
+                return ResourceManager.GetString("Help505_InputFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to file.pcap - read a PCAP legacy recorded file. The timestamps are obtained from the packet capture time which are expected to be UTC..
+        /// </summary>
+        internal static string Help506_InputFilePcap {
+            get {
+                return ResourceManager.GetString("Help506_InputFilePcap", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer..
         /// </summary>
-        internal static string Help410_InputTcp {
+        internal static string Help510_InputTcp {
             get {
-                return ResourceManager.GetString("Help410_InputTcp", resourceCulture);
+                return ResourceManager.GetString("Help510_InputTcp", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr..
         /// </summary>
-        internal static string Help415_InputSerial {
+        internal static string Help515_InputSerial {
             get {
-                return ResourceManager.GetString("Help415_InputSerial", resourceCulture);
+                return ResourceManager.GetString("Help515_InputSerial", resourceCulture);
             }
         }
         
@@ -372,7 +456,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 0 - The program ran successfully.
+        ///   Looks up a localized string similar to 0 - The program ran successfully..
         /// </summary>
         internal static string Help805_Success {
             get {
@@ -381,7 +465,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1 - There was an error processing the options.
+        ///   Looks up a localized string similar to 1 - There was an error processing the options..
         /// </summary>
         internal static string Help810_OptionError {
             get {
@@ -390,7 +474,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2 - There was an error parsing the input URIs.
+        ///   Looks up a localized string similar to 2 - There was an error parsing the input URIs..
         /// </summary>
         internal static string Help811_InputUnknown {
             get {
@@ -399,7 +483,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 3 - None of the input files could be processed.
+        ///   Looks up a localized string similar to 3 - None of the input files could be processed..
         /// </summary>
         internal static string Help812_NoFilesProcessed {
             get {
@@ -408,7 +492,7 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 4 - Not all of the files could be processed (partial error).
+        ///   Looks up a localized string similar to 4 - Not all of the files could be processed (partial error)..
         /// </summary>
         internal static string Help813_PartialFilesProcessed {
             get {
@@ -417,7 +501,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 255 - An unhandled exception occurred.
+        ///   Looks up a localized string similar to 5 - There was a problem creating the output file..
+        /// </summary>
+        internal static string Help814_OutputError {
+            get {
+                return ResourceManager.GetString("Help814_OutputError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 255 - An unhandled exception occurred..
         /// </summary>
         internal static string Help899_UnknownError {
             get {

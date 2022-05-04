@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgErrorBufferTooSmall" xml:space="preserve">
+    <value>Buffer of insufficient size</value>
+  </data>
+  <data name="DomainDecoderInvalidOutputStream" xml:space="preserve">
+    <value>OutputStream doesn't support binary</value>
+  </data>
   <data name="DomainInputStreamFactoryUnknown" xml:space="preserve">
     <value>Input URI {0} not unknown</value>
   </data>
@@ -126,6 +132,39 @@
   <data name="DomainInputStreamNotOpen" xml:space="preserve">
     <value>Cannot connect, input stream has not been opened</value>
   </data>
+  <data name="DomainOutputNoOverwrite" xml:space="preserve">
+    <value>Not overwriting previously created file {0}.</value>
+  </data>
+  <data name="DomainOutputNoOverwriteInput" xml:space="preserve">
+    <value>Not overwriting the input file {0}.</value>
+  </data>
+  <data name="DomainOutputStreamFactoryUnknown" xml:space="preserve">
+    <value>Output factory type {0} is unknown</value>
+  </data>
+  <data name="DomainOutputWriterNotOpen" xml:space="preserve">
+    <value>OutputWriter File is not open.</value>
+  </data>
+  <data name="DomainOutputWriterOpen" xml:space="preserve">
+    <value>OutputWriter File is already open.</value>
+  </data>
+  <data name="DomainPcapInvalidData" xml:space="preserve">
+    <value>PCAP file is corrupted (contains invalid data)</value>
+  </data>
+  <data name="DomainPcapUnknownBlockType" xml:space="preserve">
+    <value>Unknown PCAP file format, block {0:x8} found</value>
+  </data>
+  <data name="DomainPcapUnknownLinkFormat" xml:space="preserve">
+    <value>PCAP file format with unknown link type data</value>
+  </data>
+  <data name="DomainPcapUnknownMagic" xml:space="preserve">
+    <value>Unknown PCAP file format</value>
+  </data>
+  <data name="DomainPcapUnsupportedVersion" xml:space="preserve">
+    <value>PCAP file format version {0}.{1} unsupported</value>
+  </data>
+  <data name="DomainTemplateEmptyVar" xml:space="preserve">
+    <value>Empty variable provided</value>
+  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>
@@ -134,6 +173,9 @@
   </data>
   <data name="FileOpenError_DirectoryNotFound" xml:space="preserve">
     <value>Specified path is invalid {0}</value>
+  </data>
+  <data name="FileOpenError_EmptyName" xml:space="preserve">
+    <value>File name is invalid</value>
   </data>
   <data name="FileOpenError_FileNotFound" xml:space="preserve">
     <value>File not found {0}</value>
@@ -171,8 +213,19 @@
   <data name="FilterOpenError_Retry" xml:space="preserve">
     <value>Couldn't connect to {0}. Retry {1}...</value>
   </data>
+  <data name="FilterOutputError" xml:space="preserve">
+    <value>Couldn't create the output {0}. {1}</value>
+    <comment>Occurs on exception on create</comment>
+  </data>
+  <data name="FilterOutputError_UnknownOutput" xml:space="preserve">
+    <value>Couldn't create the output {0}. Don't know how to write this file format.</value>
+    <comment>Occurs because Automatic can't guess the output format</comment>
+  </data>
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>
+  </data>
+  <data name="InfraFileNotFound" xml:space="preserve">
+    <value>File not found</value>
   </data>
   <data name="InfraFormatHangingIndentException" xml:space="preserve">
     <value>Hanging Indent must be zero or more</value>
@@ -185,6 +238,9 @@
   </data>
   <data name="InfraFormatWidthException" xml:space="preserve">
     <value>Width should be at least 10 characters including indent</value>
+  </data>
+  <data name="InfraIoFileInfoInvalidState" xml:space="preserve">
+    <value>Class is in an undefined state</value>
   </data>
   <data name="InfraNetTcpStream_NotConnected" xml:space="preserve">
     <value>Not connected</value>
@@ -213,8 +269,20 @@
   <data name="OptionInvalidFilterType" xml:space="preserve">
     <value>Unknown filter type '{0}'.</value>
   </data>
+  <data name="OptionInvalidSplit" xml:space="preserve">
+    <value>Option 'split' provided with unrecognized format '{0}'</value>
+  </data>
+  <data name="OptionInvalidSplitRange" xml:space="preserve">
+    <value>Option 'split' value out of range</value>
+  </data>
+  <data name="OptionInvalidSplitTooSmall" xml:space="preserve">
+    <value>The output file size limit cannot be less than 64kB</value>
+  </data>
   <data name="OptionsError" xml:space="preserve">
     <value>Problem with the command line.</value>
+  </data>
+  <data name="OptionSplitParseError" xml:space="preserve">
+    <value>Unexpected modifier when parsing the split</value>
   </data>
   <data name="SerialOpenError_AuthorityNotSupported" xml:space="preserve">
     <value>Cannot connect to a remote host with ser:</value>
@@ -248,6 +316,9 @@
   </data>
   <data name="VersionDltDumpCopyright" xml:space="preserve">
     <value>DltDump Version: {0}, {1}</value>
+  </data>
+  <data name="VersionNetRuntime" xml:space="preserve">
+    <value>  Runtime: {0}</value>
   </data>
   <data name="VersionTraceReader" xml:space="preserve">
     <value>  TraceReader: {0}</value>

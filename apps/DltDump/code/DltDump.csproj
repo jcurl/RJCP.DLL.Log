@@ -26,6 +26,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
+    <RollForward>LatestMinor</RollForward>
 
     <EnableDefaultItems>false</EnableDefaultItems>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -68,6 +69,24 @@
     <Compile Include="Application\HelpApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\Context.cs" />
+    <Compile Include="Domain\ContextPacket.cs" />
+    <Compile Include="Domain\Dlt\DltDumpTraceReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\DltFileTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\DltFileTraceFilterReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\DltNetworkTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\DltNetworkTraceFilterReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\DltPcapTraceDecoder.cs" />
+    <Compile Include="Domain\Dlt\DltPcapTraceReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\DltSerialTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\DltSerialTraceFilterReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\IDltTraceReaderFactory.cs" />
+    <Compile Include="Domain\Dlt\InputFormat.cs" />
+    <Compile Include="Domain\Dlt\Pcap\DltPcapNetworkTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Legacy\DltPcapLegacyDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Legacy\PcapFormat.cs" />
+    <Compile Include="Domain\Dlt\Pcap\LinkTypes.cs" />
+    <Compile Include="Domain\Dlt\Pcap\PacketDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\UnknownPcapFileFormatException.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
@@ -79,12 +98,24 @@
     <Compile Include="Domain\InputStream\DltTcpStreamFactory.cs" />
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
+    <Compile Include="Domain\IOutputStream.cs" />
+    <Compile Include="Domain\IOutputStreamFactory.cs" />
+    <Compile Include="Domain\OutputFormat.cs" />
+    <Compile Include="Domain\OutputStreamFactory.cs" />
+    <Compile Include="Domain\OutputStream\ConsoleOutput.cs" />
+    <Compile Include="Domain\OutputStream\ContextOutput.cs" />
+    <Compile Include="Domain\OutputStream\DltOutput.cs" />
+    <Compile Include="Domain\OutputStream\FilterOutput.cs" />
+    <Compile Include="Domain\OutputStream\OutputBase.cs" />
+    <Compile Include="Domain\OutputStream\OutputStreamException.cs" />
+    <Compile Include="Domain\OutputStream\OutputWriter.cs" />
+    <Compile Include="Domain\OutputStream\TextOutput.cs" />
+    <Compile Include="Domain\OutputStream\Template.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />
-    <Compile Include="Infrastructure\Dlt\DltDumpTraceReaderFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\IDltTraceReaderFactory.cs" />
-    <Compile Include="Infrastructure\Dlt\InputFormat.cs" />
+    <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
@@ -97,6 +128,18 @@
     <Compile Include="Infrastructure\Uri\UriExtensions.cs" />
     <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Native\Win32\Kernel32+ACCESS_MASK.cs" />
+    <Compile Include="Native\Win32\Kernel32+BY_HANDLE_FILE_INFORMATION.cs" />
+    <Compile Include="Native\Win32\Kernel32+CreateFileFlags.cs" />
+    <Compile Include="Native\Win32\Kernel32+CreationDisposition.cs" />
+    <Compile Include="Native\Win32\Kernel32+FileShare.cs" />
+    <Compile Include="Native\Win32\Kernel32+FILETIME.cs" />
+    <Compile Include="Native\Win32\Kernel32+FILE_ID_BOTH_DIR_INFO.cs" />
+    <Compile Include="Native\Win32\Kernel32+FILE_ID_INFO.cs" />
+    <Compile Include="Native\Win32\Kernel32+FILE_INFO_BY_HANDLE_CLASS.cs" />
+    <Compile Include="Native\Win32\Kernel32+LargeInteger.cs" />
+    <Compile Include="Native\Win32\Kernel32+SECURITY_IMPERSONATION_LEVEL.cs" />
+    <Compile Include="Native\Win32\Kernel32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>

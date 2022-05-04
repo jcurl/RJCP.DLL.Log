@@ -32,7 +32,7 @@
     {
         private readonly int m_BeforeContext;
         private readonly int m_AfterContext;
-        private readonly DltTraceLineBase[] m_Buffer;
+        private readonly ContextPacket[] m_Buffer;
         private readonly Constraint m_Filter;
         private int m_BufferStart;
         private int m_BufferLength;
@@ -60,7 +60,7 @@
             m_Filter = filter;
             m_BeforeContext = before;
             m_AfterContext = after;
-            m_Buffer = new DltTraceLineBase[before];
+            m_Buffer = new ContextPacket[before];
         }
 
         /// <summary>
@@ -77,7 +77,33 @@
 
             if (m_BeforeContext > 0 && m_AfterContextLength == 0) {
                 int p = (m_BufferStart + m_BufferLength) % m_BeforeContext;
-                m_Buffer[p] = line;
+                m_Buffer[p] = new ContextPacket(line);
+                if (m_BufferLength == m_BeforeContext) {
+                    m_BufferStart = (m_BufferStart + 1) % m_BeforeContext;
+                } else {
+                    m_BufferLength++;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks the specified line if there is a match.
+        /// </summary>
+        /// <param name="line">The line that should be checked against the filter.</param>
+        /// <param name="packet">The packet bytes associated with the line.</param>
+        /// <returns>Is <see langword="true"/> if the filter matches, <see langword="false"/> otherwise.</returns>
+        public bool Check(DltTraceLineBase line, ReadOnlySpan<byte> packet)
+        {
+            if (m_Filter.Check(line)) {
+                m_AfterContextLength = m_AfterContext;
+                return true;
+            }
+
+            if (m_BeforeContext > 0 && m_AfterContextLength == 0) {
+                int p = (m_BufferStart + m_BufferLength) % m_BeforeContext;
+                m_Buffer[p] = new ContextPacket(line, packet.ToArray());
                 if (m_BufferLength == m_BeforeContext) {
                     m_BufferStart = (m_BufferStart + 1) % m_BeforeContext;
                 } else {
@@ -92,10 +118,10 @@
         /// Gets an enumerable object to iterate over the context before the current match.
         /// </summary>
         /// <returns>An enumerable object to iterate over the context before the current match..</returns>
-        public IEnumerable<DltTraceLineBase> GetBeforeContext()
+        public IEnumerable<ContextPacket> GetBeforeContext()
         {
             if (m_BufferLength == 0) return EmptyEnumerable;
-            IEnumerable<DltTraceLineBase> result = new BeforeContext(m_Buffer, m_BufferStart, m_BufferLength);
+            IEnumerable<ContextPacket> result = new BeforeContext(m_Buffer, m_BufferStart, m_BufferLength);
             m_BufferStart = 0;
             m_BufferLength = 0;
             return result;
@@ -120,11 +146,11 @@
 
         private static readonly EmptyContext EmptyEnumerable = new EmptyContext();
 
-        private sealed class EmptyContext : IEnumerable<DltTraceLineBase>
+        private sealed class EmptyContext : IEnumerable<ContextPacket>
         {
             private static readonly EmptyContextEnumerator EmptyEnumerator = new EmptyContextEnumerator();
 
-            public IEnumerator<DltTraceLineBase> GetEnumerator()
+            public IEnumerator<ContextPacket> GetEnumerator()
             {
                 return EmptyEnumerator;
             }
@@ -134,9 +160,9 @@
                 return GetEnumerator();
             }
 
-            private sealed class EmptyContextEnumerator : IEnumerator<DltTraceLineBase>
+            private sealed class EmptyContextEnumerator : IEnumerator<ContextPacket>
             {
-                public DltTraceLineBase Current { get { return null; } }
+                public ContextPacket Current { get { return ContextPacket.Empty; } }
 
                 object IEnumerator.Current { get { return Current; } }
 
@@ -148,20 +174,20 @@
             }
         }
 
-        private sealed class BeforeContext : IEnumerable<DltTraceLineBase>
+        private sealed class BeforeContext : IEnumerable<ContextPacket>
         {
-            private readonly DltTraceLineBase[] m_Buffer;
+            private readonly ContextPacket[] m_Buffer;
             private readonly int m_BufferStart;
             private readonly int m_BufferLength;
 
-            public BeforeContext(DltTraceLineBase[] buffer, int start, int length)
+            public BeforeContext(ContextPacket[] buffer, int start, int length)
             {
                 m_Buffer = buffer;
                 m_BufferStart = start;
                 m_BufferLength = length;
             }
 
-            public IEnumerator<DltTraceLineBase> GetEnumerator()
+            public IEnumerator<ContextPacket> GetEnumerator()
             {
                 return new BeforeContextEnumerator(m_Buffer, m_BufferStart, m_BufferLength);
             }
@@ -171,21 +197,21 @@
                 return GetEnumerator();
             }
 
-            private sealed class BeforeContextEnumerator : IEnumerator<DltTraceLineBase>
+            private sealed class BeforeContextEnumerator : IEnumerator<ContextPacket>
             {
-                private readonly DltTraceLineBase[] m_Buffer;
+                private readonly ContextPacket[] m_Buffer;
                 private readonly int m_BufferStart;
                 private readonly int m_BufferLength;
                 private int m_Index;
 
-                public BeforeContextEnumerator(DltTraceLineBase[] buffer, int start, int length)
+                public BeforeContextEnumerator(ContextPacket[] buffer, int start, int length)
                 {
                     m_Buffer = buffer;
                     m_BufferStart = start;
                     m_BufferLength = length;
                 }
 
-                public DltTraceLineBase Current { get; private set; }
+                public ContextPacket Current { get; private set; }
 
                 object IEnumerator.Current { get { return Current; } }
 

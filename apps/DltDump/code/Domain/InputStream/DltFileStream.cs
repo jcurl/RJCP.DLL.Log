@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using Resources;
 
     /// <summary>
@@ -25,9 +25,17 @@
         {
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
+            if (string.IsNullOrEmpty(fileName))
+                throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 
             Connection = fileName;
             m_FileName = fileName;
+
+            if (Path.GetExtension(fileName).Equals(".pcap", StringComparison.OrdinalIgnoreCase)) {
+                SuggestedFormat = InputFormat.Pcap;
+            } else {
+                SuggestedFormat = InputFormat.File;
+            }
         }
 
         /// <summary>
@@ -56,7 +64,7 @@
         /// Gets the suggested format that should be used for instantiating a decoder.
         /// </summary>
         /// <value>The suggested format, which is <see cref="InputFormat.File"/>.</value>
-        public InputFormat SuggestedFormat { get { return InputFormat.File; } }
+        public InputFormat SuggestedFormat { get; }
 
         /// <summary>
         /// Gets a value indicating if this input stream requires a connection.

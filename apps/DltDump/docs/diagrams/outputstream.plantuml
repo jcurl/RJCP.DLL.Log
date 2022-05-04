@@ -1,0 +1,76 @@
+@startuml Domain.OutputStreamFactory
+
+interface IDisposable
+
+enum OutputFormat {
+    Automatic
+    Console
+    Text
+    Dlt
+}
+
+interface IOutputStreamFactory {
+    Split: int
+    Force: bool
+    Create(fileType: OutputFormat, string outputFile): IOutputStream
+}
+
+OutputStreamFactory -r-> DltOutput : <<instantiates>>
+OutputStreamFactory -r-> TextOutput : <<instantiates>>
+OutputStreamFactory -r-> ConsoleOutput : <<instantiates>>
+
+IOutputStreamFactory -u- OutputFormat
+
+class OutputStreamFactory
+IOutputStreamFactory <|.d. OutputStreamFactory
+
+interface IOutputStream {
+    SupportsBinary: bool
+    SetInput(fileName: string, inputFormat: InputFormat)
+    Write(line: DltTraceLineBase)
+    Write(line: DltTraceLineBase, packet: ReadOnlySpan<byte>)
+    Flush()
+}
+
+IOutputStream .r.|> IDisposable
+
+class ConsoleOutput
+IOutputStream <|.d. ConsoleOutput
+
+class TextOutput
+IOutputStream <|.d. TextOutput
+
+class DltOutput
+IOutputStream <|.d. DltOutput
+
+class OutputBase {
+    Force: bool
+    Split: int
+    SetInput(fileName: string)
+    Write(timeStamp: DateTime, line: string)
+    Write(timeStamp: DateTime, buffer: ReadOnlySpan<byte>)
+    Write(timeStamp: DateTime, header: ReadOnlySpan<byte>, buffer: ReadOnlySpan<byte>)
+    Flush()
+    Dispose()
+}
+
+class OutputWriter {
+    Length: long
+    IsOpen: bool
+    Open(fileName: string, mode: FileMode)
+    Write(buffer: ReadOnlySpan<byte>)
+    Flush()
+    Close()
+    Dispose()
+}
+OutputWriter .u.|> IDisposable
+OutputBase .u.|> IDisposable
+
+TextOutput -d-|> OutputBase
+DltOutput -d-|> OutputBase
+
+OutputBase *-d- OutputWriter
+OutputWriter *-r- FileStream
+FileStream .u.|> IDisposable
+
+@enduml

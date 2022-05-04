@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ContextBenchmark.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="NullOutput.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
 

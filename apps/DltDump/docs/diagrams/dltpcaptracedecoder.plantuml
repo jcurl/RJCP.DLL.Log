@@ -1,0 +1,29 @@
+@startuml DltPcapTraceDecoder
+
+class DltPcapTraceDecoder
+class DltPcapLegacyDecoder
+class DltPcapNgDecoder
+'class DltLineBuilder
+'interface ITraceDecoder<DltTraceLineBase>
+
+DltPcapTraceDecoder *-d- DltPcapLegacyDecoder
+DltPcapTraceDecoder *-d- DltPcapNgDecoder
+DltPcapLegacyDecoder -r- DltPcapNgDecoder : <<xor>>
+
+class PcapFormat
+DltPcapLegacyDecoder *-d- PcapFormat
+DltPcapLegacyDecoder *-d- PacketDecoder
+
+DltPcapNgDecoder *-d- PacketDecoder
+
+class DltPcapNetworkTraceFilterDecoder {
+    PacketTimeStamp: DateTime
+}
+PacketDecoder *-d- DltPcapNetworkTraceFilterDecoder
+
+class DltTraceDecoder
+DltPcapNetworkTraceFilterDecoder -l-|> DltTraceDecoder
+
+interface IOutputStream
+DltPcapNetworkTraceFilterDecoder o-r- IOutputStream
+@enduml

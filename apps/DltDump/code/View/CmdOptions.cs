@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using Infrastructure.Dlt;
+    using System.Text.RegularExpressions;
+    using Domain.Dlt;
     using Resources;
     using RJCP.Core.CommandLine;
     using RJCP.Diagnostics.Log.Dlt;
@@ -62,6 +63,22 @@
         // This is set by reflection
         private string m_InputFormat;
 #pragma warning restore CS0649
+
+        /// <summary>
+        /// Gets the name of the output file, or <see langword="null"/> if none.
+        /// </summary>
+        /// <value>The name of the output file, or <see langword="null"/> if none.</value>
+        [Option('o', "output")]
+        public string OutputFileName { get; private set; }
+
+        /// <summary>
+        /// Allows force overwrite of the output file.
+        /// </summary>
+        /// <value>
+        /// Force overwrite if <see langword="true"/>; otherwise, raise errors with <see langword="false"/>.
+        /// </value>
+        [Option('f', "force")]
+        public bool Force { get; private set; }
 
         /// <summary>
         /// Gets the input format.
@@ -199,12 +216,41 @@
         public int AfterContext { get; private set; }
 
         /// <summary>
+        /// Gets or sets the number of bytes when to split the output.
+        /// </summary>
+        /// <value>The number of bytes for when to split the output file based on size.</value>
+        [Option("split")]
+        private string SplitString { get; set; }
+
+        /// <summary>
+        /// The size in bytes, when to split the output file.
+        /// </summary>
+        /// <value>The size in bytes, when to split the output file.</value>
+        public long Split { get; private set; }
+
+        /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
         /// <value>The input DLT streams to read.</value>
         public IReadOnlyList<string> Arguments { get { return m_Arguments; } }
 
         public void Check()
+        {
+            CheckInputFormat();
+            CheckContext();
+            CheckSplit();
+
+            try {
+                // Interpret the strings and convert to the correct DltType.
+                foreach (string dltTypeFilter in m_DltTypeFilters) {
+                    m_DltType.Add(GetDltType(dltTypeFilter));
+                }
+            } catch (ArgumentException ex) {
+                throw new OptionFormatException("type", ex.Message, ex);
+            }
+        }
+
+        private void CheckInputFormat()
         {
             if (string.IsNullOrEmpty(m_InputFormat)) {
                 InputFormat = InputFormat.Automatic;
@@ -221,24 +267,64 @@
                 case "ser":
                     InputFormat = InputFormat.Serial;
                     break;
+                case "pcap":
+                case "pcapng":
+                    InputFormat = InputFormat.Pcap;
+                    break;
                 default:
                     throw new OptionFormatException("format");
                 }
             }
+        }
 
+        private void CheckContext()
+        {
             if (BeforeContext < 0)
                 throw new OptionFormatException("before-context");
             if (AfterContext < 0)
                 throw new OptionFormatException("after-context");
+        }
 
-            try {
-                // Interpret the strings and convert to the correct DltType.
-                foreach (string dltTypeFilter in m_DltTypeFilters) {
-                    m_DltType.Add(GetDltType(dltTypeFilter));
+        private void CheckSplit()
+        {
+            Split = 0;
+            if (string.IsNullOrWhiteSpace(SplitString)) return;
+
+            long split = -1;
+            Match splitMatch = Regex.Match(SplitString, @"^(\d+)(([kKmMgG])?[bB]?)$");
+            if (splitMatch.Success) {
+                try {
+                    split = int.Parse(splitMatch.Groups[1].Value);
+                    if (splitMatch.Groups[3].Success) {
+                        switch (splitMatch.Groups[3].Value[0]) {
+                        case 'k':
+                        case 'K':
+                            split *= 1024;
+                            break;
+                        case 'm':
+                        case 'M':
+                            split = split * 1024 * 1024;
+                            break;
+                        case 'g':
+                        case 'G':
+                            split = split * 1024 * 1024 * 1024;
+                            break;
+                        default:
+                            throw new InvalidOperationException(AppResources.OptionSplitParseError);
+                        }
+                    }
+                } catch (OverflowException) {
+                    throw new OptionFormatException("split", AppResources.OptionInvalidSplitRange, null);
                 }
-            } catch (ArgumentException ex) {
-                throw new OptionFormatException("type", ex.Message, ex);
             }
+            if (split < 0) {
+                string message = string.Format(AppResources.OptionInvalidSplit, SplitString);
+                throw new OptionFormatException("split", message, null);
+            }
+            if (split < 65536)
+                throw new OptionFormatException("split", AppResources.OptionInvalidSplitTooSmall, null);
+
+            Split = split;
         }
 
         private static DltType GetDltType(string dltTypeFilter)

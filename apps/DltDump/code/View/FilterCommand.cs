@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application;
+    using Domain;
     using RJCP.Diagnostics.Log.Dlt;
 
     public class FilterCommand : ICommand
@@ -23,6 +24,10 @@
             FilterConfig config = new FilterConfig(m_Options.Arguments) {
                 ShowPosition = m_Options.Position,
                 InputFormat = m_Options.InputFormat,
+                OutputFileName = m_Options.OutputFileName,
+                Force = m_Options.Force,
+                Split = m_Options.Split,
+                OutputFormat = OutputFormat.Automatic,
                 ConnectRetries = m_Options.ConnectRetries,
                 BeforeContext = m_Options.BeforeContext,
                 AfterContext = m_Options.AfterContext

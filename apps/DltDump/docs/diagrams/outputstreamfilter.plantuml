@@ -1,0 +1,20 @@
+@startuml Domain.OutputStreamFilter
+
+interface IOutputStream {
+    SupportsBinary: bool
+    Write(line: DltTraceLineBase)
+    Write(line: DltTraceLineBase, packet: ReadOnlySpan<byte>)
+    SetInput(fileName: string, inputFormat: InputFormat)
+}
+
+class FilterOutput {
+    .ctor(filter: Constraint, output: IOutputStream)
+}
+IOutputStream <|.d. FilterOutput
+
+class ContextOutput {
+    .ctor(filter: Constraint, int before,\n int after, output: IOutputStream)
+}
+IOutputStream <|.d. ContextOutput
+
+@enduml

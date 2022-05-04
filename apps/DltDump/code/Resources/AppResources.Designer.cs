@@ -61,6 +61,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buffer of insufficient size.
+        /// </summary>
+        internal static string ArgErrorBufferTooSmall {
+            get {
+                return ResourceManager.GetString("ArgErrorBufferTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputStream doesn&apos;t support binary.
+        /// </summary>
+        internal static string DomainDecoderInvalidOutputStream {
+            get {
+                return ResourceManager.GetString("DomainDecoderInvalidOutputStream", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input URI {0} not unknown.
         /// </summary>
         internal static string DomainInputStreamFactoryUnknown {
@@ -88,6 +106,105 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not overwriting previously created file {0}..
+        /// </summary>
+        internal static string DomainOutputNoOverwrite {
+            get {
+                return ResourceManager.GetString("DomainOutputNoOverwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not overwriting the input file {0}..
+        /// </summary>
+        internal static string DomainOutputNoOverwriteInput {
+            get {
+                return ResourceManager.GetString("DomainOutputNoOverwriteInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output factory type {0} is unknown.
+        /// </summary>
+        internal static string DomainOutputStreamFactoryUnknown {
+            get {
+                return ResourceManager.GetString("DomainOutputStreamFactoryUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputWriter File is not open..
+        /// </summary>
+        internal static string DomainOutputWriterNotOpen {
+            get {
+                return ResourceManager.GetString("DomainOutputWriterNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutputWriter File is already open..
+        /// </summary>
+        internal static string DomainOutputWriterOpen {
+            get {
+                return ResourceManager.GetString("DomainOutputWriterOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file is corrupted (contains invalid data).
+        /// </summary>
+        internal static string DomainPcapInvalidData {
+            get {
+                return ResourceManager.GetString("DomainPcapInvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown PCAP file format, block {0:x8} found.
+        /// </summary>
+        internal static string DomainPcapUnknownBlockType {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownBlockType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file format with unknown link type data.
+        /// </summary>
+        internal static string DomainPcapUnknownLinkFormat {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownLinkFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown PCAP file format.
+        /// </summary>
+        internal static string DomainPcapUnknownMagic {
+            get {
+                return ResourceManager.GetString("DomainPcapUnknownMagic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCAP file format version {0}.{1} unsupported.
+        /// </summary>
+        internal static string DomainPcapUnsupportedVersion {
+            get {
+                return ResourceManager.GetString("DomainPcapUnsupportedVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty variable provided.
+        /// </summary>
+        internal static string DomainTemplateEmptyVar {
+            get {
+                return ResourceManager.GetString("DomainTemplateEmptyVar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {
@@ -111,6 +228,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string FileOpenError_DirectoryNotFound {
             get {
                 return ResourceManager.GetString("FileOpenError_DirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name is invalid.
+        /// </summary>
+        internal static string FileOpenError_EmptyName {
+            get {
+                return ResourceManager.GetString("FileOpenError_EmptyName", resourceCulture);
             }
         }
         
@@ -223,11 +349,38 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create the output {0}. {1}.
+        /// </summary>
+        internal static string FilterOutputError {
+            get {
+                return ResourceManager.GetString("FilterOutputError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create the output {0}. Don&apos;t know how to write this file format..
+        /// </summary>
+        internal static string FilterOutputError_UnknownOutput {
+            get {
+                return ResourceManager.GetString("FilterOutputError_UnknownOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internal Error: Decoding this format is not implemented.
         /// </summary>
         internal static string InfraDltInvalidFormat {
             get {
                 return ResourceManager.GetString("InfraDltInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not found.
+        /// </summary>
+        internal static string InfraFileNotFound {
+            get {
+                return ResourceManager.GetString("InfraFileNotFound", resourceCulture);
             }
         }
         
@@ -264,6 +417,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string InfraFormatWidthException {
             get {
                 return ResourceManager.GetString("InfraFormatWidthException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Class is in an undefined state.
+        /// </summary>
+        internal static string InfraIoFileInfoInvalidState {
+            get {
+                return ResourceManager.GetString("InfraIoFileInfoInvalidState", resourceCulture);
             }
         }
         
@@ -349,11 +511,47 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option &apos;split&apos; provided with unrecognized format &apos;{0}&apos;.
+        /// </summary>
+        internal static string OptionInvalidSplit {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;split&apos; value out of range.
+        /// </summary>
+        internal static string OptionInvalidSplitRange {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplitRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The output file size limit cannot be less than 64kB.
+        /// </summary>
+        internal static string OptionInvalidSplitTooSmall {
+            get {
+                return ResourceManager.GetString("OptionInvalidSplitTooSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Problem with the command line..
         /// </summary>
         internal static string OptionsError {
             get {
                 return ResourceManager.GetString("OptionsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected modifier when parsing the split.
+        /// </summary>
+        internal static string OptionSplitParseError {
+            get {
+                return ResourceManager.GetString("OptionSplitParseError", resourceCulture);
             }
         }
         
@@ -453,6 +651,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string VersionDltDumpCopyright {
             get {
                 return ResourceManager.GetString("VersionDltDumpCopyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   Runtime: {0}.
+        /// </summary>
+        internal static string VersionNetRuntime {
+            get {
+                return ResourceManager.GetString("VersionNetRuntime", resourceCulture);
             }
         }
         

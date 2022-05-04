@@ -3,8 +3,9 @@
     using System;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Dlt;
     using Domain.InputStream;
-    using Infrastructure.Dlt;
+    using Domain.OutputStream;
     using Resources;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Constraints;
@@ -27,39 +28,29 @@
             if (!CheckInputs())
                 return ExitCode.InputError;
 
-            Constraint filter = m_Config.GetFilter();
-            Context context = null;
-            if (filter != null && (m_Config.BeforeContext > 0 || m_Config.AfterContext > 0)) {
-                context = new Context(filter, m_Config.BeforeContext, m_Config.AfterContext);
-            }
+            Global.Instance.OutputStreamFactory.Force = m_Config.Force;
+            Global.Instance.OutputStreamFactory.Split = m_Config.Split;
+
             int processed = 0;
-            foreach (string uri in m_Config.Input) {
-                bool retries;
-                bool connected = false;
-                do {
-                    using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
-                        if (inputStream == null) {
-                            retries = false;
-                            continue;
-                        }
-                        retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
+            using (IOutputStream output = GetOutputStream()) {
+                if (output == null) return ExitCode.OutputError;
+                Global.Instance.DltReaderFactory.OutputStream = output;
 
-                        using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
-                            if (decoder == null) {
-                                retries = false;
-                                continue;
-                            }
-
-                            connected = true;
-                            if (context != null) {
-                                await LoopContext(decoder, context);
-                            } else {
-                                await LoopFilter(decoder, filter);
-                            }
-                        }
+                // Ensure our inputs are not overwritten.
+                if (output is OutputBase outputBase) {
+                    foreach (string uri in m_Config.Input) {
+                        outputBase.AddProtectedFile(uri);
                     }
-                } while (retries);
-                if (connected) processed++;
+                }
+
+                foreach (string uri in m_Config.Input) {
+                    try {
+                        bool connected = await ProcessInput(uri, output);
+                        if (connected) processed++;
+                    } catch (OutputStreamException ex) {
+                        Terminal.WriteLine(ex.Message);
+                    }
+                }
             }
 
             if (processed == 0) return ExitCode.NoFilesProcessed;
@@ -67,45 +58,36 @@
             return ExitCode.Success;
         }
 
-        private async Task LoopFilter(ITraceReader<DltTraceLineBase> decoder, Constraint filter)
+        private async Task<bool> ProcessInput(string uri, IOutputStream output)
         {
-            DltTraceLineBase line;
+            bool retries;
+            bool connected = false;
             do {
-                line = await decoder.GetLineAsync();
-                if (line == null) continue;
-
-                bool print = filter == null || filter.Check(line);
-                if (!print) continue;
-
-                WriteLine(line, m_Config.ShowPosition);
-            } while (line != null);
-        }
-
-        private async Task LoopContext(ITraceReader<DltTraceLineBase> decoder, Context context)
-        {
-            DltTraceLineBase line;
-            do {
-                line = await decoder.GetLineAsync();
-                if (line == null) continue;
-
-                if (context.Check(line)) {
-                    foreach (DltTraceLineBase beforeLine in context.GetBeforeContext()) {
-                        WriteLine(beforeLine, m_Config.ShowPosition);
+                using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
+                    if (inputStream == null) {
+                        retries = false;
+                        continue;
                     }
-                    WriteLine(line, m_Config.ShowPosition);
-                } else if (context.IsAfterContext()) {
-                    WriteLine(line, m_Config.ShowPosition);
-                }
-            } while (line != null);
-        }
 
-        private static void WriteLine(DltTraceLineBase line, bool showPosition)
-        {
-            if (showPosition) {
-                Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
-            } else {
-                Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
-            }
+                    retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
+                    using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
+                        if (decoder == null) {
+                            retries = false;
+                            continue;
+                        }
+
+                        output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
+
+                        connected = true;
+                        DltTraceLineBase line;
+                        do {
+                            line = await decoder.GetLineAsync();
+                            if (line != null) output.Write(line);
+                        } while (line != null);
+                    }
+                }
+            } while (retries);
+            return connected;
         }
 
         private bool CheckInputs()
@@ -174,6 +156,42 @@
             }
         }
 
+        private IOutputStream GetOutputStream()
+        {
+            IOutputStream output = null;
+            try {
+                output = Global.Instance.OutputStreamFactory.Create(m_Config.OutputFormat, m_Config.OutputFileName);
+                if (output == null) {
+                    Terminal.WriteLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");
+                    return null;
+                }
+
+                // Configure the output streams depending on the options.
+                if (output is ConsoleOutput consoleOutput) {
+                    consoleOutput.ShowPosition = m_Config.ShowPosition;
+                } else if (output is TextOutput textOutput) {
+                    textOutput.ShowPosition = m_Config.ShowPosition;
+                }
+
+                Constraint filter = m_Config.GetFilter();
+                if (filter == null) return output;
+
+                if (m_Config.BeforeContext > 0 || m_Config.AfterContext > 0) {
+                    return new ContextOutput(filter,
+                        m_Config.BeforeContext, m_Config.AfterContext, output);
+                } else {
+                    return new FilterOutput(filter, output);
+                }
+            } catch (Exception ex) {
+                if (output != null) output.Dispose();
+
+                Terminal.WriteLine(AppResources.FilterOutputError,
+                    m_Config.OutputFileName ?? "(none)",
+                    ex.Message);
+                throw;
+            }
+        }
+
         private async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
         {
             switch (m_Config.InputFormat) {
@@ -182,6 +200,7 @@
                 Global.Instance.DltReaderFactory.OnlineMode = inputStream.IsLiveStream;
                 break;
             case InputFormat.File:
+            case InputFormat.Pcap:
                 Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
                 Global.Instance.DltReaderFactory.OnlineMode = false;
                 break;

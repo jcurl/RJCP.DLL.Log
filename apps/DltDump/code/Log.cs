@@ -10,10 +10,13 @@
     {
         public static LogSource App { get; }
 
+        public static LogSource Pcap { get; }
+
         static Log()
         {
             LogSource.SetLoggerFactory(GetLoggerFactory());
             App = new LogSource("DltDump");
+            Pcap = new LogSource("RJCP.Diagnostics.Log.Dlt");
         }
 
         private static ILoggerFactory GetLoggerFactory()

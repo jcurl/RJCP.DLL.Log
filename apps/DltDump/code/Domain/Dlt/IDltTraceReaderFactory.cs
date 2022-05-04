@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump.Infrastructure.Dlt
+﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
@@ -22,5 +22,16 @@
         /// <see langword="false"/>. Formats with a storage header ignore this field.
         /// </value>
         bool OnlineMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output stream to use when instantiating.
+        /// </summary>
+        /// <value>The output stream.</value>
+        /// <remarks>
+        /// When instantiating via <see cref="CreateAsync(string)"/>, the <see cref="IOutputStream.SupportsBinary"/> is
+        /// used to determine if this object should be injected or not. If this object is <see langword="null"/>, then
+        /// no <see cref="IOutputStream"/> is used.
+        /// </remarks>
+        IOutputStream OutputStream { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.InputStream
 {
     using System;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using NUnit.Framework;
 
     [TestFixture]

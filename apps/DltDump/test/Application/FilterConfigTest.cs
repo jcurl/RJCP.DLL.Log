@@ -2,7 +2,7 @@
 {
     using System;
     using Diagnostics.Log.Dlt;
-    using Infrastructure.Dlt;
+    using Domain.Dlt;
     using NUnit.Framework;
     using TestResources;
 

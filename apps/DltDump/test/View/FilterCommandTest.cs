@@ -4,8 +4,8 @@
     using System.IO;
     using Diagnostics.Log.Dlt;
     using Domain;
+    using Domain.Dlt;
     using Domain.InputStream;
-    using Infrastructure.Dlt;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -49,6 +49,7 @@
 
         private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
         private readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
+        private readonly string EmptyPcap = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.pcap");
 
         #region Input File
         [Test]
@@ -206,7 +207,9 @@
         [TestCase("net", InputFormat.Network, InputFormat.Network)]
         [TestCase("automatic", InputFormat.Automatic, InputFormat.File)]
         [TestCase("auto", InputFormat.Automatic, InputFormat.File)]
-        public void SetInputFormat(string option, InputFormat result, InputFormat decodeFormat)
+        [TestCase("pcap", InputFormat.Pcap, InputFormat.Pcap)]
+        [TestCase("pcapng", InputFormat.Pcap, InputFormat.Pcap)]
+        public void SetInputFormatDlt(string option, InputFormat result, InputFormat decodeFormat)
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
@@ -214,6 +217,35 @@
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", option), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                Assert.That(cmdOptions.InputFormat, Is.EqualTo(result));
+
+                // This shows that the DltReaderFactory got the command line option when parsing (it only shows the last
+                // instance that was instantiated).
+                Assert.That(Global.Instance.DltReaderFactory.InputFormat, Is.EqualTo(decodeFormat));
+            }
+        }
+
+        [TestCase("file", InputFormat.File, InputFormat.File)]
+        [TestCase("File", InputFormat.File, InputFormat.File)]
+        [TestCase("FILE", InputFormat.File, InputFormat.File)]
+        [TestCase("serial", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("ser", InputFormat.Serial, InputFormat.Serial)]
+        [TestCase("network", InputFormat.Network, InputFormat.Network)]
+        [TestCase("net", InputFormat.Network, InputFormat.Network)]
+        [TestCase("automatic", InputFormat.Automatic, InputFormat.Pcap)]
+        [TestCase("auto", InputFormat.Automatic, InputFormat.Pcap)]
+        [TestCase("pcap", InputFormat.Pcap, InputFormat.Pcap)]
+        [TestCase("pcapng", InputFormat.Pcap, InputFormat.Pcap)]
+        public void SetInputFormatPcap(string option, InputFormat result, InputFormat decodeFormat)
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("format", option), EmptyPcap
                 }), Is.EqualTo(ExitCode.Success));
 
                 Assert.That(cmdOptions.InputFormat, Is.EqualTo(result));
@@ -1088,6 +1120,235 @@
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('A', "xx"), EmptyFile
                 }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+        #endregion
+
+        #region Output Files
+        [Test]
+        public void OutputFileEmpty()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("output", ""), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void OutputFileConsole()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "CON:"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("CON:"));
+            }
+        }
+
+        [Test]
+        public void OutputFileConsoleStdOut()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "/dev/stdout"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("/dev/stdout"));
+            }
+        }
+
+        [Test]
+        public void OutputTextFileName()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+            }
+        }
+
+        [Test]
+        public void OutputDltFileName()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.dlt"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.dlt"));
+            }
+        }
+
+        [Test]
+        public void OutputTextFileNameForce()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("force"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Force, Is.True);
+            }
+        }
+        #endregion
+
+        #region Split
+        [Test]
+        public void SplitInteger()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "102400"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Split, Is.EqualTo(102400));
+            }
+        }
+
+        [TestCase("65536", 65536)]
+        [TestCase("65536b", 65536)]
+        [TestCase("65536B", 65536)]
+        [TestCase("100k", 100 << 10)]
+        [TestCase("100K", 100 << 10)]
+        [TestCase("100kB", 100 << 10)]
+        [TestCase("100kb", 100 << 10)]
+        [TestCase("100KB", 100 << 10)]
+        [TestCase("100Kb", 100 << 10)]
+        [TestCase("10m", 10 << 20)]
+        [TestCase("10M", 10 << 20)]
+        [TestCase("10mB", 10 << 20)]
+        [TestCase("10mb", 10 << 20)]
+        [TestCase("10MB", 10 << 20)]
+        [TestCase("10Mb", 10 << 20)]
+        [TestCase("2g", (long)2 << 30)]
+        [TestCase("2G", (long)2 << 30)]
+        [TestCase("2gB", (long)2 << 30)]
+        [TestCase("2gb", (long)2 << 30)]
+        [TestCase("2GB", (long)2 << 30)]
+        [TestCase("2Gb", (long)2 << 30)]
+        public void SplitIntegerModifier(string split, long value)
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", split), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+
+                // The command options don't really matter for FilterCommand, but useful to see that the options were
+                // properly generated.
+                Assert.That(cmdOptions.OutputFileName, Is.EqualTo("output.txt"));
+                Assert.That(cmdOptions.Split, Is.EqualTo(value));
+
+                // When the `FilterApp` runs, it gets the split, and gives it to the factory. Here we see that the value
+                // was converted from the command line and given to the `FilterApp`.
+                Assert.That(Global.Instance.OutputStreamFactory.Split, Is.EqualTo(value));
+            }
+        }
+
+        [Test]
+        public void SplitNegativeInteger()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "-102400"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [Test]
+        public void SplitUnknownModifier()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "10E"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [TestCase("0")]
+        [TestCase("10")]
+        [TestCase("65535")]
+        public void SplitTooSmall(string value)
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", value), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
+            }
+        }
+
+        [Test]
+        public void SplitOverflow()
+        {
+            using (TestApplication global = new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    ShortOpt('o', "output.txt"), LongOpt("split", "99999999999999999999999999999999999999999"), EmptyFile
+                }), Is.EqualTo(ExitCode.OptionsError));
+
+                global.WriteStd();
             }
         }
         #endregion
