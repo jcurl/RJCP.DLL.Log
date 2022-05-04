@@ -5,6 +5,8 @@
     using System.Globalization;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Constraints;
+    using RJCP.Diagnostics.Log.Dlt.Args;
 
     public static class Program
     {
@@ -23,9 +25,19 @@
                             string appid = line.Features.ApplicationId ? line.ApplicationId : "----";
                             string ctxid = line.Features.ContextId ? line.ContextId : "----";
 
-                            Console.WriteLine("{0} {1,4} {2,4} {3,4} : {4}",
-                                time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture),
-                                ecuid, appid, ctxid, line.Length);
+                            Constraint verbose = new Constraint().DltIsControl().Or.DltIsVerbose(true).End();
+
+                            if (verbose.Check(line)) {
+                                Console.WriteLine("{0} {1,4} {2,4} {3,4} : {4}",
+                                    time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture),
+                                    ecuid, appid, ctxid, line.Length);
+                            } else {
+                                DltTraceLine traceLine = (DltTraceLine)line;
+                                Console.WriteLine("{0} {1,4} {2,4} {3,4} : {4} (message id = {5})",
+                                    time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture),
+                                    ecuid, appid, ctxid, traceLine.Length,
+                                    ((NonVerboseDltArg)traceLine.Arguments[0]).MessageId);
+                            }
                         }
                     } while (line != null);
                 }
