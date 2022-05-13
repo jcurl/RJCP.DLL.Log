@@ -26,8 +26,19 @@
 
         private PacketDecoder m_Decoder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapLegacyDecoder"/> class without an output stream or
+        /// filter.
+        /// </summary>
         public DltPcapLegacyDecoder() { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapLegacyDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="outputStream"/> is <see langword="null"/>.
+        /// </exception>
         public DltPcapLegacyDecoder(IOutputStream outputStream)
         {
             if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));

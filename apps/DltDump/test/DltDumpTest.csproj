@@ -93,6 +93,7 @@
     <Compile Include="Domain\TestInputStreamFactory.cs" />
     <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="GlobalLogger.cs" />
+    <Compile Include="Infrastructure\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />

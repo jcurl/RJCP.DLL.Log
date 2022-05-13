@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Domain.OutputStream;
+    using Infrastructure;
     using NUnit.Framework;
     using RJCP.Core;
     using RJCP.Diagnostics.Log;
@@ -100,11 +101,6 @@
             return lines;
         }
 
-        private static long TicksPerNanoSecond(long ns)
-        {
-            return ns * TimeSpan.TicksPerSecond / 1000000000;
-        }
-
         [Test]
         public void NullOutputStream()
         {
@@ -139,7 +135,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected =
-                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(TicksPerNanoSecond(100000));
+                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddNanoSeconds(100000);
                     DateTime converted = legacy.Format.GetTimeStamp(0, 100);
                     Assert.That(converted, Is.EqualTo(expected));
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
@@ -176,7 +172,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected =
-                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddTicks(TicksPerNanoSecond(100));
+                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddNanoSeconds(100);
                     DateTime converted = legacy.Format.GetTimeStamp(0, 100);
                     Assert.That(converted, Is.EqualTo(expected));
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
@@ -557,20 +553,6 @@
             }
         }
 
-        private static TimeSpan GetTimeSpan(int seconds, int microseconds)
-        {
-            long ticks = seconds * TimeSpan.TicksPerSecond +
-                         microseconds * TimeSpan.TicksPerSecond / 1000000;
-            return new TimeSpan(ticks);
-        }
-
-        private static DateTime GetDateTime(int year, int month, int day, int hour, int minutes, int seconds,
-            int microseconds)
-        {
-            long ticks = microseconds * TimeSpan.TicksPerSecond / 1000000;
-            return new DateTime(year, month, day, hour, minutes, seconds, DateTimeKind.Utc).AddTicks(ticks);
-        }
-
         private static readonly DltTraceLine PcapLine1 =
             new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
                 EcuId = "ECU1",
@@ -580,9 +562,9 @@
                 Line = 0,
                 Count = 11,
                 Type = DltType.LOG_INFO,
-                TimeStamp = GetDateTime(2020, 6, 26, 13, 55, 48, 802045),
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
                 SessionId = 910,
-                DeviceTimeStamp = GetTimeSpan(8, 711400),
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
                 Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
                            DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
                            DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
@@ -598,9 +580,9 @@
                 Line = 0,
                 Count = 12,
                 Type = DltType.LOG_INFO,
-                TimeStamp = GetDateTime(2020, 6, 26, 13, 55, 48, 802045),
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
                 SessionId = 910,
-                DeviceTimeStamp = GetTimeSpan(8, 711500),
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
                 Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
                            DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
                            DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
@@ -616,9 +598,9 @@
                 Line = 0,
                 Count = 13,
                 Type = DltType.LOG_INFO,
-                TimeStamp = GetDateTime(2020, 6, 26, 13, 55, 50, 806141),
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
                 SessionId = 910,
-                DeviceTimeStamp = GetTimeSpan(8, 711400),
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
                 Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
                            DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
                            DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
@@ -634,9 +616,9 @@
                 Line = 0,
                 Count = 14,
                 Type = DltType.LOG_INFO,
-                TimeStamp = GetDateTime(2020, 6, 26, 13, 55, 50, 806141),
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
                 SessionId = 910,
-                DeviceTimeStamp = GetTimeSpan(8, 711500),
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
                 Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
                            DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
                            DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
@@ -695,7 +677,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(TicksPerNanoSecond(100000));
+                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -781,7 +763,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(TicksPerNanoSecond(100000));
+                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -888,7 +870,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(TicksPerNanoSecond(100000));
+                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -959,7 +941,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(TicksPerNanoSecond(100000));
+                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
