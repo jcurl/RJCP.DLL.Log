@@ -62,6 +62,11 @@
     <Compile Include="Domain\Dlt\DltTraceReaderFactoryTest.cs" />
     <Compile Include="Domain\Dlt\LineTraceReader.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapLegacyDecoderTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\Options\FcsLengthOptionTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\Options\SpeedOptionTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\Options\StringOptionTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\Options\TimeResolutionOptionTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\PcapOptionsTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\PacketDecoderTest.cs" />
     <Compile Include="Domain\Dlt\TestDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\TraceReaderAccessor.cs" />

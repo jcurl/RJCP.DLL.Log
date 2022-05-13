@@ -367,6 +367,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection is read only.
+        /// </summary>
+        internal static string InfraCollectionReadOnly {
+            get {
+                return ResourceManager.GetString("InfraCollectionReadOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Internal Error: Decoding this format is not implemented.
         /// </summary>
         internal static string InfraDltInvalidFormat {

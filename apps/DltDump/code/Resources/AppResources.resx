@@ -221,6 +221,9 @@
     <value>Couldn't create the output {0}. Don't know how to write this file format.</value>
     <comment>Occurs because Automatic can't guess the output format</comment>
   </data>
+  <data name="InfraCollectionReadOnly" xml:space="preserve">
+    <value>Collection is read only</value>
+  </data>
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>
   </data>
