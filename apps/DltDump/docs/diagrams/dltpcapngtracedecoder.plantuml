@@ -1,0 +1,70 @@
+@startuml DltPcapNgTraceDecoder
+
+class DltPcapNgDecoder
+
+rectangle {
+    interface IPcapBlock {
+        BlockId: int
+        Length: int
+    }
+
+    class BlockReader {
+        -m_IsLittleEndian: bool
+        +GetHeader(buffer: ReadOnlySpan<byte>): PcapBlock
+        +GetBlock(buffer: ReadOnlySpan<byte>, position: long):\n  IPcapBlock
+        +DecodeBlock(buffer: ReadOnlySpan<byte>, position: long):\n  IEnumerable<DltTraceLineBase>
+        +Reset()
+    }
+    note left {
+        The BlockReader is stateful,
+        it must first receive a SHB
+        to get the endianness, then
+        it can decode the other
+        blocks in order.
+    }
+
+    class PcapBlock
+    BlockReader -d-> PcapBlock : <<create>>
+    IPcapBlock <|.u. PcapBlock
+
+    class SectionHeaderBlock {
+        +IsLittleEndian: bool
+        +MajorVersion: int
+        +MinorVersion: int
+        +Options: PcapOptions
+        --
+        ~.ctor(buffer: ReadOnlySpan<byte>, position: long)
+    }
+    BlockReader *-d- SectionHeaderBlock
+    IPcapBlock <|.u. SectionHeaderBlock
+
+    class InterfaceDescriptionBlock {
+        +LinkType: int
+        +SnapLen: long
+        +Options: PcapOptions
+        --
+        ~.ctor(buffer: ReadOnlySpan<byte>, bool littleEndian, position: long)
+        +GetTimeStamp(high: uint, low: uint): DateTime
+        +DecodePacket(buffer: ReadOnlySpan<byte>, timeStamp: DateTime,\n  position: long): IEnumerable<DltTraceLineBase>
+    }
+    BlockReader "1" *-d- "0..*" InterfaceDescriptionBlock
+    IPcapBlock <|.u. InterfaceDescriptionBlock
+
+    class PacketDecoder
+    InterfaceDescriptionBlock *-d- PacketDecoder
+
+    class DltPcapNetworkTraceFilterDecoder {
+        PacketTimeStamp: DateTime
+    }
+    PacketDecoder *-d- DltPcapNetworkTraceFilterDecoder
+
+    class DltTraceDecoder
+    DltPcapNetworkTraceFilterDecoder -l-|> DltTraceDecoder
+
+    interface IOutputStream
+    DltPcapNetworkTraceFilterDecoder o-r- IOutputStream
+}
+
+DltPcapNgDecoder *-d- BlockReader
+
+@enduml

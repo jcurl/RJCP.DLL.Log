@@ -32,6 +32,7 @@ implementation in an incremental manner).
     - [2.4.2. Decoders (and PCAP, PCAPNG formats)](#242-decoders-and-pcap-pcapng-formats)
       - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
       - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
+      - [2.4.2.6. PCAP-NG Design](#2426-pcap-ng-design)
       - [2.4.2.3. Supported Link Types for PCAP and PCAPNG](#2423-supported-link-types-for-pcap-and-pcapng)
       - [2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding](#2424-unsupported-features-for-pcap--pcapng-decoding)
       - [2.4.2.5. Fragmented IP packets](#2425-fragmented-ip-packets)
@@ -501,6 +502,8 @@ format, with detection based on the initial 4 bytes of the file:
   [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html) file,
   little endian, with time resolution of nanoseconds
 
+For a quick reference, see [PCAP.md](pcap.md).
+
 The decoder derives from `ITraceReader<DltTraceLineBase>`, the same as the other
 DLT decoders. It does not derive from `DltTraceDecoderBase` as the PCAP decoder
 does not implement decoding the DLT protocol, but rather uses composition, and
@@ -533,6 +536,58 @@ overriding the `ParsePrefixHeader`) and possibly writing to an `IOutputStream`.
 The implementation assumes that each packet is complete, that is, it contains an
 integer number of complete DLT packets. As such, after decoding each Ethernet
 frame, the underlying DLT decoder should be flushed.
+
+##### 2.4.2.6. PCAP-NG Design
+
+Writing a PCAP-NG decoder is a little more work, as there may be multiple
+section header blocks, and per block, there may be multiple interfaces. This
+allows a lot of flexibility. The PCAP-NG decoder shall decode all interfaces.
+
+![PCAP-NG Decoder](out/diagrams/dltpcapngtracedecoder/DltPcapNgTraceDecoder.svg)
+
+The decoding of the blocks are done in `DltPcapNgDecoder`, and the following
+blocks are supported:
+
+* `0x0A0D0D0A` - Section Header Block
+* `0x00000001` - Interface Description Block
+* `0x00000006` - Enhanced Packet Block
+
+The `BlockReader` is stateful, as it decodes blocks, it can maintain state. This
+is important as the `SectionHeaderBlock` defines the endianness. The section
+header is expected to be the first block. If it is not found, an
+`UnknownPcapFileFormatException` will be raised.
+
+An indexed list of `InterfaceDescriptionBlock`s will instantiated and kept by
+the decoder, the file format numbers the identifiers from 0 and increasing. The
+Interface Description Block defines the interface name, the time resolution and
+the link type. If no time resolution is present, a default will be provided.
+
+Decoding an Enhanced Packet Block will be done in place by the `BlockReader`
+with the `DecodeBlock()` method. The buffer is the complete Enhanced Packet
+Block. It won't create an object of type `IPcapBlock`. Once decoding is
+finished, the buffer and packet are discarded. The Enhanced Packet Block
+contains the interface that received the packet (and thus which
+`InterfaceDescriptionBlock` should decode the DLT packet). The time stamp from
+the Enhanced Packet Block is converted based on the options of the interface.
+
+The `InterfaceDescriptionBlock.DecodePacket()` method shall take the Ethernet
+frame as an input, the same input as `PacketDecoder`. That allows easier
+modification in the future if the "Simple Packet Block" also needs to be
+implemented for decoding.
+
+It should not be possible to instantiate the `IPcapBlock` derived objects
+outside of the `BlockReader`. They are returned by the respective `BlockReader`
+method:
+
+* `GetHeader()`: Returns just the information about the block identifier and the
+  length. This allows the decoder to advance to the next block in the file.
+* `GetBlock()`: Decodes the block for the following block types:
+  * `0x0A0D0D0A` - Section Header Block
+  * `0x00000001` - Interface Description Block
+  * Others are ignored
+* `DecodeBlock()`: Decodes the block and returns the DLT decoded content for the
+  following block types:
+  * `0x00000006` - Enhanced Packet Block
 
 ##### 2.4.2.3. Supported Link Types for PCAP and PCAPNG
 

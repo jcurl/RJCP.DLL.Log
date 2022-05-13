@@ -10,8 +10,23 @@ DltPcapTraceDecoder *-d- DltPcapLegacyDecoder
 DltPcapTraceDecoder *-d- DltPcapNgDecoder
 DltPcapLegacyDecoder -r- DltPcapNgDecoder : <<xor>>
 
-class PcapFormat
-DltPcapLegacyDecoder *-d- PcapFormat
+enum TimeResolution {
+    Microseconds
+    Nanoseconds
+}
+
+class PcapFormat {
+    IsLittleEndian: bool
+    MajorVersion: int
+    MinorVersion: int
+    SnapLen: int
+    FcsLen: int
+    LinkType: int
+    Resolution: TimeResolution
+}
+PcapFormat *-d- TimeResolution
+
+DltPcapLegacyDecoder *-l- PcapFormat
 DltPcapLegacyDecoder *-d- PacketDecoder
 
 DltPcapNgDecoder *-d- PacketDecoder
@@ -26,4 +41,5 @@ DltPcapNetworkTraceFilterDecoder -l-|> DltTraceDecoder
 
 interface IOutputStream
 DltPcapNetworkTraceFilterDecoder o-r- IOutputStream
+
 @enduml
