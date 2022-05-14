@@ -86,7 +86,9 @@
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapFormat.cs" />
     <Compile Include="Domain\Dlt\Pcap\LinkTypes.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\BlockCodes.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\BlockReader.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\DltPcapNgDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\IPcapBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\IPcapOption.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\EndOfOption.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\FcsLengthOption.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\StringOption.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\OptionCodes.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\TimeResolutionOption.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\PcapBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\PcapOptions.cs" />
     <Compile Include="Domain\Dlt\Pcap\PacketDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\UnknownPcapFileFormatException.cs" />
