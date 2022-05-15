@@ -100,6 +100,7 @@
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\TimeResolutionOption.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\PcapBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\PcapOptions.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\SectionHeaderBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\PacketDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\UnknownPcapFileFormatException.cs" />
     <Compile Include="Domain\IInputStream.cs" />

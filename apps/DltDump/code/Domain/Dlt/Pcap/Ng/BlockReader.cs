@@ -133,6 +133,7 @@
                 return null;
             }
 
+            IPcapBlock block = null;
             switch (blockId) {
             case BlockCodes.SectionHeaderBlock:
                 Log.Pcap.TraceEvent(TraceEventType.Information,
@@ -140,10 +141,12 @@
                     position, littleEndian ? "little endian" : "big endian");
                 m_HasSectionHeader = true;
                 m_LittleEndian = littleEndian;
-                return new PcapBlock(blockId, blockLength);
-            default:
-                return new PcapBlock(blockId, blockLength);
+                block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
+                break;
             }
+            if (block == null)
+                return new PcapBlock(blockId, blockLength);
+            return block;
         }
 
         /// <summary>
