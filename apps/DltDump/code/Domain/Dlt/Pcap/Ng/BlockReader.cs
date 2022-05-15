@@ -143,6 +143,9 @@
                 m_LittleEndian = littleEndian;
                 block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
                 break;
+            case BlockCodes.InterfaceDescriptionBlock:
+                block = InterfaceDescriptionBlock.GetInterfaceDescriptionBlock(buffer, littleEndian, position);
+                break;
             }
             if (block == null)
                 return new PcapBlock(blockId, blockLength);

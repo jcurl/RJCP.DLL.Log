@@ -88,6 +88,7 @@
     <Compile Include="Domain\Dlt\Pcap\Ng\BlockCodes.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\BlockReader.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\DltPcapNgDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\InterfaceDescriptionBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\IPcapBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\IPcapOption.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\EndOfOption.cs" />

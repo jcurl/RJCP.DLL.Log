@@ -63,6 +63,7 @@
     <Compile Include="Domain\Dlt\LineTraceReader.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapLegacyDecoderTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\BlockReaderTest.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Ng\InterfaceDescriptionBlockTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\FcsLengthOptionTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\SpeedOptionTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\Options\StringOptionTest.cs" />
