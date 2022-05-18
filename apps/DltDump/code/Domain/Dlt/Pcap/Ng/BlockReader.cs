@@ -1,8 +1,10 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt.Pcap.Ng
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
     /// Interprets a block as bytes, converting it to a PCAP-NG block.
@@ -11,11 +13,29 @@
     /// Supports reading a PCAP-NG block. This class maintains state while reading the blocks, for example the
     /// endianness of the file based on the last seen Section Header Block.
     /// </remarks>
-    public class BlockReader
+    public sealed class BlockReader : IDisposable
     {
         private const int MinimumBlockSize = 12;
+        private readonly List<InterfaceDescriptionBlock> m_Interfaces = new List<InterfaceDescriptionBlock>();
+        private readonly IOutputStream m_OutputStream;
         private bool m_HasSectionHeader = false;
         private bool m_LittleEndian;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlockReader"/> class.
+        /// </summary>
+        public BlockReader() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlockReader"/> class.
+        /// </summary>
+        /// <param name="outputStream">
+        /// The output stream which is used when calling <see cref="DecodeBlock(ReadOnlySpan{byte}, long)"/>.
+        /// </param>
+        public BlockReader(IOutputStream outputStream)
+        {
+            m_OutputStream = outputStream;
+        }
 
         /// <summary>
         /// Gets the header.
@@ -142,9 +162,11 @@
                 m_HasSectionHeader = true;
                 m_LittleEndian = littleEndian;
                 block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
+                ClearInterfaces();
                 break;
             case BlockCodes.InterfaceDescriptionBlock:
-                block = InterfaceDescriptionBlock.GetInterfaceDescriptionBlock(buffer, littleEndian, position);
+                block = InterfaceDescriptionBlock.GetInterfaceDescriptionBlock(buffer, littleEndian, m_OutputStream, position);
+                m_Interfaces.Add(block as InterfaceDescriptionBlock);
                 break;
             }
             if (block == null)
@@ -153,11 +175,107 @@
         }
 
         /// <summary>
+        /// Decodes the block content, which should contain a network frame.
+        /// </summary>
+        /// <param name="buffer">The PCAP-NG block that contains the network frame.</param>
+        /// <param name="position">The position in the stream where the block starts.</param>
+        /// <returns>A collection of decoded DLT lines.</returns>
+        /// <remarks>
+        /// This method decodes an Enhanced Packet Block, then extracts the frame within it, then decodes the contents
+        /// of that frame.
+        /// </remarks>
+        public IEnumerable<DltTraceLineBase> DecodeBlock(ReadOnlySpan<byte> buffer, long position)
+        {
+            if (!m_HasSectionHeader) {
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "PCAP Block offset 0x{0:x} found without a previous Section Header Block", position);
+                return null;
+            }
+
+            if (buffer.Length < MinimumBlockSize) {
+                // Not enough bytes, we don't know.
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "PCAP Block offset 0x{0:x} with buffer length too short (got {1}, expected >= 12)",
+                    position, buffer.Length);
+                return null;
+            }
+
+            int blockId = BitOperations.To32Shift(buffer, m_LittleEndian);
+
+            int blockLength = BitOperations.To32Shift(buffer[4..], m_LittleEndian);
+            if (buffer.Length < blockLength) {
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "PCAP Block 0x{0:x} offset 0x{1:x} with buffer length less than PCAP block length (got {2}, needed {3})",
+                    blockId, position, buffer.Length, blockLength);
+                return null;
+            }
+
+            if (blockLength < MinimumBlockSize) {
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "PCAP Block 0x{0:x} offset 0x{1:x} corruption with block length too short (got {2}, needed {3})",
+                    blockId, position, blockLength, MinimumBlockSize);
+                return null;
+            }
+
+            int blockLengthEnd = BitOperations.To32Shift(buffer[(blockLength - 4)..], m_LittleEndian);
+            if (blockLengthEnd != blockLength) {
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "PCAP Block 0x{0:x} offset 0x{1:x} corruption with block length start and end mismatch (start {2}, end {3})",
+                    blockId, position, blockLength, blockLengthEnd);
+                return null;
+            }
+
+            switch (blockId) {
+            case BlockCodes.EnhancedPacketBlock:
+                if (blockLength < 32) break;
+                int interfaceId = BitOperations.To32Shift(buffer[8..], m_LittleEndian);
+                if (interfaceId < 0 || interfaceId >= m_Interfaces.Count) break;
+                InterfaceDescriptionBlock intf = m_Interfaces[interfaceId];
+                if (intf == null) break;
+
+                int captured = BitOperations.To32Shift(buffer[20..], m_LittleEndian);
+                int original = BitOperations.To32Shift(buffer[24..], m_LittleEndian);
+                if (captured != original || original > intf.SnapLength) break;
+                if (blockLength < 32 + captured) break;
+
+                uint tsHigh = unchecked((uint)BitOperations.To32Shift(buffer[12..], m_LittleEndian));
+                uint tsLow = unchecked((uint)BitOperations.To32Shift(buffer[16..], m_LittleEndian));
+                DateTime timeStamp = intf.GetTimeStamp(tsHigh, tsLow);
+                return intf.DecodePacket(buffer[28..(28 + captured)], timeStamp, position + 28);
+            }
+
+            return Array.Empty<DltTraceLineBase>();
+        }
+
+        /// <summary>
         /// Resets the state of this instance.
         /// </summary>
         public void Reset()
         {
             m_HasSectionHeader = false;
+            ClearInterfaces();
+        }
+
+        private void ClearInterfaces()
+        {
+            foreach (InterfaceDescriptionBlock idb in m_Interfaces) {
+                if (idb != null) idb.Dispose();
+            }
+            m_Interfaces.Clear();
+        }
+
+        private bool m_IsDisposed;
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting managed or unmanaged
+        /// resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!m_IsDisposed) {
+                ClearInterfaces();
+                m_IsDisposed = true;
+            }
         }
     }
 }

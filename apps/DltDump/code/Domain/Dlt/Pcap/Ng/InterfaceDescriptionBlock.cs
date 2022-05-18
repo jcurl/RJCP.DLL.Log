@@ -1,14 +1,16 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt.Pcap.Ng
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using Domain.Dlt.Pcap.Ng.Options;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
     /// Provide details from the Interface Description Block.
     /// </summary>
-    public sealed class InterfaceDescriptionBlock : IPcapBlock
+    public sealed class InterfaceDescriptionBlock : IPcapBlock, IDisposable
     {
         /// <summary>
         /// Decode the buffer to get the <see cref="InterfaceDescriptionBlock"/>.
@@ -24,7 +26,7 @@
         /// length fields (which must be the same length as <paramref name="buffer"/>). It is assumed that the component
         /// calling this method has already checked the fields are correct (see <see cref="BlockReader"/>).
         /// </remarks>
-        internal static InterfaceDescriptionBlock GetInterfaceDescriptionBlock(ReadOnlySpan<byte> buffer, bool littleEndian, long position)
+        internal static InterfaceDescriptionBlock GetInterfaceDescriptionBlock(ReadOnlySpan<byte> buffer, bool littleEndian, IOutputStream outputStream, long position)
         {
             if (buffer.Length < 20) {
                 Log.Pcap.TraceEvent(TraceEventType.Warning,
@@ -63,7 +65,10 @@
                 return null;
             }
 
-            return new InterfaceDescriptionBlock(buffer.Length, options) {
+            PacketDecoder decoder = outputStream == null ?
+                new PacketDecoder(linkType) :
+                new PacketDecoder(linkType, outputStream);
+            return new InterfaceDescriptionBlock(buffer.Length, options, decoder) {
                 LinkType = linkType,
                 SnapLength = snapLen
             };
@@ -103,10 +108,12 @@
         }
 
         private TimeResolutionOption m_TimeResolution;
+        private readonly PacketDecoder m_Decoder;
 
-        private InterfaceDescriptionBlock(int length, PcapOptions options)
+        private InterfaceDescriptionBlock(int length, PcapOptions options, PacketDecoder decoder)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
+            if (decoder == null) throw new ArgumentNullException(nameof(decoder));
 
             Length = length;
             Options = options;
@@ -129,6 +136,8 @@
                 Log.Pcap.TraceEvent(TraceEventType.Information,
                     "Interface Description Block {0} with time resolution {1}", name, resolution);
             }
+
+            m_Decoder = decoder;
         }
 
         private void InitializeTimeResolution()
@@ -200,11 +209,36 @@
         /// <returns>The converted <see cref="DateTime"/>.</returns>
         public DateTime GetTimeStamp(uint high, uint low)
         {
-            if (m_TimeResolution == null)
-                return DateTimeOffset.FromUnixTimeSeconds(0).UtcDateTime;
-
             ulong timeStamp = ((ulong)high << 32) + low;
             return m_TimeResolution.GetTimeStamp(timeStamp);
+        }
+
+        /// <summary>
+        /// Decodes the packet, starting from the captured data (not the PCAP-NG block).
+        /// </summary>
+        /// <param name="buffer">
+        /// The buffer containing the captured data for decoding DLT, without the PCAP-NG block data present.
+        /// </param>
+        /// <param name="timeStamp">The time stamp at when the packet was captured.</param>
+        /// <param name="position">The position in the stream for the start of this data.</param>
+        /// <returns></returns>
+        public IEnumerable<DltTraceLineBase> DecodePacket(ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
+        {
+            return m_Decoder.DecodePacket(buffer, timeStamp, position);
+        }
+
+        private bool m_IsDisposed;
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting managed and unmanaged
+        /// resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!m_IsDisposed) {
+                m_Decoder.Dispose();
+                m_IsDisposed = true;
+            }
         }
     }
 }
