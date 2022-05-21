@@ -121,7 +121,7 @@
             InitializeTimeResolution();
 
             if (Log.Pcap.ShouldTrace(TraceEventType.Information)) {
-                string name = "Unknown";
+                string name = "'Unknown Name'";
                 int nameIndex = Options.IndexOf(OptionCodes.IdbName);
                 if (nameIndex != -1 && Options[nameIndex] is StringOption nameOption)
                     name = nameOption.Value;

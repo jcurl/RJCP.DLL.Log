@@ -16,7 +16,7 @@
         {
             LogSource.SetLoggerFactory(GetLoggerFactory());
             App = new LogSource("DltDump");
-            Pcap = new LogSource("RJCP.Diagnostics.Log.Dlt");
+            Pcap = new LogSource("RJCP.Diagnostics.Log.Dlt.Pcap");
         }
 
         private static ILoggerFactory GetLoggerFactory()

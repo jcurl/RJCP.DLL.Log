@@ -100,6 +100,10 @@
                 } else {
                     m_Decoder = new PacketDecoder(Format.LinkType, m_OutputStream);
                 }
+
+                if (Format != null && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
+                    Log.Pcap.TraceEvent(TraceEventType.Information, "PCAP File: {0}", Format.ToString());
+                }
             }
 
             m_List.Clear();
