@@ -1,9 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt.Pcap.Legacy
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Domain.OutputStream;
     using Infrastructure;
     using NUnit.Framework;
     using RJCP.Core;
@@ -24,22 +21,15 @@
     [TestFixture(typeof(DltPcapLegacyDecoder), false)]
     [TestFixture(typeof(DltPcapTraceDecoder), true)]
     [TestFixture(typeof(DltPcapTraceDecoder), false)]
-    public class PcapLegacyDecoderTest<TDec> where TDec : class, ITraceDecoder<DltTraceLineBase>, new()
+    public class PcapLegacyDecoderTest<TDec> : PcapDecoderTestBase where TDec : class, ITraceDecoder<DltTraceLineBase>, new()
     {
-        private readonly MemoryOutput m_OutputStream;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PcapLegacyDecoderTest{TDec}"/> class.
         /// </summary>
         /// <param name="outputStream">
         /// If set to <see langword="true"/>, test with an <see cref="IOutputStream"/>.
         /// </param>
-        public PcapLegacyDecoderTest(bool outputStream)
-        {
-            if (outputStream) m_OutputStream = new MemoryOutput();
-        }
-
-        private static readonly int[] ReadChunks = { 0, 1, 2, 3, 5, 8, 13, 21, 50, 100 };
+        public PcapLegacyDecoderTest(bool outputStream) : base(outputStream) { }
 
         private TDec Create()
         {
@@ -51,54 +41,16 @@
             if (nullOutput) {
                 if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder(null) as TDec;
                 if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(null) as TDec;
-            } else if (m_OutputStream != null) {
+            } else if (MemOutputStream != null) {
                 if (typeof(TDec) == typeof(DltPcapLegacyDecoder))
-                    return new DltPcapLegacyDecoder(m_OutputStream) as TDec;
-                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(m_OutputStream) as TDec;
+                    return new DltPcapLegacyDecoder(MemOutputStream) as TDec;
+                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(MemOutputStream) as TDec;
             } else {
                 if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder() as TDec;
                 if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder() as TDec;
             }
 
             throw new NotImplementedException();
-        }
-
-        private IList<TLine> Decode<TLine>(ITraceDecoder<TLine> traceDecoder, ReadOnlySpan<byte> data, int chunkSize)
-            where TLine : DltTraceLineBase
-        {
-            if (m_OutputStream != null) m_OutputStream.Clear();
-
-            if (chunkSize == 0)
-                return new List<TLine>(traceDecoder.Decode(data, 0));
-
-            List<TLine> lines = new List<TLine>();
-            int offset = 0;
-            while (offset < data.Length) {
-                int chunkLength = Math.Min(chunkSize, data.Length - offset);
-                IEnumerable<TLine> decodedLines = traceDecoder.Decode(data[offset..(offset + chunkLength)], offset);
-                lines.AddRange(decodedLines);
-                offset += chunkSize;
-            }
-
-            return lines;
-        }
-
-        private IList<TLine> Flush<TLine>(ITraceDecoder<TLine> traceDecoder)
-            where TLine : DltTraceLineBase
-        {
-            if (m_OutputStream != null) m_OutputStream.Clear();
-
-            return new List<TLine>(traceDecoder.Flush());
-        }
-
-        private IList<DltTraceLineBase> GetLines(IList<DltTraceLineBase> lines)
-        {
-            if (m_OutputStream != null) {
-                Assert.That(lines.Count, Is.EqualTo(0));
-                return (from line in m_OutputStream.Lines select line.Line).ToList();
-            }
-
-            return lines;
         }
 
         [Test]
@@ -121,7 +73,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -141,7 +93,7 @@
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -158,7 +110,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -178,7 +130,7 @@
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -195,7 +147,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -209,7 +161,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -226,7 +178,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -240,7 +192,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -255,7 +207,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -263,7 +215,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -278,7 +230,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -286,7 +238,7 @@
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_LINUX_SLL));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -301,7 +253,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -309,7 +261,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(4));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -324,7 +276,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, header, chunk));
+                var lines = Decode(decoder, header, chunk);
 
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
@@ -332,7 +284,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -651,7 +603,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, packet, chunk));
+                var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(2));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
@@ -681,7 +633,7 @@
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -725,7 +677,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, packet, chunk));
+                var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(4));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
@@ -767,7 +719,7 @@
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -832,7 +784,7 @@
             pkt2.CopyTo(packet, header.Length + pkt1.Length + bigPktHdr.Length + BigFrame);
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, packet, chunk));
+                var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(4));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
@@ -874,7 +826,7 @@
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }
@@ -883,7 +835,7 @@
         public void FlushBeforeDecode()
         {
             using (TDec decoder = Create()) {
-                var lines = GetLines(Flush(decoder));
+                var lines = Flush(decoder);
                 Assert.That(lines, Is.Empty);
             }
         }
@@ -914,7 +866,7 @@
             };
 
             using (TDec decoder = Create()) {
-                var lines = GetLines(Decode(decoder, packet, chunk));
+                var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(2));
                 // Skipped line
@@ -945,7 +897,7 @@
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
-                lines = GetLines(Flush(decoder));
+                lines = Flush(decoder);
                 Assert.That(lines.Count, Is.EqualTo(0));
             }
         }

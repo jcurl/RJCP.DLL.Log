@@ -147,6 +147,9 @@
   <data name="DomainOutputWriterOpen" xml:space="preserve">
     <value>OutputWriter File is already open.</value>
   </data>
+  <data name="DomainPcapBlockCorruption" xml:space="preserve">
+    <value>PCAP-NG block corruption found</value>
+  </data>
   <data name="DomainPcapInvalidData" xml:space="preserve">
     <value>PCAP file is corrupted (contains invalid data)</value>
   </data>

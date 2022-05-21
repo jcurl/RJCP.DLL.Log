@@ -161,6 +161,25 @@
         }
 
         [Test]
+        public void WriteLineAsPacketPcapNg()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File.dlt")) {
+                Assert.That(File.Exists("File.dlt"), Is.False);
+
+                output.SetInput("input.pcapng", InputFormat.Pcap);
+                output.Write(TestLines.Verbose, TcpData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File.dlt"), Is.True);
+
+                // The data is written exactly as the packet says. A storage header is added.
+                FileInfo fileInfo = new FileInfo("File.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
+            }
+        }
+
+        [Test]
         public void SetInputNullString()
         {
             using (ScratchPad pad = Deploy.ScratchPad())

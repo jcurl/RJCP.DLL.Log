@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Pcap;
     using Pcap.Legacy;
+    using Pcap.Ng;
     using Resources;
     using RJCP.Core;
     using RJCP.Diagnostics.Log.Decoder;
@@ -74,9 +75,13 @@
         {
             int magicBytes = BitOperations.To32ShiftLittleEndian(header);
             switch (magicBytes) {
-            case 0x0D0A0A0D:
-                // PCAP-NG file
-                throw new UnknownPcapFileFormatException(AppResources.DomainPcapUnknownMagic);
+            case 0x0A0D0D0A:
+                if (m_OutputStream == null) {
+                    m_PcapDecoder = new DltPcapNgDecoder();
+                } else {
+                    m_PcapDecoder = new DltPcapNgDecoder(m_OutputStream);
+                }
+                return;
             case unchecked((int)0xA1B2C3D4):
             case unchecked((int)0xA1B23C4D):
             case unchecked((int)0xD4C3B2A1):

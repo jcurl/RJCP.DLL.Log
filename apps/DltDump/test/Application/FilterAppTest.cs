@@ -808,5 +808,27 @@
                 Assert.That(File.Exists("file.dlt"), Is.False);
             }
         }
+
+        [Test]
+        public async Task ExceptionWhileDecoding()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).TriggerExceptionOnEof = true;
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+
+                FilterConfig config = new FilterConfig(new[] { EmptyFile });
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.PartialFilesProcessed));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(2));
+
+                string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
+                    TestLines.Verbose.TimeStamp.ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture));
+                Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
+            }
+        }
     }
 }

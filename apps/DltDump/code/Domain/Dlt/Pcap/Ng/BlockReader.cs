@@ -159,9 +159,13 @@
                 Log.Pcap.TraceEvent(TraceEventType.Information,
                     "PCAP Block Section Header Block offset 0x{0:x} found with {1}",
                     position, littleEndian ? "little endian" : "big endian");
-                m_HasSectionHeader = true;
-                m_LittleEndian = littleEndian;
                 block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
+                if (block != null) {
+                    m_HasSectionHeader = true;
+                    m_LittleEndian = littleEndian;
+                } else {
+                    m_HasSectionHeader = false;
+                }
                 ClearInterfaces();
                 break;
             case BlockCodes.InterfaceDescriptionBlock:

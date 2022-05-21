@@ -58,6 +58,7 @@
             Write(4, 6, HelpResources.Help325_InputFormatFile);
             Write(4, 6, HelpResources.Help325_InputFormatSerial);
             Write(4, 6, HelpResources.Help325_InputFormatNetwork);
+            Write(4, 6, HelpResources.Help325_InputFormatPcap);
             Write(2, 4, HelpResources.Help330_Retries);
             Write(2, 4, HelpResources.Help335_StringSearch);
             Write(2, 4, HelpResources.Help340_RegexSearch);
@@ -80,11 +81,13 @@
             Write(4, 6, HelpResources.Help405_OutputSplit);
             Write(2, 4, HelpResources.Help410_Force);
             Write(2, 4, HelpResources.Help415_Split);
+            Write(2, 4, HelpResources.Help420_Log);
             Write();
             Write(HelpResources.Help500_Input);
             Write();
             Write(2, 4, HelpResources.Help505_InputFile);
             Write(2, 4, HelpResources.Help506_InputFilePcap);
+            Write(2, 4, HelpResources.Help507_InputFilePcapNg);
             Write(2, 4, HelpResources.Help510_InputTcp);
             Write(2, 4, HelpResources.Help515_InputSerial);
             Write();

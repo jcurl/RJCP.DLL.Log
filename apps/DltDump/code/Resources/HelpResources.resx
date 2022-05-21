@@ -157,6 +157,9 @@
   <data name="Help325_InputFormatNetwork" xml:space="preserve">
     <value>* network|net - interpret the URI as a network stream, each packet starting with the standard header.</value>
   </data>
+  <data name="Help325_InputFormatPcap" xml:space="preserve">
+    <value>* pcap|pcapng - interpret the URI as a PCAP or PCAPNG file</value>
+  </data>
   <data name="Help325_InputFormatSerial" xml:space="preserve">
     <value>* serial|ser - interpret the URI as a serial stream with a DLS\1 header.</value>
   </data>
@@ -248,6 +251,10 @@
     <value>{1}split{2}&lt;bytes&gt;
   Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB.</value>
   </data>
+  <data name="Help420_Log" xml:space="preserve">
+    <value>{1}log
+  Dump internal logs to a crash dump file. This log file can assist in understand errors while reading, file corruption, etc.</value>
+  </data>
   <data name="Help500_Input" xml:space="preserve">
     <value>The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:</value>
   </data>
@@ -256,6 +263,9 @@
   </data>
   <data name="Help506_InputFilePcap" xml:space="preserve">
     <value>file.pcap - read a PCAP legacy recorded file. The timestamps are obtained from the packet capture time which are expected to be UTC.</value>
+  </data>
+  <data name="Help507_InputFilePcapNg" xml:space="preserve">
+    <value>file.pcapng - read a PCAP NG recorded file. Timestamps are obtained from the packet capture time up to nanosecond resolution. All interfaces are parsed. Filter out double captures on multiple interfaces before running.</value>
   </data>
   <data name="Help510_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>

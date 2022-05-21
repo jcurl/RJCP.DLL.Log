@@ -31,7 +31,9 @@
             Connection = fileName;
             m_FileName = fileName;
 
-            if (Path.GetExtension(fileName).Equals(".pcap", StringComparison.OrdinalIgnoreCase)) {
+            string extension = Path.GetExtension(fileName);
+            if (extension.Equals(".pcap", StringComparison.OrdinalIgnoreCase) ||
+                extension.Equals(".pcapng", StringComparison.OrdinalIgnoreCase)) {
                 SuggestedFormat = InputFormat.Pcap;
             } else {
                 SuggestedFormat = InputFormat.File;

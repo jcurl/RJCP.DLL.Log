@@ -26,7 +26,7 @@
         Network,
 
         /// <summary>
-        /// PCAP File.
+        /// PCAP or PCAP-NG File.
         /// </summary>
         Pcap
     }

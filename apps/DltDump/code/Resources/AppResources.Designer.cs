@@ -151,6 +151,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PCAP-NG block corruption found.
+        /// </summary>
+        internal static string DomainPcapBlockCorruption {
+            get {
+                return ResourceManager.GetString("DomainPcapBlockCorruption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PCAP file is corrupted (contains invalid data).
         /// </summary>
         internal static string DomainPcapInvalidData {

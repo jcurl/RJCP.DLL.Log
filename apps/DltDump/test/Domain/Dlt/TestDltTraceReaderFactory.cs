@@ -44,6 +44,17 @@
         public IOutputStream OutputStream { get; set; }
 
         /// <summary>
+        /// Gets or sets a flag that will cause an exception at the end of parsing with a
+        /// <see cref="LineTraceReader{T}"/>.
+        /// </summary>
+        /// <value>
+        /// If <see langword="true"/> then the next instantiation with <see cref="CreateAsync(Stream)"/> or
+        /// <see cref="CreateAsync(string)"/> will create a reader that will raise an exception when all lines are
+        /// obtained.
+        /// </value>
+        public bool TriggerExceptionOnEof { get; set; }
+
+        /// <summary>
         /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
         /// </summary>
         /// <param name="stream">The stream.</param>
@@ -67,9 +78,20 @@
 
         private ITraceReader<DltTraceLineBase> GetTraceReader()
         {
-            if (OutputStream == null || !OutputStream.SupportsBinary)
-                return new LineTraceReader<DltTraceLineBase>(Lines);
+            if (OutputStream == null || !OutputStream.SupportsBinary) {
+                LineTraceReader<DltTraceLineBase> reader;
+                reader = new LineTraceReader<DltTraceLineBase>(Lines);
+                if (TriggerExceptionOnEof) {
+                    TriggerExceptionOnEof = false;
+                    reader.GetLineEvent += (s, e) => {
+                        if (e.Line == null)
+                            throw new InvalidOperationException("Test Operation after file reading");
+                    };
+                }
+                return reader;
+            }
 
+            TriggerExceptionOnEof = false;
             return new BinaryTraceReader<DltTraceLineBase>(OutputStream);
         }
     }

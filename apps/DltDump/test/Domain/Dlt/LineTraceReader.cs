@@ -1,5 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using RJCP.Diagnostics.Log;
@@ -14,12 +15,24 @@
             m_LineEnumerable = list.GetEnumerator();
         }
 
+        public event EventHandler<LineEventArgs<T>> GetLineEvent;
+
         public Task<T> GetLineAsync()
         {
+            T line;
             if (m_LineEnumerable.MoveNext()) {
-                return Task.FromResult(m_LineEnumerable.Current);
+                line = OnGetLineEvent(this, new LineEventArgs<T>(m_LineEnumerable.Current));
+            } else {
+                line = OnGetLineEvent(this, new LineEventArgs<T>(default));
             }
-            return Task.FromResult<T>(default);
+            return Task.FromResult(line);
+        }
+
+        private T OnGetLineEvent(object sender, LineEventArgs<T> args)
+        {
+            EventHandler<LineEventArgs<T>> handler = GetLineEvent;
+            if (handler != null) handler(sender, args);
+            return args.Line;
         }
 
         public void Dispose()

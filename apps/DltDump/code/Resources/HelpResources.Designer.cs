@@ -173,6 +173,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to * pcap|pcapng - interpret the URI as a PCAP or PCAPNG file.
+        /// </summary>
+        internal static string Help325_InputFormatPcap {
+            get {
+                return ResourceManager.GetString("Help325_InputFormatPcap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to * serial|ser - interpret the URI as a serial stream with a DLS\1 header..
         /// </summary>
         internal static string Help325_InputFormatSerial {
@@ -402,6 +411,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}log
+        ///  Dump internal logs to a crash dump file. This log file can assist in understand errors while reading, file corruption, etc..
+        /// </summary>
+        internal static string Help420_Log {
+            get {
+                return ResourceManager.GetString("Help420_Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The input stream shall be the last option in the command line. Multiple files can be specified, or a single URI can be specified. The URIs supported are:.
         /// </summary>
         internal static string Help500_Input {
@@ -425,6 +444,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help506_InputFilePcap {
             get {
                 return ResourceManager.GetString("Help506_InputFilePcap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to file.pcapng - read a PCAP NG recorded file. Timestamps are obtained from the packet capture time up to nanosecond resolution. All interfaces are parsed. Filter out double captures on multiple interfaces before running..
+        /// </summary>
+        internal static string Help507_InputFilePcapNg {
+            get {
+                return ResourceManager.GetString("Help507_InputFilePcapNg", resourceCulture);
             }
         }
         

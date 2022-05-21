@@ -108,12 +108,11 @@
                     if (m_DiscardLength >= buffer.Length) {
                         m_DiscardLength -= buffer.Length;
                         return m_List;
-                    } else {
-                        int offset = (int)m_DiscardLength;
-                        buffer = buffer[offset..];
-                        m_DiscardLength = 0;
-                        position += offset;
                     }
+                    int offset = (int)m_DiscardLength;
+                    buffer = buffer[offset..];
+                    m_DiscardLength = 0;
+                    position += offset;
                 }
 
                 ReadOnlySpan<byte> packet;
@@ -244,9 +243,8 @@
                 if (!m_IsDisposed && m_Decoder != null) {
                     m_Decoder.Dispose();
                 }
+                m_IsDisposed = true;
             }
-
-            m_IsDisposed = true;
         }
     }
 }

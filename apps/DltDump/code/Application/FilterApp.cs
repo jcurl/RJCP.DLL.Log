@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
     using Domain;
     using Domain.Dlt;
@@ -32,6 +33,7 @@
             Global.Instance.OutputStreamFactory.Split = m_Config.Split;
 
             int processed = 0;
+            bool partial = false;
             using (IOutputStream output = GetOutputStream()) {
                 if (output == null) return ExitCode.OutputError;
                 Global.Instance.DltReaderFactory.OutputStream = output;
@@ -45,20 +47,34 @@
 
                 foreach (string uri in m_Config.Input) {
                     try {
-                        bool connected = await ProcessInput(uri, output);
-                        if (connected) processed++;
+                        InputResult connected = await ProcessInput(uri, output);
+                        switch (connected) {
+                        case InputResult.Connected:
+                            processed++;
+                            break;
+                        case InputResult.DecodeFailure:
+                            partial = true;
+                            break;
+                        }
                     } catch (OutputStreamException ex) {
                         Terminal.WriteLine(ex.Message);
                     }
                 }
             }
 
-            if (processed == 0) return ExitCode.NoFilesProcessed;
-            if (processed != m_Config.Input.Count) return ExitCode.PartialFilesProcessed;
+            if (processed == 0 && !partial) return ExitCode.NoFilesProcessed;
+            if (processed != m_Config.Input.Count || partial) return ExitCode.PartialFilesProcessed;
             return ExitCode.Success;
         }
 
-        private async Task<bool> ProcessInput(string uri, IOutputStream output)
+        private enum InputResult
+        {
+            NotConnected,
+            DecodeFailure,
+            Connected
+        }
+
+        private async Task<InputResult> ProcessInput(string uri, IOutputStream output)
         {
             bool retries;
             bool connected = false;
@@ -79,15 +95,32 @@
                         output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
 
                         connected = true;
-                        DltTraceLineBase line;
-                        do {
-                            line = await decoder.GetLineAsync();
-                            if (line != null) output.Write(line);
-                        } while (line != null);
+                        bool receivedLine = false;
+                        try {
+                            DltTraceLineBase line;
+                            do {
+                                line = await decoder.GetLineAsync();
+                                if (line != null) {
+                                    receivedLine = true;
+                                    output.Write(line);
+                                }
+                            } while (line != null);
+                        } catch (OutputStreamException) {
+                            // Propagate this exception upstream
+                            throw;
+                        } catch (Exception ex) {
+                            // Any exception can occur while decoding. If so, it's aborted, and we try reading the next.
+                            // Errors might be file format, or Operating System errors.
+                            Log.App.TraceEvent(TraceEventType.Warning,
+                                "Error while processing file (Exception {0}), see previous exceptions. {1}",
+                                ex.GetType().Name, ex.Message);
+                            Terminal.WriteLine(ex.Message);
+                            return receivedLine ? InputResult.DecodeFailure : InputResult.NotConnected;
+                        }
                     }
                 }
             } while (retries);
-            return connected;
+            return connected ? InputResult.Connected : InputResult.NotConnected;
         }
 
         private bool CheckInputs()
