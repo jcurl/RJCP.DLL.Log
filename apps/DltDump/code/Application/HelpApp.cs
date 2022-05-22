@@ -3,6 +3,7 @@
     using Infrastructure.Text;
     using Resources;
     using RJCP.Core.Environment;
+    using Services;
 
     public static class HelpApp
     {
@@ -115,14 +116,7 @@
 
         private static void Write(int indent, int hangingIndent, string message)
         {
-            string expanded = string.Format(message, ShortOptionSymbol, LongOptionSymbol, AssignmentSymbol);
-            string[] output = Format.Wrap(Global.Instance.Terminal.TerminalWidth - 1, indent, hangingIndent, expanded);
-
-            if (output != null) {
-                foreach (string line in output) {
-                    Global.Instance.Terminal.StdOut.WriteLine(line);
-                }
-            }
+            Terminal.WriteLine(indent, hangingIndent, message, ShortOptionSymbol, LongOptionSymbol, AssignmentSymbol);
         }
     }
 }

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Threading;
     using Application;
     using Resources;
     using RJCP.Diagnostics;
@@ -17,8 +16,9 @@
 
             Log.App.TraceEvent(TraceEventType.Information, VersionApp.GetVersion());
 
+            ExitCode result;
             try {
-                return (int)CommandLine.Run(args);
+                result = CommandLine.Run(args);
             } catch (Exception ex) {
                 Terminal.WriteLine(AppResources.ErrorAppUnhandledException);
                 Log.App.TraceException(ex, nameof(Program), "Unhandled exception");
@@ -27,9 +27,11 @@
                 CrashReporter.CreateDump();
 
                 // If the user is logging to the console, we need to wait 200ms for it to be printed.
-                Thread.Sleep(200);
-                return (int)ExitCode.UnknownError;
+                result = ExitCode.UnknownError;
             }
+
+            Log.Close();
+            return (int)result;
         }
     }
 }

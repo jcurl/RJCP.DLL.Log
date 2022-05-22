@@ -10,12 +10,15 @@
     {
         public static LogSource App { get; }
 
+        public static LogSource AppTerminal { get; }
+
         public static LogSource Pcap { get; }
 
         static Log()
         {
             LogSource.SetLoggerFactory(GetLoggerFactory());
             App = new LogSource("DltDump");
+            AppTerminal = new LogSource("DltDump.Terminal");
             Pcap = new LogSource("RJCP.Diagnostics.Log.Dlt.Pcap");
         }
 
@@ -35,6 +38,13 @@
                     .AddConsole()
                     .AddSimplePrioMemoryLogger();
             });
+        }
+
+        public static void Close()
+        {
+            App.Dispose();
+            AppTerminal.Dispose();
+            Pcap.Dispose();
         }
     }
 }

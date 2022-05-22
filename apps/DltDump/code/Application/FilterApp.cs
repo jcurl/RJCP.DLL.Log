@@ -79,12 +79,16 @@
             bool retries;
             bool connected = false;
             do {
+                Log.App.TraceEvent(TraceEventType.Information, "Input: URI {0}", uri);
                 using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
                     if (inputStream == null) {
                         retries = false;
                         continue;
                     }
 
+                    Log.App.TraceEvent(TraceEventType.Information,
+                        "Input: LiveStream {0}; RequireConnection {1}; ConnectRetries {2}; SuggestedFormat {3}",
+                        inputStream.IsLiveStream, inputStream.RequiresConnection, m_Config.ConnectRetries, inputStream.SuggestedFormat);
                     retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
                     using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
                         if (decoder == null) {

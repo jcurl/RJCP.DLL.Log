@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
-    using System.Threading;
+    using System.Diagnostics;
+    using System.Text;
     using Application;
     using Resources;
     using RJCP.Core.CommandLine;
@@ -11,6 +12,14 @@
     {
         public static ExitCode Run(string[] arguments)
         {
+            if (Log.App.ShouldTrace(TraceEventType.Information)) {
+                StringBuilder cmdLine = new StringBuilder();
+                foreach (string arg in arguments) {
+                    cmdLine.AppendFormat("Arg: '{0}'; ", arg);
+                }
+                Log.App.TraceEvent(TraceEventType.Information, cmdLine.ToString());
+            }
+
             CmdOptions cmdOptions = new CmdOptions();
 
             try {
@@ -30,9 +39,9 @@
 
             ExitCode result = command.Run();
             if (cmdOptions.Log) {
+                Log.App.TraceEvent(TraceEventType.Information, "Result: {0} ({1})", result, (int)result);
                 string path = CrashReporter.CreateDump(Diagnostics.Dump.CoreType.None);
                 Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
-                Thread.Sleep(200);
             }
 
             return result;
