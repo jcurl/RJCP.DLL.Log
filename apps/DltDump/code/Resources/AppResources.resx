@@ -224,6 +224,12 @@
     <value>Couldn't create the output {0}. Don't know how to write this file format.</value>
     <comment>Occurs because Automatic can't guess the output format</comment>
   </data>
+  <data name="InfraArgOutOfRangeIndex" xml:space="preserve">
+    <value>The length and offset would exceed the boundaries of the array/buffer</value>
+  </data>
+  <data name="InfraArgOutOfRangeNegative" xml:space="preserve">
+    <value>may not be negative</value>
+  </data>
   <data name="InfraCollectionReadOnly" xml:space="preserve">
     <value>Collection is read only</value>
   </data>

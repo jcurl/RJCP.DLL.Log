@@ -82,9 +82,9 @@
             Stream stream = m_FileStream;
             if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), "may not be negative");
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "may not be negative");
-            if (offset > buffer.Length - count) throw new ArgumentException("The length and offset would exceed the boundaries of the array/buffer");
+            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), AppResources.InfraArgOutOfRangeNegative);
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), AppResources.InfraArgOutOfRangeNegative);
+            if (offset > buffer.Length - count) throw new ArgumentException(AppResources.InfraArgOutOfRangeNegative);
 
             try {
                 stream.Write(buffer, offset, count);

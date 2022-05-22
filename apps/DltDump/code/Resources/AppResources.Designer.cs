@@ -376,6 +376,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The length and offset would exceed the boundaries of the array/buffer.
+        /// </summary>
+        internal static string InfraArgOutOfRangeIndex {
+            get {
+                return ResourceManager.GetString("InfraArgOutOfRangeIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to may not be negative.
+        /// </summary>
+        internal static string InfraArgOutOfRangeNegative {
+            get {
+                return ResourceManager.GetString("InfraArgOutOfRangeNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collection is read only.
         /// </summary>
         internal static string InfraCollectionReadOnly {
