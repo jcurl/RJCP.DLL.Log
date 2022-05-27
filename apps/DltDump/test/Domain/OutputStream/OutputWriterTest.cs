@@ -240,7 +240,7 @@
             using (OutputWriter writer = new OutputWriter()) {
                 writer.Open("File.txt");
                 Assert.That(writer.IsOpen, Is.True);
-                writer.Write(buffer.AsSpan().Slice(0, 5));
+                writer.Write(buffer.AsSpan()[..5]);
                 Assert.That(writer.Length, Is.EqualTo(5));
                 writer.Close();
                 Assert.That(writer.IsOpen, Is.False);
@@ -261,7 +261,7 @@
                 using (OutputWriter writer = new OutputWriter()) {
                     writer.Open("File.txt");
                     Assert.That(writer.IsOpen, Is.True);
-                    writer.Write(buffer.AsSpan().Slice(0, 5));
+                    writer.Write(buffer.AsSpan()[..5]);
                     Assert.That(writer.Length, Is.EqualTo(5));
                     writer.Close();
                     Assert.That(writer.IsOpen, Is.False);
