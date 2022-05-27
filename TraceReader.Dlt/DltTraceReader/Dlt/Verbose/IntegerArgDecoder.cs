@@ -57,7 +57,6 @@
         /// <remarks>This decoder cannot decode fields with the VARI bit or FIXP bit set.</remarks>
         public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
-            arg = null;
             if ((typeInfo & (DltConstants.TypeInfo.VariableInfo | DltConstants.TypeInfo.FixedPoint)) != 0)
                 return DecodeError("'Integer' unsupported type info", out arg);
 
