@@ -9,6 +9,81 @@
     using RJCP.Diagnostics.Log.Dlt;
     using RJCP.Diagnostics.Log.Dlt.Args;
 
+    internal static class PcapLegacyLines
+    {
+        public static readonly DltTraceLine Line1 =
+            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
+                EcuId = "ECU1",
+                ApplicationId = "APP1",
+                ContextId = "CTX1",
+                Position = 0,
+                Line = 0,
+                Count = 11,
+                Type = DltType.LOG_INFO,
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
+                SessionId = 910,
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
+                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
+                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
+                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+            };
+
+        public static readonly DltTraceLine Line2 =
+            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
+                EcuId = "ECU1",
+                ApplicationId = "APP1",
+                ContextId = "CTX1",
+                Position = 0,
+                Line = 0,
+                Count = 12,
+                Type = DltType.LOG_INFO,
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
+                SessionId = 910,
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
+                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
+                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
+                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+            };
+
+        public static readonly DltTraceLine Line3 =
+            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
+                EcuId = "ECU1",
+                ApplicationId = "APP1",
+                ContextId = "CTX1",
+                Position = 0,
+                Line = 0,
+                Count = 13,
+                Type = DltType.LOG_INFO,
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
+                SessionId = 910,
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
+                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
+                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
+                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+            };
+
+        public static readonly DltTraceLine Line4 =
+            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
+                EcuId = "ECU1",
+                ApplicationId = "APP1",
+                ContextId = "CTX1",
+                Position = 0,
+                Line = 0,
+                Count = 14,
+                Type = DltType.LOG_INFO,
+                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
+                SessionId = 910,
+                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
+                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
+                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
+                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+            };
+    }
+
     /// <summary>
     /// Test decoding legacy PCAP formats.
     /// </summary>
@@ -505,78 +580,6 @@
             }
         }
 
-        private static readonly DltTraceLine PcapLine1 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
-                EcuId = "ECU1",
-                ApplicationId = "APP1",
-                ContextId = "CTX1",
-                Position = 0,
-                Line = 0,
-                Count = 11,
-                Type = DltType.LOG_INFO,
-                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
-                SessionId = 910,
-                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
-                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
-                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
-                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
-                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
-            };
-
-        private static readonly DltTraceLine PcapLine2 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
-                EcuId = "ECU1",
-                ApplicationId = "APP1",
-                ContextId = "CTX1",
-                Position = 0,
-                Line = 0,
-                Count = 12,
-                Type = DltType.LOG_INFO,
-                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 48).AddNanoSeconds(802045000),
-                SessionId = 910,
-                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
-                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
-                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
-                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
-                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
-            };
-
-        private static readonly DltTraceLine PcapLine3 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
-                EcuId = "ECU1",
-                ApplicationId = "APP1",
-                ContextId = "CTX1",
-                Position = 0,
-                Line = 0,
-                Count = 13,
-                Type = DltType.LOG_INFO,
-                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
-                SessionId = 910,
-                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711400000),
-                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
-                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
-                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
-                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
-            };
-
-        private static readonly DltTraceLine PcapLine4 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
-                EcuId = "ECU1",
-                ApplicationId = "APP1",
-                ContextId = "CTX1",
-                Position = 0,
-                Line = 0,
-                Count = 14,
-                Type = DltType.LOG_INFO,
-                TimeStamp = new DateTime(2020, 6, 26, 13, 55, 50).AddNanoSeconds(806141000),
-                SessionId = 910,
-                DeviceTimeStamp = new TimeSpan(0, 0, 8).AddNanoSeconds(711500000),
-                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.SessionIdFeature +
-                           DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
-                           DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
-                           DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
-            };
-
         /// <summary>
         /// Decodes two DLT packets in one Ethernet Frame. Checks the PCAP time stamp matches.
         /// </summary>
@@ -606,16 +609,16 @@
                 var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(2));
-                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
-                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLine1.DeviceTimeStamp));
-                Assert.That(lines[0].Text, Is.EqualTo(PcapLine1.Text));
-                Assert.That(lines[0].Count, Is.EqualTo(PcapLine1.Count));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
+                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
+                Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
+                Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
                 Assert.That(lines[0].Line, Is.EqualTo(0));
                 Assert.That(lines[0].Position, Is.EqualTo(82));
-                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLine2.TimeStamp));
-                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLine2.DeviceTimeStamp));
-                Assert.That(lines[1].Text, Is.EqualTo(PcapLine2.Text));
-                Assert.That(lines[1].Count, Is.EqualTo(PcapLine2.Count));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
+                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
+                Assert.That(lines[1].Text, Is.EqualTo(PcapLegacyLines.Line2.Text));
+                Assert.That(lines[1].Count, Is.EqualTo(PcapLegacyLines.Line2.Count));
                 Assert.That(lines[1].Line, Is.EqualTo(1));
                 Assert.That(lines[1].Position, Is.EqualTo(141));
 
@@ -680,28 +683,28 @@
                 var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(4));
-                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
-                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLine1.DeviceTimeStamp));
-                Assert.That(lines[0].Text, Is.EqualTo(PcapLine1.Text));
-                Assert.That(lines[0].Count, Is.EqualTo(PcapLine1.Count));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
+                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
+                Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
+                Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
                 Assert.That(lines[0].Line, Is.EqualTo(0));
                 Assert.That(lines[0].Position, Is.EqualTo(82));
-                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLine2.TimeStamp));
-                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLine2.DeviceTimeStamp));
-                Assert.That(lines[1].Text, Is.EqualTo(PcapLine2.Text));
-                Assert.That(lines[1].Count, Is.EqualTo(PcapLine2.Count));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
+                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
+                Assert.That(lines[1].Text, Is.EqualTo(PcapLegacyLines.Line2.Text));
+                Assert.That(lines[1].Count, Is.EqualTo(PcapLegacyLines.Line2.Count));
                 Assert.That(lines[1].Line, Is.EqualTo(1));
                 Assert.That(lines[1].Position, Is.EqualTo(141));
-                Assert.That(lines[2].TimeStamp, Is.EqualTo(PcapLine3.TimeStamp));
-                Assert.That(lines[2].DeviceTimeStamp, Is.EqualTo(PcapLine3.DeviceTimeStamp));
-                Assert.That(lines[2].Text, Is.EqualTo(PcapLine3.Text));
-                Assert.That(lines[2].Count, Is.EqualTo(PcapLine3.Count));
+                Assert.That(lines[2].TimeStamp, Is.EqualTo(PcapLegacyLines.Line3.TimeStamp));
+                Assert.That(lines[2].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line3.DeviceTimeStamp));
+                Assert.That(lines[2].Text, Is.EqualTo(PcapLegacyLines.Line3.Text));
+                Assert.That(lines[2].Count, Is.EqualTo(PcapLegacyLines.Line3.Count));
                 Assert.That(lines[2].Line, Is.EqualTo(2));
                 Assert.That(lines[2].Position, Is.EqualTo(258));
-                Assert.That(lines[3].TimeStamp, Is.EqualTo(PcapLine4.TimeStamp));
-                Assert.That(lines[3].DeviceTimeStamp, Is.EqualTo(PcapLine4.DeviceTimeStamp));
-                Assert.That(lines[3].Text, Is.EqualTo(PcapLine4.Text));
-                Assert.That(lines[3].Count, Is.EqualTo(PcapLine4.Count));
+                Assert.That(lines[3].TimeStamp, Is.EqualTo(PcapLegacyLines.Line4.TimeStamp));
+                Assert.That(lines[3].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line4.DeviceTimeStamp));
+                Assert.That(lines[3].Text, Is.EqualTo(PcapLegacyLines.Line4.Text));
+                Assert.That(lines[3].Count, Is.EqualTo(PcapLegacyLines.Line4.Count));
                 Assert.That(lines[3].Line, Is.EqualTo(3));
                 Assert.That(lines[3].Position, Is.EqualTo(317));
 
@@ -787,28 +790,28 @@
                 var lines = Decode(decoder, packet, chunk);
 
                 Assert.That(lines.Count, Is.EqualTo(4));
-                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
-                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLine1.DeviceTimeStamp));
-                Assert.That(lines[0].Text, Is.EqualTo(PcapLine1.Text));
-                Assert.That(lines[0].Count, Is.EqualTo(PcapLine1.Count));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
+                Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
+                Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
+                Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
                 Assert.That(lines[0].Line, Is.EqualTo(0));
                 Assert.That(lines[0].Position, Is.EqualTo(82));
-                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLine2.TimeStamp));
-                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLine2.DeviceTimeStamp));
-                Assert.That(lines[1].Text, Is.EqualTo(PcapLine2.Text));
-                Assert.That(lines[1].Count, Is.EqualTo(PcapLine2.Count));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
+                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
+                Assert.That(lines[1].Text, Is.EqualTo(PcapLegacyLines.Line2.Text));
+                Assert.That(lines[1].Count, Is.EqualTo(PcapLegacyLines.Line2.Count));
                 Assert.That(lines[1].Line, Is.EqualTo(1));
                 Assert.That(lines[1].Position, Is.EqualTo(141));
-                Assert.That(lines[2].TimeStamp, Is.EqualTo(PcapLine3.TimeStamp));
-                Assert.That(lines[2].DeviceTimeStamp, Is.EqualTo(PcapLine3.DeviceTimeStamp));
-                Assert.That(lines[2].Text, Is.EqualTo(PcapLine3.Text));
-                Assert.That(lines[2].Count, Is.EqualTo(PcapLine3.Count));
+                Assert.That(lines[2].TimeStamp, Is.EqualTo(PcapLegacyLines.Line3.TimeStamp));
+                Assert.That(lines[2].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line3.DeviceTimeStamp));
+                Assert.That(lines[2].Text, Is.EqualTo(PcapLegacyLines.Line3.Text));
+                Assert.That(lines[2].Count, Is.EqualTo(PcapLegacyLines.Line3.Count));
                 Assert.That(lines[2].Line, Is.EqualTo(2));
                 Assert.That(lines[2].Position, Is.EqualTo(258 + bigPktHdr.Length + BigFrame));
-                Assert.That(lines[3].TimeStamp, Is.EqualTo(PcapLine4.TimeStamp));
-                Assert.That(lines[3].DeviceTimeStamp, Is.EqualTo(PcapLine4.DeviceTimeStamp));
-                Assert.That(lines[3].Text, Is.EqualTo(PcapLine4.Text));
-                Assert.That(lines[3].Count, Is.EqualTo(PcapLine4.Count));
+                Assert.That(lines[3].TimeStamp, Is.EqualTo(PcapLegacyLines.Line4.TimeStamp));
+                Assert.That(lines[3].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line4.DeviceTimeStamp));
+                Assert.That(lines[3].Text, Is.EqualTo(PcapLegacyLines.Line4.Text));
+                Assert.That(lines[3].Count, Is.EqualTo(PcapLegacyLines.Line4.Count));
                 Assert.That(lines[3].Line, Is.EqualTo(3));
                 Assert.That(lines[3].Position, Is.EqualTo(317 + bigPktHdr.Length + BigFrame));
 
@@ -870,16 +873,16 @@
 
                 Assert.That(lines.Count, Is.EqualTo(2));
                 // Skipped line
-                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLine1.TimeStamp));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
                 Assert.That(lines[0].DeviceTimeStamp.Ticks, Is.EqualTo(0));
                 Assert.That(lines[0].Text, Is.EqualTo("Skipped: 59 bytes; Reason: Invalid packet standard header"));
                 Assert.That(lines[0].Count, Is.EqualTo(-1));
                 Assert.That(lines[0].Line, Is.EqualTo(0));
                 Assert.That(lines[0].Position, Is.EqualTo(82));
-                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLine2.TimeStamp));
-                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLine2.DeviceTimeStamp));
-                Assert.That(lines[1].Text, Is.EqualTo(PcapLine2.Text));
-                Assert.That(lines[1].Count, Is.EqualTo(PcapLine2.Count));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
+                Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
+                Assert.That(lines[1].Text, Is.EqualTo(PcapLegacyLines.Line2.Text));
+                Assert.That(lines[1].Count, Is.EqualTo(PcapLegacyLines.Line2.Count));
                 Assert.That(lines[1].Line, Is.EqualTo(1));
                 Assert.That(lines[1].Position, Is.EqualTo(141));
 
