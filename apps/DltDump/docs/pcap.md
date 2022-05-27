@@ -435,22 +435,32 @@ then the length is 20 bytes.
 
 ### 6.1. IP Fragmentation
 
-When IP fragmentation occurs, the minimum length of the packet data must be 8.
-It can be up to the MTU (which on Ethernet is typically 1500 packet data bytes,
-but may be less if VLAN is used).
-
-In case of IP fragmentation, the data is fragmented, and new IP headers are
-generated with new Header Checksums.
+When IPv4 fragmentation occurs, the data is fragmented over multiple IPv4
+packets. Each new packet has a new IPv4 header recalculated with a new length
+and new checksum. the minimum length of the v4 packet data must be 8 bytes. It
+can be up to the MTU (which on Ethernet is typically 1500 packet data bytes, but
+may be less if VLAN is used).
 
 The Identification field is used to identify the reconstruction of the fragments
 for a given source and destination address and protocol type. Apart from the
 packet data from being split, no change to the content of the packet data is
 made.
 
-Example: Let's say that the total length is 92 bytes, with the IHL being 20
-bytes. This leaves 72 bytes of Packet data. If it's fragmented, so that the MF
-bit is set, the Fragment offset is 0x00, the second packet would then have a
-fragmentation offset of 0x09 (which is 72 bytes).
+A group of IP fragments are reconstructed into a single IPv4 packet based on the
+following fields:
+
+* The source address.
+* The destination address.
+* The protocol identifier.
+* The identification field.
+
+The length of the packet is uknown, until the final packet is received. The
+final packet is identified as having the MF bit set to zero. The length is then
+calculated from the data length and the fragmentation offset.
+
+The ordering of the fragmented IP packets is undefined, but it is observed often
+on Linux that the last packet is transmitted first. However, this is not
+guaranteed.
 
 ## 7. UDP Protocol
 

@@ -79,16 +79,6 @@
 
             public void Append(long position, int length)
             {
-#if DEBUG
-                // Used during debug to ensure that writes are consistent. If this condition is not held in Release
-                // mode, the results are undefined.
-                if (position < m_EndPosition) {
-                    string message = string.Format("Inconsistent position detected. Last position: {0}; New position {1}.",
-                        m_EndPosition, position);
-                    throw new ArgumentOutOfRangeException(nameof(position), message);
-                }
-#endif
-
                 if (m_PosMapCount == 0) {
                     m_PosMapCount = 1;
                     m_PosMapHead = 0;
@@ -142,6 +132,8 @@
                             length, length - remaining);
                         throw new ArgumentOutOfRangeException(nameof(length), message);
                     }
+#else
+                    if (m_PosMapCount == 0) return;
 #endif
                     if (m_PosMap[m_PosMapHead].Blocksize <= remaining) {
                         remaining -= m_PosMap[m_PosMapHead].Blocksize;

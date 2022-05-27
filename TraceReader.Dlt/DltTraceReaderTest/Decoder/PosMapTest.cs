@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Decoder
 {
+    using System;
     using NUnit.Framework;
 
     [TestFixture]
@@ -81,6 +82,50 @@
             posmap.Append(200, 100);
             Assert.That(posmap.Position, Is.EqualTo(0));
             Assert.That(posmap.Length, Is.EqualTo(200));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void AppendGapRandom(bool overlap)
+        {
+            // Tests if the position is based on packets, and those packets are not in order, e.g. as obtained by
+            // Ethernet and then it needs rejoining after fragmentation.
+
+            PosMapAccessor posmap = new PosMapAccessor();
+            posmap.Append(150, 50);
+            posmap.Append(10, 50);
+            Assert.That(posmap.Position, Is.EqualTo(150));
+            Assert.That(posmap.Length, Is.EqualTo(100));
+
+            posmap.Consume(45);
+            Assert.That(posmap.Position, Is.EqualTo(195));
+            Assert.That(posmap.Length, Is.EqualTo(55));
+
+            if (overlap) {
+                posmap.Consume(10);
+                Assert.That(posmap.Position, Is.EqualTo(15));
+                Assert.That(posmap.Length, Is.EqualTo(45));
+            } else {
+                posmap.Consume(5);
+                Assert.That(posmap.Position, Is.EqualTo(10));
+                Assert.That(posmap.Length, Is.EqualTo(50));
+
+                posmap.Consume(5);
+                Assert.That(posmap.Position, Is.EqualTo(15));
+                Assert.That(posmap.Length, Is.EqualTo(45));
+            }
+
+            posmap.Consume(40);
+            Assert.That(posmap.Position, Is.EqualTo(55));
+            Assert.That(posmap.Length, Is.EqualTo(5));
+
+            posmap.Consume(5);
+            Assert.That(posmap.Position, Is.EqualTo(60));
+            Assert.That(posmap.Length, Is.EqualTo(0));
+
+            posmap.Append(275, 25);
+            Assert.That(posmap.Position, Is.EqualTo(275));
+            Assert.That(posmap.Length, Is.EqualTo(25));
         }
 
         [TestCase(1)]
@@ -184,6 +229,20 @@
             posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(86)); Assert.That(posMap.Length, Is.EqualTo(24));
             posMap.Consume(14); Assert.That(posMap.Position, Is.EqualTo(120)); Assert.That(posMap.Length, Is.EqualTo(10));
             posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(130)); Assert.That(posMap.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void ConsumeTooMuch()
+        {
+            PosMapAccessor posMap = new PosMapAccessor();
+#if DEBUG
+            Assert.That(() => {
+                posMap.Consume(1);
+            }, Throws.TypeOf<ArgumentOutOfRangeException>());
+#else
+            // Should be ignored in release mode.
+            posMap.Consume(1);
+#endif
         }
     }
 }
