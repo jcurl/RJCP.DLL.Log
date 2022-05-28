@@ -1,6 +1,5 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
-    using Infrastructure.Text;
     using Resources;
     using RJCP.Core.Environment;
     using Services;
