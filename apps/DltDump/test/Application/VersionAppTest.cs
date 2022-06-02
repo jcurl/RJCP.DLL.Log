@@ -2,6 +2,7 @@
 {
     using System;
     using NUnit.Framework;
+    using Infrastructure.Terminal;
 
     [TestFixture]
     public class VersionAppTest
@@ -22,6 +23,7 @@
         public void GetSimpleVersion()
         {
             using (TestApplication global = new TestApplication()) {
+                ((VirtualTerminal)Global.Instance.Terminal).TerminalWidth = 132;
                 VersionApp.ShowSimpleVersion();
 
                 global.WriteStd();
@@ -34,6 +36,7 @@
         public void GetVersion()
         {
             using (TestApplication global = new TestApplication()) {
+                ((VirtualTerminal)Global.Instance.Terminal).TerminalWidth = 132;
                 VersionApp.ShowVersion();
 
                 global.WriteStd();

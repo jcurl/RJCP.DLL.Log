@@ -23,13 +23,13 @@
         /// Gets the width of the terminal.
         /// </summary>
         /// <value>The width of the terminal.</value>
-        public int TerminalWidth { get { return 80; } }
+        public int TerminalWidth { get; set; } = 80;
 
         /// <summary>
         /// Gets the height of the terminal.
         /// </summary>
         /// <value>The height of the terminal.</value>
-        public int TerminalHeight { get { return 25; } }
+        public int TerminalHeight { get; set; } = 25;
 
         /// <summary>
         /// Gets or sets the color of the background.
