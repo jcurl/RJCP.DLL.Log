@@ -446,5 +446,54 @@
                 Assert.That(packetDecoder.DecodePacket(frame2, Time1, 162), Is.Empty);
             }
         }
+
+        private static readonly int[] InternetHeaders = {
+            0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F
+        };
+
+        [TestCaseSource(nameof(InternetHeaders))]
+        public void LargeInternetHeaderCutUntagged(int ih)
+        {
+            // Ensure that the header is more than 50 bytes (the minimum size), and that we don't have the UDP
+            // port to ensure buffer size checks are made.
+
+            byte[] packet = new byte[50] {
+                0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+                0x08, 0x00,                                                             // IPv4 Proto
+                0x49, 0x00, 0x00, 0x67, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header, IHL=36 bytes
+                0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00
+            };
+
+            int len = Math.Min(((ih & 0x0F) << 2) + 14, 34);
+            packet[14] = (byte)ih;
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
+                Assert.That(lines, Is.Empty);
+            }
+        }
+
+        [TestCaseSource(nameof(InternetHeaders))]
+        public void LargeInternetHeaderCutTagged(int ih)
+        {
+            // Ensure that the header is more than 52 bytes (the minimum size), and that we don't have the UDP
+            // port to ensure buffer size checks are made.
+
+            byte[] packet = new byte[50] {
+                0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+                0x81, 0x00, 0x00, 0x49, 0x08, 0x00,                                     // IPv4 Proto
+                0x48, 0x00, 0x00, 0x67, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header, IHL=36 bytes
+                0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            };
+
+            int len = Math.Min(((ih & 0x0F) << 2) + 18, 38);
+            packet[18] = (byte)ih;
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
+                Assert.That(lines, Is.Empty);
+            }
+        }
     }
 }

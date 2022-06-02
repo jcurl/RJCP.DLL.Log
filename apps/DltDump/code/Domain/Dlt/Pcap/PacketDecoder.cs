@@ -82,6 +82,7 @@
             if (fragOffset != 0) return Array.Empty<DltTraceLineBase>();                 // IP fragmented, MF = x
 
             // Check UDP fields, https://datatracker.ietf.org/doc/html/rfc768
+            if (ipHdr.Length < ihl + 16) return Array.Empty<DltTraceLineBase>();         // UDP Hdr 8 bytes; DLT min 8 bytes
             int dstPort = BitOperations.To16ShiftBigEndian(ipHdr[(ihl + 2)..]);
             if (dstPort != 3490) return Array.Empty<DltTraceLineBase>();                 // Not destination port 3490
 
@@ -155,7 +156,7 @@
             // * IPv4 Header = 20 bytes (src, dest, proto, length)
             // * UDP Header = 8 bytes (src port, dest port, length, checksum)
             // * DLT Header + Message ID = 8 bytes
-            // -> Total = 48 bytes (minimum size for a minimum DLT packet in a UDP frame)
+            // -> Total = 52 bytes (minimum size for a minimum DLT packet in a UDP frame)
 
             if (buffer.Length < 52) return -1;
 
