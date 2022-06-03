@@ -197,8 +197,7 @@
                     m_Length = 0;
                 }
 
-                int origLen = BitOperations.To32Shift(packet[12..], Format.IsLittleEndian);
-                if (origLen == packet.Length - PcapRecHdrLen) {
+                if (packet.Length > PcapRecHdrLen) {
                     uint seconds = unchecked((uint)BitOperations.To32Shift(packet, Format.IsLittleEndian));
                     uint subsec = unchecked((uint)BitOperations.To32Shift(packet[4..], Format.IsLittleEndian));
                     DateTime timeStamp = Format.GetTimeStamp(seconds, subsec);

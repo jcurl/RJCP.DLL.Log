@@ -45,7 +45,7 @@
         /// <summary>
         /// Decodes the packet.
         /// </summary>
-        /// <param name="buffer">The buffer where the packet starts.</param>
+        /// <param name="buffer">The buffer where the packet starts, length being the captured data.</param>
         /// <param name="position">The position.</param>
         /// <returns>An enumerable list of lines that were decoded.</returns>
         /// <remarks>
@@ -54,9 +54,6 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> DecodePacket(ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
         {
-            // The start of the IPv4 data, see https://datatracker.ietf.org/doc/html/rfc791
-            ReadOnlySpan<byte> ipHdr;
-
             int offset;
             switch (m_LinkType) {
             case LinkTypes.LINKTYPE_ETHERNET:
@@ -70,23 +67,26 @@
             }
             if (offset == -1) return Array.Empty<DltTraceLineBase>();
 
+            int ipLen = BitOperations.To16ShiftBigEndian(buffer[(offset + 2)..]);
+            if (ipLen < 20 || ipLen > buffer.Length - offset) return Array.Empty<DltTraceLineBase>();
+
+            // The IPv4 packet, see https://datatracker.ietf.org/doc/html/rfc791
+            ReadOnlySpan<byte> ipPacket = buffer[offset..(offset + ipLen)];
+
             // Check IPv4 fields that UDP is present.
-            ipHdr = buffer[offset..];
-            if ((ipHdr[0] & 0xF0) != 0x40) return Array.Empty<DltTraceLineBase>();       // Not IPv4
-            if (ipHdr[9] != 17) return Array.Empty<DltTraceLineBase>();                  // Not UDP
+            if ((ipPacket[0] & 0xF0) != 0x40) return Array.Empty<DltTraceLineBase>();    // Not IPv4
+            if (ipPacket[9] != 17) return Array.Empty<DltTraceLineBase>();               // Not UDP
 
-            int ihl = (ipHdr[0] & 0x0F) << 2;
-            int flags = (ipHdr[6] & 0xE0) >> 5;
-            int fragOffset = (((ipHdr[6] & 0x1F) << 8) + ipHdr[7]) * 8;
-
+            int ihl = (ipPacket[0] & 0x0F) << 2;
+            int flags = (ipPacket[6] & 0xE0) >> 5;
+            int fragOffset = (((ipPacket[6] & 0x1F) << 8) + ipPacket[7]) * 8;
             if (fragOffset != 0) return Array.Empty<DltTraceLineBase>();                 // IP fragmented, MF = x
+            if (ipLen < ihl + 16) return Array.Empty<DltTraceLineBase>();                // Corrupted packet
 
             // Check UDP fields, https://datatracker.ietf.org/doc/html/rfc768
-            if (ipHdr.Length < ihl + 16) return Array.Empty<DltTraceLineBase>();         // UDP Hdr 8 bytes; DLT min 8 bytes
-            int dstPort = BitOperations.To16ShiftBigEndian(ipHdr[(ihl + 2)..]);
+            int dstPort = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 2)..]);
             if (dstPort != 3490) return Array.Empty<DltTraceLineBase>();                 // Not destination port 3490
-
-            int udpLen = BitOperations.To16ShiftBigEndian(ipHdr[(ihl + 4)..]);
+            int udpLen = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 4)..]);
 
             if ((flags & 0x01) != 0) {                                                   // IP fragmented, MF = 1
                 // This is the first packet of a fragmented UDP datagram, and more packets are to follow. The rest are
@@ -97,16 +97,16 @@
                 return Array.Empty<DltTraceLineBase>();
             }
 
-            if (ipHdr.Length < ihl + udpLen) {
-                // The packet is too small. A corrupted, or partially recorded packet.
+            if (ipLen < ihl + udpLen) {
+                // The packet is corrupted.
                 Log.Pcap.TraceEvent(TraceEventType.Warning,
                     "Discarded invalid UDP packet, position 0x{0:x}, Data Length {1}, actual data size {2}",
-                    position, udpLen - 8, ipHdr.Length - ihl - 8);
+                    position, udpLen - 8, ipLen - ihl - 8);
                 return Array.Empty<DltTraceLineBase>();
             }
 
             position += offset + ihl + 8;
-            ReadOnlySpan<byte> dltPacket = ipHdr.Slice(ihl + 8, udpLen - 8);
+            ReadOnlySpan<byte> dltPacket = ipPacket.Slice(ihl + 8, udpLen - 8);
 
             // We decode and flush, as we expect each DLT packet to be complete in a UDP packet. If a DLT packet spans
             // across multiple UDP packets, then this will cause the packet to likely be discarded.

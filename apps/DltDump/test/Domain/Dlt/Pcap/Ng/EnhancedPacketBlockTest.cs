@@ -249,22 +249,6 @@
 
         [TestCase(true)]
         [TestCase(false)]
-        public void DecodeBlockCaptureOriginalMismatch(bool littleEndian)
-        {
-            byte[] epb = (littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian).ToArray();
-            BitOperations.Copy32Shift(0x400, epb, 24, littleEndian);  // Offset 24 is the Original Packet Length.
-
-            using (BlockReader reader = new BlockReader()) {
-                _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
-                _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
-
-                var lines = reader.DecodeBlock(epb, 0).ToList();
-                Assert.That(lines.Count, Is.EqualTo(0));
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
         public void DecodeWithMultipleShb(bool littleEndian)
         {
             List<DltTraceLineBase> lines;

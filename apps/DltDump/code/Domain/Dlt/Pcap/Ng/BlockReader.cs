@@ -238,8 +238,7 @@
                 if (intf == null) break;
 
                 int captured = BitOperations.To32Shift(buffer[20..], m_LittleEndian);
-                int original = BitOperations.To32Shift(buffer[24..], m_LittleEndian);
-                if (captured != original || original > intf.SnapLength) break;
+                if (captured > intf.SnapLength) break;
                 if (blockLength < 32 + captured) break;
 
                 uint tsHigh = unchecked((uint)BitOperations.To32Shift(buffer[12..], m_LittleEndian));
