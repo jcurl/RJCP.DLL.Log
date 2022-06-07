@@ -29,28 +29,30 @@ implementation in an incremental manner).
       - [2.3.2.4. The Output Stream, Context and Filter](#2324-the-output-stream-context-and-filter)
   - [2.4. Domain](#24-domain)
     - [2.4.1. InputStreamFactory and InputStream](#241-inputstreamfactory-and-inputstream)
-    - [2.4.2. Decoders (and PCAP, PCAPNG formats)](#242-decoders-and-pcap-pcapng-formats)
-      - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
-      - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
-      - [2.4.2.6. PCAP-NG Design](#2426-pcap-ng-design)
-      - [2.4.2.3. Supported Link Types for PCAP and PCAPNG](#2423-supported-link-types-for-pcap-and-pcapng)
-      - [2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding](#2424-unsupported-features-for-pcap--pcapng-decoding)
-      - [2.4.2.5. Fragmented IP packets](#2425-fragmented-ip-packets)
-    - [2.4.3. Trace Output](#243-trace-output)
-      - [2.4.3.1. Console Output](#2431-console-output)
-      - [2.4.3.2. Text File Output](#2432-text-file-output)
-      - [2.4.3.3. DLT File Output](#2433-dlt-file-output)
-      - [2.4.3.4. File Templates for DLT and Text Output](#2434-file-templates-for-dlt-and-text-output)
-      - [2.4.3.5. Input File Concatenation](#2435-input-file-concatenation)
-      - [2.4.3.6. Splitting Output Files](#2436-splitting-output-files)
-      - [2.4.3.7. Detailed Logic for Splitting and Concatenating Files](#2437-detailed-logic-for-splitting-and-concatenating-files)
-      - [2.4.3.8. IOutputStream Object Lifetime](#2438-ioutputstream-object-lifetime)
-      - [2.4.3.9. On Flush](#2439-on-flush)
-    - [2.4.4. The Filter and the Context](#244-the-filter-and-the-context)
-      - [2.4.4.1. Output Chaining](#2441-output-chaining)
-      - [2.4.4.2. Context Implementation](#2442-context-implementation)
-    - [2.4.5. Decoder Extension on Line Decoding](#245-decoder-extension-on-line-decoding)
-      - [2.4.5.1. DltTraceDecoder writing to IOutputStream](#2451-dlttracedecoder-writing-to-ioutputstream)
+    - [2.4.2. DLT Trace Decoder (AutoSAR PRS format)](#242-dlt-trace-decoder-autosar-prs-format)
+    - [2.4.3. DLT Trace Decoder for PCAP and PCAPNG](#243-dlt-trace-decoder-for-pcap-and-pcapng)
+      - [2.4.3.1. PCAP-NG Design](#2431-pcap-ng-design)
+      - [2.4.3.2. Supported Link Types for PCAP and PCAPNG](#2432-supported-link-types-for-pcap-and-pcapng)
+      - [2.4.3.3. Handling Connections within a PCAP File](#2433-handling-connections-within-a-pcap-file)
+        - [2.4.3.3.1. IPv4 Packet Fragmentation by the Network Stack](#24331-ipv4-packet-fragmentation-by-the-network-stack)
+        - [2.4.3.3.2. Issues with IP Fragmentation Reassembly](#24332-issues-with-ip-fragmentation-reassembly)
+        - [2.4.3.3.3. DLT Packet Fragmentation by the Client](#24333-dlt-packet-fragmentation-by-the-client)
+      - [2.4.3.4. Unsupported Features for PCAP / PCAPNG Decoding](#2434-unsupported-features-for-pcap--pcapng-decoding)
+    - [2.4.4. Trace Output](#244-trace-output)
+      - [2.4.4.1. Console Output](#2441-console-output)
+      - [2.4.4.2. Text File Output](#2442-text-file-output)
+      - [2.4.4.3. DLT File Output](#2443-dlt-file-output)
+      - [2.4.4.4. File Templates for DLT and Text Output](#2444-file-templates-for-dlt-and-text-output)
+      - [2.4.4.5. Input File Concatenation](#2445-input-file-concatenation)
+      - [2.4.4.6. Splitting Output Files](#2446-splitting-output-files)
+      - [2.4.4.7. Detailed Logic for Splitting and Concatenating Files](#2447-detailed-logic-for-splitting-and-concatenating-files)
+      - [2.4.4.8. IOutputStream Object Lifetime](#2448-ioutputstream-object-lifetime)
+      - [2.4.4.9. On Flush](#2449-on-flush)
+    - [2.4.5. The Filter and the Context](#245-the-filter-and-the-context)
+      - [2.4.5.1. Output Chaining](#2451-output-chaining)
+      - [2.4.5.2. Context Implementation](#2452-context-implementation)
+    - [2.4.6. Decoder Extension on Line Decoding](#246-decoder-extension-on-line-decoding)
+      - [2.4.6.1. DltTraceDecoder writing to IOutputStream](#2461-dlttracedecoder-writing-to-ioutputstream)
   - [2.5. Infrastructure](#25-infrastructure)
     - [2.5.1. Version Information](#251-version-information)
 
@@ -459,14 +461,12 @@ returns a stream and other metadata:
 Connecting the stream should be done by the `FilterApp` application in an
 asynchronous manner before giving to the decoder.
 
-#### 2.4.2. Decoders (and PCAP, PCAPNG formats)
+#### 2.4.2. DLT Trace Decoder (AutoSAR PRS format)
 
 There are three decoders implemented in the DLT package for reading a stream of
 bytes and interpreting DLT contents, implemented as per the [AutoSAR R20-11
 PRS](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11/AUTOSAR_PRS_LogAndTraceProtocol.pdf)
 standard (DLT version 1).
-
-##### 2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)
 
 If writing to the console, the DLT Trace Decoder used can be instantiated from
 the decoders already defined. The output of the decoder is the result of the
@@ -482,7 +482,7 @@ constructed. Information about the decoded packet is part of the
 `IDltLineBuilder` object maintained internally in the decoder and must also be
 made present to the binary writer.
 
-##### 2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG
+#### 2.4.3. DLT Trace Decoder for PCAP and PCAPNG
 
 A decoder can be implemented that can decode either a PCAP or PCAPNG file
 format, with detection based on the initial 4 bytes of the file:
@@ -537,7 +537,7 @@ The implementation assumes that each packet is complete, that is, it contains an
 integer number of complete DLT packets. As such, after decoding each Ethernet
 frame, the underlying DLT decoder should be flushed.
 
-##### 2.4.2.6. PCAP-NG Design
+##### 2.4.3.1. PCAP-NG Design
 
 Writing a PCAP-NG decoder is a little more work, as there may be multiple
 section header blocks, and per block, there may be multiple interfaces. This
@@ -589,7 +589,7 @@ method:
   following block types:
   * `0x00000006` - Enhanced Packet Block
 
-##### 2.4.2.3. Supported Link Types for PCAP and PCAPNG
+##### 2.4.3.2. Supported Link Types for PCAP and PCAPNG
 
 The `PacketDecoder` should support the following Link Types defined by [Link
 Type](https://www.tcpdump.org/linktypes.html)
@@ -598,7 +598,125 @@ Type](https://www.tcpdump.org/linktypes.html)
 * `LINKTYPE_LINUX_SLL` = 0x71 (113)
   * With a 6 byte address, being the MAC of the interface being recorded.
 
-##### 2.4.2.4. Unsupported Features for PCAP / PCAPNG Decoding
+##### 2.4.3.3. Handling Connections within a PCAP File
+
+There are two scenarios in which UDP packets may not fit within a single UDP
+frame:
+
+1. The frame is so large, that there is IP fragmentation of the UDP packet. This
+   requires the decoder to manage IP fragmentation and to reconstruct the
+   original packet as per
+   [RFC791](https://datatracker.ietf.org/doc/html/rfc791).
+2. The DLT writer application splits the DLT packet into smaller chunks and
+   transmits multiple UDP frames (the IP frame is not fragmented, but the
+   payload is). This requires treating the input sequence of UDP packets as a
+   stream, separating each connection.
+
+The design to handle these two cases are presented:
+
+![PCAP](out/diagrams/dltpacketdecoder/DltPcapPacketDecoder.svg)
+
+###### 2.4.3.3.1. IPv4 Packet Fragmentation by the Network Stack
+
+In the first case of IP fragmentation, the IPv4 source address, destination
+address and fragmentation fields (identifier, offset, more fragments) are to be
+tracked as per [RFC791](https://datatracker.ietf.org/doc/html/rfc791). The
+protocol is always UDP.
+
+For a single full DLT packet in an IPv4 fragmented packet, reassembly is done
+defined by the source address, destination address, protocol (always UDP here)
+and the fragmentation identifier. The reassembled packet is then given to the
+`DltPcapNetworkTraceFilterDecoder` for decoding as if it were a single packet.
+
+The `PacketDecoder` then does the following for each packet it receives:
+
+* If the packet is not fragmented, it gets the `DltTraceDecoder` based on the
+  (source:port, destination:port) pair via `Connection.GetDltDecoder`.
+* If the packet is fragmented, and this is the first fragment, where the
+  fragmentation offset is zero, it gets the list of fragments via
+  `Connection.GetIpFragments(fragId)` and adds it via the first method giving
+  the source/destination ports.
+* If the packet is fragmented, and this is not the first fragment, where the
+  fragmentation offset is non-zero, it gets the list of fragments via
+  `Connection.GetIpFragments(fragId)` and adds it via the second method giving
+  the offset and if this is the last packet (via the `mf` flag). For this kind
+  of packet, the UDP source/destination port is not known.
+
+If the result of calling `AddFragment` is `true`, it means that the reassembly
+is complete, and the entire packet can be obtained and given to the
+`DltTraceDecoder`. The ordering of the fragments are not defined. It is observed
+on Linux hosts transmitting fragmented IP packets that often the last packet is
+transmitted first, followed by the remaining packets. This implementation makes
+no assumption of the ordering.
+
+###### 2.4.3.3.2. Issues with IP Fragmentation Reassembly
+
+The following scenarios can occur in a PCAP/PCAP-NG file and should be handled:
+
+* A packet is lost
+* A packet is duplicated (re-sent)
+* A packet is incorrect with overlap
+
+If a packet is lost, it is likely to be never retransmitted. If this is the
+case, we'll have a "stale" entry in the `IpFragments` dictionary collection for
+the fragmentation identifier. We assume that the packets arrive always in
+ordered time. Thus, if the time stamp of the current fragment exceeds 15 seconds
+of the current time stamp entry for the fragment, we discard all elements and
+treat this new fragment as the first element. A log message is emitted
+indicating the position of all packets that were discarded.
+
+If the fragments already contain the first packet, or the last packet for this
+fragmentation identifier, all existing fragments are discarded and this becomes
+the "new" fragment. A log message is emitted indicating the position of all
+packets that were discarded. We take advantage that an Operating System is
+likely to transmit the first fragment or the last fragment first over the wire.
+
+If a packet is sent with overlap, its position is logged and is discarded. This
+can occur when a packet is lost and the time overlap is less than 15 seconds. A
+host operating system should try and minimize the reuse of the fragmentation
+identifier which should minimize the occurrence of this happening. This overlap
+may occur for high data output rates when a packet is lost, but still very
+unlikely to occur as the previous check for the first/last fragment will likely
+occur prior.
+
+Overlap can also occur when a packet is resent, or logged twice, in which case,
+there is no loss of data by ignoring this packet.
+
+If a packet is incorrect and has overlap but due to a corrupted fragment, no
+attempt will be made to try and reconstruct the packet by merging the overlap.
+It is expected that routers, switches and Operating Systems implement
+fragmentation correctly.
+
+It should be noted that PCAP-NG files where the same packet is seen on multiple
+interfaces will not see duplicated packets, as interfaces are seggregated
+through the `InterfaceDescriptionBlock`.
+
+###### 2.4.3.3.3. DLT Packet Fragmentation by the Client
+
+In the second case of the client fragmenting the payload and transmitting
+multiple packets, the virtual connection must be tracked, each connection in the
+PCAP file treated as a stream. This requires the fields source address and port,
+destination address and port to be tracked. The protocol is always UDP.
+
+If packets are not treated as such, interleaved packets from two different
+sources (identified by their address and port) in the PCAP can interfere with
+each other. Imagine two sources, `1` and `2`. We'll use the notation `1.1` and
+`1.2` to indicate the first and second fragment of the first source. If the
+packet arrives in the PCAP stream as `1.1`, `2.1`, `1.2`, `2.2`, then both must
+be treated independently as `1.1`, `1.2` and `2.1`, `2.2` and thus two different
+instances of the `PacketDecoder`. Else the packet `2.1` will corrupt the
+decoding of the previous packet `1.1` for example.  It is assumed here that
+packets are not reordered in the PCAP file, as there is no information on the
+ordering.
+
+To handle the multiple streams, the `PacketDecoder` decodes the IP end points
+for the virtual connection. Each combination of `source:port`,
+`destination:port` define the virtual connection between the device transmitting
+and the addresses to receive (which can be a multicast sink). As each virtual
+connection has its own `DltPcapNetworkTraceFilterDecoder`, this handles the
+second case avoiding corruption should DLT streams be interleaved.
+
+##### 2.4.3.4. Unsupported Features for PCAP / PCAPNG Decoding
 
 The following limitations are applied:
 
@@ -611,19 +729,7 @@ The following limitations are applied:
 * Only IPv4 will be supported, until real-world examples exist of IPv6 which can
   be tested with.
 
-##### 2.4.2.5. Fragmented IP packets
-
-The class `PacketDecoder` is responsible for fragmented IP packets. At this
-time, it discards fragmented packets:
-
-* If the IPv4 fragmentation offset is non-zero, it is ignored
-  * In these packets, there are no UDP port information, that is in the first of
-    the fragmented packets
-* If the IPv4 fragmentation offset is zero, but the MF (More Frames) bit is set,
-  it is ignored and a warning is printed in the logs (but no output is put into
-  the decoded traffic).
-
-#### 2.4.3. Trace Output
+#### 2.4.4. Trace Output
 
 There are multiple output sinks, each shall also implement the `IOutputStream`.
 The sinks are:
@@ -652,12 +758,12 @@ on the output file name:
 * `*.dlt`: DLT File Output
 * Any other file name: Text File Output
 
-##### 2.4.3.1. Console Output
+##### 2.4.4.1. Console Output
 
 This class knows only how to output the DLT trace line to the console. The
 construction of this object must know if the position should be printed or not.
 
-##### 2.4.3.2. Text File Output
+##### 2.4.4.2. Text File Output
 
 For consistent output to a text file in UTF8 format, it is possible to write to
 a text file output. When using shell redirection on Windows Power Shell, the
@@ -671,7 +777,7 @@ not.
 It must maintain a text stream, the file name of the output, automatically split
 the output on each line as required by the inputs.
 
-##### 2.4.3.3. DLT File Output
+##### 2.4.4.3. DLT File Output
 
 The DLT file output writer implements both methods for writing data, one only
 containing the DLT line, the other containing the DLT line with the binary
@@ -690,7 +796,7 @@ be constructed and written.
 This output writer also maintains a binary stream, the file name based on a
 template, the size of the output stream on when to split.
 
-##### 2.4.3.4. File Templates for DLT and Text Output
+##### 2.4.4.4. File Templates for DLT and Text Output
 
 The functionality for writing DLT and text files have components in common and
 should be implemented in the `OutputBase`:
@@ -728,7 +834,7 @@ the `%FILE%` from `SetInput`, the `%CDATE%`, `%CTIME%` and `%CDATETIME%` from
 the first `Write` just before opening the file. The `%CTR%` is maintained
 internally.
 
-##### 2.4.3.5. Input File Concatenation
+##### 2.4.4.5. Input File Concatenation
 
 Input files shall be concatenated if the output file name is independent of the
 input file name. All inputs will be processed one after the other, and split as
@@ -740,7 +846,7 @@ every input, there is a separate output file.
 
 Rule: `AllowConcatenation = !%FILE%`
 
-##### 2.4.3.6. Splitting Output Files
+##### 2.4.4.6. Splitting Output Files
 
 If the `Split` option is provided so that files should be split, then files will
 be split and dependent on the variables `%CTR%` and `%CDATETIME%`, `%CDATE%`,
@@ -754,7 +860,7 @@ above mentioned variables.
 
 Rule: `AllowSplit = %CTR% || %CDATE% || %CTIME% || %CDATETIME%`
 
-##### 2.4.3.7. Detailed Logic for Splitting and Concatenating Files
+##### 2.4.4.7. Detailed Logic for Splitting and Concatenating Files
 
 To handle the logic of input files being converted to output files, it is split
 into two logical paths, depending on `AllowConcatenation`. For the current
@@ -821,7 +927,7 @@ writes files.
     * Otherwise, add to the Segments list.
       * `FileMode = Force ? CreateNew : Create`
 
-##### 2.4.3.8. IOutputStream Object Lifetime
+##### 2.4.4.8. IOutputStream Object Lifetime
 
 As indicated above, it is important that this object is created once and used
 for all input files as in the previous section on concatenating output files.
@@ -829,7 +935,7 @@ The `IOutputStream` is then used directly by the `FilterApp` or used by the
 decoder. But the `FilterApp` always calls when a new file is processed, between
 instantiations of the decoder.
 
-##### 2.4.3.9. On Flush
+##### 2.4.4.9. On Flush
 
 When the input stream has reached end of file, or the decoder is closed, the
 `DltDecoder` has the method `Flush()` called. This should result in the
@@ -838,7 +944,7 @@ remaining data in the packet being written to the `IOutputStream`. The
 stream, thus causing problems as in the previous section about the object
 lifetime.
 
-#### 2.4.4. The Filter and the Context
+#### 2.4.5. The Filter and the Context
 
 The filter is used for matching conditions of a trace line, as given by user
 input. The context maintains information for when a filter matches, so that
@@ -867,7 +973,7 @@ required. The `Context` object maintains:
 * A history of lines for the `--before-context` option
 * A counter of how many lines should be given for the `--after-context` option
 
-##### 2.4.4.1. Output Chaining
+##### 2.4.5.1. Output Chaining
 
 The filter and the context shall implement the `IOutputStream` interface. It
 shall have a constructor allowing another `IOutputStream`, which the filter and
@@ -890,7 +996,7 @@ separation of the output format from the filtering.
 
 The property `SupportsBinary` and the method `SetInput` are a passthrough.
 
-##### 2.4.4.2. Context Implementation
+##### 2.4.5.2. Context Implementation
 
 The `Context` class implements checking the filter and notifying of changes. It
 must necessarily have copy operations for the duration of the history given by
@@ -927,13 +1033,13 @@ On further iteration and new lines, the history buffer is not updated, while
 `context.IsAfterContext()` is true, which also decrements the internal counter
 for how many lines should be printed.
 
-#### 2.4.5. Decoder Extension on Line Decoding
+#### 2.4.6. Decoder Extension on Line Decoding
 
 The property `IOutputStream.SupportsBinary` can be used to determine if the
 `IOutputStream` object should be given to a `DltTraceDecoder`, or be parsed by
 the `FilterApp`.
 
-##### 2.4.5.1. DltTraceDecoder writing to IOutputStream
+##### 2.4.6.1. DltTraceDecoder writing to IOutputStream
 
 While in the use case for console output, the line is given by the result of
 `GetLineAsync()`, the ability to write to a file requires knowledge of the DLT

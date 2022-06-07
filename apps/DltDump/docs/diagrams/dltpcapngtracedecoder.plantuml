@@ -52,17 +52,6 @@ rectangle {
 
     class PacketDecoder
     InterfaceDescriptionBlock *-d- PacketDecoder
-
-    class DltPcapNetworkTraceFilterDecoder {
-        PacketTimeStamp: DateTime
-    }
-    PacketDecoder *-d- DltPcapNetworkTraceFilterDecoder
-
-    class DltTraceDecoder
-    DltPcapNetworkTraceFilterDecoder -l-|> DltTraceDecoder
-
-    interface IOutputStream
-    DltPcapNetworkTraceFilterDecoder o-r- IOutputStream
 }
 
 DltPcapNgDecoder *-d- BlockReader

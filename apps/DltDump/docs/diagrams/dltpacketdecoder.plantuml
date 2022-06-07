@@ -1,0 +1,98 @@
+@startuml DltPcapPacketDecoder
+
+class PacketDecoder {
+    -<<readonly, init>> m_Connections: Dictionary<ConnectionKey, Connection>
+    -<<readonly, init>> m_LinkType: int
+    -<<readonly, init>> m_OutputStream: IOutputStream
+    +.ctor(linkType: int)
+    +.ctor(linkType: int, outputStream: IOutputStream)
+    +DecodePacket(buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
+    -DecodeDltPacket(srcAddr: int, srcPort: short, dstAddr: int, dstPort: short,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
+    -DecodeDltFragment(srcAddr: int, srcPort: short, dstAddr: int, dstPort: short, fragId: int,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
+    -DecodeDltFragment(srcAddr: int, dstAddr: int, fragId: int, fragOffset: int, mf: bool,\n  buffer: ReadOnlySpan<byte>, position: long)\n  : IEnumerable<DltTraceLineBase>
+}
+
+note left {
+    <<readonly>> indicates that there is
+     no public setter for the property.
+    <<init>> indicates that the object is
+     only assigned in the constructor.
+}
+
+class ConnectionKey<IEquatable<ConnectionKey>> <<(S,#FF7700) struct>> {
+    +<<readonly, init>> SourceAddress: int
+    +<<readonly, init>> DestinationAddress: int
+    +.ctor(srcAddr: int, dstAddr: int)
+    +GetHashCode(): int
+    +Equals(obj: object): bool
+    +Equals(other: ConnectionKey): bool
+}
+
+note top {
+    The <<struct>> and IEquatable<T>
+    allow for a very fast Dictionary
+    lookup.
+}
+
+PacketDecoder .r. ConnectionKey
+
+class Connection {
+    -<<readonly, init>> m_Decoders: Dictionary<EndPointKey, DltPcapNetworkTraceFilterDecoder>
+    -<<readonly, init>> m_Fragments: Dictionary<int, IpFragments>
+    +<<readonly, init>> SourceAddress: int
+    +<<readonly, init>> DestinationAddress: int
+    +<<readonly, init>> OutputStream: IOutputStream
+    +.ctor(srcAddr: int, dstAddr: int)
+    +.ctor(srcAddr: int, dstAddr: int, outputStream: IOutputStream)
+    +GetDltDecoder(srcPort: short, dstPort: short): DltPcapNetworkTraceFilterDecoder
+    +GetIpFragments(fragId: int): IpFragments
+    +DiscardFragments(fragId: int)
+}
+
+PacketDecoder "1" *-d- "0..*" Connection : <<key = ConnectionKey>>
+
+class EndPointKey<IEquatable<EndPointKey>> <<(S,#FF7700) struct>> {
+    +<<readonly, init>> SourcePort: short
+    +<<readonly, init>> DestinationPort: short
+    +.ctor(srcPort: short, dstPort: short)
+    +GetHashCode(): int
+    +Equals(obj: object): bool
+    +Equals(other: EndPointKey): bool
+}
+
+class DltPcapNetworkTraceFilterDecoder {
+    +PacketTimeStamp: DateTime
+    +Decode(buffer: ReadOnlySpan<byte>, position: long, flush: bool)\n  : IEnumerable<DltTraceLineBase>
+}
+
+Connection "1" *-d- "0..*" DltPcapNetworkTraceFilterDecoder : <<key = EndPointKey>>
+Connection .r. EndPointKey
+
+class DltTraceDecoder
+DltPcapNetworkTraceFilterDecoder -u-|> DltTraceDecoder
+
+interface IOutputStream
+DltPcapNetworkTraceFilterDecoder o-d- IOutputStream
+
+class IpFragment <<(S,#FF7700) struct>> {
+    +<<readonly, init>> FragOffset: int
+    +<<readonly, init>> Buffer: byte[]
+    +<<readonly, init>> Position: long
+    +.ctor(offset: int, buffer: ReadOnlySpan<byte>, position: long)
+}
+
+class IpFragments {
+    -<<readonly, init>> m_Fragments: List<IpFragment>
+    +<<readonly, init>> FragId: int
+    +<<readonly>> SourcePort: short
+    +<<readonly>> DestinationPort: short
+    +<<readonly>> TimeStamp: DateTime
+    +.ctor(fragId: int)
+    +AddFragment(srcPort: short, dstPort: short,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : bool
+    +AddFragment(fragOffset: int, mf: bool,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : bool
+    +GetFragments(): IEnumerable<IpFragment>
+}
+IpFragments "1" *-r- "0..*" IpFragment
+Connection "1" *-d- "0..*" IpFragments : <<key = int>>
+
+@enduml
