@@ -10,7 +10,8 @@
     [TestFixture]
     public class PacketDecoderTest
     {
-        private readonly DateTime Time1 = new DateTime(2022, 4, 24, 17, 2, 54, DateTimeKind.Utc).AddMilliseconds(580);
+        private static readonly DateTime Time1 = new DateTime(2022, 4, 24, 17, 2, 54, DateTimeKind.Utc).AddMilliseconds(580);
+        private static readonly DateTime Time2 = new DateTime(2022, 4, 24, 17, 2, 55, DateTimeKind.Utc).AddMilliseconds(20);
 
         [Test]
         public void UnknownLinkType()
@@ -579,6 +580,104 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
+            }
+        }
+
+        private static readonly byte[] P1a = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x34, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x0D, 0xA2, 0x0D, 0xA2, 0x00, 0x20, 0xB5, 0xCF,                         // UDP Header
+            0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
+            0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54,
+        };
+
+        private static readonly byte[] P1b = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x3F, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x0D, 0xA2, 0x0D, 0xA2, 0x00, 0x2B, 0xB5, 0xCF,                         // UDP Header
+            0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20,
+            0x41, 0x72, 0x67, 0x75, 0x6D, 0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73,
+            0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
+        };
+
+        private static readonly byte[] P2a = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x34, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x0D, 0xA3, 0x0D, 0xA2, 0x00, 0x20, 0xB5, 0xCF,                         // UDP Header
+            0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
+            0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54,
+        };
+
+        private static readonly byte[] P2b = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x3F, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, // IPv4 Header
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x0D, 0xA3, 0x0D, 0xA2, 0x00, 0x2B, 0xB5, 0xCF,                         // UDP Header
+            0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20,
+            0x41, 0x72, 0x67, 0x75, 0x6D, 0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73,
+            0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x31, 0x2E, 0x00
+        };
+
+        [Test]
+        public void SplitUdpPacket1()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+
+                lines.AddRange(packetDecoder.DecodePacket(P1a, Time1, 0));
+                Assert.That(lines, Is.Empty);
+
+                lines.AddRange(packetDecoder.DecodePacket(P1b, Time1, 0));
+                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
+            }
+        }
+
+        [Test]
+        public void SplitUdpPacket2()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+
+                lines.AddRange(packetDecoder.DecodePacket(P2a, Time1, 0));
+                Assert.That(lines, Is.Empty);
+
+                lines.AddRange(packetDecoder.DecodePacket(P2b, Time1, 0));
+                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string1."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
+            }
+        }
+
+        [Test]
+        public void InterleavedSplitUdpPacket()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+
+                lines.AddRange(packetDecoder.DecodePacket(P1a, Time1, 0));
+                Assert.That(lines, Is.Empty);
+
+                lines.AddRange(packetDecoder.DecodePacket(P2a, Time1, 0));
+                Assert.That(lines, Is.Empty);
+
+                lines.AddRange(packetDecoder.DecodePacket(P1b, Time2, 0));
+                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time2));  // Time when last part of packet is received
+
+                lines.AddRange(packetDecoder.DecodePacket(P2b, Time2, 0));
+                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string1."));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(Time2));  // Time when last part of packet is received
             }
         }
     }

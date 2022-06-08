@@ -82,7 +82,10 @@
     <Compile Include="Domain\Dlt\DltSerialTraceFilterReaderFactory.cs" />
     <Compile Include="Domain\Dlt\IDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\InputFormat.cs" />
+    <Compile Include="Domain\Dlt\Pcap\Connection.cs" />
+    <Compile Include="Domain\Dlt\Pcap\ConnectionKey.cs" />
     <Compile Include="Domain\Dlt\Pcap\DltPcapNetworkTraceFilterDecoder.cs" />
+    <Compile Include="Domain\Dlt\Pcap\EndPointKey.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\DltPcapLegacyDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapFormat.cs" />
     <Compile Include="Domain\Dlt\Pcap\LinkTypes.cs" />
