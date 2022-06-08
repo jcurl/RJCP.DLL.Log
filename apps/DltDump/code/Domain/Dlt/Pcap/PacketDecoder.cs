@@ -13,7 +13,8 @@
     public sealed class PacketDecoder : IDisposable
     {
         private readonly int m_LinkType;
-        private readonly DltPcapNetworkTraceFilterDecoder m_Decoder;
+        private readonly IOutputStream m_OutputStream;
+        private readonly Dictionary<ConnectionKey, Connection> m_Connections = new Dictionary<ConnectionKey, Connection>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PacketDecoder"/> class.
@@ -38,8 +39,7 @@
             default:
                 throw new UnknownPcapFileFormatException(AppResources.DomainPcapUnknownLinkFormat);
             }
-
-            m_Decoder = new DltPcapNetworkTraceFilterDecoder(outputStream);
+            m_OutputStream = outputStream;
         }
 
         /// <summary>
@@ -84,7 +84,8 @@
             if (ipLen < ihl + 16) return Array.Empty<DltTraceLineBase>();                // Corrupted packet
 
             // Check UDP fields, https://datatracker.ietf.org/doc/html/rfc768
-            int dstPort = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 2)..]);
+            short srcPort = BitOperations.To16ShiftBigEndian(ipPacket[ihl..]);
+            short dstPort = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 2)..]);
             if (dstPort != 3490) return Array.Empty<DltTraceLineBase>();                 // Not destination port 3490
             int udpLen = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 4)..]);
 
@@ -105,14 +106,12 @@
                 return Array.Empty<DltTraceLineBase>();
             }
 
+            int srcAddr = BitOperations.To32ShiftBigEndian(ipPacket[12..]);
+            int dstAddr = BitOperations.To32ShiftBigEndian(ipPacket[16..]);
+
             position += offset + ihl + 8;
             ReadOnlySpan<byte> dltPacket = ipPacket.Slice(ihl + 8, udpLen - 8);
-
-            // We decode and flush, as we expect each DLT packet to be complete in a UDP packet. If a DLT packet spans
-            // across multiple UDP packets, then this will cause the packet to likely be discarded.
-            m_Decoder.PacketTimeStamp = timeStamp;
-            IEnumerable<DltTraceLineBase> lines = m_Decoder.Decode(dltPacket, position, true);
-            return lines;
+            return DecodeDltPacket(srcAddr, srcPort, dstAddr, dstPort, dltPacket, timeStamp, position);
         }
 
         private static int GetIpHdrEthernetOffset(ReadOnlySpan<byte> buffer)
@@ -175,6 +174,22 @@
             return offset;
         }
 
+        private IEnumerable<DltTraceLineBase> DecodeDltPacket(int srcAddr, short srcPort, int dstAddr, short dstPort, ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
+        {
+            ConnectionKey key = new ConnectionKey(srcAddr, dstAddr);
+            if (!m_Connections.TryGetValue(key, out Connection connection)) {
+                connection = new Connection(srcAddr, dstAddr, m_OutputStream);
+                m_Connections.Add(key, connection);
+            }
+
+            DltPcapNetworkTraceFilterDecoder decoder = connection.GetDltDecoder(srcPort, dstPort);
+            decoder.PacketTimeStamp = timeStamp;
+
+            // We decode but do not flush, as we handle each src:prt, dst:port pair as it's own connection which is
+            // expected to be a continuous stream. Lost packets will result in corruption.
+            return decoder.Decode(buffer, position, false);
+        }
+
         private bool m_IsDisposed;
 
         /// <summary>
@@ -183,8 +198,10 @@
         /// </summary>
         public void Dispose()
         {
-            if (!m_IsDisposed) {
-                m_Decoder.Dispose();
+            if (m_IsDisposed) return;
+
+            foreach (Connection connection in m_Connections.Values) {
+                connection.Dispose();
             }
             m_IsDisposed = true;
         }
