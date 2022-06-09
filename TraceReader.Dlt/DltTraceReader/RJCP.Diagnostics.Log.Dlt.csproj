@@ -21,7 +21,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.Log.git</PackageProjectUrl>
     <Description>An AutoSAR DLT Decoder.</Description>
-    <Version>0.8.0</Version>
+    <Version>0.8.0-alpha.v7</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
