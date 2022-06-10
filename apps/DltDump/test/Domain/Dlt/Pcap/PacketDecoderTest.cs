@@ -467,7 +467,6 @@
                 0x00, 0x00, 0x00, 0x00
             };
 
-            int len = Math.Min(((ih & 0x0F) << 2) + 14, 34);
             packet[14] = (byte)ih;
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
@@ -489,7 +488,6 @@
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             };
 
-            int len = Math.Min(((ih & 0x0F) << 2) + 18, 38);
             packet[18] = (byte)ih;
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
