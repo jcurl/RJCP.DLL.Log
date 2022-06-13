@@ -630,24 +630,29 @@ and the fragmentation identifier. The reassembled packet is then given to the
 
 The `PacketDecoder` then does the following for each packet it receives:
 
-* If the packet is not fragmented, it gets the `DltTraceDecoder` based on the
-  (source:port, destination:port) pair via `Connection.GetDltDecoder`.
-* If the packet is fragmented, and this is the first fragment, where the
-  fragmentation offset is zero, it gets the list of fragments via
-  `Connection.GetIpFragments(fragId)` and adds it via the first method giving
-  the source/destination ports.
-* If the packet is fragmented, and this is not the first fragment, where the
-  fragmentation offset is non-zero, it gets the list of fragments via
-  `Connection.GetIpFragments(fragId)` and adds it via the second method giving
-  the offset and if this is the last packet (via the `mf` flag). For this kind
-  of packet, the UDP source/destination port is not known.
-
-If the result of calling `AddFragment` is `true`, it means that the reassembly
-is complete, and the entire packet can be obtained and given to the
-`DltTraceDecoder`. The ordering of the fragments are not defined. It is observed
-on Linux hosts transmitting fragmented IP packets that often the last packet is
-transmitted first, followed by the remaining packets. This implementation makes
-no assumption of the ordering.
+* If the packet is not fragmented, the private method
+  `PacketDecoder.DecodeDltPackets` is called with the UDP buffer (the first 8
+  bytes contains the ports, length and checksum). The `DltTraceDecoder` is
+  retrieved based on the (source:port, destination:port) pair via
+  `Connection.GetDltDecoder`.
+* If the packet is fragmented (either that the fragmentation offset is non-zero,
+  or the MF bit is set), the private method `PacketDecoder.DecodeDltFragments`
+  is called to create or add to the list of fragments for this fragmentation
+  identifier. The ordering of the fragments are not defined. It is observed on
+  Linux hosts transmitting fragmented IP packets that often the last packet is
+  transmitted first, followed by the remaining packets. This implementation
+  makes no assumption of the ordering.
+  * When decoding DLT fragments, the payload of the IP fragment is given
+    (including the UDP header). The IP fragment must always be reassembled, even
+    if the source port and destination port do not match a DLT packet. That is
+    because an IP fragment later could use this fragment and result in possible
+    dataloss otherwise. If the result of `IpFragments.AddFragment` returns:
+  * `IpFragmentResult.Incomplete`, no decoding is required.
+  * `IpFragmentResult.Reassembled`, the packet should be decoded, getting the
+    UDP source and destination ports, using `Connection.GetDltDecoder` and all
+    fragments are given to the decoder.
+  * Other results are an error, the packets with the fragmentation offset are
+    discarded (after logging) and the packet is added to a new `IpFragment`.
 
 ###### 2.4.3.3.2. Issues with IP Fragmentation Reassembly
 

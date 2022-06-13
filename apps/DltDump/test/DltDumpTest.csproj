@@ -62,6 +62,7 @@
     <Compile Include="Domain\Dlt\DltTraceReaderFactoryTest.cs" />
     <Compile Include="Domain\Dlt\LineEventArgs.cs" />
     <Compile Include="Domain\Dlt\LineTraceReader.cs" />
+    <Compile Include="Domain\Dlt\Pcap\IpFragmentsTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapLegacyDecoderTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\BlockReaderTest.cs" />
     <Compile Include="Domain\Dlt\Pcap\Ng\EnhancedPacketBlockTest.cs" />

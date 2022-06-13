@@ -86,6 +86,9 @@
     <Compile Include="Domain\Dlt\Pcap\ConnectionKey.cs" />
     <Compile Include="Domain\Dlt\Pcap\DltPcapNetworkTraceFilterDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\EndPointKey.cs" />
+    <Compile Include="Domain\Dlt\Pcap\IpFragment.cs" />
+    <Compile Include="Domain\Dlt\Pcap\IpFragmentResult.cs" />
+    <Compile Include="Domain\Dlt\Pcap\IpFragments.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\DltPcapLegacyDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\Legacy\PcapFormat.cs" />
     <Compile Include="Domain\Dlt\Pcap\LinkTypes.cs" />

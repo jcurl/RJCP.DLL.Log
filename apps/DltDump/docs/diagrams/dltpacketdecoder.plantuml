@@ -7,9 +7,8 @@ class PacketDecoder {
     +.ctor(linkType: int)
     +.ctor(linkType: int, outputStream: IOutputStream)
     +DecodePacket(buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
-    -DecodeDltPacket(srcAddr: int, srcPort: short, dstAddr: int, dstPort: short,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
-    -DecodeDltFragment(srcAddr: int, srcPort: short, dstAddr: int, dstPort: short, fragId: int,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
-    -DecodeDltFragment(srcAddr: int, dstAddr: int, fragId: int, fragOffset: int, mf: bool,\n  buffer: ReadOnlySpan<byte>, position: long)\n  : IEnumerable<DltTraceLineBase>
+    -DecodeDltPacket(srcAddr: int, dstAddr: int,\n  udpBuffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
+    -DecodeDltFragments(srcAddr: int, dstAddr: int,\n  udpFragments: IEnumerable<IpFragment>, timeStamp: DateTime, position: long)\n  : IEnumerable<DltTraceLineBase>
 }
 
 note left {
@@ -84,15 +83,22 @@ class IpFragment <<(S,#FF7700) struct>> {
 class IpFragments {
     -<<readonly, init>> m_Fragments: List<IpFragment>
     +<<readonly, init>> FragId: int
-    +<<readonly>> SourcePort: short
-    +<<readonly>> DestinationPort: short
     +<<readonly>> TimeStamp: DateTime
     +.ctor(fragId: int)
-    +AddFragment(srcPort: short, dstPort: short,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : bool
-    +AddFragment(fragOffset: int, mf: bool,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : bool
+    +AddFragment(fragOffset: int, mf: bool,\n  buffer: ReadOnlySpan<byte>, timeStamp: DateTime, position: long)\n  : IpFragmentResult
     +GetFragments(): IEnumerable<IpFragment>
 }
 IpFragments "1" *-r- "0..*" IpFragment
 Connection "1" *-d- "0..*" IpFragments : <<key = int>>
+
+enum IpFragmentResult {
+    Incomplete
+    Reassembled
+    InvalidOverlap
+    InvalidTimeOut
+    InvalidOffset
+    InvalidDuplicateLastPacket
+}
+IpFragments -d- IpFragmentResult
 
 @enduml
