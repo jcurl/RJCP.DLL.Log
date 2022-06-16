@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Text;
     using Resources;
     using RJCP.Core;
     using RJCP.Diagnostics.Log.Dlt;
@@ -78,40 +79,23 @@
             if (ipPacket[9] != 17) return Array.Empty<DltTraceLineBase>();               // Not UDP
 
             int ihl = (ipPacket[0] & 0x0F) << 2;
-            int flags = (ipPacket[6] & 0xE0) >> 5;
-            int fragOffset = (((ipPacket[6] & 0x1F) << 8) + ipPacket[7]) * 8;
-            if (fragOffset != 0) return Array.Empty<DltTraceLineBase>();                 // IP fragmented, MF = x
             if (ipLen < ihl + 16) return Array.Empty<DltTraceLineBase>();                // Corrupted packet
 
-            // Check UDP fields, https://datatracker.ietf.org/doc/html/rfc768
-            short srcPort = BitOperations.To16ShiftBigEndian(ipPacket[ihl..]);
-            short dstPort = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 2)..]);
-            if (dstPort != 3490) return Array.Empty<DltTraceLineBase>();                 // Not destination port 3490
-            int udpLen = BitOperations.To16ShiftBigEndian(ipPacket[(ihl + 4)..]);
-
-            if ((flags & 0x01) != 0) {                                                   // IP fragmented, MF = 1
-                // This is the first packet of a fragmented UDP datagram, and more packets are to follow. The rest are
-                // discarded above when the packet fragmentation offset is non-zero.
-                Log.Pcap.TraceEvent(TraceEventType.Warning,
-                    "Discarded fragmented UDP packet (MF=1), position 0x{0:x}, Data Length {1}",
-                    position, udpLen - 8);
-                return Array.Empty<DltTraceLineBase>();
-            }
-
-            if (ipLen < ihl + udpLen) {
-                // The packet is corrupted.
-                Log.Pcap.TraceEvent(TraceEventType.Warning,
-                    "Discarded invalid UDP packet, position 0x{0:x}, Data Length {1}, actual data size {2}",
-                    position, udpLen - 8, ipLen - ihl - 8);
-                return Array.Empty<DltTraceLineBase>();
-            }
+            int flags = (ipPacket[6] & 0xE0) >> 5;
+            int fragOffset = (((ipPacket[6] & 0x1F) << 8) + ipPacket[7]) * 8;
+            bool mf = (flags & 0x01) != 0;
 
             int srcAddr = BitOperations.To32ShiftBigEndian(ipPacket[12..]);
             int dstAddr = BitOperations.To32ShiftBigEndian(ipPacket[16..]);
 
-            position += offset + ihl + 8;
-            ReadOnlySpan<byte> dltPacket = ipPacket.Slice(ihl + 8, udpLen - 8);
-            return DecodeDltPacket(srcAddr, srcPort, dstAddr, dstPort, dltPacket, timeStamp, position);
+            if (mf || fragOffset != 0) {
+                // This is a fragmented IP packet
+                int fragId = BitOperations.To16ShiftBigEndian(ipPacket[4..]);
+                return DecodeDltFragments(srcAddr, dstAddr, fragOffset, fragId, mf, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
+            } else {
+                // This is a single UDP packet
+                return DecodeDltPacket(srcAddr, dstAddr, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
+            }
         }
 
         private static int GetIpHdrEthernetOffset(ReadOnlySpan<byte> buffer)
@@ -174,20 +158,130 @@
             return offset;
         }
 
-        private IEnumerable<DltTraceLineBase> DecodeDltPacket(int srcAddr, short srcPort, int dstAddr, short dstPort, ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
+        private Connection GetConnection(int srcAddr, int dstAddr)
         {
             ConnectionKey key = new ConnectionKey(srcAddr, dstAddr);
             if (!m_Connections.TryGetValue(key, out Connection connection)) {
                 connection = new Connection(srcAddr, dstAddr, m_OutputStream);
                 m_Connections.Add(key, connection);
             }
+            return connection;
+        }
 
-            DltPcapNetworkTraceFilterDecoder decoder = connection.GetDltDecoder(srcPort, dstPort);
+        private DltPcapNetworkTraceFilterDecoder GetDecoder(int srcAddr, short srcPort, int dstAddr, short dstPort)
+        {
+            Connection connection = GetConnection(srcAddr, dstAddr);
+            return connection.GetDltDecoder(srcPort, dstPort);
+        }
+
+        private IEnumerable<DltTraceLineBase> DecodeDltFragments(int srcAddr, int dstAddr, int fragOffset, int fragId, bool mf, ReadOnlySpan<byte> udpBuffer, DateTime timeStamp, long position)
+        {
+            bool retry = false;
+            Connection connection = GetConnection(srcAddr, dstAddr);
+
+            do {
+                IpFragments ipFragments = connection.GetIpFragments(fragId);
+                IpFragmentResult result = ipFragments.AddFragment(fragOffset, mf, udpBuffer, timeStamp, position);
+
+                switch (result) {
+                case IpFragmentResult.Incomplete:
+                    return Array.Empty<DltTraceLineBase>();
+                case IpFragmentResult.Reassembled:
+                    IEnumerable<DltTraceLineBase> lines = DecodeDltFragments(connection, ipFragments);
+                    connection.DiscardFragments(fragId);
+                    return lines;
+                default:
+                    if (retry) {
+                        // Shouldn't ever get here, because the array is empty. But just in case.
+                        Log.Pcap.TraceEvent(TraceEventType.Error,
+                            "Discarded fragmented UDP packets on second attempt, reason {0}, fragment identifier {1}, Timestamp {2:u}",
+                            result, fragId, timeStamp);
+                        return Array.Empty<DltTraceLineBase>();
+                    }
+                    retry = true;
+
+                    if (Log.Pcap.ShouldTrace(TraceEventType.Warning)) {
+                        StringBuilder sb = new StringBuilder();
+                        foreach (IpFragment fragment in ipFragments.GetFragments()) {
+                            if (sb.Length != 0) sb.Append(", ");
+                            sb.AppendFormat("(0x{0:x}, 0x{1:x})", fragment.Position, fragment.FragmentOffset);
+                        }
+                        Log.Pcap.TraceEvent(TraceEventType.Warning,
+                            "Discarded fragmented UDP packets, reason {0}, fragment identifier {1}, Timestamp {2:u}. Discarded: Packet Offset, Frag Offset {3}",
+                            result, fragId, timeStamp, sb.ToString());
+                    }
+                    connection.DiscardFragments(fragId);
+                    break;
+                }
+            } while (true);
+        }
+
+        private IEnumerable<DltTraceLineBase> DecodeDltFragments(Connection connection, IpFragments fragments)
+        {
+            bool first = true;
+            short srcPort;
+            short dstPort;
+            int udpLen;
+
+            ReadOnlySpan<byte> dltBuffer;
+            DltPcapNetworkTraceFilterDecoder decoder = null;
+            List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            long position;
+
+            foreach (IpFragment fragment in fragments.GetFragments()) {
+                if (first) {
+                    srcPort = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan());
+                    dstPort = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan(2));
+                    if (dstPort != 3490) {
+                        connection.DiscardFragments(fragments.FragmentId);
+                        return Array.Empty<DltTraceLineBase>();
+                    }
+
+                    udpLen = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan(4));
+                    if (fragments.Length < udpLen) {
+                        // The packet is corrupted.
+                        Log.Pcap.TraceEvent(TraceEventType.Warning,
+                            "Discarded truncated fragmented UDP packet, position 0x{0:x} (fragment offset 0), UDP Length {1}, actual data size {2}, Timestamp {3:u}",
+                            fragment.Position, udpLen, fragments.Length, fragments.TimeStamp);
+                        return Array.Empty<DltTraceLineBase>();
+                    }
+                    dltBuffer = fragment.Buffer.AsSpan(8);
+                    decoder = GetDecoder(connection.SourceAddress, srcPort, connection.DestinationAddress, dstPort);
+                    decoder.PacketTimeStamp = fragments.TimeStamp;
+                    position = fragment.Position + 8;
+                    first = false;
+                } else {
+                    dltBuffer = fragment.Buffer.AsSpan();
+                    position = fragment.Position;
+                }
+
+                lines.AddRange(decoder.Decode(dltBuffer, position, false));
+            }
+            return lines;
+        }
+
+        private IEnumerable<DltTraceLineBase> DecodeDltPacket(int srcAddr, int dstAddr, ReadOnlySpan<byte> udpBuffer, DateTime timeStamp, long position)
+        {
+            // Check UDP fields, https://datatracker.ietf.org/doc/html/rfc768
+            short srcPort = BitOperations.To16ShiftBigEndian(udpBuffer);
+            short dstPort = BitOperations.To16ShiftBigEndian(udpBuffer[2..]);
+            if (dstPort != 3490) return Array.Empty<DltTraceLineBase>();                 // Not destination port 3490
+            int udpLen = BitOperations.To16ShiftBigEndian(udpBuffer[4..]);
+
+            if (udpBuffer.Length < udpLen) {
+                // The packet is corrupted.
+                Log.Pcap.TraceEvent(TraceEventType.Warning,
+                    "Discarded truncated UDP packet, position 0x{0:x}, UDP Length {1}, actual data size {2}, Timestamp {3:u}",
+                    position, udpLen, udpBuffer.Length, timeStamp);
+                return Array.Empty<DltTraceLineBase>();
+            }
+
+            DltPcapNetworkTraceFilterDecoder decoder = GetDecoder(srcAddr, srcPort, dstAddr, dstPort);
             decoder.PacketTimeStamp = timeStamp;
 
-            // We decode but do not flush, as we handle each src:prt, dst:port pair as it's own connection which is
+            // We decode but do not flush, as we handle each src:port, dst:port pair as it's own connection which is
             // expected to be a continuous stream. Lost packets will result in corruption.
-            return decoder.Decode(buffer, position, false);
+            return decoder.Decode(udpBuffer[8..udpLen], position + 8, false);
         }
 
         private bool m_IsDisposed;

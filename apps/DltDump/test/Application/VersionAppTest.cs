@@ -1,8 +1,8 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
-    using NUnit.Framework;
     using Infrastructure.Terminal;
+    using NUnit.Framework;
 
     [TestFixture]
     public class VersionAppTest

@@ -12,6 +12,9 @@
         private readonly Dictionary<EndPointKey, DltPcapNetworkTraceFilterDecoder> m_Decoders =
             new Dictionary<EndPointKey, DltPcapNetworkTraceFilterDecoder>();
 
+        private readonly Dictionary<int, IpFragments> m_Fragments =
+            new Dictionary<int, IpFragments>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class.
         /// </summary>
@@ -73,6 +76,29 @@
                 m_Decoders.Add(key, decoder);
             }
             return decoder;
+        }
+
+        /// <summary>
+        /// Gets the IPv4 Fragments for the fragmentation identifier.
+        /// </summary>
+        /// <param name="fragmentId">The fragment identifier.</param>
+        /// <returns>A collection of fragments, which can be retrieved or added to.</returns>
+        public IpFragments GetIpFragments(int fragmentId)
+        {
+            if (!m_Fragments.TryGetValue(fragmentId, out IpFragments fragments)) {
+                fragments = new IpFragments(fragmentId);
+                m_Fragments.Add(fragmentId, fragments);
+            }
+            return fragments;
+        }
+
+        /// <summary>
+        /// Discards the fragments associated with the fragmentation identifier.
+        /// </summary>
+        /// <param name="fragmentId">The fragment identifier to discard.</param>
+        public void DiscardFragments(int fragmentId)
+        {
+            m_Fragments.Remove(fragmentId);
         }
 
         private bool m_IsDisposed;

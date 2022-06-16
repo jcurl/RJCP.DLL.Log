@@ -14,6 +14,7 @@
             Assert.That(fragments.FragmentId, Is.EqualTo(10));
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.GetFragments(), Is.Empty);
+            Assert.That(fragments.Length, Is.EqualTo(0));
         }
 
         private static readonly byte[] Fragment1 = new byte[] {
@@ -41,6 +42,7 @@
             Assert.That(fragments.AddFragment(8, false, Fragment2, Time2, 16), Is.EqualTo(IpFragmentResult.Reassembled));
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(20));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));
@@ -60,6 +62,7 @@
             Assert.That(fragments.AddFragment(0, true, Fragment1, Time2, 16), Is.EqualTo(IpFragmentResult.Reassembled));
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time2));
             Assert.That(fragments.FragmentId, Is.EqualTo(20));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));
@@ -130,6 +133,7 @@
             }
             Assert.That(fragments.TimeStamp, Is.EqualTo(t1));
             Assert.That(fragments.FragmentId, Is.EqualTo(20));
+            Assert.That(fragments.Length, Is.EqualTo(24));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(3));
@@ -154,6 +158,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(30));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             // The last fragment wasn't added, as it was much newer (15 seconds or more) than the last fragment. The
             // existing collection should remain intact, so that it can be logged what is being dropped.
@@ -172,6 +177,7 @@
             Assert.That(fragmentsNew.AddFragment(16, false, Fragment3, TimeOld, 128), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragmentsNew.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragmentsNew.FragmentId, Is.EqualTo(30));
+            Assert.That(fragmentsNew.Length, Is.EqualTo(8));
         }
 
         [Test]
@@ -184,6 +190,7 @@
 
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.FragmentId, Is.EqualTo(30));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             // The last fragment wasn't added, as it was much newer (15 seconds or more) than the last fragment. The
             // existing collection should remain intact, so that it can be logged what is being dropped.
@@ -206,6 +213,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -224,6 +232,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));
@@ -245,6 +254,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time2));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));
@@ -266,6 +276,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time2));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));
@@ -286,6 +297,7 @@
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -303,6 +315,7 @@
 
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -320,6 +333,7 @@
 
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.FragmentId, Is.EqualTo(50));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -337,6 +351,7 @@
 
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.FragmentId, Is.EqualTo(50));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -354,6 +369,7 @@
 
             Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
             Assert.That(fragments.FragmentId, Is.EqualTo(60));
+            Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(1));
@@ -368,10 +384,11 @@
             IpFragments fragments = new IpFragments(60);
             Assert.That(fragments.AddFragment(0, true, Fragment1, Time1, 0), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(8, true, Fragment2, Time2, 16), Is.EqualTo(IpFragmentResult.Incomplete));
-            Assert.That(fragments.AddFragment(1, true, Fragment3[0..4], Time3, 40), Is.EqualTo(IpFragmentResult.InvalidOverlap));
+            Assert.That(fragments.AddFragment(1, true, Fragment3.AsSpan(0, 4), Time3, 40), Is.EqualTo(IpFragmentResult.InvalidOverlap));
 
             Assert.That(fragments.TimeStamp, Is.EqualTo(Time1));
             Assert.That(fragments.FragmentId, Is.EqualTo(60));
+            Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
             Assert.That(list.Count, Is.EqualTo(2));

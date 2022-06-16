@@ -41,6 +41,12 @@
         /// <value>The time stamp. This is the default value if not yet defined.</value>
         public DateTime TimeStamp { get; private set; }
 
+        /// <summary>
+        /// Gets the length of all fragmented packets joined.
+        /// </summary>
+        /// <value>The length of all packets joined.</value>
+        public int Length { get; private set; }
+
         private bool IsExpired(DateTime timeStamp)
         {
             if (m_Fragments.Count != 0) {
@@ -94,6 +100,7 @@
 
             IpFragment fragment = new IpFragment(fragOffset, buffer, position);
             if (m_Fragments.Count == 0) {
+                Length += buffer.Length;
                 m_Fragments.Add(fragment);
                 m_HasLastFragment = !mf;
             } else if (!mf) {
@@ -104,6 +111,7 @@
                 if (fragOffset < m_Fragments[^1].FragmentOffset + m_Fragments[^1].Buffer.Length)
                     return IpFragmentResult.InvalidOffset;
 
+                Length += buffer.Length;
                 m_Fragments.Add(fragment);
                 m_HasLastFragment = true;
             } else {
@@ -113,6 +121,7 @@
                     int sLength = m_Fragments[i].Buffer.Length;
 
                     if (fragOffset + buffer.Length <= sOffset) {
+                        Length += buffer.Length;
                         m_Fragments.Insert(i, fragment);
                         inserted = true;
                         break;
@@ -125,6 +134,7 @@
                     // fragment. Thus the fragment offset is bad.
                     if (m_HasLastFragment) return IpFragmentResult.InvalidOffset;
 
+                    Length += buffer.Length;
                     m_Fragments.Add(fragment);
                 }
             }

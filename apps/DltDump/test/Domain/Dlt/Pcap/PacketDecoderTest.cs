@@ -6,6 +6,7 @@
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
     using RJCP.Diagnostics.Log.Dlt.Args;
+    using Infrastructure;
 
     [TestFixture]
     public class PacketDecoderTest
@@ -411,40 +412,116 @@
             }
         }
 
-        [Test]
-        public void IgnoreFragmentedPacket()
-        {
-            // The first frame is a fragmented IP packet
-            byte[] frame1 = {
-                0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
-                0x08, 0x00,                                                             // IPv4 Proto
-                0x45, 0x00, 0x00, 0x5C, 0x3A, 0x25, 0x20, 0x00, 0x01, 0x11, 0x83, 0x60, // IPv4 Header (id=0x3a25, MF=1)
-                0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
-                0x0D, 0xA2, 0x0D, 0xA2, 0x00, 0x7E, 0x69, 0x15,                         // UDP Header (length=126)
-                0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
-                0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54,
-                0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20,
-                0x41, 0x72, 0x67, 0x75, 0x6D, 0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73,
-                0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00,
-                0x3D, 0x0B, 0x00, 0x3B, 0x45                                            // DLT
-            };
+        private static readonly byte[] FragFrame1 = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x5C, 0x3A, 0x25, 0x20, 0x00, 0x01, 0x11, 0x83, 0x60, // IPv4 Header (id=0x3a25, MF=1)
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x0D, 0xA2, 0x0D, 0xA2, 0x00, 0x7E, 0x69, 0x15,                         // UDP Header (length=126)
+            0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
+            0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54,
+            0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20,
+            0x41, 0x72, 0x67, 0x75, 0x6D, 0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73,
+            0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00,
+            0x3D, 0x0B, 0x00, 0x3B, 0x45                                            // DLT
+        };
 
-            // The second frame is a continuation from above
-            byte[] frame2 = {
-                0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
-                0x08, 0x00,                                                             // IPv4 Proto
-                0x45, 0x00, 0x00, 0x4A, 0x3A, 0x25, 0x00, 0x09, 0x01, 0x11, 0xA3, 0x69, // IPv4 Header (id=0x3a25, MF=0, Offset=9*8=72)
-                0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
-                0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, 0x00, 0x01, 0x54, 0x4A, 0x41, // DLT (ctd.)
-                0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x02, 0x00,
-                0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20, 0x41, 0x72, 0x67, 0x75, 0x6D,
-                0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73, 0x74, 0x72,
-                0x69, 0x6E, 0x67, 0x20, 0x32, 0x00
-            };
+        private static readonly byte[] FragFrame2 = {
+            0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, // DstMac, SrcMac
+            0x08, 0x00,                                                             // IPv4 Proto
+            0x45, 0x00, 0x00, 0x4A, 0x3A, 0x25, 0x00, 0x09, 0x01, 0x11, 0xA3, 0x69, // IPv4 Header (id=0x3a25, MF=0, Offset=9*8=72)
+            0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF, 0x2A, 0x63,
+            0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, 0x00, 0x01, 0x54, 0x4A, 0x41, // DLT (ctd.)
+            0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54, 0x58, 0x31, 0x00, 0x02, 0x00,
+            0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20, 0x41, 0x72, 0x67, 0x75, 0x6D,
+            0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73, 0x74, 0x72,
+            0x69, 0x6E, 0x67, 0x20, 0x32, 0x00
+        };
+
+        [Test]
+        public void ReassembleIpFragmentInOrder()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                Assert.That(packetDecoder.DecodePacket(FragFrame1, Time1, 40), Is.Empty);
+                IList<DltTraceLineBase> lines =
+                    new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
+
+                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
+                Assert.That(lines[0].Position, Is.EqualTo(82));  // Offset 42 in first frame
+                Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(Time1));
+                Assert.That(lines[1].Position, Is.EqualTo(141)); // Offset 101 in first frame
+            }
+        }
+
+        [Test]
+        public void ReassembleIpFragmentInReverse()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                Assert.That(packetDecoder.DecodePacket(FragFrame2, Time1, 40), Is.Empty);
+                IList<DltTraceLineBase> lines =
+                    new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame1, Time2, 180));
+
+                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time2));
+                Assert.That(lines[0].Position, Is.EqualTo(222));  // Offset 42 in 2nd frame
+                Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(Time2));
+                Assert.That(lines[1].Position, Is.EqualTo(281)); // Offset 101 in 2nd frame
+            }
+        }
+
+        [Test]
+        public void ReassembleIpFragmentWrongPort()
+        {
+            byte[] frame1 = FragFrame1.CopyArray();
+            frame1[35] = 0xFF; frame1[37] = 0xFF;        // Change ports
 
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
                 Assert.That(packetDecoder.DecodePacket(frame1, Time1, 40), Is.Empty);
-                Assert.That(packetDecoder.DecodePacket(frame2, Time1, 162), Is.Empty);
+                IList<DltTraceLineBase> lines =
+                    new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
+
+                // The port is wrong. Manually check with the debugger there are no fragments.
+                Assert.That(lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void ReassembleIpFragmentsUdpTruncated()
+        {
+            byte[] frame1 = FragFrame1.CopyArray();
+            frame1[39] += 1;   // Increase UDP length by 1, make it look truncated.
+
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                Assert.That(packetDecoder.DecodePacket(frame1, Time1, 40), Is.Empty);
+                IList<DltTraceLineBase> lines =
+                    new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
+
+                // The port is wrong. Manually check with the debugger there are no fragments.
+                Assert.That(lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void ReassemblyIpFragmentFrame1Repeated()
+        {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                Assert.That(packetDecoder.DecodePacket(FragFrame1, Time1, 40), Is.Empty);
+                Assert.That(packetDecoder.DecodePacket(FragFrame1, Time1, 140), Is.Empty);
+                IList<DltTraceLineBase> lines =
+                    new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 262));
+
+                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
+                Assert.That(lines[0].Position, Is.EqualTo(182));  // Offset 42 in first frame
+                Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
+                Assert.That(lines[1].TimeStamp, Is.EqualTo(Time1));
+                Assert.That(lines[1].Position, Is.EqualTo(241)); // Offset 101 in first frame
             }
         }
 
