@@ -68,8 +68,10 @@
             };
 
             using (TDec decoder = Create()) {
+                // The first decode might now throw, as it sees an error it marks it as corrupted.
                 Assert.That(() => {
                     _ = Decode(decoder, header, chunk);
+                    decoder.Flush();
                 }, Throws.TypeOf<UnknownPcapFileFormatException>());
             }
         }
@@ -86,6 +88,7 @@
             using (TDec decoder = Create()) {
                 Assert.That(() => {
                     _ = Decode(decoder, new[] { header, PcapBlocks.IdbData, PcapBlocks.EpbData }, chunk);
+                    decoder.Flush();
                 }, Throws.TypeOf<UnknownPcapFileFormatException>());
             }
         }
@@ -102,6 +105,7 @@
             using (TDec decoder = Create()) {
                 Assert.That(() => {
                     _ = Decode(decoder, new[] { header, PcapBlocks.IdbData, PcapBlocks.EpbData }, chunk);
+                    decoder.Flush();
                 }, Throws.TypeOf<UnknownPcapFileFormatException>());
             }
         }
@@ -269,6 +273,40 @@
             using (TDec decoder = Create()) {
                 var lines = Flush(decoder);
                 Assert.That(lines, Is.Empty);
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public void CorruptedPcapNgFile(int chunk)
+        {
+            byte[] epbCorruptData = new byte[] {
+                0x06, 0x00, 0x00, 0x00, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46, 0xA8, 0x05, 0x00,
+                0xFE, 0x05, 0x68, 0xEC, 0x65, 0x00, 0x00, 0x00, 0x65, 0x00, 0x00, 0x00,
+
+                // Packet
+                0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E, 0x08, 0x00, 0x45, 0x00,
+                0x00, 0x57, 0x3A, 0x25, 0x00, 0x00, 0x01, 0x11, 0xA3, 0x65, 0xC0, 0xA8, 0x01, 0x01, 0xEF, 0xFF,
+                0x2A, 0x63, 0x0D, 0xA2, 0x0D, 0xA2, 0x00, 0x43, 0xB5, 0xCF, 0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43,
+                0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, 0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31,
+                0x43, 0x54, 0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20, 0x41, 0x72,
+                0x67, 0x75, 0x6D, 0x65, 0x6E, 0x74, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x73, 0x74, 0x72, 0x69,
+                0x6E, 0x67, 0x2E, 0x2E, 0x00, 0x00, 0x00, 0x00,
+
+                0xFF, 0xEE, 0xFF, 0xEE
+            };
+
+            using (TDec decoder = Create()) {
+                var lines = Decode(decoder, new[] {
+                    PcapBlocks.ShbData, PcapBlocks.IdbData, PcapBlocks.EpbData, epbCorruptData
+                }, chunk);
+
+                Assert.That(() => {
+                    Decode(decoder, PcapBlocks.ShbData, chunk);
+                }, Throws.TypeOf<UnknownPcapFileFormatException>());
+
+                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
+                Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }
         }
     }

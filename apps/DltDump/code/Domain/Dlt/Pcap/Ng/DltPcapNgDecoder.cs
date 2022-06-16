@@ -24,6 +24,8 @@
         private uint m_ExpectedLength;
         private long m_DiscardLength;
 
+        private bool m_FileCorrupted;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DltPcapNgDecoder"/> class without an output stream or filter.
         /// </summary>
@@ -51,6 +53,8 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(DltPcapNgDecoder));
+            if (m_FileCorrupted)
+                throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
 
             m_List.Clear();
 
@@ -77,7 +81,7 @@
                     }
 
                     blockHeader = m_BlockReader.GetHeader(buffer);
-                    if (blockHeader.Length == 0) throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
+                    if (blockHeader.Length == 0) return SetFileCorrupted();
 
                     m_ExpectedLength = unchecked((uint)blockHeader.Length);
                     if (m_ExpectedLength > m_Packet.Length) {
@@ -117,7 +121,7 @@
                     buffer = buffer[hdr..];
                     position += hdr;
                     blockHeader = m_BlockReader.GetHeader(m_Packet);
-                    if (blockHeader.Length == 0) throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
+                    if (blockHeader.Length == 0) return SetFileCorrupted();
 
                     m_ExpectedLength = unchecked((uint)blockHeader.Length);
                     if (m_ExpectedLength > m_Packet.Length) {
@@ -148,7 +152,7 @@
 
                     packet = m_Packet.AsSpan(0, m_Length + pkt);
                     blockHeader = m_BlockReader.GetHeader(packet);
-                    if (blockHeader.Length == 0) throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
+                    if (blockHeader.Length == 0) return SetFileCorrupted();
 
                     m_Length = 0;
                 }
@@ -159,7 +163,9 @@
                     m_BlockReader.GetBlock(packet, m_Position);
                     break;
                 case BlockCodes.EnhancedPacketBlock:
-                    m_List.AddRange(m_BlockReader.DecodeBlock(packet, m_Position));
+                    IEnumerable<DltTraceLineBase> lines = m_BlockReader.DecodeBlock(packet, m_Position);
+                    if (lines == null) return SetFileCorrupted();
+                    m_List.AddRange(lines);
                     break;
                 }
             }
@@ -167,8 +173,22 @@
             return m_List;
         }
 
+        /// <summary>
+        /// Flags that the stream we're parsing is corrupted.
+        /// </summary>
+        /// <returns>The currently parsed lines.</returns>
+        /// <exception cref="UnknownPcapFileFormatException">Indicates that the file is corrupted.</exception>
+        private IEnumerable<DltTraceLineBase> SetFileCorrupted()
+        {
+            m_FileCorrupted = true;
+            return m_List;
+        }
+
         public IEnumerable<DltTraceLineBase> Flush()
         {
+            if (m_FileCorrupted)
+                throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
+
             return Array.Empty<DltTraceLineBase>();
         }
 

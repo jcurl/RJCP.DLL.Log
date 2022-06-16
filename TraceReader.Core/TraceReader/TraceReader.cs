@@ -77,15 +77,8 @@
                     m_Position += read;
                 }
 
-                if (lines == null) {
-                    if (m_StreamEnd) return null;
-                } else {
-                    m_LineEnumerator = lines.GetEnumerator();
-                    if (m_LineEnumerator.MoveNext()) {
-                        return m_LineEnumerator.Current;
-                    }
-                    m_LineEnumerator = null;
-                }
+                if (lines == null) return null;
+                m_LineEnumerator = lines.GetEnumerator();
             } while (true);
         }
 
