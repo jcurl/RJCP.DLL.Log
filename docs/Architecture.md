@@ -1,8 +1,8 @@
 # TraceReader Architecture
 
-The TraceReader project is to read streams and decode the strings converting
-them to trace lines. These trace lines are presented to the user as lines of
-text with metadata, that the data can be processed in some way.
+The goal of the TraceReader project is to decode streams and convert them to
+trace lines. These trace lines can be presented to the user as lines of text
+with metadata, allowing the data can be processed in some way.
 
 ## The Trace Reader
 
@@ -65,15 +65,15 @@ The position of the stream is tracked by the `TraceReader<T>`. The position can
 be useful later for decoding errors in the protocol. This happens on the first
 call to `GetLineAsync()`.
 
-The `GetLineAsync()` returns a single line. If there is the first time the
-method has been called, or all lines have been returned by a previous call, it
-reads new data from the stream. This makes the method awaitable, as it reads
-from the stream it was given during construction.
+The `GetLineAsync()` returns a single line. If the method is the first time
+being called, or all lines have been returned by a previous call, it reads new
+data from the stream. This makes the method awaitable, as it reads from the
+stream it was given during construction.
 
-It returns `null` in case the stream is closed. Any exceptions are passed on to
-the user, but the object itself is not closing the stream or destroying state
-from the exception (e.g. if there was a `TimeoutException`, it must be possible
-to try again).
+The method `GetLineAsync()` returns `null` in case the stream is closed. Any
+exceptions are passed on to the user, but the object itself is not closing the
+stream or destroying state from the exception (e.g. if there was a
+`TimeoutException`, it must be possible to try again).
 
 The specific decoder `MyTraceDecoder` knows how to decode the bytes in the
 `Span<byte>`, and returns a read-only collection of decoded lines. This

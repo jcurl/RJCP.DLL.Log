@@ -27,4 +27,4 @@ reads a text file and returns each individual line in the text file.
 
 ## DLT Library (RJCP.Diagnostics.Log.Dlt)
 
-Implements decoding DLT messages as defined by AutoSAR.
+Implements decoding DLT messages as defined by AutoSAR R20-11 and earlier.

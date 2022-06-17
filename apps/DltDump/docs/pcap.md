@@ -483,8 +483,9 @@ It has the following format:
 ```
 
 The fields are all stored in network order (big-endian). The length is the
-length of the entire UDP packet including other fragments. The Checksum is over
-the entire data octets.
+length of the entire UDP packet including the 8-byte header and all other
+fragments. The Checksum is over the entire data octets, which may be split
+across multipe IPv4 fragments.
 
 In case of IPv4 fragmentation, the source port and destination port are only in
 the first fragment, as IP fragmentation is over IP not UDP.

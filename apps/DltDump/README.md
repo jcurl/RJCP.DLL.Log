@@ -14,16 +14,17 @@ DltDump is a tool that reads DLT Version 1 formatted files.
   - [2.2. Recording data from a Serial Stream](#22-recording-data-from-a-serial-stream)
   - [2.3. Recording data from a Serial Stream in the Network Format](#23-recording-data-from-a-serial-stream-in-the-network-format)
   - [2.4. Converting a Recorded File to Text](#24-converting-a-recorded-file-to-text)
-  - [2.5. Search for a String](#25-search-for-a-string)
-  - [2.6. Search for a Regular Expression](#26-search-for-a-regular-expression)
-  - [2.7. Case Insensitive Search](#27-case-insensitive-search)
-  - [2.8. Printing Context (like 'grep')](#28-printing-context-like-grep)
-  - [2.9. Filtering for an Application Identifier](#29-filtering-for-an-application-identifier)
-  - [2.10. Other Filters](#210-other-filters)
-  - [2.11. Concatenating files](#211-concatenating-files)
-  - [2.12. Splitting files](#212-splitting-files)
-  - [2.13. Splitting files on Input based on Time Stamp](#213-splitting-files-on-input-based-on-time-stamp)
-  - [2.14. Searching for Corruption on the Input File](#214-searching-for-corruption-on-the-input-file)
+  - [2.5. Converting a PCAP File to DLT](#25-converting-a-pcap-file-to-dlt)
+  - [2.6. Search for a String](#26-search-for-a-string)
+  - [2.7. Search for a Regular Expression](#27-search-for-a-regular-expression)
+  - [2.8. Case Insensitive Search](#28-case-insensitive-search)
+  - [2.9. Printing Context (like 'grep')](#29-printing-context-like-grep)
+  - [2.10. Filtering for an Application Identifier](#210-filtering-for-an-application-identifier)
+  - [2.11. Other Filters](#211-other-filters)
+  - [2.12. Concatenating files](#212-concatenating-files)
+  - [2.13. Splitting files](#213-splitting-files)
+  - [2.14. Splitting files on Input based on Time Stamp](#214-splitting-files-on-input-based-on-time-stamp)
+  - [2.15. Searching for Corruption on the Input DLT File](#215-searching-for-corruption-on-the-input-dlt-file)
 - [3. Detailed Usage](#3-detailed-usage)
   - [3.1. Input Formats](#31-input-formats)
   - [3.2. Time Stamps](#32-time-stamps)
@@ -78,6 +79,7 @@ DltDump can read from:
 * A file on disk;
   * As recorded by a logger, containing a storage header; or
   * binary data, recorded from a TCP stream (e.g. with netcat), or serial.
+  * Recorded with a PCAP or PCAP-NG file
 * a TCP server; or
 * a Serial port.
 
@@ -155,7 +157,20 @@ to know that the output should be written in text form, instead of a DLT packet.
 dltdump --output convert.txt record.dlt
 ```
 
-### 2.5. Search for a String
+### 2.5. Converting a PCAP File to DLT
+
+To convert an existing PCAP or PCAP-NG file to a DLT, the input extension must
+be `.pcap` or `.pcapng`, and the output extension must be `.dlt`.
+
+```sh
+dltdump --output out.dlt input.pcapng
+```
+
+Invalid packets, including those that have only partial captures, are ignored.
+They are not printed on the command line, or put in the log file. Only packets
+with the destination port 3490 are captured.
+
+### 2.6. Search for a String
 
 Search for a specific string in the output and print to the console
 
@@ -165,7 +180,7 @@ dltdump -s substring record.dlt
 
 This is conceptually similar to doing a "grep" over the input.
 
-### 2.6. Search for a Regular Expression
+### 2.7. Search for a Regular Expression
 
 Likewise, .NET regular expressions are supported
 
@@ -176,7 +191,7 @@ dltdump -r "\\d+" record.dlt
 This searches for the regular expression `\d+`, which matches for all lines that
 have a number.
 
-### 2.7. Case Insensitive Search
+### 2.8. Case Insensitive Search
 
 If the string to be sought should be case insensitive, add the option `i`:
 
@@ -184,7 +199,7 @@ If the string to be sought should be case insensitive, add the option `i`:
 dltdump -i -s substring record.dlt
 ```
 
-### 2.8. Printing Context (like 'grep')
+### 2.9. Printing Context (like 'grep')
 
 If you want to see the lines before and after a match, use the context options
 `-A` (after) and `-B` (before):
@@ -193,7 +208,7 @@ If you want to see the lines before and after a match, use the context options
 dltdump -s substring -A 10 -B 2 record.dlt
 ```
 
-### 2.9. Filtering for an Application Identifier
+### 2.10. Filtering for an Application Identifier
 
 If you only want to see logs from a particular application on the console:
 
@@ -207,7 +222,7 @@ Or if you want to output the result to a new file `filtered.dlt`
 dltdump --appid APP1 --output filtered.dlt record.dlt
 ```
 
-### 2.10. Other Filters
+### 2.11. Other Filters
 
 The options for filtering are:
 
@@ -223,7 +238,7 @@ The options for filtering are:
 You can provide the filters, they have a logical "and" relationship. Providing
 the same filter option (e.g. `appid`) has a logical "or" relationship.
 
-### 2.11. Concatenating files
+### 2.12. Concatenating files
 
 If you have multiple files, you can parse and join them together. The ordering
 is important (no sorting of the input files are made):
@@ -232,7 +247,13 @@ is important (no sorting of the input files are made):
 dltdump --output concat.dlt input1.dlt input2.dlt input3.dlt
 ```
 
-### 2.12. Splitting files
+Or join many PCAP files into one DLT file
+
+```sh
+dltdump --output result.dlt file001.pcap file002.pcap file003.pcap
+```
+
+### 2.13. Splitting files
 
 If you have a large file, you can split it up into many smaller files. This
 example takes the input `record.dlt` and splits it up into files named
@@ -242,7 +263,7 @@ example takes the input `record.dlt` and splits it up into files named
 dltdump --split 100M --output split_%CTR%.dlt record.dlt
 ```
 
-### 2.13. Splitting files on Input based on Time Stamp
+### 2.14. Splitting files on Input based on Time Stamp
 
 An extension of splitting the files is to record data, and to split the output
 into files of particular sizes, with the file name having the time stamp when
@@ -252,7 +273,7 @@ the file was started.
 dltdump --split 50M --output record_%CDATETIME%.dlt tcp://192.158.1.10
 ```
 
-### 2.14. Searching for Corruption on the Input File
+### 2.15. Searching for Corruption on the Input DLT File
 
 If the "dlt-viewer" isn't showing data as you'd expect from recorded input, you
 can filter for SKIP data, and show the position of the input file. Let's say
@@ -291,8 +312,9 @@ R20-11](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11
 
 It can read files in three different formats:
 
-* As files already stored on disk, that contains a storage header, as added by
-  loggers;
+* As files already stored on the filesystem, that contains a storage header, as
+  added by loggers; or as PCAP or PCAP-NG files stored on the file system
+  encapsulated in IPv4 UDP packets;
 * As a network stream, described in the PRS, starting with the standard header;
   and
 * As a serial stream, which is the fixed 4-byte marker `DLS\1` followed by the
@@ -305,11 +327,12 @@ used to specify the format.
 
 By default:
 
-| Input                           | Default Format  |
-| ------------------------------- | --------------- |
-| file on disk                    | `--format=file` |
-| `tcp://host:port`               | `--format=net`  |
-| `ser:/dev/ttyUSB0,115200,8,n,1` | `--format=ser`  |
+| Input                           | Default Format    |
+| ------------------------------- | ----------------- |
+| DLT file with storage header    | `--format=file`   |
+| PCAP or PCAP-NG file            | `--format=pcapng` |
+| `tcp://host:port`               | `--format=net`    |
+| `ser:/dev/ttyUSB0,115200,8,n,1` | `--format=ser`    |
 
 ### 3.2. Time Stamps
 
@@ -318,6 +341,9 @@ extract the time stamp at which the message was recorded. Otherwise, if the
 recording is made directly from TCP or Serial, the time stamp of the PC at the
 time the message is decoded is used. If the file is on disk and has no storage
 header, the default Unix time stamp of 1/Jan/1970 is used.
+
+If the input format is `--format=pcap` or `--format=pcapng`, the time stamp
+associated with the packet is used when the message was recorded.
 
 ### 3.3. Live Streams, Retries and Time outs
 
@@ -473,7 +499,8 @@ So long as data is being read from the input file, it will be written to
 The following features are not implemented
 
 * Reading FIBEX or ARXML files are not supported
-* Reading PCAP or PCAPNG files are not supported.
+* Reading from UDP network streams
+* Filtering based on the logger time stamp
 
 ### 4.1. Contributing
 
@@ -491,7 +518,8 @@ Design documentation can be found in this repository:
 
 To build, see [RJCP.base](https://github.com/jcurl/RJCP.base/). Once all
 repositories are checked out, you can run `dotnet build` within the base of this
-repository.
+repository (and indeed is a requirement before you can build using Visual
+Studio).
 
 ### 4.2. Reporting Issues
 

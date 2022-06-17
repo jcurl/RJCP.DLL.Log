@@ -28,7 +28,7 @@ implementation in an incremental manner).
         - [2.3.2.3.1. Adding a new InputFormat](#23231-adding-a-new-inputformat)
       - [2.3.2.4. The Output Stream, Context and Filter](#2324-the-output-stream-context-and-filter)
   - [2.4. Domain](#24-domain)
-    - [2.4.1. InputStreamFactory and InputStream](#241-inputstreamfactory-and-inputstream)
+    - [2.4.1. InputStreamFactory and IInputStream](#241-inputstreamfactory-and-iinputstream)
     - [2.4.2. DLT Trace Decoder (AutoSAR PRS format)](#242-dlt-trace-decoder-autosar-prs-format)
     - [2.4.3. DLT Trace Decoder for PCAP and PCAPNG](#243-dlt-trace-decoder-for-pcap-and-pcapng)
       - [2.4.3.1. PCAP-NG Design](#2431-pcap-ng-design)
@@ -113,12 +113,11 @@ being in the root namespace.
 
  ![Layers](out/diagrams/layers/Layers.svg)
 
-The layered design is based on the principles of Domain Driven Design by Eric
-Evans. It has been extended slightly. A higher layer can access an element in
-the lower layer, but not the reverse. There is no strict rule that only the
-immediate layer is accessible, so that the application layer might handle a
-reference to the infrastructure layer, or the application layer uses elements
-from the framework layer.
+The layered design chosen to structure software. A higher layer can access an
+element in the lower layer, but not the reverse. There is no strict rule that
+only the immediate layer is accessible, so that the application layer might
+handle a reference to the infrastructure layer, or the application layer uses
+elements from the framework layer.
 
 #### 2.1.1. Root
 
@@ -128,7 +127,7 @@ This is where the program entry points are. It instantiates the View.
 
 This is the user interface. This is a command line application, so it gets the
 options the user provided and executes the use cases in the application layer.
-If a graphical user interface should be created, only this layer is modified.
+If a graphical user interface should be created, this layer is modified.
 
 #### 2.1.3. Application
 
@@ -162,11 +161,9 @@ introduced.
 
 #### 2.1.6. Infrastructure
 
-This contains code local to this application, but could be considered reasonably
+This contains code local to this application. It could be considered reasonably
 generic, but for now only used in this application. Importantly, it doesn't
-contain any thing related to policy. It helps implement business logic for the
-application, but doesn't assume what those decisions are, applying only
-technical constraints.
+contain any thing related to policy or business logic, but only supporting such.
 
 #### 2.1.7. Framework
 
@@ -231,6 +228,12 @@ match:
 
 * `-A=n` or `--after-context`: Provide context for `n` lines after the match
 * `-B=n` or `--before-context`: Provide context for `n` lines before the match
+
+Special options:
+
+* `--log`: Dump the internal memory log to the file system for analysis and
+  debugging of the decoder (e.g. of corrupt files, or detection of unsupported
+  features).
 
 #### 2.2.2. The Command Factory
 
@@ -437,7 +440,7 @@ The domain layer contains logic specific to this application or the problem
 domain. It implements the business logic specific to reading and writing DLT
 data.
 
-#### 2.4.1. InputStreamFactory and InputStream
+#### 2.4.1. InputStreamFactory and IInputStream
 
 This component handles parsing a string input, and determining if this is a file
 to read, or a URI for creating a stream.
@@ -621,14 +624,10 @@ The design to handle these two cases are presented:
 In the first case of IP fragmentation, the IPv4 source address, destination
 address and fragmentation fields (identifier, offset, more fragments) are to be
 tracked as per [RFC791](https://datatracker.ietf.org/doc/html/rfc791). The
-protocol is always UDP.
-
-For a single full DLT packet in an IPv4 fragmented packet, reassembly is done
-defined by the source address, destination address, protocol (always UDP here)
-and the fragmentation identifier. The reassembled packet is then given to the
+protocol is always UDP. The reassembled packet is then given to the
 `DltPcapNetworkTraceFilterDecoder` for decoding as if it were a single packet.
 
-The `PacketDecoder` then does the following for each packet it receives:
+For each packet received, `PacketDecoder` then checks:
 
 * If the packet is not fragmented, the private method
   `PacketDecoder.DecodeDltPackets` is called with the UDP buffer (the first 8
@@ -656,7 +655,7 @@ The `PacketDecoder` then does the following for each packet it receives:
 
 ###### 2.4.3.3.2. Issues with IP Fragmentation Reassembly
 
-The following scenarios can occur in a PCAP/PCAP-NG file and should be handled:
+The following scenarios can occur in a PCAP/PCAP-NG file:
 
 * A packet is lost
 * A packet is duplicated (re-sent)
@@ -728,9 +727,7 @@ The following limitations are applied:
 * As I don't have examples of the FCS field in the PCAP file, it is expected
   that this value is not present (the `P` bit is `0`).
 * Filtering will be based on the destination port only, default to 3490.
-* 802.1q double tagging won't be supported.
-* For PCAP-NG, the first interface will be used if there are multiple interfaces
-  present in the file.
+* 802.1q double tagging isn't supported.
 * Only IPv4 will be supported, until real-world examples exist of IPv6 which can
   be tested with.
 

@@ -5,7 +5,7 @@ DLT format should be obtained by the relevant specifications.
 
 ## General Format
 
-The DLT packet consists of:
+The DLT v1 packet consists of:
 
 * A storage header (for files recorded from a DLT talker)
 * A standard header

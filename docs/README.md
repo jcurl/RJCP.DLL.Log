@@ -1,10 +1,7 @@
 # READ ME
 
-Browse this directory for design and architecture.
-
-This directory may be refactored as documentation is added, to make it
-convenient to browse using web-based GIT front-ends, such as GitHub and
-BitBucket.
+Browse this directory for design and architecture for the Trace Reader. There
+may be other `docs` directory specific to code nearby.
 
 ## Construction of Plant UML Diagrams
 
