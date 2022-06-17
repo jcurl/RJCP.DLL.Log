@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
+    using System;
     using System.Text;
 
     /// <summary>
@@ -11,7 +12,7 @@
         /// Initializes a new instance of the <see cref="RawDltArg"/> class with the given byte array.
         /// </summary>
         /// <param name="data">The value of the raw data bytes.</param>
-        public RawDltArg(byte[] data) : base(data) { }
+        public RawDltArg(byte[] data) : base(data ?? Array.Empty<byte>()) { }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.
@@ -22,7 +23,7 @@
         /// </remarks>
         public override string ToString()
         {
-            if (Data == null || Data.Length == 0) return string.Empty;
+            if (Data.Length == 0) return string.Empty;
 
             StringBuilder strBuilder = new StringBuilder(Data.Length * 3);
             HexConvert.ConvertToHex(strBuilder, Data);
@@ -35,7 +36,7 @@
         /// <param name="strBuilder">The string builder to append this argument to.</param>
         public override StringBuilder Append(StringBuilder strBuilder)
         {
-            if (Data == null || Data.Length == 0) return strBuilder;
+            if (Data.Length == 0) return strBuilder;
 
             HexConvert.ConvertToHex(strBuilder, Data);
             return strBuilder;

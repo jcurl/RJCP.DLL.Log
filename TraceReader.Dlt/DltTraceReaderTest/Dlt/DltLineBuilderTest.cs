@@ -35,14 +35,15 @@
             builder.SetDltType(DltType.LOG_INFO);   // Must set this to know what to build
 
             DltTraceLineBase line = builder.GetResult();
-            Assert.That(line, Is.TypeOf<DltTraceLine>());
+            Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
 
             // The features shouldn't be set, as nothing was assigned to the builder
-            DltTraceLine dltLine = (DltTraceLine)line;
+            DltNonVerboseTraceLine dltLine = (DltNonVerboseTraceLine)line;
             Assert.That(dltLine.Line, Is.EqualTo(0));
             Assert.That(dltLine.Position, Is.EqualTo(0));
-            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info non-verbose 0 "));
-            Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.MessageId, Is.EqualTo(0));
+            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info non-verbose 0 [0] "));
+            Assert.That(dltLine.Text, Is.EqualTo("[0] "));
             Assert.That(dltLine.Features.EcuId, Is.False);
             Assert.That(dltLine.EcuId, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.ApplicationId, Is.False);
@@ -60,6 +61,42 @@
             Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.False);
+            Assert.That(dltLine.Arguments.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DefaultVerboseLine()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetDltType(DltType.LOG_INFO);   // Must set this to know what to build
+            builder.SetIsVerbose(true);
+
+            DltTraceLineBase line = builder.GetResult();
+            Assert.That(line, Is.TypeOf<DltTraceLine>());
+
+            // The features shouldn't be set, as nothing was assigned to the builder
+            DltTraceLine dltLine = (DltTraceLine)line;
+            Assert.That(dltLine.Line, Is.EqualTo(0));
+            Assert.That(dltLine.Position, Is.EqualTo(0));
+            Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info verbose 0 "));
+            Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.Features.EcuId, Is.False);
+            Assert.That(dltLine.EcuId, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.Features.ApplicationId, Is.False);
+            Assert.That(dltLine.ApplicationId, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.Features.ContextId, Is.False);
+            Assert.That(dltLine.ContextId, Is.EqualTo(string.Empty));
+            Assert.That(dltLine.Count, Is.EqualTo(DltTraceLineBase.InvalidCounter));
+            Assert.That(dltLine.Features.MessageType, Is.True);
+            Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
+            Assert.That(dltLine.Features.SessionId, Is.False);
+            Assert.That(dltLine.SessionId, Is.EqualTo(0));
+            Assert.That(dltLine.Features.DeviceTimeStamp, Is.False);
+            Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
+            Assert.That(dltLine.Features.TimeStamp, Is.False);
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.Default));
+            Assert.That(dltLine.Features.BigEndian, Is.False);
+            Assert.That(dltLine.Features.IsVerbose, Is.True);
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(0));
         }
 

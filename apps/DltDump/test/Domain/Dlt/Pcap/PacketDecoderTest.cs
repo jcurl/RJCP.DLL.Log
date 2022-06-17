@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using Infrastructure;
     using NUnit.Framework;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
     using RJCP.Diagnostics.Log.Dlt.Args;
-    using Infrastructure;
 
     [TestFixture]
     public class PacketDecoderTest
@@ -217,10 +217,10 @@
                 Assert.That(lines.Count, Is.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Features.IsVerbose, Is.False);
+                Assert.That(((DltNonVerboseTraceLine)lines[0]).MessageId, Is.EqualTo(1));
 
-                IList<IDltArg> args = ((DltTraceLine)lines[0]).Arguments;
+                IList<IDltArg> args = ((DltNonVerboseTraceLine)lines[0]).Arguments;
                 Assert.That(args.Count, Is.EqualTo(1));
-                Assert.That(((NonVerboseDltArg)args[0]).MessageId, Is.EqualTo(1));
             }
         }
 
@@ -243,10 +243,10 @@
                 Assert.That(lines.Count, Is.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Features.IsVerbose, Is.False);
+                Assert.That(((DltNonVerboseTraceLine)lines[0]).MessageId, Is.EqualTo(1));
 
-                IList<IDltArg> args = ((DltTraceLine)lines[0]).Arguments;
+                IList<IDltArg> args = ((DltNonVerboseTraceLine)lines[0]).Arguments;
                 Assert.That(args.Count, Is.EqualTo(1));
-                Assert.That(((NonVerboseDltArg)args[0]).MessageId, Is.EqualTo(1));
             }
         }
 

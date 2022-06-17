@@ -97,15 +97,14 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         /// <remarks>
         /// Shall return a string containing the values of the DLT line fields, similar to a DLT trace line, exported to
-        /// a text file using DLT Viewer 2.18.0. This can be used to assign to the <see cref="DltTraceLineBase.Text"/>
-        /// property.
+        /// a text file using DLT Viewer 2.18.0.
         /// </remarks>
         public override string ToString()
         {
             // We don't return the 'NOAR' field in the line as dlt-viewer does, as this information is used only
             // when decoding. As an alternative, we show the actual number of arguments present.
             return string.Format("{0} {1} {2} {3}", base.ToString(),
-                Features.IsVerbose ? "verbose" : "non-verbose", Arguments.Count, BuildArgumentText());
+                Features.IsVerbose ? "verbose" : "non-verbose", Arguments.Count, Text);
         }
     }
 }

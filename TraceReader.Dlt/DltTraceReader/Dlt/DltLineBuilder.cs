@@ -87,6 +87,7 @@
             EcuId = null;
             ApplicationId = null;
             ContextId = null;
+            MessageId = 0;
             Count = DltTraceLineBase.InvalidCounter;
             DltType = DltType.UNKNOWN;
             SessionId = 0;
@@ -133,7 +134,7 @@
                     Type = DltType,
                 };
                 line.Features += Features;
-            } else {
+            } else if (Features.IsVerbose) {
 #if DEBUG
                 // This should never occur, as the DltType.UNKNOWN is never settable after masking the verbose flag.
                 // Thus, check only in debug mode where performance is not an issue.
@@ -142,6 +143,20 @@
                 }
 #endif
                 line = new DltTraceLine(m_Arguments.ToArray()) {
+                    Line = m_Line,
+                    Position = Position,
+                    TimeStamp = TimeStamp,
+                    EcuId = EcuId ?? string.Empty,
+                    ApplicationId = ApplicationId ?? string.Empty,
+                    ContextId = ContextId ?? string.Empty,
+                    SessionId = SessionId,
+                    Count = Count,
+                    DeviceTimeStamp = DeviceTimeStamp,
+                    Type = DltType,
+                    Features = Features
+                };
+            } else {
+                line = new DltNonVerboseTraceLine(MessageId, m_Arguments.ToArray()) {
                     Line = m_Line,
                     Position = Position,
                     TimeStamp = TimeStamp,
@@ -230,7 +245,7 @@
         public DltLineFeatures Features { get; set; }
 
         /// <summary>
-        /// Gets or sets the ECU identifier.
+        /// Gets the ECU identifier.
         /// </summary>
         /// <value>The ECU identifier.</value>
         public string EcuId { get; private set; }
@@ -267,7 +282,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the application identifier.
+        /// Gets the application identifier.
         /// </summary>
         /// <value>The application identifier.</value>
         public string ApplicationId { get; private set; }
@@ -289,7 +304,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the context identifier.
+        /// Gets the context identifier.
         /// </summary>
         /// <value>The context identifier.</value>
         public string ContextId { get; private set; }
@@ -311,7 +326,24 @@
         }
 
         /// <summary>
-        /// Gets or sets the message counter value.
+        /// Gets the non-verbose message identifier.
+        /// </summary>
+        /// <value>The non-verbose message identifier.</value>
+        public int MessageId { get; private set; }
+
+        /// <summary>
+        /// Sets the non-verbose message identifier.
+        /// </summary>
+        /// <param name="messageId">The non-verbose message identifier.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder" />.</returns>
+        public IDltLineBuilder SetMessageId(int messageId)
+        {
+            MessageId = messageId;
+            return this;
+        }
+
+        /// <summary>
+        /// Gets the message counter value.
         /// </summary>
         /// <value>
         /// The message counter value. A value of <see cref="DltTraceLineBase.InvalidCounter"/> indicates that the
@@ -331,7 +363,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the device time stamp.
+        /// Gets the device time stamp.
         /// </summary>
         /// <value>The device time stamp.</value>
         public TimeSpan DeviceTimeStamp { get; private set; }
@@ -353,7 +385,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the type of the DLT message.
+        /// Gets the type of the DLT message.
         /// </summary>
         /// <value>The type of the DLT message.</value>
         public DltType DltType { get; private set; }
@@ -371,7 +403,7 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is verbose message.
+        /// Gets a value indicating whether this instance is verbose message.
         /// </summary>
         /// <value>
         /// Returns <see langword="true"/> if this instance is verbose; otherwise, <see langword="false"/>.
@@ -390,7 +422,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the session identifier.
+        /// Gets the session identifier.
         /// </summary>
         /// <value>The session identifier.</value>
         public int SessionId { get; private set; }
@@ -412,9 +444,9 @@
         }
 
         /// <summary>
-        /// Gets or sets the time stamp.
+        /// Gets the logger time stamp.
         /// </summary>
-        /// <value>The time stamp of the device.</value>
+        /// <value>The time stamp of the logger.</value>
         public DateTime TimeStamp { get; private set; }
 
         /// <summary>
@@ -445,7 +477,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the position in the stream.
+        /// Gets the position in the stream.
         /// </summary>
         /// <value>The position in the stream.</value>
         public long Position { get; private set; }

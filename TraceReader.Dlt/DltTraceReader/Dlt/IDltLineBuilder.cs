@@ -69,7 +69,7 @@
         DltLineFeatures Features { get; set; }
 
         /// <summary>
-        /// Gets or sets the ECU identifier.
+        /// Gets the ECU identifier.
         /// </summary>
         /// <value>The ECU identifier.</value>
         string EcuId { get; }
@@ -98,7 +98,7 @@
         IDltLineBuilder SetEcuId(string id);
 
         /// <summary>
-        /// Gets or sets the application identifier.
+        /// Gets the application identifier.
         /// </summary>
         /// <value>The application identifier.</value>
         string ApplicationId { get; }
@@ -115,7 +115,7 @@
         IDltLineBuilder SetApplicationId(string id);
 
         /// <summary>
-        /// Gets or sets the context identifier.
+        /// Gets the context identifier.
         /// </summary>
         /// <value>The context identifier.</value>
         string ContextId { get; }
@@ -132,7 +132,20 @@
         IDltLineBuilder SetContextId(string id);
 
         /// <summary>
-        /// Gets or sets the message counter value.
+        /// Gets the non-verbose message identifier.
+        /// </summary>
+        /// <value>The non-verbose message identifier.</value>
+        int MessageId { get; }
+
+        /// <summary>
+        /// Sets the non-verbose message identifier.
+        /// </summary>
+        /// <param name="messageId">The non-verbose message identifier.</param>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder SetMessageId(int messageId);
+
+        /// <summary>
+        /// Gets the message counter value.
         /// </summary>
         /// <value>The message counter value.</value>
         int Count { get; }
@@ -145,7 +158,7 @@
         IDltLineBuilder SetCount(byte value);
 
         /// <summary>
-        /// Gets or sets the device time stamp.
+        /// Gets the device time stamp.
         /// </summary>
         /// <value>The device time stamp.</value>
         TimeSpan DeviceTimeStamp { get; }
@@ -162,7 +175,7 @@
         IDltLineBuilder SetDeviceTimeStamp(long ticks);
 
         /// <summary>
-        /// Gets or sets the type of the DLT message.
+        /// Gets the type of the DLT message.
         /// </summary>
         /// <value>The type of the DLT message.</value>
         DltType DltType { get; }
@@ -175,7 +188,7 @@
         IDltLineBuilder SetDltType(DltType type);
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is verbose message.
+        /// Gets a value indicating whether this instance is verbose message.
         /// </summary>
         /// <value>
         /// Returns <see langword="true"/> if this instance is verbose; otherwise, <see langword="false"/>.
@@ -190,7 +203,7 @@
         IDltLineBuilder SetIsVerbose(bool value);
 
         /// <summary>
-        /// Gets or sets the session identifier.
+        /// Gets the session identifier.
         /// </summary>
         /// <value>The session identifier.</value>
         int SessionId { get; }
@@ -207,9 +220,9 @@
         IDltLineBuilder SetSessionId(int id);
 
         /// <summary>
-        /// Gets or sets the time stamp.
+        /// Gets the time stamp of the logger.
         /// </summary>
-        /// <value>The time stamp of the device.</value>
+        /// <value>The time stamp of the logger.</value>
         DateTime TimeStamp { get; }
 
         /// <summary>
@@ -228,7 +241,7 @@
         IDltLineBuilder SetTimeStamp(DateTime dateTime);
 
         /// <summary>
-        /// Gets or sets the position in the stream.
+        /// Gets the position in the stream.
         /// </summary>
         /// <value>The position in the stream.</value>
         long Position { get; }

@@ -13,19 +13,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NonVerboseDltArg"/> class.
         /// </summary>
-        /// <param name="messageId">The message identifier.</param>
         /// <param name="data">The data.</param>
-        public NonVerboseDltArg(int messageId, byte[] data)
-            : base(data ?? Array.Empty<byte>())
-        {
-            MessageId = messageId;
-        }
-
-        /// <summary>
-        /// Gets the message identifier.
-        /// </summary>
-        /// <value>The message identifier.</value>
-        public int MessageId { get; }
+        public NonVerboseDltArg(byte[] data) : base(data ?? Array.Empty<byte>()) { }
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.
@@ -37,7 +26,6 @@
         {
             if (m_NonVerboseArg == null) {
                 StringBuilder builder = new StringBuilder(4 * Data.Length + 20);
-                builder.Append('[').Append(unchecked((uint)MessageId)).Append("] ");
                 if (Data.Length > 0) {
                     int offset = builder.Length;
                     builder.Length += Data.Length;

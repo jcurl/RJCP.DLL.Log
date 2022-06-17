@@ -74,6 +74,7 @@
     <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
     <Compile Include="DltControlTraceLine.cs" />
     <Compile Include="DltFileTraceReaderFactory.cs" />
+    <Compile Include="DltNonVerboseTraceLine.cs" />
     <Compile Include="DltSerialTraceReaderFactory.cs" />
     <Compile Include="DltSkippedTraceLine.cs" />
     <Compile Include="DltTraceLine.cs" />

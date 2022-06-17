@@ -24,10 +24,12 @@
             try {
                 NonVerboseDltArg arg;
                 if (buffer.Length < 4) {
-                    arg = new NonVerboseDltArg(0, Array.Empty<byte>());
+                    lineBuilder.SetMessageId(0);
+                    arg = new NonVerboseDltArg(Array.Empty<byte>());
                 } else {
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                    arg = new NonVerboseDltArg(messageId, buffer[4..].ToArray());
+                    lineBuilder.SetMessageId(messageId);
+                    arg = new NonVerboseDltArg(buffer[4..].ToArray());
                 }
                 lineBuilder.AddArgument(arg);
                 return buffer.Length;

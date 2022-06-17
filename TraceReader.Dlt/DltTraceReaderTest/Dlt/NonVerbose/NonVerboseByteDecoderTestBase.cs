@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.NonVerbose
 {
     using System;
-    using Args;
     using Dlt.Packet;
     using NUnit.Framework;
 
@@ -9,27 +8,27 @@
     {
         protected NonVerboseByteDecoderTestBase(DecoderType decoderType, Endianness endian) : base(decoderType, endian) { }
 
-        protected void Decode(byte[] data, string fileName, out IDltArg arg)
+        protected void Decode(byte[] data, string fileName, int messageId, out DltNonVerboseTraceLine line)
         {
             switch (Type) {
             case DecoderType.Line:
-                DecodeLine(data, fileName, out arg);
+                DecodeLine(data, fileName, messageId, out line);
                 break;
             case DecoderType.Packet:
-                DecodePacket(data, out arg);
+                DecodePacket(data, out line);
                 break;
             default:
                 throw new NotImplementedException();
             }
         }
 
-        private void DecodeLine(byte[] data, string fileName, out IDltArg arg)
+        private void DecodeLine(byte[] data, string fileName, int messageId, out DltNonVerboseTraceLine line)
         {
-            DltTraceLineBase line = DecodeLine(null, DltType.UNKNOWN, data, fileName);
-            Assert.That(line, Is.TypeOf<DltTraceLine>());
-            DltTraceLine message = (DltTraceLine)line;
-            Assert.That(message.Arguments.Count, Is.EqualTo(1));
-            arg = message.Arguments[0];
+            DltTraceLineBase baseLine = DecodeLine(null, DltType.UNKNOWN, data, fileName);
+            Assert.That(baseLine, Is.TypeOf<DltNonVerboseTraceLine>());
+            line = (DltNonVerboseTraceLine)baseLine;
+            Assert.That(line.MessageId, Is.EqualTo(messageId));
+            Assert.That(line.Arguments.Count, Is.EqualTo(1));
         }
 
         protected override void CreateLine(DltFactory factory, DltPacketWriter writer, DltType dltType, byte[] data, bool msbf)
@@ -37,10 +36,10 @@
             factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), data).BigEndian(msbf).Append();
         }
 
-        private void DecodePacket(byte[] data, out IDltArg arg)
+        private void DecodePacket(byte[] data, out DltNonVerboseTraceLine line)
         {
             IDltLineBuilder lineBuilder = new DltLineBuilder();
-            lineBuilder.SetDltType(DltType.UNKNOWN);
+            lineBuilder.SetIsVerbose(false);
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
             INonVerboseDltDecoder dltDecoder = new NonVerboseByteDecoder();
@@ -48,7 +47,7 @@
 
             Assert.That(length, Is.EqualTo(data.Length));
             Assert.That(lineBuilder.Arguments.Count, Is.EqualTo(1));
-            arg = lineBuilder.Arguments[0];
+            line = (DltNonVerboseTraceLine)lineBuilder.GetResult();
         }
     }
 }
