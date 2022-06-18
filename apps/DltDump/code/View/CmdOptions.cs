@@ -228,6 +228,24 @@
         /// <value>The size in bytes, when to split the output file.</value>
         public long Split { get; private set; }
 
+        [Option("not-before")]
+        private string NotBeforeString { get; set; }
+
+        /// <summary>
+        /// The date for when messages should be filtered from, or <see langword="null"/> if not defined.
+        /// </summary>
+        /// <value>The date messages should not be before.</value>
+        public DateTime? NotBefore { get; private set; }
+
+        [Option("not-after")]
+        private string NotAfterString { get; set; }
+
+        /// <summary>
+        /// The date for when messages should be filtered to, or <see langword="null"/> if not defined.
+        /// </summary>
+        /// <value>The date messages should not be after.</value>
+        public DateTime? NotAfter { get; private set; }
+
         /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
@@ -239,6 +257,7 @@
             CheckInputFormat();
             CheckContext();
             CheckSplit();
+            CheckDates();
 
             try {
                 // Interpret the strings and convert to the correct DltType.
@@ -314,17 +333,41 @@
                         }
                     }
                 } catch (OverflowException) {
-                    throw new OptionFormatException("split", AppResources.OptionInvalidSplitRange, null);
+                    throw new OptionFormatException("split", AppResources.OptionInvalidSplitRange);
                 }
             }
             if (split < 0) {
                 string message = string.Format(AppResources.OptionInvalidSplit, SplitString);
-                throw new OptionFormatException("split", message, null);
+                throw new OptionFormatException("split", message);
             }
             if (split < 65536)
-                throw new OptionFormatException("split", AppResources.OptionInvalidSplitTooSmall, null);
+                throw new OptionFormatException("split", AppResources.OptionInvalidSplitTooSmall);
 
             Split = split;
+        }
+
+        private void CheckDates()
+        {
+            NotBefore = ParseDateTime("not-before", NotBeforeString);
+            NotAfter = ParseDateTime("not-after", NotAfterString);
+
+            if (NotBefore.HasValue && NotAfter.HasValue) {
+                if (NotBefore.Value > NotAfter.Value) {
+                    string message = string.Format(AppResources.OptionInvalidDateNotBeforeAfterOrder,
+                        NotBefore.Value, NotAfter.Value);
+                    throw new OptionException(message);
+                }
+            }
+        }
+
+        private static DateTime? ParseDateTime(string option, string date)
+        {
+            if (string.IsNullOrWhiteSpace(date)) return null;
+            if (DateTime.TryParse(date, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime dt))
+                return dt.ToUniversalTime();
+
+            string message = string.Format(AppResources.OptionInvalidDate, option, date);
+            throw new OptionFormatException(option, message);
         }
 
         private static DltType GetDltType(string dltTypeFilter)
@@ -335,7 +378,7 @@
                 return (DltType)value;
             }
 
-            if (!Enum.TryParse<DltTypeFilter>(dltTypeFilter, true, out DltTypeFilter typeFilter)) {
+            if (!Enum.TryParse(dltTypeFilter, true, out DltTypeFilter typeFilter)) {
                 string msg = string.Format(AppResources.OptionInvalidFilterType, dltTypeFilter);
                 throw new ArgumentException(msg, nameof(dltTypeFilter));
             }

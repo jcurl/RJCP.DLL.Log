@@ -17,14 +17,15 @@ DltDump is a tool that reads DLT Version 1 formatted files.
   - [2.5. Converting a PCAP File to DLT](#25-converting-a-pcap-file-to-dlt)
   - [2.6. Search for a String](#26-search-for-a-string)
   - [2.7. Search for a Regular Expression](#27-search-for-a-regular-expression)
-  - [2.8. Case Insensitive Search](#28-case-insensitive-search)
-  - [2.9. Printing Context (like 'grep')](#29-printing-context-like-grep)
-  - [2.10. Filtering for an Application Identifier](#210-filtering-for-an-application-identifier)
-  - [2.11. Other Filters](#211-other-filters)
-  - [2.12. Concatenating files](#212-concatenating-files)
-  - [2.13. Splitting files](#213-splitting-files)
-  - [2.14. Splitting files on Input based on Time Stamp](#214-splitting-files-on-input-based-on-time-stamp)
-  - [2.15. Searching for Corruption on the Input DLT File](#215-searching-for-corruption-on-the-input-dlt-file)
+  - [2.8. Filter for a Range of Dates](#28-filter-for-a-range-of-dates)
+  - [2.9. Case Insensitive Search](#29-case-insensitive-search)
+  - [2.10. Printing Context (like 'grep')](#210-printing-context-like-grep)
+  - [2.11. Filtering for an Application Identifier](#211-filtering-for-an-application-identifier)
+  - [2.12. Other Filters](#212-other-filters)
+  - [2.13. Concatenating files](#213-concatenating-files)
+  - [2.14. Splitting files](#214-splitting-files)
+  - [2.15. Splitting files on Input based on Time Stamp](#215-splitting-files-on-input-based-on-time-stamp)
+  - [2.16. Searching for Corruption on the Input DLT File](#216-searching-for-corruption-on-the-input-dlt-file)
 - [3. Detailed Usage](#3-detailed-usage)
   - [3.1. Input Formats](#31-input-formats)
   - [3.2. Time Stamps](#32-time-stamps)
@@ -191,7 +192,19 @@ dltdump -r "\\d+" record.dlt
 This searches for the regular expression `\d+`, which matches for all lines that
 have a number.
 
-### 2.8. Case Insensitive Search
+### 2.8. Filter for a Range of Dates
+
+Return all time stamps that are either after, or before a particular date. This
+helps create a log file that has only a specific range.
+
+This specific example will only return lines in the range 18th June 2022, time
+10:00:00 to 10:05:00.
+
+```sh
+dltdump --not-before 2022-06-18T10:00:00 --not-after 2022-06-18T10:05:00
+```
+
+### 2.9. Case Insensitive Search
 
 If the string to be sought should be case insensitive, add the option `i`:
 
@@ -199,7 +212,7 @@ If the string to be sought should be case insensitive, add the option `i`:
 dltdump -i -s substring record.dlt
 ```
 
-### 2.9. Printing Context (like 'grep')
+### 2.10. Printing Context (like 'grep')
 
 If you want to see the lines before and after a match, use the context options
 `-A` (after) and `-B` (before):
@@ -208,7 +221,7 @@ If you want to see the lines before and after a match, use the context options
 dltdump -s substring -A 10 -B 2 record.dlt
 ```
 
-### 2.10. Filtering for an Application Identifier
+### 2.11. Filtering for an Application Identifier
 
 If you only want to see logs from a particular application on the console:
 
@@ -222,7 +235,7 @@ Or if you want to output the result to a new file `filtered.dlt`
 dltdump --appid APP1 --output filtered.dlt record.dlt
 ```
 
-### 2.11. Other Filters
+### 2.12. Other Filters
 
 The options for filtering are:
 
@@ -238,7 +251,7 @@ The options for filtering are:
 You can provide the filters, they have a logical "and" relationship. Providing
 the same filter option (e.g. `appid`) has a logical "or" relationship.
 
-### 2.12. Concatenating files
+### 2.13. Concatenating files
 
 If you have multiple files, you can parse and join them together. The ordering
 is important (no sorting of the input files are made):
@@ -253,7 +266,7 @@ Or join many PCAP files into one DLT file
 dltdump --output result.dlt file001.pcap file002.pcap file003.pcap
 ```
 
-### 2.13. Splitting files
+### 2.14. Splitting files
 
 If you have a large file, you can split it up into many smaller files. This
 example takes the input `record.dlt` and splits it up into files named
@@ -263,7 +276,7 @@ example takes the input `record.dlt` and splits it up into files named
 dltdump --split 100M --output split_%CTR%.dlt record.dlt
 ```
 
-### 2.14. Splitting files on Input based on Time Stamp
+### 2.15. Splitting files on Input based on Time Stamp
 
 An extension of splitting the files is to record data, and to split the output
 into files of particular sizes, with the file name having the time stamp when
@@ -273,7 +286,7 @@ the file was started.
 dltdump --split 50M --output record_%CDATETIME%.dlt tcp://192.158.1.10
 ```
 
-### 2.15. Searching for Corruption on the Input DLT File
+### 2.16. Searching for Corruption on the Input DLT File
 
 If the "dlt-viewer" isn't showing data as you'd expect from recorded input, you
 can filter for SKIP data, and show the position of the input file. Let's say
@@ -408,6 +421,8 @@ Filters are given on the command line option:
 * `--verbose`: Filter for verbose messages
 * `--nonverbose`: Filter for non-verbose messages (excluding control messages)
 * `--control`: Filter for control messages
+* `--not-before`: Filter for messages that occur on, or after this date
+* `--not-after`: Filter for messages that occur on, or before this date
 * `--string`: Filter for a string
 * `--regex`: Filter for a .NET regular expression.
 

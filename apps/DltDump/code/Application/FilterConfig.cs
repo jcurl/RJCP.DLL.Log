@@ -82,6 +82,7 @@
         private Constraint m_Search;
         private Constraint m_Session;
         private Constraint m_MessageType;
+        private Constraint m_Time;
         private bool m_Verbose;
         private bool m_NonVerbose;
         private bool m_Control;
@@ -185,6 +186,20 @@
         }
 
         /// <summary>
+        /// Adds the time range to filter. This can only be set once.
+        /// </summary>
+        /// <param name="notBefore">The time stamp that messages not before should be shown.</param>
+        /// <param name="notAfter">The time stamp that messages not after should be shown.</param>
+        public void AddTimeRange(DateTime? notBefore, DateTime? notAfter)
+        {
+            if (!notBefore.HasValue && !notAfter.HasValue) return;
+
+            m_Time = new Constraint();
+            if (notBefore.HasValue) m_Time.Expr(new DltNotBeforeDate(notBefore.Value));
+            if (notAfter.HasValue) m_Time.Expr(new DltNotAfterDate(notAfter.Value));
+        }
+
+        /// <summary>
         /// Filter for non-control messages that have the verbose flag set.
         /// </summary>
         public void SetVerbose()
@@ -246,6 +261,11 @@
 
             if (m_Session != null) {
                 constraint.Expr(m_Session);
+                filtered = true;
+            }
+
+            if (m_Time != null) {
+                constraint.Expr(m_Time);
                 filtered = true;
             }
 

@@ -287,6 +287,12 @@
   <data name="InfraUriError_QuotesNotClosed" xml:space="preserve">
     <value>Error parsing URI parameters, quotes not terminated</value>
   </data>
+  <data name="OptionInvalidDate" xml:space="preserve">
+    <value>Can't interpret date {0} for {1}.</value>
+  </data>
+  <data name="OptionInvalidDateNotBeforeAfterOrder" xml:space="preserve">
+    <value>Nothing to filter, 'not-before' {0:s} must be earlier than 'not-after' {1:s}.</value>
+  </data>
   <data name="OptionInvalidFilterType" xml:space="preserve">
     <value>Unknown filter type '{0}'.</value>
   </data>

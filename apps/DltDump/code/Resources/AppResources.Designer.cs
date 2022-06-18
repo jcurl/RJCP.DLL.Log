@@ -565,6 +565,24 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t interpret date {0} for {1}..
+        /// </summary>
+        internal static string OptionInvalidDate {
+            get {
+                return ResourceManager.GetString("OptionInvalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing to filter, &apos;not-before&apos; {0:s} must be earlier than &apos;not-after&apos; {1:s}..
+        /// </summary>
+        internal static string OptionInvalidDateNotBeforeAfterOrder {
+            get {
+                return ResourceManager.GetString("OptionInvalidDateNotBeforeAfterOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown filter type &apos;{0}&apos;..
         /// </summary>
         internal static string OptionInvalidFilterType {

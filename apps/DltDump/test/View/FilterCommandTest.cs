@@ -964,6 +964,195 @@
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
             }
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SearchNotBeforeUtc(bool utc)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notBefore = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
+                string notBeforeOpt;
+                if (utc) {
+                    notBeforeOpt = notBefore.ToString(@"yyyy-MM-dd\ZHH:mm:ss");   // Input is UTC, string is UTC
+                } else {
+                    notBeforeOpt = notBefore.ToLocalTime().ToString(@"yyyy-MM-dd\THH:mm:ss");
+                }
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-before"), notBeforeOpt, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SearchNotBeforeNoMatchUtc(bool utc)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notBefore = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
+                string notBeforeOpt;
+                if (utc) {
+                    notBeforeOpt = notBefore.ToString(@"yyyy-MM-dd\ZHH:mm:ss");   // Input is UTC, string is UTC
+                } else {
+                    notBeforeOpt = notBefore.ToLocalTime().ToString(@"yyyy-MM-dd\THH:mm:ss");
+                }
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-before"), notBeforeOpt, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SearchNotAfterUtc(bool utc)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notAfter = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
+                string notAfterOpt;
+                if (utc) {
+                    notAfterOpt = notAfter.ToString(@"yyyy-MM-dd\ZHH:mm:ss");   // Input is UTC, string is UTC
+                } else {
+                    notAfterOpt = notAfter.ToLocalTime().ToString(@"yyyy-MM-dd\THH:mm:ss");
+                }
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-after"), notAfterOpt, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SearchNotAfterNoMatchUtc(bool utc)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notAfter = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
+                string notAfterOpt;
+                if (utc) {
+                    notAfterOpt = notAfter.ToString(@"yyyy-MM-dd\ZHH:mm:ss");   // Input is UTC, string is UTC
+                } else {
+                    notAfterOpt = notAfter.ToLocalTime().ToString(@"yyyy-MM-dd\THH:mm:ss");
+                }
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-after"), notAfterOpt, "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void SearchDateTimeRange(bool utc)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notBefore = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
+                DateTime notAfter = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
+                string notBeforeOpt;
+                string notAfterOpt;
+                if (utc) {
+                    notBeforeOpt = notBefore.ToString(@"yyyy-MM-dd\ZHH:mm:ss");   // Input is UTC, string is UTC
+                    notAfterOpt = notAfter.ToString(@"yyyy-MM-dd\ZHH:mm:ss");
+                } else {
+                    notBeforeOpt = notBefore.ToLocalTime().ToString(@"yyyy-MM-dd HH:mm:ss"); // An alternative for local time
+                    notAfterOpt = notAfter.ToLocalTime().ToString(@"yyyy-MM-dd HH:mm:ss");
+                }
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-after", notAfterOpt), LongOpt("not-before", notBeforeOpt), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+
+        [TestCase("not-before")]
+        [TestCase("not-after")]
+        public void InvalidDate(string opt)
+        {
+            using (new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt(opt, "xxxx"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
+
+        [Test]
+        public void InvalidDateOrder()
+        {
+            using (new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                DateTime notBefore = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
+                DateTime notAfter = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
+                string notBeforeOpt = notBefore.ToString(@"yyyy-MM-dd\ZHH:mm:ss");
+                string notAfterOpt = notAfter.ToString(@"yyyy-MM-dd\ZHH:mm:ss");
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("not-before", notBeforeOpt), LongOpt("not-after", notAfterOpt), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.OptionsError));
+            }
+        }
         #endregion
 
         #region Context

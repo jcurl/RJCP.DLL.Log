@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class HelpResources {
@@ -316,12 +316,32 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}not-after{2}&lt;datetime&gt;
+        ///  Filter for messages that are at this date/time and earlier. Local time can be given as YYYY-MM-DDTHH:MM:SS (2022-06-18T10:30:00), universal time can be given as  YY-MM-DDZHH:MM:SS (2022-06-18Z08:30:00)..
+        /// </summary>
+        internal static string Help390_DateNotAfter {
+            get {
+                return ResourceManager.GetString("Help390_DateNotAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}not-before{2}&lt;datetime&gt;
+        ///  Filter for messages that are at this date/time and later. Time is in Local Time, unless {0}utc is given..
+        /// </summary>
+        internal static string Help395_DateNotBefore {
+            get {
+                return ResourceManager.GetString("Help395_DateNotBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}B | {1}before-context{2}&lt;lines&gt;
         ///  On a match, print &lt;lines&gt; of text before the match..
         /// </summary>
-        internal static string Help390_BeforeContext {
+        internal static string Help400_BeforeContext {
             get {
-                return ResourceManager.GetString("Help390_BeforeContext", resourceCulture);
+                return ResourceManager.GetString("Help400_BeforeContext", resourceCulture);
             }
         }
         
@@ -329,9 +349,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {0}A | {1}after-context{2}&lt;lines&gt;
         ///  On a match, print &lt;lines&gt; of text after the match..
         /// </summary>
-        internal static string Help395_AfterContext {
+        internal static string Help405_AfterContext {
             get {
-                return ResourceManager.GetString("Help395_AfterContext", resourceCulture);
+                return ResourceManager.GetString("Help405_AfterContext", resourceCulture);
             }
         }
         
@@ -339,54 +359,54 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {0}o | {1}output{2}&lt;filename&gt;
         ///  Write the output to the file specified. The file format is given by the extension (.dlt for DLT with storage header, all others are text files). If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:.
         /// </summary>
-        internal static string Help400_OutputFileName {
+        internal static string Help410_OutputFileName {
             get {
-                return ResourceManager.GetString("Help400_OutputFileName", resourceCulture);
+                return ResourceManager.GetString("Help410_OutputFileName", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to * %FILE% - use the name of the input file.
         /// </summary>
-        internal static string Help401_OutputFile {
+        internal static string Help411_OutputFile {
             get {
-                return ResourceManager.GetString("Help401_OutputFile", resourceCulture);
+                return ResourceManager.GetString("Help411_OutputFile", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to * %CDATETIME% - use the local date/time of the first line.
         /// </summary>
-        internal static string Help402_OutputDateTime {
+        internal static string Help412_OutputDateTime {
             get {
-                return ResourceManager.GetString("Help402_OutputDateTime", resourceCulture);
+                return ResourceManager.GetString("Help412_OutputDateTime", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to * %CDATE% - use the local date of the first line.
         /// </summary>
-        internal static string Help403_OuputDate {
+        internal static string Help413_OuputDate {
             get {
-                return ResourceManager.GetString("Help403_OuputDate", resourceCulture);
+                return ResourceManager.GetString("Help413_OuputDate", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to * %CTIME% - use the local time of the first line.
         /// </summary>
-        internal static string Help404_OutputTime {
+        internal static string Help414_OutputTime {
             get {
-                return ResourceManager.GetString("Help404_OutputTime", resourceCulture);
+                return ResourceManager.GetString("Help414_OutputTime", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to * %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;.
         /// </summary>
-        internal static string Help405_OutputSplit {
+        internal static string Help415_OutputSplit {
             get {
-                return ResourceManager.GetString("Help405_OutputSplit", resourceCulture);
+                return ResourceManager.GetString("Help415_OutputSplit", resourceCulture);
             }
         }
         
@@ -394,9 +414,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {0}f | {1}force
         ///  When using {1}output, overwrite the output file if it already exists..
         /// </summary>
-        internal static string Help410_Force {
+        internal static string Help420_Force {
             get {
-                return ResourceManager.GetString("Help410_Force", resourceCulture);
+                return ResourceManager.GetString("Help420_Force", resourceCulture);
             }
         }
         
@@ -404,9 +424,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {1}split{2}&lt;bytes&gt;
         ///  Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB..
         /// </summary>
-        internal static string Help415_Split {
+        internal static string Help425_Split {
             get {
-                return ResourceManager.GetString("Help415_Split", resourceCulture);
+                return ResourceManager.GetString("Help425_Split", resourceCulture);
             }
         }
         
@@ -414,9 +434,9 @@ namespace RJCP.App.DltDump.Resources {
         ///   Looks up a localized string similar to {1}log
         ///  Dump internal logs to a crash dump file. This log file can assist in understand errors while reading, file corruption, etc..
         /// </summary>
-        internal static string Help420_Log {
+        internal static string Help430_Log {
             get {
-                return ResourceManager.GetString("Help420_Log", resourceCulture);
+                return ResourceManager.GetString("Help430_Log", resourceCulture);
             }
         }
         

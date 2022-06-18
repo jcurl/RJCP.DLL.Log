@@ -86,6 +86,8 @@
             }
             types.Clear();
 
+            config.AddTimeRange(options.NotBefore, options.NotAfter);
+
             foreach (string search in options.SearchString) {
                 config.AddSearchString(search, options.IgnoreCase);
             }

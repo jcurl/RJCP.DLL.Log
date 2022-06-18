@@ -139,6 +139,8 @@
     <Compile Include="Global.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />
+    <Compile Include="Infrastructure\Constraints\DltNotAfterDate.cs" />
+    <Compile Include="Infrastructure\Constraints\DltNotBeforeDate.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />

@@ -216,42 +216,50 @@
     <value>{1}control
   Match lines that are a control message (including the timing message).</value>
   </data>
-  <data name="Help390_BeforeContext" xml:space="preserve">
+  <data name="Help390_DateNotAfter" xml:space="preserve">
+    <value>{0}not-after{2}&lt;datetime&gt;
+  Filter for messages that are at this date/time and earlier. Local time can be given as YYYY-MM-DDTHH:MM:SS (2022-06-18T10:30:00), universal time can be given as  YY-MM-DDZHH:MM:SS (2022-06-18Z08:30:00).</value>
+  </data>
+  <data name="Help395_DateNotBefore" xml:space="preserve">
+    <value>{0}not-before{2}&lt;datetime&gt;
+  Filter for messages that are at this date/time and later. Time is in Local Time, unless {0}utc is given.</value>
+  </data>
+  <data name="Help400_BeforeContext" xml:space="preserve">
     <value>{0}B | {1}before-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text before the match.</value>
   </data>
-  <data name="Help395_AfterContext" xml:space="preserve">
+  <data name="Help405_AfterContext" xml:space="preserve">
     <value>{0}A | {1}after-context{2}&lt;lines&gt;
   On a match, print &lt;lines&gt; of text after the match.</value>
   </data>
-  <data name="Help400_OutputFileName" xml:space="preserve">
+  <data name="Help410_OutputFileName" xml:space="preserve">
     <value>{0}o | {1}output{2}&lt;filename&gt;
   Write the output to the file specified. The file format is given by the extension (.dlt for DLT with storage header, all others are text files). If not provided, write to the console. When writing text files, the {0}position argument can optionally prepend each line with the offset from the input stream. The output file name may contain substitution with %VAR%, where the name is an environment variable which will be substituted. Some special variables are allowed:</value>
   </data>
-  <data name="Help401_OutputFile" xml:space="preserve">
+  <data name="Help411_OutputFile" xml:space="preserve">
     <value>* %FILE% - use the name of the input file</value>
   </data>
-  <data name="Help402_OutputDateTime" xml:space="preserve">
+  <data name="Help412_OutputDateTime" xml:space="preserve">
     <value>* %CDATETIME% - use the local date/time of the first line</value>
   </data>
-  <data name="Help403_OuputDate" xml:space="preserve">
+  <data name="Help413_OuputDate" xml:space="preserve">
     <value>* %CDATE% - use the local date of the first line</value>
   </data>
-  <data name="Help404_OutputTime" xml:space="preserve">
+  <data name="Help414_OutputTime" xml:space="preserve">
     <value>* %CTIME% - use the local time of the first line</value>
   </data>
-  <data name="Help405_OutputSplit" xml:space="preserve">
+  <data name="Help415_OutputSplit" xml:space="preserve">
     <value>* %CTR% - use a counter for how many times this output file has been split with the option {1}split{2}&lt;bytes&gt;</value>
   </data>
-  <data name="Help410_Force" xml:space="preserve">
+  <data name="Help420_Force" xml:space="preserve">
     <value>{0}f | {1}force
   When using {1}output, overwrite the output file if it already exists.</value>
   </data>
-  <data name="Help415_Split" xml:space="preserve">
+  <data name="Help425_Split" xml:space="preserve">
     <value>{1}split{2}&lt;bytes&gt;
   Split the input, so that the output files are approximately the size of bytes that are requested. Output are split so that lines are intact. Standard byte modifiers can be given, e.g. 64kB, 100M, 1Gb, and are case insensitive, the units being in bytes. The smallest split is 64kB.</value>
   </data>
-  <data name="Help420_Log" xml:space="preserve">
+  <data name="Help430_Log" xml:space="preserve">
     <value>{1}log
   Dump internal logs to a crash dump file. This log file can assist in understand errors while reading, file corruption, etc.</value>
   </data>
