@@ -399,7 +399,7 @@
             int headerType = standardHeader[0];
 
             int version = headerType & DltConstants.HeaderType.VersionIdentifierMask;
-            if (version != DltConstants.HeaderType.Version1) {
+            if (version != DltConstants.HeaderType.Version1 && version != 0xE0 /* Version 7 */) {
                 length = 0;
                 Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet offset 0x{0:x} with version {1} found, expected {2}",
                     m_PosMap.Position, version >> DltConstants.HeaderType.VersionBitShift,
