@@ -93,6 +93,16 @@
         }
 
         /// <summary>
+        /// Gets or sets the automatic flush period, in milliseconds.
+        /// </summary>
+        /// <value>The automatic flush period, in milliseconds.</value>
+        /// <remarks>
+        /// This value is used when the output is opened for the first time. Once it is opened, the value is no longer
+        /// used.
+        /// </remarks>
+        public int AutoFlushPeriod { get; set; }
+
+        /// <summary>
         /// Adds a file name that should be protected from writing.
         /// </summary>
         /// <param name="fileName">Name of the file that should be protected.</param>
@@ -276,6 +286,7 @@
                     AddOutputFile(fileName);
                 }
             }
+            if (AutoFlushPeriod > 0) m_Writer.AutoFlush(AutoFlushPeriod);
         }
 
         private void CheckSplit()

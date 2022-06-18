@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Text;
+    using System.Threading;
     using Domain.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -745,7 +746,6 @@
                     output.Write(TestLines.Verbose);
                 }, Throws.TypeOf<OutputStreamException>().With.InnerException.Null);
                 output.Flush();
-
             }
         }
 
@@ -765,7 +765,30 @@
                     output.Write(TestLines.Verbose);
                 }, Throws.TypeOf<OutputStreamException>().With.InnerException.Null);
                 output.Flush();
+            }
+        }
 
+        [Test]
+        public void AutoFlushPeriod()
+        {
+            // We can set the AutoFlushPeriod, but it's not possible to test as there is no way to easily confirm it
+            // gave it to the OutputWriter, other than through coverage in the private OpenWriter method.
+
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+                output.ShowPosition = true;
+                output.AutoFlushPeriod = 50;
+
+                Assert.That(File.Exists("File.txt"), Is.False);
+
+                output.Write(TestLines.Verbose);
+                Thread.Sleep(500);
+
+                Assert.That(File.Exists("File.txt"), Is.True);
+
+                FileInfo fileInfo = new FileInfo("File.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(10 + TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
     }

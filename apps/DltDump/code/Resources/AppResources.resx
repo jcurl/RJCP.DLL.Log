@@ -141,6 +141,9 @@
   <data name="DomainOutputStreamFactoryUnknown" xml:space="preserve">
     <value>Output factory type {0} is unknown</value>
   </data>
+  <data name="DomainOutputWriterCantWrite" xml:space="preserve">
+    <value>OutputWriter can't write to stream</value>
+  </data>
   <data name="DomainOutputWriterNotOpen" xml:space="preserve">
     <value>OutputWriter File is not open.</value>
   </data>
@@ -167,6 +170,9 @@
   </data>
   <data name="DomainTemplateEmptyVar" xml:space="preserve">
     <value>Empty variable provided</value>
+  </data>
+  <data name="DomainWriterAutoFlushStarted" xml:space="preserve">
+    <value>Autoflush is already started</value>
   </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
@@ -256,6 +262,9 @@
   </data>
   <data name="InfraNetTcpStream_NotConnected" xml:space="preserve">
     <value>Not connected</value>
+  </data>
+  <data name="InfraTaskAlreadyStarted" xml:space="preserve">
+    <value>Task is already started</value>
   </data>
   <data name="InfraTcpStreamAlreadyConnected" xml:space="preserve">
     <value>Connection already established</value>

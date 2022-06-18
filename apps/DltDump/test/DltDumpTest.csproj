@@ -44,7 +44,7 @@
     <PackageReference Include="NUnit.Analyzers" Version="3.1.0" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Moq" Version="4.18.1" />
     <ProjectReference Include="..\code\DltDump.csproj" />
     <ProjectReference Include="..\..\..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
   </ItemGroup>
@@ -110,11 +110,13 @@
     <Compile Include="Infrastructure\ArrayUtils.cs" />
     <Compile Include="Infrastructure\DateTimeExtensions.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
+    <Compile Include="Infrastructure\IO\NullStream.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpServer.cs" />
     <Compile Include="Infrastructure\Net\TcpServerTest.cs" />
     <Compile Include="Infrastructure\OptionsGen.cs" />
+    <Compile Include="Infrastructure\Tasks\CancelTaskTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalOutTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalTest.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualOutBase.cs" />

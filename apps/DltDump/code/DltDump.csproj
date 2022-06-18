@@ -143,6 +143,7 @@
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
+    <Compile Include="Infrastructure\Tasks\CancelTask.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />

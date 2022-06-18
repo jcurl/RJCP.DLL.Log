@@ -830,5 +830,28 @@
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(expectedLine));
             }
         }
+
+        [Test]
+        public async Task OpenLiveStreamWithAutoFlush()
+        {
+            // This is difficult to test, as we don't mock the stream that is being written to. This would require
+            // changing OutputBase that we write to our own stream, which is not how OutputBase works, and the test
+            // requires the type OutputBase else the AutoFlushPeriod won't be set. Thus, the test should pass, but only
+            // through the code coverage can we see that it is being tested.
+
+            // Instead, we rely on it being called, and test cases in OutputWriterTest check the functionality that
+            // flushing is periodically called.
+
+            using (Deploy.ScratchPad())
+            using (TestApplication global = new TestApplication()) {
+                Global.Instance.OutputStreamFactory = new OutputStreamFactory();   // TextOutput allows flushing
+
+                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                    OutputFileName = "file.txt"
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+            }
+        }
     }
 }

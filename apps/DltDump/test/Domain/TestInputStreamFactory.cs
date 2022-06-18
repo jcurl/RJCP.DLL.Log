@@ -7,6 +7,7 @@
         public TestInputStreamFactory()
         {
             SetFactory("null", new NullInputStreamFactory());
+            SetFactory("net", new TestNetworkStreamFactory());
         }
     }
 }

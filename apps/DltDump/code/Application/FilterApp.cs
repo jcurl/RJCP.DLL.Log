@@ -97,6 +97,10 @@
                         }
 
                         output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
+                        if (inputStream.IsLiveStream && output is OutputBase outputBase) {
+                            // 5 seconds.
+                            outputBase.AutoFlushPeriod = 5000;
+                        }
 
                         connected = true;
                         bool receivedLine = false;

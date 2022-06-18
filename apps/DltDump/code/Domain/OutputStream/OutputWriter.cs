@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using Infrastructure.Tasks;
     using Resources;
 
     /// <summary>
@@ -10,6 +11,7 @@
     public sealed class OutputWriter : IDisposable
     {
         private Stream m_FileStream;
+        private bool m_OwnsStream;
 
         /// <summary>
         /// Gets the length of data written.
@@ -29,6 +31,7 @@
         /// <param name="fileName">Name of the file.</param>
         /// <exception cref="ObjectDisposedException"><see cref="OutputWriter"/> is disposed.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Underlying stream is still open. Call <see cref="Close"/> first.</exception>
         /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Open(string fileName)
         {
@@ -42,6 +45,7 @@
         /// <param name="mode">The mode to use when opening the file, to allow overwriting and appending.</param>
         /// <exception cref="ObjectDisposedException"><see cref="OutputWriter"/> is disposed.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Underlying stream is still open. Call <see cref="Close"/> first.</exception>
         /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Open(string fileName, FileMode mode)
         {
@@ -53,11 +57,41 @@
                 m_FileStream = new FileStream(fileName, mode, FileAccess.Write, FileShare.Read);
                 m_FileStream.Seek(0, SeekOrigin.End);
                 Length = m_FileStream.Position;
+                m_OwnsStream = true;
             } catch (Exception ex) {
                 if (m_FileStream != null) m_FileStream.Dispose();
                 m_FileStream = null;
                 Length = 0;
                 throw new OutputStreamException(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// Opens a file for the specified file name.
+        /// </summary>
+        /// <param name="stream">Name of the file.</param>
+        /// <exception cref="ObjectDisposedException"><see cref="OutputWriter"/> is disposed.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// The stream is not writable.
+        /// <para>- or -</para>
+        /// Underlying stream is still open. Call <see cref="Close"/> first.
+        /// </exception>
+        public void Open(Stream stream)
+        {
+            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (m_FileStream != null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
+            if (!stream.CanWrite) throw new InvalidOperationException(AppResources.DomainOutputWriterCantWrite);
+
+            try {
+                m_FileStream = stream;
+                Length = stream.Position;
+                m_OwnsStream = false;
+            } catch {
+                m_FileStream = null;
+                Length = 0;
+                throw;
             }
         }
 
@@ -133,6 +167,39 @@
             }
         }
 
+        private CancelTask m_AutoFlushTask;
+        private readonly object m_CloseLock = new object();
+
+        /// <summary>
+        /// Automatically flushes the output at regular intervals in a Task.
+        /// </summary>
+        /// <param name="milliSeconds">The seconds interval to wait between flushing.</param>
+        /// <exception cref="InvalidOperationException">This method was previously called.</exception>
+        public void AutoFlush(int milliSeconds)
+        {
+            if (m_AutoFlushTask != null) return;
+            Stream stream = m_FileStream;
+            if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
+
+            m_AutoFlushTask = new CancelTask((t) => {
+                while (true) {
+                    if (t.WaitHandle.WaitOne(milliSeconds)) {
+                        // We're cancelled, so exit the thread.
+                        return;
+                    }
+                    try {
+                        lock (m_CloseLock) {
+                            if (IsOpen) m_FileStream.Flush();
+                        }
+                    } catch (Exception) {
+                        // Ignore background flush operations. Assume they're permanent.
+                        return;
+                    }
+                }
+            });
+            _ = m_AutoFlushTask.Run();
+        }
+
         /// <summary>
         /// Closes the file.
         /// </summary>
@@ -140,9 +207,17 @@
         {
             if (m_Disposed) return;
 
-            if (m_FileStream != null) {
-                m_FileStream.Dispose();
-                m_FileStream = null;
+            if (m_AutoFlushTask != null) {
+                m_AutoFlushTask.Cancel().GetAwaiter().GetResult();
+                m_AutoFlushTask = null;
+            }
+
+            lock (m_CloseLock) {
+                // The AutoFlush method might be checking the file stream in parallel.
+                if (m_FileStream != null) {
+                    if (m_OwnsStream) m_FileStream.Dispose();
+                    m_FileStream = null;
+                }
             }
         }
 

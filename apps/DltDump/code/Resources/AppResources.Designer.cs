@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -133,6 +133,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OutputWriter can&apos;t write to stream.
+        /// </summary>
+        internal static string DomainOutputWriterCantWrite {
+            get {
+                return ResourceManager.GetString("DomainOutputWriterCantWrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OutputWriter File is not open..
         /// </summary>
         internal static string DomainOutputWriterNotOpen {
@@ -210,6 +219,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string DomainTemplateEmptyVar {
             get {
                 return ResourceManager.GetString("DomainTemplateEmptyVar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Autoflush is already started.
+        /// </summary>
+        internal static string DomainWriterAutoFlushStarted {
+            get {
+                return ResourceManager.GetString("DomainWriterAutoFlushStarted", resourceCulture);
             }
         }
         
@@ -471,6 +489,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string InfraNetTcpStream_NotConnected {
             get {
                 return ResourceManager.GetString("InfraNetTcpStream_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task is already started.
+        /// </summary>
+        internal static string InfraTaskAlreadyStarted {
+            get {
+                return ResourceManager.GetString("InfraTaskAlreadyStarted", resourceCulture);
             }
         }
         
