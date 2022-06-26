@@ -7,3 +7,4 @@ TestResults/
 *.user
 *.userprefs
 *.suo
+/apps/DltDump/tools/dltudpbeacon/build/
