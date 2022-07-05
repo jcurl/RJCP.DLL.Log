@@ -30,6 +30,9 @@ int main(int argc, char* argv[])
     if (udp.open() < 0)
         perror("open");
 
+    if (udp.reuseaddr(true) < 0)
+        perror("setsockopt(SO_REUSEADDR)");
+
     if (udp.bind(src) < 0)
         perror("bind");
 

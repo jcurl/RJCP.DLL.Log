@@ -31,6 +31,24 @@ namespace rjcp::net {
         int open() noexcept;
 
         /**
+         * @brief Tests if the socket is opened
+         *
+         * @return true if the socket is already open.
+         * @return false if the socket is not open.
+         */
+        bool is_open() const noexcept;
+
+        /**
+         * @brief Set the socket option for reuse
+         *
+         * This should be called before binding the socket.
+         *
+         * @param reuse a boolean value if the socket address should be reused or not
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        int reuseaddr(bool reuse) noexcept;
+
+        /**
          * @brief Bind the socket to a particular address and port.
          *
          * @param addr The address to bind to.

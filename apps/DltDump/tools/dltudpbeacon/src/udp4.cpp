@@ -31,9 +31,29 @@ int rjcp::net::udp4::open() noexcept
     return 0;
 }
 
+bool rjcp::net::udp4::is_open() const noexcept
+{
+    return this->m_socket_fd != -1;
+}
+
+int rjcp::net::udp4::reuseaddr(bool reuse) noexcept
+{
+    if (!this->is_open()) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int value = reuse ? 1 : 0;
+    int result = ::setsockopt(this->m_socket_fd, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value));
+    if (result < 0) {
+        return -1;
+    }
+    return 0;
+}
+
 int rjcp::net::udp4::bind(sockaddr4& addr) noexcept
 {
-    if (!addr.is_valid() || this->m_socket_fd == -1) {
+    if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
         return -1;
     }
@@ -45,7 +65,7 @@ int rjcp::net::udp4::bind(sockaddr4& addr) noexcept
 
 int rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept
 {
-    if (!addr.is_valid() || this->m_socket_fd == -1) {
+    if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
         return -1;
     }
@@ -64,7 +84,7 @@ int rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buf
 
 int rjcp::net::udp4::close() noexcept
 {
-    if (this->m_socket_fd == -1) {
+    if (this->is_open()) {
         errno = EINVAL;
         return -1;
     }
