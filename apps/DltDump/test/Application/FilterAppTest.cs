@@ -851,6 +851,7 @@
                 };
                 FilterApp app = new FilterApp(config);
                 ExitCode result = await app.Run();
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }
     }
