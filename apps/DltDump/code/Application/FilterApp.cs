@@ -79,19 +79,15 @@
             bool retries;
             bool connected = false;
             do {
-                Log.App.TraceEvent(TraceEventType.Information, "Input: URI {0}", uri);
                 using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
                     if (inputStream == null) {
                         retries = false;
                         continue;
                     }
 
-                    Log.App.TraceEvent(TraceEventType.Information,
-                        "Input: LiveStream {0}; RequireConnection {1}; ConnectRetries {2}; SuggestedFormat {3}",
-                        inputStream.IsLiveStream, inputStream.RequiresConnection, m_Config.ConnectRetries, inputStream.SuggestedFormat);
                     retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
-                    using (ITraceReader<DltTraceLineBase> decoder = await GetDecoder(inputStream)) {
-                        if (decoder == null) {
+                    using (ITraceReader<DltTraceLineBase> reader = await GetReader(inputStream)) {
+                        if (reader == null) {
                             retries = false;
                             continue;
                         }
@@ -107,7 +103,7 @@
                         try {
                             DltTraceLineBase line;
                             do {
-                                line = await decoder.GetLineAsync();
+                                line = await reader.GetLineAsync();
                                 if (line != null) {
                                     receivedLine = true;
                                     output.Write(line);
@@ -162,6 +158,10 @@
                     Terminal.WriteLine(AppResources.FilterOpenError_CreateError, uri);
                     return null;
                 }
+
+                Log.App.TraceEvent(TraceEventType.Information,
+                    "Input: URI {0}; LiveStream {1}; RequireConnection {2}; SuggestedFormat {3}; Connect Retries {4}",
+                    uri, inputStream.IsLiveStream, inputStream.RequiresConnection, inputStream.SuggestedFormat, retries);
 
                 inputStream.Open();
                 if (inputStream.RequiresConnection) {
@@ -233,7 +233,7 @@
             }
         }
 
-        private async Task<ITraceReader<DltTraceLineBase>> GetDecoder(IInputStream inputStream)
+        private async Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream inputStream)
         {
             switch (m_Config.InputFormat) {
             case InputFormat.Automatic:
