@@ -39,6 +39,12 @@
             return Task.FromResult(true);
         }
 
+        public void Close()
+        {
+            if (InputStream != null) InputStream.Dispose();
+            InputStream = null;
+        }
+
         private bool m_IsDisposed;
 
         public void Dispose()
@@ -51,7 +57,7 @@
         {
             if (disposing) {
                 if (!m_IsDisposed) {
-                    if (InputStream != null) InputStream.Dispose();
+                    Close();
                     m_IsDisposed = true;
                 }
             }

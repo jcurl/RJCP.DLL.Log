@@ -156,6 +156,15 @@
             return Task.FromResult(true);
         }
 
+        /// <summary>
+        /// Closes this stream, but does not dispose, so it can be reopened.
+        /// </summary>
+        public void Close()
+        {
+            if (InputStream != null) InputStream.Close();
+            InputStream = null;
+        }
+
         private bool m_IsDisposed;
 
         /// <summary>
@@ -165,7 +174,7 @@
         public void Dispose()
         {
             if (!m_IsDisposed) {
-                if (InputStream != null) InputStream.Dispose();
+                Close();
                 m_IsDisposed = true;
             }
         }

@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Domain;
@@ -15,6 +16,13 @@
 
     public class FilterApp
     {
+        private enum InputResult
+        {
+            NotConnected,
+            DecodeFailure,
+            Connected
+        }
+
         private readonly FilterConfig m_Config;
 
         public FilterApp(FilterConfig config)
@@ -26,7 +34,8 @@
 
         public async Task<ExitCode> Run()
         {
-            if (!CheckInputs())
+            ICollection<IInputStream> inputs = ParseInputs();
+            if (inputs == null || inputs.Count == 0)
                 return ExitCode.InputError;
 
             Global.Instance.OutputStreamFactory.Force = m_Config.Force;
@@ -45,9 +54,9 @@
                     }
                 }
 
-                foreach (string uri in m_Config.Input) {
+                foreach (IInputStream input in inputs) {
                     try {
-                        InputResult connected = await ProcessInput(uri, output);
+                        InputResult connected = await ProcessInput(input, output);
                         switch (connected) {
                         case InputResult.Connected:
                             processed++;
@@ -58,6 +67,8 @@
                         }
                     } catch (OutputStreamException ex) {
                         Terminal.WriteLine(ex.Message);
+                    } finally {
+                        input.Dispose();
                     }
                 }
             }
@@ -67,132 +78,123 @@
             return ExitCode.Success;
         }
 
-        private enum InputResult
-        {
-            NotConnected,
-            DecodeFailure,
-            Connected
-        }
-
-        private async Task<InputResult> ProcessInput(string uri, IOutputStream output)
-        {
-            bool retries;
-            bool connected = false;
-            do {
-                using (IInputStream inputStream = await GetInputStream(uri, m_Config.ConnectRetries)) {
-                    if (inputStream == null) {
-                        retries = false;
-                        continue;
-                    }
-
-                    retries = inputStream.IsLiveStream && m_Config.ConnectRetries != 0;
-                    using (ITraceReader<DltTraceLineBase> reader = await GetReader(inputStream)) {
-                        if (reader == null) {
-                            retries = false;
-                            continue;
-                        }
-
-                        output.SetInput(inputStream.Connection, Global.Instance.DltReaderFactory.InputFormat);
-                        if (inputStream.IsLiveStream && output is OutputBase outputBase) {
-                            // 5 seconds.
-                            outputBase.AutoFlushPeriod = 5000;
-                        }
-
-                        connected = true;
-                        bool receivedLine = false;
-                        try {
-                            DltTraceLineBase line;
-                            do {
-                                line = await reader.GetLineAsync();
-                                if (line != null) {
-                                    receivedLine = true;
-                                    output.Write(line);
-                                }
-                            } while (line != null);
-                        } catch (OutputStreamException) {
-                            // Propagate this exception upstream
-                            throw;
-                        } catch (Exception ex) {
-                            // Any exception can occur while decoding. If so, it's aborted, and we try reading the next.
-                            // Errors might be file format, or Operating System errors.
-                            Log.App.TraceEvent(TraceEventType.Warning,
-                                "Error while processing file (Exception {0}), see previous exceptions. {1}",
-                                ex.GetType().Name, ex.Message);
-                            Terminal.WriteLine(ex.Message);
-                            return receivedLine ? InputResult.DecodeFailure : InputResult.NotConnected;
-                        }
-                    }
-                }
-            } while (retries);
-            return connected ? InputResult.Connected : InputResult.NotConnected;
-        }
-
-        private bool CheckInputs()
+        private ICollection<IInputStream> ParseInputs()
         {
             int count = m_Config.Input.Count;
             if (count == 0) {
                 Terminal.WriteLine(AppResources.FilterCheckError_NoStreams);
-                return false;
+                return null;
             }
 
+            List<IInputStream> inputs = new List<IInputStream>();
             foreach (string uri in m_Config.Input) {
-                IInputStream inputStream = Global.Instance.InputStreamFactory.Create(uri);
-                if (inputStream == null) {
-                    Terminal.WriteLine(AppResources.FilterCheckError_UnknownInput, uri);
-                    return false;
-                }
-                if (inputStream.IsLiveStream && count > 1) {
-                    Terminal.WriteLine(AppResources.FilterCheckError_LiveStreams);
-                    return false;
-                }
-            }
-            return true;
-        }
+                IInputStream input = Global.Instance.InputStreamFactory.Create(uri);
 
-        private static async Task<IInputStream> GetInputStream(string uri, int retries)
-        {
-            IInputStream inputStream = null;
-            try {
-                inputStream = Global.Instance.InputStreamFactory.Create(uri);
-                if (inputStream == null) {
-                    Terminal.WriteLine(AppResources.FilterOpenError_CreateError, uri);
+                // In case of an error, and we return, the list and its contents are just garbage collected. They are
+                // not disposed of as there is nothing to dispose (until it is opened).
+                if (input == null) {
+                    Terminal.WriteLine(AppResources.FilterCheckError_UnknownInput, uri);
                     return null;
                 }
+                if (input.IsLiveStream && count > 1) {
+                    Terminal.WriteLine(AppResources.FilterCheckError_LiveStreams);
+                    return null;
+                }
+                inputs.Add(input);
+            }
+            return inputs;
+        }
 
+        private async Task<InputResult> ProcessInput(IInputStream input, IOutputStream output)
+        {
+            bool retries;
+            InputResult parsed = InputResult.NotConnected;
+            do {
+                bool connected = await ConnectInputStream(input, m_Config.ConnectRetries);
+                if (!connected) return parsed;
+
+                retries = input.IsLiveStream && m_Config.ConnectRetries != 0;
+                using (ITraceReader<DltTraceLineBase> reader = await GetReader(input)) {
+                    if (reader == null) return parsed;
+
+                    output.SetInput(input.Connection, Global.Instance.DltReaderFactory.InputFormat);
+                    if (input.IsLiveStream && output is OutputBase outputBase) {
+                        // 5 seconds.
+                        outputBase.AutoFlushPeriod = 5000;
+                    }
+
+                    parsed = InputResult.Connected;
+                    bool receivedLine = false;
+                    try {
+                        DltTraceLineBase line;
+                        do {
+                            line = await reader.GetLineAsync();
+                            if (line != null) {
+                                receivedLine = true;
+                                output.Write(line);
+                            }
+                        } while (line != null);
+                    } catch (OutputStreamException) {
+                        // Propagate this exception upstream
+                        throw;
+                    } catch (Exception ex) {
+                        // Any exception can occur while decoding. If so, it's aborted, and we try reading the next.
+                        // Errors might be file format, or Operating System errors.
+                        Log.App.TraceEvent(TraceEventType.Warning,
+                            "Error while processing file (Exception {0}), see previous exceptions. {1}",
+                            ex.GetType().Name, ex.Message);
+                        Terminal.WriteLine(ex.Message);
+                        return receivedLine ? InputResult.DecodeFailure : InputResult.NotConnected;
+                    } finally {
+                        input.Close();
+                    }
+                }
+            } while (retries);
+            return parsed;
+        }
+
+        /// <summary>
+        /// Connects the input stream.
+        /// </summary>
+        /// <param name="input">The input stream to open and connect.</param>
+        /// <param name="retries">The number of retries.</param>
+        /// <returns>
+        /// Is <see langword="true"/> when the connection is established within the number of retries, otherwise
+        /// <see langword="false"/>.
+        /// </returns>
+        private static async Task<bool> ConnectInputStream(IInputStream input, int retries)
+        {
+            try {
                 Log.App.TraceEvent(TraceEventType.Information,
-                    "Input: URI {0}; LiveStream {1}; RequireConnection {2}; SuggestedFormat {3}; Connect Retries {4}",
-                    uri, inputStream.IsLiveStream, inputStream.RequiresConnection, inputStream.SuggestedFormat, retries);
+                    "Input: {0}; LiveStream {1}; RequireConnection {2}; SuggestedFormat {3}; Connect Retries {4}",
+                    input.Connection, input.IsLiveStream, input.RequiresConnection, input.SuggestedFormat, retries);
 
-                inputStream.Open();
-                if (inputStream.RequiresConnection) {
+                input.Open();
+                if (input.RequiresConnection) {
                     int connectAttempt = 0;
                     bool connected = false;
                     while (!connected && (retries < 0 || connectAttempt <= retries)) {
                         if (connectAttempt > 0) {
-                            Terminal.WriteLine(AppResources.FilterOpenError_Retry, uri, connectAttempt);
+                            Terminal.WriteLine(AppResources.FilterOpenError_Retry, input.Connection, connectAttempt);
                         }
-                        connected = await inputStream.ConnectAsync();
+                        connected = await input.ConnectAsync();
                         connectAttempt++;
                     }
 
                     if (!connected) {
-                        Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, uri);
-                        inputStream.Dispose();
-                        return null;
+                        Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, input.Connection);
+                        input.Close();
+                        return false;
                     }
                 }
 
-                return inputStream;
+                return true;
             } catch (InputStreamException ex) {
-                if (inputStream != null) {
-                    inputStream.Dispose();
-                }
+                input.Close();
                 Terminal.WriteLine(ex.Message);
-                return null;
+                return false;
             } catch {
-                if (inputStream != null) {
-                    inputStream.Dispose();
-                }
+                input.Close();
                 throw;
             }
         }
@@ -233,12 +235,12 @@
             }
         }
 
-        private async Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream inputStream)
+        private async Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream input)
         {
             switch (m_Config.InputFormat) {
             case InputFormat.Automatic:
-                Global.Instance.DltReaderFactory.InputFormat = inputStream.SuggestedFormat;
-                Global.Instance.DltReaderFactory.OnlineMode = inputStream.IsLiveStream;
+                Global.Instance.DltReaderFactory.InputFormat = input.SuggestedFormat;
+                Global.Instance.DltReaderFactory.OnlineMode = input.IsLiveStream;
                 break;
             case InputFormat.File:
             case InputFormat.Pcap:
@@ -250,11 +252,11 @@
                 Global.Instance.DltReaderFactory.InputFormat = m_Config.InputFormat;
 
                 // If we read from a file, then we never use the local time stamp.
-                Global.Instance.DltReaderFactory.OnlineMode = !inputStream.Scheme.Equals("file");
+                Global.Instance.DltReaderFactory.OnlineMode = !input.Scheme.Equals("file");
                 break;
             }
 
-            return await Global.Instance.DltReaderFactory.CreateAsync(inputStream.InputStream);
+            return await Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
         }
     }
 }

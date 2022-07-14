@@ -82,11 +82,11 @@ If the output is written to the console, the DLT decoder provided by
 when producing a binary file, it must be captured during the decoding phase to
 have access to the original packet data.
 
-The history is used if context before or after a filter is required, and outputs
-the lines that should be recorded. The filter is used on the decoded trace line
-to identify if it should be recorded or not. The Console Output and File Output
-both contain the context and filter, which differs essentially in where it is
-instantiated and used, rather than the functionality.
+The context is used if options for the context before or after a filter is
+given, and outputs the lines that should be recorded. The filter is used on the
+decoded trace line to identify if it should be recorded or not. The Console
+Output and File Output both contain the context and filter, which differs
+essentially in where it is instantiated and used, rather than the functionality.
 
 The Console output just writes the output to the console.
 
@@ -113,7 +113,7 @@ being in the root namespace.
 
  ![Layers](out/diagrams/layers/Layers.svg)
 
-The layered design chosen to structure software. A higher layer can access an
+A layered design is chosen to structure software. A higher layer can access an
 element in the lower layer, but not the reverse. There is no strict rule that
 only the immediate layer is accessible, so that the application layer might
 handle a reference to the infrastructure layer, or the application layer uses
@@ -154,10 +154,8 @@ execute use cases. Elements of the domain model can be:
 * Output: Knows how to write the output, either console or binary
 * Context: Keeps buffers of lines for showing context on a filter match
 
-Each element of the domain model on its own is independent, and has minimal
-input on other elements of the domain model. The Application layer ties the
-Domain model together. As the domain becomes larger, application services can be
-introduced.
+The Application layer ties the Domain model together. As the domain becomes
+larger, application services can be introduced.
 
 #### 2.1.6. Infrastructure
 
@@ -276,8 +274,7 @@ objects necessary for:
     `--not-after` options
   * The context portion is required for `--after-context` or `--before-context`
   * This must be before the binary writer or the console writer.
-* a binary writer that can split and rename files as necessary if writing to a
-  file
+* a writer that can split and rename files as necessary if writing to a file
   * handles the `--output`, `--force`, `--split` options
   * it needs input information about the names of files, time stamp information.
     The module for handling the environment data for the application should be
@@ -333,15 +330,14 @@ of the inputs or their time stamps are considered in this design).
 ##### 2.3.2.2. Instantiating a Stream from the Input Path
 
 The input path can be a file name or a URI. The diagram in the previous section
-is a simplification. To enable testing and extension for reading various input
-streams, the following design is taken.
-
-In the diagram below, it shows the `DltFileStreamFactory` and the
-`DltFileStream`, but the same is also for the serial and network streams.
+is a simplification. In the diagram below, it shows the `DltFileStreamFactory`
+and the `DltFileStream`, but the same is also for the serial and network
+streams. The design allows for reading various input streams and enables better
+testing.
 
 ![Input Stream](out/diagrams/InputStreamFactory/InputStreamFactory.svg)
 
-The `FilterApp` instantiates only through the `InputStreamFilter`. This has an
+The `FilterApp` instantiates only through the `InputStreamFactory`. This has an
 internal mapping of a URI scheme to a second factory, e.g.:
 
 * `DltFileStreamFactory`: creates a `DltFileStream`, opening a `FileStream`,
@@ -373,6 +369,10 @@ When implementing a new `IInputStreamFactory`:
 The sequence of how the `FilterApp` uses the `IInputStreamFactory` is given:
 
 ![InputStreamCreate](out/diagrams/inputstream/Domain.InputStream_Sequence.svg)
+
+When calling `Close()`, the internal stream is disposed of, this allows a new
+call to `Open()`, so the same URI can be reused in a loop (e.g. for retries).
+Once `Dispose()` is called, the `IInputStream` object can no longer be used.
 
 ##### 2.3.2.3. Decoder Factory
 

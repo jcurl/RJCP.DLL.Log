@@ -4,13 +4,13 @@
 
     public sealed class TestNetworkStreamFactory : InputStreamFactoryBase
     {
-        public event EventHandler<ConnectSuccessEventArgs> CreateEvent;
+        public event EventHandler<ConnectSuccessEventArgs> OpenEvent;
 
         public event EventHandler<ConnectSuccessEventArgs> ConnectEvent;
 
-        private void OnCreateEvent(object sender, ConnectSuccessEventArgs args)
+        private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
-            EventHandler<ConnectSuccessEventArgs> handler = CreateEvent;
+            EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
             if (handler != null) handler(sender, args);
         }
 
@@ -22,11 +22,8 @@
 
         public override IInputStream Create(Uri uri)
         {
-            ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
-            OnCreateEvent(this, createArgs);
-            if (!createArgs.Succeed) throw new InputStreamException("TestNetworkStream creation failed");
-
             TestNetworkStream inputStream = new TestNetworkStream();
+            inputStream.OpenEvent += OnOpenEvent;
             inputStream.ConnectEvent += OnConnectEvent;
             return inputStream;
         }

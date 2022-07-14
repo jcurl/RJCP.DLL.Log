@@ -118,7 +118,7 @@
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), AppResources.InfraArgOutOfRangeNegative);
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), AppResources.InfraArgOutOfRangeNegative);
-            if (offset > buffer.Length - count) throw new ArgumentException(AppResources.InfraArgOutOfRangeNegative);
+            if (offset > buffer.Length - count) throw new ArgumentException(AppResources.InfraArgOutOfRangeIndex);
 
             try {
                 stream.Write(buffer, offset, count);

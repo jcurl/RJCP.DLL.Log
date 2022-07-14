@@ -171,9 +171,6 @@
   <data name="DomainTemplateEmptyVar" xml:space="preserve">
     <value>Empty variable provided</value>
   </data>
-  <data name="DomainWriterAutoFlushStarted" xml:space="preserve">
-    <value>Autoflush is already started</value>
-  </data>
   <data name="ErrorAppUnhandledException" xml:space="preserve">
     <value>An internal error has occurred (unhandled exception).</value>
   </data>
@@ -215,9 +212,6 @@
   </data>
   <data name="FilterOpenError_ConnectError" xml:space="preserve">
     <value>Couldn't connect to the stream end-point {0}.</value>
-  </data>
-  <data name="FilterOpenError_CreateError" xml:space="preserve">
-    <value>Couldn't open the input {0}.</value>
   </data>
   <data name="FilterOpenError_Retry" xml:space="preserve">
     <value>Couldn't connect to {0}. Retry {1}...</value>

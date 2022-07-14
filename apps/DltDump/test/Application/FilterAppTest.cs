@@ -155,8 +155,8 @@
         public async Task OpenConnectErrorRetries(ConnectTestMode mode)
         {
             const int RetryOption = 7; // Option given to FilterApp
-            const int CreateCount = 2; // Our test case fails to connect after this count
-            const int RetryCount = 4; // Our test case connects after this many retries
+            const int OpenCount = 2;   // Our test case fails to connect after this count
+            const int RetryCount = 4;  // Our test case connects after this many retries
 
             ExitCode expectedResult;
             int retries = RetryCount;
@@ -176,14 +176,14 @@
                     expectedConnects = RetryOption + 1;
                     break;
                 case ConnectTestMode.RetryThenCreateFail:
-                    int creates = CreateCount + 1; // First create is to check
-                    // For loop 1, it fails the first two times and then connects.
-                    // For loop 2, it fails the first two times and then connects.
+                    int opens = OpenCount;
+                    // For loop 1, it fails the first four times and then connects.
+                    // For loop 2, it fails the first four times and then connects.
                     // For loop 3, the connection has an error.
-                    testFactory.CreateEvent += (s, e) => {
-                        --creates;
+                    testFactory.OpenEvent += (s, e) => {
+                        --opens;
                         retries = RetryCount;
-                        e.Succeed = creates >= 0;
+                        e.Succeed = opens >= 0;
                     };
                     testFactory.ConnectEvent += (s, e) => {
                         actualConnects++;
@@ -191,25 +191,24 @@
                         e.Succeed = retries < 0;
                     };
                     expectedResult = ExitCode.Success;
-                    expectedConnects = CreateCount * (RetryCount + 1);
+                    expectedConnects = OpenCount * (RetryCount + 1);
                     break;
                 case ConnectTestMode.RetryThenFail:
-                    int loop = CreateCount;
-                    // For loop 1, it fails the first two times and then connects.
-                    // For loop 2, it fails the first two times and then connects.
+                    int loop = OpenCount;
+                    // For loop 1, it fails the first four times and then connects.
+                    // For loop 2, it fails the first four times and then connects.
                     // For loop 3, it will never connect, thus ending the connect infinite loop
                     testFactory.ConnectEvent += (s, e) => {
-                        Console.WriteLine("ConnectEvent");
                         actualConnects++;
                         --retries;
-                        e.Succeed = retries < 0 && loop > 0; // Here is 1, because first create has no connect.
+                        e.Succeed = retries < 0 && loop > 0;
                         if (e.Succeed) {
                             retries = RetryCount;
                             --loop;
                         }
                     };
                     expectedResult = ExitCode.Success;
-                    expectedConnects = CreateCount * (RetryCount + 1) + RetryOption + 1;
+                    expectedConnects = OpenCount * (RetryCount + 1) + RetryOption + 1;
                     break;
                 default:
                     Assert.Fail("Unknown test case");

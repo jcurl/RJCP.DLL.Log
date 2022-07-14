@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -223,15 +223,6 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Autoflush is already started.
-        /// </summary>
-        internal static string DomainWriterAutoFlushStarted {
-            get {
-                return ResourceManager.GetString("DomainWriterAutoFlushStarted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to An internal error has occurred (unhandled exception)..
         /// </summary>
         internal static string ErrorAppUnhandledException {
@@ -354,15 +345,6 @@ namespace RJCP.App.DltDump.Resources {
         internal static string FilterOpenError_ConnectError {
             get {
                 return ResourceManager.GetString("FilterOpenError_ConnectError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t open the input {0}..
-        /// </summary>
-        internal static string FilterOpenError_CreateError {
-            get {
-                return ResourceManager.GetString("FilterOpenError_CreateError", resourceCulture);
             }
         }
         

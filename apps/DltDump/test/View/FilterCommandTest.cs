@@ -306,7 +306,7 @@
                 int actualCreate = 0;
 
                 TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
-                testFactory.CreateEvent += (s, e) => {
+                testFactory.OpenEvent += (s, e) => {
                     e.Succeed = actualCreate < 20;
                     actualCreate++;
                 };

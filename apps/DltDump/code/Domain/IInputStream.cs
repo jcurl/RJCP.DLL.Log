@@ -31,6 +31,22 @@
         bool RequiresConnection { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is live stream.
+        /// </summary>
+        /// <value>Is <see langword="true"/> if this instance is live stream; otherwise, <see langword="false"/>.</value>
+        /// <remarks>
+        /// A live stream generally indicates that time stamps should be based on the PC clock, and is not part of the
+        /// input stream.
+        /// </remarks>
+        bool IsLiveStream { get; }
+
+        /// <summary>
+        /// Gets the suggested format that should be used for instantiating a decoder.
+        /// </summary>
+        /// <value>The suggested format.</value>
+        InputFormat SuggestedFormat { get; }
+
+        /// <summary>
         /// Gets the input stream.
         /// </summary>
         /// <value>The input stream.</value>
@@ -49,19 +65,8 @@
         Task<bool> ConnectAsync();
 
         /// <summary>
-        /// Gets a value indicating whether this instance is live stream.
+        /// Closes this stream, but does not dispose, so it can be reopened.
         /// </summary>
-        /// <value>Is <see langword="true"/> if this instance is live stream; otherwise, <see langword="false"/>.</value>
-        /// <remarks>
-        /// A live stream generally indicates that time stamps should be based on the PC clock, and is not part of the
-        /// input stream.
-        /// </remarks>
-        bool IsLiveStream { get; }
-
-        /// <summary>
-        /// Gets the suggested format that should be used for instantiating a decoder.
-        /// </summary>
-        /// <value>The suggested format.</value>
-        InputFormat SuggestedFormat { get; }
+        void Close();
     }
 }

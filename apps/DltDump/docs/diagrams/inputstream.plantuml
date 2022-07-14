@@ -1,31 +1,38 @@
 @startuml Domain.InputStream_Sequence
+autoactivate on
 
 FilterApp -> IInputStreamFactory : Create(uri)
-activate IInputStreamFactory
-FilterApp <-- IInputStreamFactory : returns IInputStream
-deactivate IInputStreamFactory
+return IInputStream
 
-FilterApp -> IInputStream : Open()
-activate IInputStream
-FilterApp <-- IInputStream
-deactivate IInputStream
+loop Process File
 
-alt inputStream.RequiresConnection == true
+    FilterApp -> IInputStream : Open()
+    return
 
-    loop !connected && (retries < 0 || connectAttempt <= retries)
+    alt inputStream.RequiresConnection == true
 
-        FilterApp -> IInputStream : ConnectAsync()
-        activate IInputStream
-        FilterApp <-- IInputStream : returns connected:bool
-        deactivate IInputStream
+        loop !connected && (retries < 0 || connectAttempt <= retries)
+
+            FilterApp -> IInputStream : ConnectAsync()
+            return connected: bool
+
+        end
 
     end
 
+    FilterApp -> IInputStream : get_InputStream()
+    return Stream
+
+    note over FilterApp
+        Process Input
+    end note
+
+    FilterApp -> IInputStream : Close()
+    return
+
 end
 
-FilterApp -> IInputStream : get_InputStream()
-activate IInputStream
-FilterApp <-- IInputStream : returns Stream
-deactivate IInputStream
+FilterApp -> IInputStream : Dispose()
+return
 
 @enduml

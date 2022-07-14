@@ -12,7 +12,15 @@
         /// </summary>
         public TestNetworkStream() { }
 
+        public event EventHandler<ConnectSuccessEventArgs> OpenEvent;
+
         public event EventHandler<ConnectSuccessEventArgs> ConnectEvent;
+
+        private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
+        {
+            EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
+            if (handler != null) handler(sender, args);
+        }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
@@ -40,8 +48,14 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            if (InputStream == null)
-                InputStream = new MemoryStream(Array.Empty<byte>());
+            if (InputStream != null)
+                throw new InvalidOperationException("TestNetworkStream already opened");
+
+            ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
+            OnOpenEvent(this, createArgs);
+            if (!createArgs.Succeed) throw new InputStreamException("TestNetworkStream creation failed");
+
+            InputStream = new MemoryStream(Array.Empty<byte>());
         }
 
         public Task<bool> ConnectAsync()
@@ -54,12 +68,18 @@
             return Task.FromResult(args.Succeed);
         }
 
+        public void Close()
+        {
+            if (InputStream != null) InputStream.Dispose();
+            InputStream = null;
+        }
+
         private bool m_IsDisposed;
 
         public void Dispose()
         {
             if (!m_IsDisposed) {
-                if (InputStream != null) InputStream.Dispose();
+                Close();
                 m_IsDisposed = true;
             }
         }
