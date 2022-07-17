@@ -11,6 +11,8 @@
     /// </summary>
     public sealed class DltOutput : OutputBase, IOutputStream
     {
+        private readonly object m_WriteLock = new object();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DltOutput"/> class.
         /// </summary>
@@ -97,10 +99,12 @@
             // We only write trace lines (not control lines).
             if (!(line is DltTraceLine traceLine)) return false;
 
-            BuildStorageHeader(traceLine);
-            int length = BuildPacket(traceLine);
-            Write(line.TimeStamp, m_StorageHeader, m_Packet.AsSpan(0, length));
-            return true;
+            lock (m_WriteLock) {
+                BuildStorageHeader(traceLine);
+                int length = BuildPacket(traceLine);
+                Write(line.TimeStamp, m_StorageHeader, m_Packet.AsSpan(0, length));
+                return true;
+            }
         }
 
         /// <summary>
@@ -115,20 +119,22 @@
         /// <remarks>The output knows of the input format through the method <see cref="SetInput"/>.</remarks>
         public bool Write(DltTraceLineBase line, ReadOnlySpan<byte> packet)
         {
-            switch (m_InputFormat) {
-            case InputFormat.File:
-                Write(line.TimeStamp, packet);
-                return true;
-            case InputFormat.Network:
-            case InputFormat.Pcap:
-                BuildStorageHeader(line);
-                Write(line.TimeStamp, m_StorageHeader, packet);
-                return true;
-            case InputFormat.Serial:
-                // Remove the `DLS\1` header.
-                BuildStorageHeader(line);
-                Write(line.TimeStamp, m_StorageHeader, packet[4..]);
-                return true;
+            lock (m_WriteLock) {
+                switch (m_InputFormat) {
+                case InputFormat.File:
+                    Write(line.TimeStamp, packet);
+                    return true;
+                case InputFormat.Network:
+                case InputFormat.Pcap:
+                    BuildStorageHeader(line);
+                    Write(line.TimeStamp, m_StorageHeader, packet);
+                    return true;
+                case InputFormat.Serial:
+                    // Remove the `DLS\1` header.
+                    BuildStorageHeader(line);
+                    Write(line.TimeStamp, m_StorageHeader, packet[4..]);
+                    return true;
+                }
             }
             return false;
         }

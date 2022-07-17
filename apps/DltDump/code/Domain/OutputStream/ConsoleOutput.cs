@@ -9,6 +9,8 @@
     /// </summary>
     public sealed class ConsoleOutput : IOutputStream
     {
+        private readonly object m_WriteLock = new object();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleOutput"/> class.
         /// </summary>
@@ -61,10 +63,12 @@
         /// <returns>This method always writes the output, so returns <see langword="true"/>.</returns>
         public bool Write(DltTraceLineBase line)
         {
-            if (ShowPosition) {
-                Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
-            } else {
-                Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+            lock (m_WriteLock) {
+                if (ShowPosition) {
+                    Global.Instance.Terminal.StdOut.WriteLine("{0:x8}: {1}", line.Position, line.ToString());
+                } else {
+                    Global.Instance.Terminal.StdOut.WriteLine(line.ToString());
+                }
             }
             return true;
         }

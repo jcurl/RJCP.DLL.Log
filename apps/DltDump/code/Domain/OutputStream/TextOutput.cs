@@ -9,6 +9,8 @@
     /// </summary>
     public sealed class TextOutput : OutputBase, IOutputStream
     {
+        private readonly object m_WriteLock = new object();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextOutput"/> class.
         /// </summary>
@@ -84,10 +86,12 @@
         /// </returns>
         public bool Write(DltTraceLineBase line)
         {
-            if (ShowPosition) {
-                Write(line.TimeStamp, "{0:x8}: {1}", line.Position, line.ToString());
-            } else {
-                Write(line.TimeStamp, line.ToString());
+            lock (m_WriteLock) {
+                if (ShowPosition) {
+                    Write(line.TimeStamp, "{0:x8}: {1}", line.Position, line.ToString());
+                } else {
+                    Write(line.TimeStamp, line.ToString());
+                }
             }
             return true;
         }
