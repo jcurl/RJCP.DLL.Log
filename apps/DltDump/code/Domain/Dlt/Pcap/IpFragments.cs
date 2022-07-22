@@ -66,7 +66,7 @@
             foreach (IpFragment fragment in m_Fragments) {
                 if (fragment.FragmentOffset != expectedOffset)
                     return IpFragmentResult.Incomplete;
-                expectedOffset += fragment.Buffer.Length;
+                expectedOffset += fragment.GetArray().Length;
             }
 
             return IpFragmentResult.Reassembled;
@@ -94,21 +94,28 @@
         /// <item>All other results indicate an error. A new <see cref="IpFragments"/> object should be created.</item>
         /// </list>
         /// </returns>
-        public IpFragmentResult AddFragment(int fragOffset, bool mf, ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
+        public IpFragmentResult AddFragment(int fragOffset, bool mf, int checksum, ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
         {
             if (IsExpired(timeStamp)) return IpFragmentResult.InvalidTimeOut;
 
-            IpFragment fragment = new IpFragment(fragOffset, buffer, position);
+            IpFragment fragment = new IpFragment(fragOffset, checksum, buffer, position);
             if (m_Fragments.Count == 0) {
                 Length += buffer.Length;
                 m_Fragments.Add(fragment);
                 m_HasLastFragment = !mf;
             } else if (!mf) {
                 // There is only one last fragment.
-                if (m_HasLastFragment) return IpFragmentResult.InvalidDuplicateLastPacket;
+                if (m_HasLastFragment) {
+                    if (m_Fragments[^1].FragmentOffset == fragOffset &&
+                        m_Fragments[^1].GetArray().Length == buffer.Length &&
+                        m_Fragments[^1].CheckSum == checksum) {
+                        return IpFragmentResult.InvalidDuplicate;
+                    }
+                    return IpFragmentResult.InvalidOffset;
+                }
 
                 // We expect that if this is the last fragment, it must be at the end of the list.
-                if (fragOffset < m_Fragments[^1].FragmentOffset + m_Fragments[^1].Buffer.Length)
+                if (fragOffset < m_Fragments[^1].FragmentOffset + m_Fragments[^1].GetArray().Length)
                     return IpFragmentResult.InvalidOffset;
 
                 Length += buffer.Length;
@@ -118,7 +125,7 @@
                 bool inserted = false;
                 for (int i = 0; i < m_Fragments.Count; i++) {
                     int sOffset = m_Fragments[i].FragmentOffset;
-                    int sLength = m_Fragments[i].Buffer.Length;
+                    int sLength = m_Fragments[i].GetArray().Length;
 
                     if (fragOffset + buffer.Length <= sOffset) {
                         Length += buffer.Length;
@@ -126,6 +133,9 @@
                         inserted = true;
                         break;
                     }
+
+                    if (fragOffset == sOffset && buffer.Length == sLength && checksum == m_Fragments[i].CheckSum)
+                        return IpFragmentResult.InvalidDuplicate;
 
                     if (fragOffset < sOffset + sLength) return IpFragmentResult.InvalidOverlap;
                 }
@@ -147,7 +157,7 @@
         /// Gets the fragments.
         /// </summary>
         /// <returns>An enumerable providing the fragments in the order they occur.</returns>
-        public IEnumerable<IpFragment> GetFragments()
+        public IReadOnlyCollection<IpFragment> GetFragments()
         {
             return m_Fragments;
         }

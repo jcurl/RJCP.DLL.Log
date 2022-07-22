@@ -31,8 +31,8 @@
         InvalidOffset,
 
         /// <summary>
-        /// Adding the last packet, when this fragment list already has a last packet.
+        /// This packet appears to be duplicated.
         /// </summary>
-        InvalidDuplicateLastPacket
+        InvalidDuplicate
     }
 }

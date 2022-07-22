@@ -91,7 +91,8 @@
             if (mf || fragOffset != 0) {
                 // This is a fragmented IP packet
                 int fragId = BitOperations.To16ShiftBigEndian(ipPacket[4..]);
-                return DecodeDltFragments(srcAddr, dstAddr, fragOffset, fragId, mf, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
+                int hcs = BitOperations.To16ShiftBigEndian(ipPacket[10..]);
+                return DecodeDltFragments(srcAddr, dstAddr, fragOffset, fragId, mf, hcs, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
             } else {
                 // This is a single UDP packet
                 return DecodeDltPacket(srcAddr, dstAddr, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
@@ -174,17 +175,23 @@
             return connection.GetDltDecoder(srcPort, dstPort);
         }
 
-        private IEnumerable<DltTraceLineBase> DecodeDltFragments(int srcAddr, int dstAddr, int fragOffset, int fragId, bool mf, ReadOnlySpan<byte> udpBuffer, DateTime timeStamp, long position)
+        private IEnumerable<DltTraceLineBase> DecodeDltFragments(int srcAddr, int dstAddr, int fragOffset, int fragId, bool mf, int hcs, ReadOnlySpan<byte> udpBuffer, DateTime timeStamp, long position)
         {
             bool retry = false;
             Connection connection = GetConnection(srcAddr, dstAddr);
 
             do {
                 IpFragments ipFragments = connection.GetIpFragments(fragId);
-                IpFragmentResult result = ipFragments.AddFragment(fragOffset, mf, udpBuffer, timeStamp, position);
+                IpFragmentResult result = ipFragments.AddFragment(fragOffset, mf, hcs, udpBuffer, timeStamp, position);
 
                 switch (result) {
                 case IpFragmentResult.Incomplete:
+                    return Array.Empty<DltTraceLineBase>();
+                case IpFragmentResult.InvalidDuplicate:
+                    // A duplicate packet is ignored, so that we don't discard properly decoded packets previously.
+                    // Because we discard this packet, it won't be decoded, and the output would not contain a duplicate
+                    // DLT packet. Best is if the user previously removed duplicates from the input, but at least we
+                    // don't discard data.
                     return Array.Empty<DltTraceLineBase>();
                 case IpFragmentResult.Reassembled:
                     IEnumerable<DltTraceLineBase> lines = DecodeDltFragments(connection, ipFragments);
@@ -226,18 +233,18 @@
             ReadOnlySpan<byte> dltBuffer;
             DltPcapNetworkTraceFilterDecoder decoder = null;
             List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
-            long position;
 
             foreach (IpFragment fragment in fragments.GetFragments()) {
+                long position;
                 if (first) {
-                    srcPort = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan());
-                    dstPort = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan(2));
+                    srcPort = BitOperations.To16ShiftBigEndian(fragment.GetArray().AsSpan());
+                    dstPort = BitOperations.To16ShiftBigEndian(fragment.GetArray().AsSpan(2));
                     if (dstPort != 3490) {
                         connection.DiscardFragments(fragments.FragmentId);
                         return Array.Empty<DltTraceLineBase>();
                     }
 
-                    udpLen = BitOperations.To16ShiftBigEndian(fragment.Buffer.AsSpan(4));
+                    udpLen = BitOperations.To16ShiftBigEndian(fragment.GetArray().AsSpan(4));
                     if (fragments.Length < udpLen) {
                         // The packet is corrupted.
                         Log.Pcap.TraceEvent(TraceEventType.Warning,
@@ -245,13 +252,13 @@
                             fragment.Position, udpLen, fragments.Length, fragments.TimeStamp);
                         return Array.Empty<DltTraceLineBase>();
                     }
-                    dltBuffer = fragment.Buffer.AsSpan(8);
+                    dltBuffer = fragment.GetArray().AsSpan(8);
                     decoder = GetDecoder(connection.SourceAddress, srcPort, connection.DestinationAddress, dstPort);
                     decoder.PacketTimeStamp = fragments.TimeStamp;
                     position = fragment.Position + 8;
                     first = false;
                 } else {
-                    dltBuffer = fragment.Buffer.AsSpan();
+                    dltBuffer = fragment.GetArray().AsSpan();
                     position = fragment.Position;
                 }
 

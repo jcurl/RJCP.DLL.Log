@@ -69,7 +69,7 @@
         /// </summary>
         /// <param name="dltPacket">
         /// The DLT packet where offset zero is the start of the packet found, including the marker as returned by
-        /// <see cref="ScanStartFrame"/>.
+        /// <see cref="DltTraceDecoder.ScanStartFrame"/>.
         /// </param>
         /// <param name="lineBuilder">The line builder.</param>
         /// <returns>
