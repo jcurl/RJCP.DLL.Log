@@ -100,7 +100,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public void Open()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
+            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltTcpStream));
             if (InputStream != null) return;
 
             InputStream = new TcpClientStream(m_HostName, m_Port) {
@@ -115,7 +115,7 @@
         public Task<bool> ConnectAsync()
         {
             if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltFileStream));
+                throw new ObjectDisposedException(nameof(DltTcpStream));
             if (InputStream == null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 
