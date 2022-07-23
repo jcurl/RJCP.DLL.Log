@@ -186,6 +186,8 @@
             try {
                 input = factory.Create("tcp://127.0.0.1:123");
                 input.Open();
+                Assert.That(input.InputStream, Is.Not.Null);
+                Assert.That(input.InputPacket, Is.Null);
                 input.Dispose();
                 Assert.That(async () => {
                     _ = await input.ConnectAsync();

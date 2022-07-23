@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Domain.Dlt;
+    using Infrastructure.IO;
 
     public sealed class TestNetworkStream : IInputStream
     {
@@ -42,6 +43,8 @@
         public bool RequiresConnection { get { return true; } }
 
         public Stream InputStream { get; private set; }
+
+        public IPacket InputPacket { get { return null; } }
 
         public void Open()
         {

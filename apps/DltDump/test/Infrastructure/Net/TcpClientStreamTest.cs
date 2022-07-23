@@ -8,6 +8,11 @@
     using System.Threading.Tasks;
     using NUnit.Framework;
 
+    // To test integration tests under Linux:
+    //
+    // dotnet test --filter=FullyQualifiedName~RJCP.App.DltDump.Infrastructure.Net.TcpClientStreamTest
+    // dotnet test --filter="FullyQualifiedName~RJCP.App.DltDump.Infrastructure.Net.TcpClientStreamTest&TestCategory=Integration"
+
     [TestFixture]
     public class TcpClientStreamTest
     {
@@ -96,6 +101,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ConnectNoListener()
         {
             // It throws an instance of SocketException, but not the exact type on .NET Core. The time it takes to
@@ -107,6 +113,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectNoListenerAsync()
         {
             // It throws an instance of SocketException, but not the exact type on .NET Core. The time it takes to
@@ -130,6 +137,7 @@
         [Test]
         [Repeat(10)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void Connect()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -145,6 +153,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ConnectTwice()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -165,6 +174,7 @@
         [Test]
         [Repeat(10)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectAsync()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -180,6 +190,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectAsyncTwice()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -220,6 +231,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ConnectSeekUnsupported()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -243,6 +255,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ConnectTimeout()
         {
             // Note, changing this to a valid IP address on your network will work faster.
@@ -255,6 +268,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectAsyncTimeout()
         {
             // Note, changing this to a valid IP address on your network will work faster.
@@ -267,6 +281,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ConnectReadTimeout()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -285,6 +300,7 @@
 
         [Test]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectReadAsyncTimeout()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -304,6 +320,7 @@
         [TestCase(false)]
         [TestCase(true)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ConnectReadTimeoutReset(bool close)
         {
             // A rather large test that shows we don't timeout in 200ms if data arrives.

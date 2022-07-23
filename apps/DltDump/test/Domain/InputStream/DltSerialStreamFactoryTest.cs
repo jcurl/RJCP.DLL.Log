@@ -91,6 +91,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create("ser:/dev/ttyUSB0,115200,8,n,1")) {
                 Assert.That(stream.InputStream, Is.Null);
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.True);
                 Assert.That(stream.RequiresConnection, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.Serial));
@@ -104,6 +105,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create("ser:com1,115200,8,n,1")) {
                 Assert.That(stream.InputStream, Is.Null);
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.True);
                 Assert.That(stream.RequiresConnection, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.Serial));
@@ -117,6 +119,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create("ser:/dev/ttyUSB0,115200,8,n,1,rts")) {
                 Assert.That(stream.InputStream, Is.Null);
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.True);
                 Assert.That(stream.RequiresConnection, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.Serial));
@@ -130,6 +133,7 @@
             IInputStreamFactory factory = GetFactory(factoryType);
             using (IInputStream stream = factory.Create("ser:com1,115200,8,n,1,rts")) {
                 Assert.That(stream.InputStream, Is.Null);
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.True);
                 Assert.That(stream.RequiresConnection, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.Serial));

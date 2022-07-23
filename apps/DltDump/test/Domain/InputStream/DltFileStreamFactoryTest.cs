@@ -72,6 +72,7 @@
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
                 Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
             }
@@ -89,6 +90,7 @@
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
+                    Assert.That(stream.InputPacket, Is.Null);
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
                 }
@@ -107,6 +109,7 @@
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
+                    Assert.That(stream.InputPacket, Is.Null);
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
                 }
@@ -125,6 +128,7 @@
                     Assert.That(stream, Is.TypeOf<DltFileStream>());
                     Assert.That(stream.Scheme, Is.EqualTo("file"));
                     Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
+                    Assert.That(stream.InputPacket, Is.Null);
                     Assert.That(stream.IsLiveStream, Is.False);
                     Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
                 }
@@ -154,6 +158,7 @@
                 Assert.That(stream, Is.TypeOf<DltFileStream>());
                 Assert.That(stream.Scheme, Is.EqualTo("file"));
                 Assert.That(stream.InputStream, Is.TypeOf<FileStream>());
+                Assert.That(stream.InputPacket, Is.Null);
                 Assert.That(stream.IsLiveStream, Is.False);
                 Assert.That(stream.SuggestedFormat, Is.EqualTo(InputFormat.File));
             }

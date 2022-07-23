@@ -266,6 +266,24 @@
   <data name="InfraTcpStreamInvalidHostName" xml:space="preserve">
     <value>Invalid hostname for connection</value>
   </data>
+  <data name="InfraUdpReceiverInvalidFamily" xml:space="preserve">
+    <value>Address is not of type IPv4</value>
+  </data>
+  <data name="InfraUdpReceiverInvalidPort" xml:space="preserve">
+    <value>Address port {0} is invalid</value>
+  </data>
+  <data name="InfraUdpReceiverNotMulticast" xml:space="preserve">
+    <value>Address {0} is not multicast</value>
+  </data>
+  <data name="InfraUdpReceiverNotOpen" xml:space="preserve">
+    <value>UDP receiver not open</value>
+  </data>
+  <data name="InfraUdpReceiverNotUnicast" xml:space="preserve">
+    <value>Address {0} is not unicast</value>
+  </data>
+  <data name="InfraUdpReceiverOpen" xml:space="preserve">
+    <value>UDP receiver already open</value>
+  </data>
   <data name="InfraUriError_EscapeCharacter" xml:space="preserve">
     <value>Error parsing URI parameters, incomplete escape sequence</value>
   </data>

@@ -117,6 +117,7 @@
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpServer.cs" />
     <Compile Include="Infrastructure\Net\TcpServerTest.cs" />
+    <Compile Include="Infrastructure\Net\UdpPacketReceiverTest.cs" />
     <Compile Include="Infrastructure\OptionsGen.cs" />
     <Compile Include="Infrastructure\Tasks\CancelTaskTest.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminalOutTest.cs" />

@@ -142,9 +142,12 @@
     <Compile Include="Infrastructure\Constraints\DltNotAfterDate.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotBeforeDate.cs" />
     <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
+    <Compile Include="Infrastructure\IO\IPacket.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
+    <Compile Include="Infrastructure\IO\PacketReadResult.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
+    <Compile Include="Infrastructure\Net\UdpPacketReceiver.cs" />
     <Compile Include="Infrastructure\Tasks\CancelTask.cs" />
     <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
     <Compile Include="Infrastructure\Terminal\ITerminal.cs" />

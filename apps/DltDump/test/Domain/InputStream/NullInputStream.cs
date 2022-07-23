@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Domain.Dlt;
+    using Infrastructure.IO;
 
     public class NullInputStream : IInputStream
     {
@@ -21,6 +22,8 @@
         public bool RequiresConnection { get { return false; } }
 
         public Stream InputStream { get; private set; }
+
+        public IPacket InputPacket { get { return null; } }
 
         public virtual void Open()
         {

@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Domain.Dlt;
+    using Infrastructure.IO;
 
     /// <summary>
     /// Interface for parsing an input stream.
@@ -49,8 +50,20 @@
         /// <summary>
         /// Gets the input stream.
         /// </summary>
-        /// <value>The input stream.</value>
+        /// <value>
+        /// The input stream. If this object isn't opened, or it doesn't support streams, then <see langword="null"/> is
+        /// set.
+        /// </value>
         Stream InputStream { get; }
+
+        /// <summary>
+        /// Gets the input packet provider.
+        /// </summary>
+        /// <value>
+        /// The input packet provider. If this object isn't open, or it doesn't support packets, then
+        /// <see langword="null"/> is set.
+        /// </value>
+        IPacket InputPacket { get; }
 
         /// <summary>
         /// Opens the input stream.

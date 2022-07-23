@@ -7,6 +7,11 @@
     using System.Threading.Tasks;
     using NUnit.Framework;
 
+    // To test integration tests under Linux:
+    //
+    // dotnet test --filter=FullyQualifiedName~RJCP.App.DltDump.Infrastructure.Net.TcpServerTest
+    // dotnet test --filter="FullyQualifiedName~RJCP.App.DltDump.Infrastructure.Net.TcpServerTest&TestCategory=Integration"
+
     [TestFixture]
     public class TcpServerTest
     {
@@ -21,6 +26,7 @@
         [Test]
         [Repeat(50)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public void ListenerDoNothing()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
@@ -32,6 +38,7 @@
         [Test]
         [Repeat(10)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ListenerDoNothingDispose()
         {
             TcpServer server = null;
@@ -51,6 +58,7 @@
         [Test]
         [Repeat(3)]
         [Explicit("Integration Test")]
+        [Category("Integration")]
         public async Task ListenConnect()
         {
             using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {

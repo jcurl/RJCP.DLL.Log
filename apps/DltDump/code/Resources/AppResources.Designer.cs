@@ -502,6 +502,60 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address is not of type IPv4.
+        /// </summary>
+        internal static string InfraUdpReceiverInvalidFamily {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverInvalidFamily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address port {0} is invalid.
+        /// </summary>
+        internal static string InfraUdpReceiverInvalidPort {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverInvalidPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address {0} is not multicast.
+        /// </summary>
+        internal static string InfraUdpReceiverNotMulticast {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverNotMulticast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UDP receiver not open.
+        /// </summary>
+        internal static string InfraUdpReceiverNotOpen {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address {0} is not unicast.
+        /// </summary>
+        internal static string InfraUdpReceiverNotUnicast {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverNotUnicast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UDP receiver already open.
+        /// </summary>
+        internal static string InfraUdpReceiverOpen {
+            get {
+                return ResourceManager.GetString("InfraUdpReceiverOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error parsing URI parameters, incomplete escape sequence.
         /// </summary>
         internal static string InfraUriError_EscapeCharacter {

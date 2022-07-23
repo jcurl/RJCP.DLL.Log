@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Domain.Dlt;
+    using Infrastructure.IO;
     using Resources;
 
     /// <summary>
@@ -81,6 +82,14 @@
         /// </summary>
         /// <value>The input stream.</value>
         public Stream InputStream { get; private set; }
+
+        /// <summary>
+        /// Gets the input packet provider.
+        /// </summary>
+        /// <value>
+        /// The input packet provider. This object doesn't support packets and always returns <see langword="null"/>.
+        /// </value>
+        public IPacket InputPacket { get { return null; } }
 
         /// <summary>
         /// Opens the input stream.
