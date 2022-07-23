@@ -25,6 +25,14 @@
                 throw new InputStreamException(message);
             }
 
+            if (!string.IsNullOrEmpty(uri.UserInfo) ||
+                !string.IsNullOrEmpty(uri.Query) ||
+                !string.IsNullOrEmpty(uri.Fragment) ||
+                !string.IsNullOrEmpty(uri.AbsolutePath) && !uri.AbsolutePath.Equals("/")) {
+                string message = string.Format(AppResources.DomainInputStreamFactoryInvalid, uri);
+                throw new InputStreamException(message);
+            }
+
             string hostName = uri.Host;
             UriHostNameType hostType = Uri.CheckHostName(hostName);
             switch (hostType) {

@@ -32,6 +32,8 @@
                 throw new InputStreamException(AppResources.SerialOpenError_InvalidUri);
             if (!string.IsNullOrEmpty(uri.UserInfo))
                 throw new InputStreamException(AppResources.SerialOpenError_InvalidUri);
+            if (!string.IsNullOrEmpty(uri.Query))
+                throw new InputStreamException(AppResources.SerialOpenError_InvalidUri);
 
             string path = uri.LocalPath;
             IReadOnlyList<string> par = UriExtensions.ParseCommaSeparatedList(path);

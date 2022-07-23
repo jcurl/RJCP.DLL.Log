@@ -64,6 +64,7 @@
         [TestCase(Factory.DltSerialFactory, "ser:115200,9,n,1")]
         [TestCase(Factory.DltSerialFactory, "ser:115200,8,n,1#fragment")]
         [TestCase(Factory.DltSerialFactory, "ser:115200,8,n,1&x")]
+        [TestCase(Factory.DltSerialFactory, "ser:115200,8,n,1/?query")]
         [TestCase(Factory.InputStreamFactory, "ser:")]
         [TestCase(Factory.InputStreamFactory, "ser://com1,115200,8,n,1")]
         [TestCase(Factory.InputStreamFactory, "ser:115200,8,q,1")]
@@ -76,6 +77,7 @@
         [TestCase(Factory.InputStreamFactory, "ser:115200,9,n,1")]
         [TestCase(Factory.InputStreamFactory, "ser:115200,8,n,1#fragment")]
         [TestCase(Factory.InputStreamFactory, "ser:115200,8,n,1&x")]
+        [TestCase(Factory.InputStreamFactory, "ser:115200,8,n,1/?query")]
         public void SerInvalid(Factory factoryType, string uri)
         {
             IInputStreamFactory factory = GetFactory(factoryType);

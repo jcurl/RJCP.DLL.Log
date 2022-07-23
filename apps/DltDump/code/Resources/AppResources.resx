@@ -123,6 +123,10 @@
   <data name="DomainDecoderInvalidOutputStream" xml:space="preserve">
     <value>OutputStream doesn't support binary</value>
   </data>
+  <data name="DomainInputStreamFactoryInvalid" xml:space="preserve">
+    <value>Invalid URI {0}, unsupported fields.</value>
+    <comment>User provided path or query, which isn't supported</comment>
+  </data>
   <data name="DomainInputStreamFactoryUnknown" xml:space="preserve">
     <value>Input URI {0} not unknown</value>
   </data>

@@ -79,6 +79,15 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid URI {0}, unsupported fields..
+        /// </summary>
+        internal static string DomainInputStreamFactoryInvalid {
+            get {
+                return ResourceManager.GetString("DomainInputStreamFactoryInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input URI {0} not unknown.
         /// </summary>
         internal static string DomainInputStreamFactoryUnknown {

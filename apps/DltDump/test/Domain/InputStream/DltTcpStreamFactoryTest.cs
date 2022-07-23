@@ -94,6 +94,56 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltTcpFactory)]
+        public void TcpInvalidWithQuery(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            Assert.That(() => {
+                _ = factory.Create("tcp://127.0.0.1:80/?query");
+            }, Throws.TypeOf<InputStreamException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void TcpInvalidWithFragment(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            Assert.That(() => {
+                _ = factory.Create("tcp://127.0.0.1:80/#fragment");
+            }, Throws.TypeOf<InputStreamException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void TcpInvalidWithPath(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            Assert.That(() => {
+                _ = factory.Create("tcp://127.0.0.1:80/path");
+            }, Throws.TypeOf<InputStreamException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void TcpInvalidWithUserInfo1(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            Assert.That(() => {
+                _ = factory.Create("tcp://foo@127.0.0.1:80");
+            }, Throws.TypeOf<InputStreamException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
+        public void TcpInvalidWithUserInfo2(Factory factoryType)
+        {
+            IInputStreamFactory factory = GetFactory(factoryType);
+            Assert.That(() => {
+                _ = factory.Create("tcp://foo:bar@127.0.0.1:80");
+            }, Throws.TypeOf<InputStreamException>());
+        }
+
+        [TestCase(Factory.InputStreamFactory)]
+        [TestCase(Factory.DltTcpFactory)]
         public void TcpLocalHostNameNoPort(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
