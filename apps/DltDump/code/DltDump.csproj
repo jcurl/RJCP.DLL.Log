@@ -120,6 +120,8 @@
     <Compile Include="Domain\InputStream\DltSerialStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltTcpStream.cs" />
     <Compile Include="Domain\InputStream\DltTcpStreamFactory.cs" />
+    <Compile Include="Domain\InputStream\DltUdpPacketReceiver.cs" />
+    <Compile Include="Domain\InputStream\DltUdpPacketReceiverFactory.cs" />
     <Compile Include="Domain\InputStream\InputStreamException.cs" />
     <Compile Include="Domain\InputStream\InputStreamFactoryBase.cs" />
     <Compile Include="Domain\IOutputStream.cs" />

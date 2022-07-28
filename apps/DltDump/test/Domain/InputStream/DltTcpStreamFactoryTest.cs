@@ -44,7 +44,7 @@
         }
 
         [TestCase(Factory.DltTcpFactory)]
-        public void OpenEmptyDltFile(Factory factoryType)
+        public void OpenEmptyConnectionString(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             Assert.That(() => {

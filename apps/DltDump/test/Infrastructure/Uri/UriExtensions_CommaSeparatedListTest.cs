@@ -5,7 +5,7 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public class UriExtensionsTest
+    public class UriExtensions_CommaSeparatedListTest
     {
         [Test]
         public void ParseEmptyList()

@@ -79,6 +79,8 @@
     <Compile Include="Domain\Dlt\Pcap\PcapDecoderTestBase.cs" />
     <Compile Include="Domain\Dlt\TestDltTraceReaderFactory.cs" />
     <Compile Include="Domain\Dlt\TraceReaderAccessor.cs" />
+    <Compile Include="Domain\InputStream\DltUdpPacketReceiverFactoryTest.cs" />
+    <Compile Include="Domain\InputStream\DltUdpPacketReceiverTest.cs" />
     <Compile Include="Domain\OutputStreamFactoryTest.cs" />
     <Compile Include="Domain\OutputStream\ConsoleOutputTest.cs" />
     <Compile Include="Domain\OutputStream\ContextOutputTest.cs" />
@@ -128,7 +130,8 @@
     <Compile Include="Infrastructure\Terminal\VirtualStdOut.cs" />
     <Compile Include="Infrastructure\Terminal\VirtualTerminal.cs" />
     <Compile Include="Infrastructure\Text\FormatTest.cs" />
-    <Compile Include="Infrastructure\Uri\UriExtensionsTest.cs" />
+    <Compile Include="Infrastructure\Uri\UriExtensions_CommaSeparatedListTest.cs" />
+    <Compile Include="Infrastructure\Uri\UriExtensions_ParseQueryTest.cs" />
     <Compile Include="Infrastructure\VersionTest.cs" />
     <Compile Include="Resources\ResourcesTest.cs" />
     <Compile Include="TestApplication.cs" />

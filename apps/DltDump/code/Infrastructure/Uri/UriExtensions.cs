@@ -86,5 +86,68 @@
 
             return list;
         }
+
+        /// <summary>
+        /// Parses the query portion in the format '?key=value'.
+        /// </summary>
+        /// <param name="uri">The URI to parse the query section of.</param>
+        /// <returns>An ordered list of key/value pairs after parsing.</returns>
+        /// <exception cref="ArgumentException">The URI has an invalid character in the query.</exception>
+        public static IReadOnlyList<KeyValuePair<string, string>> ParseQuery(this Uri uri)
+        {
+            string query = uri.Query;
+            if (query.Length == 0) return Array.Empty<KeyValuePair<string, string>>();
+
+            List<KeyValuePair<string, string>> kvps = new List<KeyValuePair<string, string>>();
+            int keyStart = 0;
+            int valueStart = -1;
+
+            for (int i = 0; i < query.Length; i++) {
+                char c = query[i];
+                if (c == '&') {
+                    if (i == keyStart) {
+                        keyStart++;
+                        continue;
+                    }
+
+                    kvps.Add(GetPair(query, keyStart, valueStart, i));
+                    keyStart = i + 1;
+                } else if (c == '?') {
+                    if (i == 0) keyStart = 1;
+                } else if (c == '=') {
+                    if (valueStart < keyStart) valueStart = i;
+                }
+            }
+
+            if (keyStart < query.Length) {
+                kvps.Add(GetPair(query, keyStart, valueStart, query.Length));
+            }
+            return kvps;
+        }
+
+        private static readonly KeyValuePair<string, string> EmptyKeyValue =
+            new KeyValuePair<string, string>(string.Empty, string.Empty);
+
+        private static KeyValuePair<string, string> GetPair(string query, int keyStart, int valuePos, int endPos)
+        {
+            if (keyStart >= query.Length) return EmptyKeyValue;
+
+            string key;
+            string value;
+            if (valuePos < keyStart) {
+                value = string.Empty;
+                key = Uri.UnescapeDataString(query[keyStart..endPos]);
+            } else {
+                key = Uri.UnescapeDataString(query[keyStart..valuePos]);
+                value = valuePos == endPos ?
+                    string.Empty :
+                    Uri.UnescapeDataString(query[(valuePos + 1)..endPos]);
+            }
+
+            if (key == String.Empty && value == string.Empty)
+                return EmptyKeyValue;
+
+            return new KeyValuePair<string, string>(key, value);
+        }
     }
 }
