@@ -54,13 +54,18 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 ### 2.4. Selecting the Compiler
 
-To compile using common compilers:
+To compile using common compilers on your local machine (Linux):
 
 | Compiler | Command                |
 |----------|------------------------|
 | GCC      | `CXX=g++ cmake ..`     |
 | Clang    | `CXX=clang++ cmake ..` |
 
+For cross compiling, provide a toolchain file, e.g.
+
+```sh
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchain/qcc710_x86_64
+```
 
 ### 2.5. Building the Software
 

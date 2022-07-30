@@ -19,7 +19,7 @@ rjcp::net::sockaddr4::sockaddr4(const std::string& addr, int port) noexcept
     memset(&this->m_addr_in, 0, sizeof(::sockaddr_in));
     this->m_addr_in.sin_family = AF_INET;
     this->m_addr_in.sin_addr.s_addr = ::inet_addr(const_cast<char*>(addr.c_str()));
-    this->m_addr_in.sin_port = ::htons(port);
+    this->m_addr_in.sin_port = htons(port);
 }
 
 bool rjcp::net::sockaddr4::is_valid() const noexcept
