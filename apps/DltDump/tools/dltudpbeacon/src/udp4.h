@@ -39,6 +39,36 @@ namespace rjcp::net {
         bool is_open() const noexcept;
 
         /**
+         * @brief Enable the multicast loop to enable or disable the loopback of
+         * outgoing multicast datagrams.
+         *
+         * Set or read a boolean integer argument that determines whether sent
+         * multicast packets should be looped back to the local sockets.
+         *
+         * @param group The multicast group to join
+         * @param enabled If loopback is enabled
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        int multicast_loop(sockaddr4& group, bool enabled) noexcept;
+
+        /**
+         * @brief Set the local device for a multicast socket.
+         *
+         * @param addr The local interface to set
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        int multicast_join(sockaddr4& addr) noexcept;
+
+        /**
+         * @brief Set or read the time-to-live value of outgoing multicast
+         * packets for this socket
+         *
+         * @param ttl The Time To Live field set for the multicast packets.
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        int multicast_ttl(int ttl) noexcept;
+
+        /**
          * @brief Set the socket option for reuse
          *
          * This should be called before binding the socket.
@@ -47,6 +77,22 @@ namespace rjcp::net {
          * @return int Success if zero, -1 on error. Check errno.
          */
         int reuseaddr(bool reuse) noexcept;
+
+        /**
+         * @brief Set the amount of send buffer for the socket.
+         *
+         * @param sendbuf The size of the bytes to send.
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        int set_sendbuf(int sendbuf) noexcept;
+
+        /**
+         * @brief Get the amount of send buffer for the socket.
+         *
+         * @return int The amount of send buffer if the result is positive, else
+         * if -1 an error occurred. Check errno.
+         */
+        int get_sendbuf() noexcept;
 
         /**
          * @brief Bind the socket to a particular address and port.

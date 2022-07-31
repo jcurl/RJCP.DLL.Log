@@ -10,6 +10,9 @@ set(SOURCES
     src/udp4.cpp
     src/dlt.cpp)
 
+# So that we can find "config.h"
+include_directories("${PROJECT_BINARY_DIR}")
+
 add_executable(dltudpbeacon ${SOURCES})
 
 target_compile_features(dltudpbeacon PUBLIC cxx_std_17)
@@ -36,3 +39,11 @@ endif()
 if (NOT (${HAVE_SOCKET}))
     message(FATAL_ERROR "socket not found")
 endif()
+
+# Check for IP_MULTICAST_LOOP
+CHECK_SYMBOL_EXISTS(IP_MULTICAST_LOOP "arpa/inet.h" HAVE_IP_MULTICAST_LOOP)
+CHECK_SYMBOL_EXISTS(IP_MULTICAST_IF   "arpa/inet.h" HAVE_IP_MULTICAST_IF)
+CHECK_SYMBOL_EXISTS(IP_MULTICAST_TTL  "arpa/inet.h" HAVE_IP_MULTICAST_TTL)
+
+# Finally write the configuration file dependent on what is found
+configure_file(${PROJECT_SOURCE_DIR}/src/config.h.in ${PROJECT_BINARY_DIR}/config.h)
