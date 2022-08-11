@@ -31,6 +31,7 @@
 
             Connection = fileName;
             m_FileName = fileName;
+            InputFileName = Path.GetFileName(fileName);
 
             string extension = Path.GetExtension(fileName);
             if (extension.Equals(".pcap", StringComparison.OrdinalIgnoreCase) ||
@@ -52,6 +53,16 @@
         /// </summary>
         /// <value>The connection string.</value>
         public string Connection { get; }
+
+        /// <summary>
+        /// Gets the name of the input file, associated with the connection string.
+        /// </summary>
+        /// <value>The name of the input file.</value>
+        /// <remarks>
+        /// The input file name can be used to calculate the output file name, given the input is loaded from a file
+        /// system like URI.
+        /// </remarks>
+        public string InputFileName { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is live stream.

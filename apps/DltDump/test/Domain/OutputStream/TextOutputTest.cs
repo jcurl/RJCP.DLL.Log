@@ -119,16 +119,95 @@
             }
         }
 
-        [Test]
-        public void SetInputNullString()
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringInitNoFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
             using (TextOutput output = new TextOutput("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
 
-                Assert.That(() => {
-                    output.SetInput(null, InputFormat.File);
-                }, Throws.TypeOf<ArgumentNullException>());
+                Assert.That(File.Exists("File.txt"), Is.True);
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringInitFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+                Assert.That(File.Exists("File_.txt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                Assert.That(File.Exists("File_.txt"), Is.True);
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File_.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+                Assert.That(File.Exists("File_.txt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                Assert.That(File.Exists("File_.txt"), Is.True);
+
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File_.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(2 * (TestLines.Verbose.ToString().Length + Environment.NewLine.Length)));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputFromValidToNullStringFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+                Assert.That(File.Exists("File_.txt"), Is.False);
+                output.SetInput("input.dlt", InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                Assert.That(File.Exists("File_input.txt"), Is.True);
+                FileInfo fileInfo = new FileInfo("File_input.txt");
+                Assert.That(fileInfo.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
+
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose);
+                output.Flush();
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                Assert.That(File.Exists("File_.txt"), Is.True);
+                FileInfo fileInfoEmpty = new FileInfo("File_.txt");
+                Assert.That(fileInfoEmpty.Length,
+                    Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
 

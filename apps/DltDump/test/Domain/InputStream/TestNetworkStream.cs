@@ -33,6 +33,8 @@
 
         public string Connection { get { return "net://127.0.0.1"; } }
 
+        public string InputFileName { get { return null; } }
+
         public bool IsLiveStream
         {
             get { return true; }

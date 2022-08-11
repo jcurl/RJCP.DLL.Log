@@ -117,7 +117,7 @@
                 using (ITraceReader<DltTraceLineBase> reader = await GetReader(input)) {
                     if (reader == null) return parsed;
 
-                    output.SetInput(input.Connection, Global.Instance.DltReaderFactory.InputFormat);
+                    output.SetInput(input.InputFileName, Global.Instance.DltReaderFactory.InputFormat);
                     if (input.IsLiveStream && output is OutputBase outputBase) {
                         // 5 seconds.
                         outputBase.AutoFlushPeriod = 5000;

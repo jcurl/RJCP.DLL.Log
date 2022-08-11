@@ -24,6 +24,17 @@
         string Connection { get; }
 
         /// <summary>
+        /// Gets the name of the input file, associated with the connection string.
+        /// </summary>
+        /// <value>The name of the input file.</value>
+        /// <remarks>
+        /// The input file name can be used to calculate the output file name, given the input is loaded from a file
+        /// system like URI. If the connection string is not file based, the result may be empty or a
+        /// <see langword="null"/> string.
+        /// </remarks>
+        string InputFileName { get; }
+
+        /// <summary>
         /// Gets a value indicating if this input stream requires a connection.
         /// </summary>
         /// <value>

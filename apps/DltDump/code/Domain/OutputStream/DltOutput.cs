@@ -55,15 +55,15 @@
         /// </summary>
         /// <param name="fileName">Name of the input file.</param>
         /// <param name="inputFormat">The input format.</param>
-        /// <exception cref="ArgumentNullException">fileName</exception>
-        /// <exception cref="ArgumentOutOfRangeException">inputFormat</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="inputFormat"/> is not defined, or is <see cref="InputFormat.Automatic"/>.
+        /// </exception>
         /// <remarks>
         /// Setting the input file name and the format can assist with knowing how to write binary data, and optionally
         /// set the name of the file that should be written.
         /// </remarks>
         public void SetInput(string fileName, InputFormat inputFormat)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             if (!Enum.IsDefined(typeof(InputFormat), inputFormat))
                 throw new ArgumentOutOfRangeException(nameof(inputFormat));
             if (inputFormat == InputFormat.Automatic)

@@ -27,7 +27,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file to write to (may be a template).</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         protected OutputBase(string fileName) : this(fileName, 0, false) { }
@@ -35,7 +35,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
         /// </summary>
-        /// <param name="fileName">Name of the file to write to.</param>
+        /// <param name="fileName">Name of the file to write to (may be a template).</param>
         /// <param name="split">The number of bytes to write before splitting.</param>
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
@@ -168,14 +168,54 @@
         /// Sets the input file name.
         /// </summary>
         /// <param name="fileName">Name of the input file.</param>
+        /// <remarks>
+        /// Setting a new input file name can cause the current file to be closed if the output file name depends on the
+        /// input file name. Setting the <paramref name="fileName"/> to <see langword="null"/> or to
+        /// <see cref="string.Empty"/> will cause the file name to be cleared and the old output file to be closed if it
+        /// was previously not empty.
+        /// <list type="bullet">
+        /// <item>Previous=null/empty or new; FileName=null/empty; Result=Continue writing.</item>
+        /// <item>
+        /// Previous=null/empty or new; FileName=file name; Result=If template contains <c>%FILE%</c> then create new
+        /// file.
+        /// </item>
+        /// <item>
+        /// Previous=file name; FileName=null/empty; Result=If template contains <c>%FILE%</c> then create new file.
+        /// </item>
+        /// <item>
+        /// Previous=file name; FileName=file name; Result=If template contains <c>%FILE%</c> then create new file.
+        /// </item>
+        /// </list>
+        /// When creating a new file, if the new file name based on the template was already written using this session,
+        /// an error will occur, so existing files created in this session are not overwritten. This can occur also if
+        /// two distinct full paths have the same file name (but in different folders).
+        /// </remarks>
         protected void SetInput(string fileName)
         {
-            if (!m_Template.AllowConcatenation) {
-                m_Segments = null;
-                if (m_Writer.IsOpen) m_Writer.Close();
-            }
+            if (string.IsNullOrEmpty(fileName)) {
+                if (!m_Template.AllowConcatenation && !string.IsNullOrEmpty(CurrentFile()))
+                    ResetSegments();
 
-            m_Template.Variables["FILE"] = Path.GetFileNameWithoutExtension(fileName);
+                m_Template.Variables["FILE"] = string.Empty;
+            } else {
+                if (!m_Template.AllowConcatenation)
+                    ResetSegments();
+
+                m_Template.Variables["FILE"] = Path.GetFileNameWithoutExtension(fileName);
+            }
+        }
+
+        private string CurrentFile()
+        {
+            if (m_Template.Variables.TryGetValue("FILE", out string fileName))
+                return fileName ?? string.Empty;
+            return string.Empty;
+        }
+
+        private void ResetSegments()
+        {
+            m_Segments = null;
+            if (m_Writer.IsOpen) m_Writer.Close();
         }
 
         // Defines the maximum line length.

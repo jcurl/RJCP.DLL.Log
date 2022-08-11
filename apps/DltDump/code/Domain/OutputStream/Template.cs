@@ -88,7 +88,7 @@
         /// Gets a value indicating whether output concatenation of input files are allowed.
         /// </summary>
         /// <value>
-        /// Is <see langword="true"/> if file concatenation is allwoed; otherwise, <see langword="false"/>.
+        /// Is <see langword="true"/> if file concatenation is allowed; otherwise, <see langword="false"/>.
         /// </value>
         public bool AllowConcatenation { get; }
 

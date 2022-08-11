@@ -12,6 +12,8 @@
 
         public string Connection { get { return "null:"; } }
 
+        public string InputFileName { get { return null; } }
+
         public bool IsLiveStream
         {
             get { return false; }

@@ -179,16 +179,90 @@
             }
         }
 
-        [Test]
-        public void SetInputNullString()
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringInitNoFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
             using (DltOutput output = new DltOutput("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
 
-                Assert.That(() => {
-                    output.SetInput(null, InputFormat.File);
-                }, Throws.TypeOf<ArgumentNullException>());
+                Assert.That(File.Exists("File.dlt"), Is.True);
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringInitFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+                Assert.That(File.Exists("File_.dlt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File_.dlt"), Is.True);
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File_.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputNullStringFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+                Assert.That(File.Exists("File_.dlt"), Is.False);
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File_.dlt"), Is.True);
+
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                FileInfo fileInfo = new FileInfo("File_.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(2 * FileData.Length));
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetInputFromValidToNullStringFileTemplate(string inputFileName)
+        {
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+                Assert.That(File.Exists("File_.dlt"), Is.False);
+                output.SetInput("input.dlt", InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
+
+                Assert.That(File.Exists("File_input.dlt"), Is.True);
+                FileInfo fileInfo = new FileInfo("File_input.dlt");
+                Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
+
+                output.SetInput(inputFileName, InputFormat.File);
+                output.Write(TestLines.Verbose, FileData.AsSpan());
+                output.Flush();
+
+                // The data is written exactly as the packet says. There is no interpretation of the data.
+                Assert.That(File.Exists("File_.dlt"), Is.True);
+                FileInfo fileInfoEmpty = new FileInfo("File_.dlt");
+                Assert.That(fileInfoEmpty.Length, Is.EqualTo(FileData.Length));
             }
         }
 

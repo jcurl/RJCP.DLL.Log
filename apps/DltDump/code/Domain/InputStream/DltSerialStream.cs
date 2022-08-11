@@ -108,6 +108,16 @@
         public string Connection { get; }
 
         /// <summary>
+        /// Gets the name of the input file, associated with the connection string.
+        /// </summary>
+        /// <value>The name of the input file.</value>
+        /// <remarks>
+        /// The input file name can be used to calculate the output file name, given the input is loaded from a file
+        /// system like URI.
+        /// </remarks>
+        public string InputFileName { get { return null; } }
+
+        /// <summary>
         /// Gets a value indicating whether this instance is live stream.
         /// </summary>
         /// <value>Is <see langword="true"/> if this instance is live stream; otherwise, <see langword="false"/>.</value>
