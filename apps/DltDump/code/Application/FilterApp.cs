@@ -113,7 +113,6 @@
                 bool connected = await ConnectInputStream(input, m_Config.ConnectRetries);
                 if (!connected) return parsed;
 
-                retries = input.IsLiveStream && m_Config.ConnectRetries != 0;
                 using (ITraceReader<DltTraceLineBase> reader = await GetReader(input)) {
                     if (reader == null) return parsed;
 
@@ -149,6 +148,8 @@
                         input.Close();
                     }
                 }
+
+                retries = input.IsLiveStream && input.RequiresConnection && m_Config.ConnectRetries != 0;
             } while (retries);
             return parsed;
         }
