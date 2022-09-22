@@ -10,7 +10,7 @@
     using RJCP.Diagnostics.Log.Dlt;
 
     [TestFixture]
-    public class DltTraceReaderFactoryTest
+    public class DltDumpTraceReaderFactoryTest
     {
         private readonly string file = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
 

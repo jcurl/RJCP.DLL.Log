@@ -11,7 +11,7 @@
         public void WriteOnlyStream()
         {
             Assert.That(async () => {
-                _ = await new EmptyTracedReaderFactory().CreateAsync(new WriteOnlyStream());
+                _ = await new EmptyTraceReaderFactory().CreateAsync(new WriteOnlyStream());
             }, Throws.TypeOf<ArgumentException>());
         }
     }

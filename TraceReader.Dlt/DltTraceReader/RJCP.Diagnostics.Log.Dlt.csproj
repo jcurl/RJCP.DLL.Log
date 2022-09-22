@@ -67,11 +67,14 @@
     <Compile Include="Constraints\DltMessageType.cs" />
     <Compile Include="Constraints\DltSessionId.cs" />
     <Compile Include="Decoder\DltFileTraceDecoder.cs" />
+    <Compile Include="Decoder\DltFileTraceDecoderFactory.cs" />
     <Compile Include="Decoder\DltSerialTraceDecoder.cs" />
+    <Compile Include="Decoder\DltSerialTraceDecoderFactory.cs" />
     <Compile Include="Decoder\DltTraceDecoder.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase+PosMap.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase.cs" />
     <Compile Include="Decoder\DltTraceDecoderBase+LineCache.cs" />
+    <Compile Include="Decoder\DltTraceDecoderFactory.cs" />
     <Compile Include="DltControlTraceLine.cs" />
     <Compile Include="DltFileTraceReaderFactory.cs" />
     <Compile Include="DltNonVerboseTraceLine.cs" />
@@ -153,7 +156,6 @@
     <Compile Include="Dlt\ControlArgs\SetMessageFilteringResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetTraceStatusResponse.cs" />
-
     <Compile Include="Dlt\ControlArgs\SetUseEcuIdRequest.cs" />
     <Compile Include="Dlt\ControlArgs\SetUseEcuIdResponse.cs" />
     <Compile Include="Dlt\ControlArgs\SetUseExtendedHeaderRequest.cs" />

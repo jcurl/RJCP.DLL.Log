@@ -4,10 +4,11 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
+    using Infrastructure.IO;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
 
-    public class TestDltTraceReaderFactory : IDltTraceReaderFactory
+    public class TestDltTraceReaderFactory : IDltDumpTraceReaderFactory
     {
         /// <summary>
         /// Gets the collection of lines that can be modified which the factory uses to create a reader.
@@ -74,6 +75,11 @@
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             return Task.FromResult(GetTraceReader());
+        }
+
+        public Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet)
+        {
+            throw new NotImplementedException();
         }
 
         private ITraceReader<DltTraceLineBase> GetTraceReader()

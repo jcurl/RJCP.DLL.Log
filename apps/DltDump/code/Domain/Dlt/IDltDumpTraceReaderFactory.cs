@@ -1,12 +1,14 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
+    using System.Threading.Tasks;
+    using Infrastructure.IO;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
     /// Interface for the DLT Trace Reader Factory.
     /// </summary>
-    public interface IDltTraceReaderFactory : ITraceReaderFactory<DltTraceLineBase>
+    public interface IDltDumpTraceReaderFactory : ITraceReaderFactory<DltTraceLineBase>
     {
         /// <summary>
         /// Gets or sets the input format which is used to decide which decoder to create.
@@ -33,5 +35,12 @@
         /// no <see cref="IOutputStream"/> is used.
         /// </remarks>
         IOutputStream OutputStream { get; set; }
+
+        /// <summary>
+        /// Creates an <see cref="ITraceReader{DltTraceLineBase}"/> from a packet interface.
+        /// </summary>
+        /// <param name="packet">The packet reader interface.</param>
+        /// <returns>The <see cref="ITraceReader{DltTraceLineBase}"/> object the factory knows how to create.</returns>
+        Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet);
     }
 }

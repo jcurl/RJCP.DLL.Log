@@ -27,21 +27,24 @@ factory `MyTraceReaderFactory`, which returns the reader that can be used to get
 the logging lines. There can be many different factories, one for each
 implemented protocol for reading log data.
 
-Factories and Trace readers generally have a lot of common code. For this
-purposes, user factories can derive from the base class `TraceReaderFactory<T>`,
-and they then only need to provide an implementation on how to instantiate a
-`ITraceDecoder<T>`.
+Factories and trace readers generally have a similar code. For this purpose,
+reader factories can derive from the base class `TraceReaderFactory<T>`. They
+provide an implementation of `ITraceDecoderFactory<T>` which the
+`TraceReaderFactory<T>` uses to instantiate via `ITraceDecoder<T>` and gives to
+a `TraceReader<T>`.
 
 ![TraceReaderFactory](out/diagrams/ITraceDecoder/ITraceDecoder.svg)
 
-Usually, there is one factory for each decoder, and for brevity, a single
-factory `MyTraceReaderFactory` is depicted in the above diagram. The
-`MyTraceReaderFactory` knows how to instantiate the decoder, `MyTraceDecoder`,
-which knows how to decode bytes to generate a collection of type `T` which is
-`MyTraceLine`.
+Usually, there is one reader factory for each decoder factory and one decoder
+factory per decoder. In more complex scenarios, a single reader factory may
+choose from multiple decoder factories. For brevity, a single factory
+`MyTraceReaderFactory` is depicted in the above diagram. The
+`MyTraceReaderFactory` has a `MyTraceDecoderFactory` that knows how to
+instantiate the decoder, `MyTraceDecoder`, which knows how to decode bytes to
+generate a collection of type `T` which is `MyTraceLine`.
 
-The factory knows how to open a file name to obtain a stream. The trace reader
-knows how to read the stream and send this to the user decoder.
+The reader factory knows how to open a file name to obtain a stream. The trace
+reader knows how to read the stream and send this to the user decoder.
 
 ### Consideration for using Factories
 
@@ -82,10 +85,10 @@ collection is then returned by `GetLineAsync()` as mentioned above.
 ### Performance Considerations
 
 The specific implementation of the `ITraceDecoder<T>` is not intended to be
-asynchornous. It blocks until data is decoded. It is given a buffer of data as a
-`Span<byte>` and should consider decoding thed ata directly from the span
+asynchronous. It blocks until data is decoded. It is given a buffer of data as a
+`Span<byte>` and should consider decoding the data directly from the span
 without copying. Only if an incomplete packet is received, should the decoder
-then copy the remaining bytes in teh buffer to its own buffer (which is normally
+then copy the remaining bytes in the buffer to its own buffer (which is normally
 allocated during construction by the factory, and remains fixed). Then on the
 next `Write`, the decoder normally knows how much data is missing, and copies
 only the necessary data into its own buffer to decode the packet.

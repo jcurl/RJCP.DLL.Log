@@ -11,7 +11,7 @@
         public void NullStream()
         {
             Assert.That(async () => {
-                _ = await new EmptyTracedReaderFactory().CreateAsync((Stream)null);
+                _ = await new EmptyTraceReaderFactory().CreateAsync((Stream)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -19,7 +19,7 @@
         public void NullFile()
         {
             Assert.That(async () => {
-                _ = await new EmptyTracedReaderFactory().CreateAsync((string)null);
+                _ = await new EmptyTraceReaderFactory().CreateAsync((string)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -27,7 +27,7 @@
         public void NotFoundFile()
         {
             Assert.That(async () => {
-                _ = await new EmptyTracedReaderFactory().CreateAsync("FileNotFound.txt");
+                _ = await new EmptyTraceReaderFactory().CreateAsync("FileNotFound.txt");
             }, Throws.TypeOf<FileNotFoundException>());
         }
     }

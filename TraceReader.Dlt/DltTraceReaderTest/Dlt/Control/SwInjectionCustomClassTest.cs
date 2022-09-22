@@ -38,10 +38,15 @@
 
     public class CustomDltFileTraceReaderFactory : TraceReaderFactory<DltTraceLineBase>
     {
-        protected override ITraceDecoder<DltTraceLineBase> GetDecoder()
+        private class CustomDltFileTraceDecoderFactory : ITraceDecoderFactory<DltTraceLineBase>
         {
-            return new CustomDltFileTraceDecoder();
+            public ITraceDecoder<DltTraceLineBase> Create()
+            {
+                return new CustomDltFileTraceDecoder();
+            }
         }
+
+        public CustomDltFileTraceReaderFactory() : base(new CustomDltFileTraceDecoderFactory()) { }
     }
 
     [TestFixture(DecoderType.Line, Endianness.Little)]

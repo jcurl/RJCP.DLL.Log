@@ -5,10 +5,8 @@ interface ITraceReader<T : ITraceLine> {
     GetLineAsync() : T
 }
 
-class TraceReader<T : ITraceLine> {
-    TraceReader(stream: Stream, decoder: ITraceDecoder<T>)
-    ..
-    GetLineAsync() : T
+interface ITraceDecoderFactory<T : ITraceLine> {
+    Create() : ITraceDecoder<T>
 }
 
 interface ITraceReaderFactory<T : ITraceLine> {
@@ -16,46 +14,49 @@ interface ITraceReaderFactory<T : ITraceLine> {
     CreateAsync(fileName: string) : ITraceReader<T>
 }
 
-abstract class TraceReaderFactory<T : ITraceLine> {
-    +CreateAsync(stream) : ITraceReader<T>
-    +CreateAsync(fileName) : ITraceReader<T>
-    #GetDecoder() : ITraceDecoder<T>
-}
-
-class MyTraceReaderFactory {
-    #GetDecoder() : ITraceDecoder<MyTraceLine>
-}
-note bottom
-    User instantiates this class
-    to get the <b>TraceReader</b>.
-end note
-
 interface ITraceDecoder<T : ITraceLine> {
     Decode(buffer: ReadOnlySpan<byte>, position: long) : IEnumerable<T>
     Flush() : IEnumerable<T>
 }
 
+class TraceReaderFactory<T : ITraceLine> {
+    #.ctor(decoderFactory: ITraceDecoderFactory<T>)
+    +CreateAsync(stream: Stream) : ITraceReader<T>
+    +CreateAsync(fileName: string) : ITraceReader<T>
+}
+
+class TraceReader<T : ITraceLine> {
+    TraceReader(stream: Stream, decoder: ITraceDecoder<T>)
+    ..
+    GetLineAsync() : T
+}
+
+ITraceReaderFactory <|.. TraceReaderFactory
+
+TraceReader .u.|> ITraceReader
+TraceReaderFactory -r-> TraceReader : <<returns>>\nT > MyTraceLine
+
+class MyTraceReaderFactory { }
+note bottom
+    User instantiates this class
+    to get the <b>TraceReader</b>.
+end note
+
+class MyTraceDecoderFactory {
+    +Create(): ITraceDecoder<MyTraceLine>
+}
+
+MyTraceDecoderFactory .u.|> ITraceDecoderFactory : T > MyTraceLine
+MyTraceDecoderFactory -r-> MyTraceDecoder : <<instantiates>>
+
 class MyTraceDecoder {
     Decode(buffer, position) : IEnumerable<MyTraceLine>
 }
 
-'interface ITraceLine
-class MyTraceLine
-class MyTraceLine2
+MyTraceDecoder .u.|> ITraceDecoder : T > MyTraceLine
+MyTraceDecoder -u-o TraceReader
 
-IDisposable ()-- ITraceDecoder
-IDisposable ()-- ITraceReader
-ITraceLine <|.. MyTraceLine
-ITraceLine <|.. MyTraceLine2
-'ITraceReaderFactory . ITraceReader
-ITraceReaderFactory <|.. TraceReaderFactory
 TraceReaderFactory <|-- MyTraceReaderFactory : T > MyTraceLine
-ITraceReader <|.. TraceReader
-ITraceDecoder <|.. MyTraceDecoder : T > MyTraceLine
-
-TraceReader *-- MyTraceDecoder
-MyTraceReaderFactory .. MyTraceDecoder : <<instantiates>>
-TraceReaderFactory .. TraceReader : <<returns>>\nT > MyTraceLine
-MyTraceDecoder .. MyTraceLine
-MyTraceDecoder .. MyTraceLine2
+MyTraceReaderFactory *-r- MyTraceDecoderFactory
+TraceReaderFactory o- MyTraceDecoderFactory
 @enduml

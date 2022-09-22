@@ -67,7 +67,7 @@ The DLT trace decoder is responsible for receiving parts of the byte stream and
 decoding each individual DLT packet. It must look for the headers if required
 (TCP streams have no fixed header structure, a valid packet can only be
 determined by analysing the content). As the packet is decoded, the
-`IDltLineBuilder` can then be used to construct a line.
+`IDltLineBuilder` is then used to construct a line.
 
 ### 1.2. Use Cases of the DLT Trace Decoder
 
@@ -79,10 +79,10 @@ design:
   needed to cache a partial line, ready for the next decode method call).
 * Other decoders can be derived from this decoder. One example would be to
   calculate statistics. That means a new trace decoder, derived from
-  `DltBaseTraceDecoder` and related classes, may provide its own implementation
+  `DltTraceDecoderBase` and related classes, may provide its own implementation
   of `IDltLineBuilder` that returns a different object type than `DltTraceLine`
   (not shown in the diagram above, but constructed by the `DltLineBuilder`).
-* It may be possible to inject functionality into the `DltBaseTraceDecoder`.
+* It may be possible to inject functionality into the `DltTraceDecoderBase`.
   These are called "filters", which are similar to plugins. The filter may parse
   the contents of the line, write the packet to a new stream, insert or modify
   data. It may take a raw packet and decode it based on a new format such as:
@@ -757,9 +757,8 @@ public class MyCustomDltFileTraceDecoder : DltFileTraceDecoder {
 
 // Finally, this is optional, a factory for creating our new decoder
 public class CustomDltFileTraceReaderFactory : TraceReaderFactory<DltTraceLineBase> {
-  protected override ITraceDecoder<DltTraceLineBase> GetDecoder() {
-    return new CustomDltFileTraceDecoder();
-  }
+  public CustomDltFileTraceReaderFactory() :
+    base(new CustomDltFileTraceDecoder()) { }
 }
 ```
 

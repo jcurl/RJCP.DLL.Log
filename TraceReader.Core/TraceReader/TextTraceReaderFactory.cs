@@ -13,12 +13,17 @@
     /// </remarks>
     public class TextTraceReaderFactory : TraceReaderFactory<TraceLine>
     {
-        private static Encoding GetDefaultEncoding()
-        {
-            return Encoding.GetEncoding("UTF-8", new EncoderReplacementFallback("."), new DecoderReplacementFallback("."));
-        }
+        private readonly TextDecoderFactory m_DecoderFactory;
 
-        private Encoding m_Encoding;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextTraceReaderFactory"/> class.
+        /// </summary>
+        public TextTraceReaderFactory() : this(new TextDecoderFactory()) { }
+
+        private TextTraceReaderFactory(TextDecoderFactory decoderFactory) : base(decoderFactory)
+        {
+            m_DecoderFactory = decoderFactory;
+        }
 
         /// <summary>
         /// Gets or sets the encoding that should be used when decoding lines.
@@ -27,30 +32,8 @@
         /// <exception cref="ArgumentNullException">This property is set to <see langword="null"/>.</exception>
         public Encoding Encoding
         {
-            get
-            {
-                if (m_Encoding == null) {
-                    m_Encoding = GetDefaultEncoding();
-                }
-                return m_Encoding;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(Encoding));
-                m_Encoding = value;
-            }
-        }
-
-        /// <summary>
-        /// In a derived class, return an instance of the decoder for reading the stream.
-        /// </summary>
-        /// <returns>A <see cref="TextDecoder"/> to split log lines as text.</returns>
-        protected override ITraceDecoder<TraceLine> GetDecoder()
-        {
-            TextDecoder decoder = new TextDecoder();
-            if (m_Encoding != null) decoder.Encoding = m_Encoding;
-            return decoder;
+            get { return m_DecoderFactory.Encoding; }
+            set { m_DecoderFactory.Encoding = value; }
         }
     }
 }

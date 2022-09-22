@@ -2,11 +2,16 @@
 {
     using Decoder;
 
-    public class EmptyTracedReaderFactory : TraceReaderFactory<ITraceLine>
+    public class EmptyTraceReaderFactory : TraceReaderFactory<ITraceLine>
     {
-        protected override ITraceDecoder<ITraceLine> GetDecoder()
+        private class EmptyTraceDecoderFactory : ITraceDecoderFactory<ITraceLine>
         {
-            return new EmptyTraceDecoder();
+            public ITraceDecoder<ITraceLine> Create()
+            {
+                return new EmptyTraceDecoder();
+            }
         }
+
+        public EmptyTraceReaderFactory() : base(new EmptyTraceDecoderFactory()) { }
     }
 }

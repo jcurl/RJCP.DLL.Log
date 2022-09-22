@@ -87,6 +87,6 @@
         /// The DLT reader factory that is used to obtain the reader based on inputs.
         /// </summary>
         /// <value>The DLT reader factory.</value>
-        public IDltTraceReaderFactory DltReaderFactory { get; set; }
+        public IDltDumpTraceReaderFactory DltReaderFactory { get; set; }
     }
 }

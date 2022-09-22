@@ -30,14 +30,14 @@ class TextTraceReaderFactory
 TraceReaderFactory <|-- TextTraceReaderFactory : T > TraceLine
 TraceReaderFactory <|-- TeraTermTraceReaderFactory : T > LogTraceLine
 
-TextTraceReaderFactory .. Decoder.TextDecoder : <<instantiates>>
-TextTraceReaderFactory .. TraceReader : <<returns>>\nT > TraceLine
+TextTraceReaderFactory --> Decoder.TextDecoder : <<instantiates>>
+TextTraceReaderFactory --> TraceReader : <<returns>>\nT > TraceLine
 
-TeraTermTraceReaderFactory .. Decoder.TeraTermDecoder : <<instantiates>>
-TeraTermTraceReaderFactory .. TraceReader : <<returns>>\nT > LogTraceLine
+TeraTermTraceReaderFactory --> Decoder.TeraTermDecoder : <<instantiates>>
+TeraTermTraceReaderFactory --> TraceReader : <<returns>>\nT > LogTraceLine
 
-Main .. TeraTermTraceReaderFactory : <<instantiates>>
-Main .. TextTraceReaderFactory : <<instantiates>>
+Main --> TeraTermTraceReaderFactory : <<instantiates>>
+Main --> TextTraceReaderFactory : <<instantiates>>
 'Main *-- TraceReader
 TraceReader --* Main
 @enduml

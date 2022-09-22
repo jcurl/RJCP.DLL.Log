@@ -6,12 +6,26 @@
     using Decoder;
 
     /// <summary>
-    /// An abstract factory for common operations to instantiate a <see cref="ITraceReader{T}"/>.
+    /// A factory for common operations to instantiate a <see cref="ITraceReader{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of trace line the decoder produces.</typeparam>
-    public abstract class TraceReaderFactory<T> : ITraceReaderFactory<T> where T : class, ITraceLine
+    public class TraceReaderFactory<T> : ITraceReaderFactory<T> where T : class, ITraceLine
     {
         private const int FileSystemCaching = 262144;
+
+        private readonly ITraceDecoderFactory<T> m_DecoderFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TraceReaderFactory{T}"/> class.
+        /// </summary>
+        /// <param name="decoderFactory">The decoder factory.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="decoderFactory"/> is <see langword="null"/>.</exception>
+        protected TraceReaderFactory(ITraceDecoderFactory<T> decoderFactory)
+        {
+            if (decoderFactory == null)
+                throw new ArgumentNullException(nameof(decoderFactory));
+            m_DecoderFactory = decoderFactory;
+        }
 
         /// <summary>
         /// Creates an <see cref="ITraceReader{T}" /> from a stream.
@@ -23,7 +37,7 @@
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            ITraceDecoder<T> decoder = GetDecoder();
+            ITraceDecoder<T> decoder = m_DecoderFactory.Create();
             return Task.FromResult<ITraceReader<T>>(new TraceReader<T>(stream, decoder));
         }
 
@@ -59,11 +73,5 @@
 
             return CreateAsync(fileStream);
         }
-
-        /// <summary>
-        /// In a derived class, return an instance of the decoder for reading the stream.
-        /// </summary>
-        /// <returns>A <see cref="ITraceDecoder{T}"/> that knows how to decode the stream.</returns>
-        protected abstract ITraceDecoder<T> GetDecoder();
     }
 }

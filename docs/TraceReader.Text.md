@@ -11,11 +11,12 @@ at the beginning of each line which are written in the format from the
 
 ## Reading Text Files
 
-The simplest way to read text files is to instantiate the `TextTraceReaderFactory` and create
-a new reader:
+The simplest way to read text files is to instantiate the
+`TextTraceReaderFactory` and create a new reader:
 
 ```csharp
-using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(path)) {
+using (ITraceReader<TraceLine> reader =
+  await new TextTraceReaderFactory().CreateAsync(path)) {
     // ... use reader.GetLineAsync() to read each line
 }
 ```
