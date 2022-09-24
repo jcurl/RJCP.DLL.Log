@@ -172,6 +172,14 @@
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
+        [Test]
+        public void OpenDltFileStreamEmptyFile()
+        {
+            Assert.That(() => {
+                _ = new DltFileStream(string.Empty);
+            }, Throws.TypeOf<ArgumentException>());
+        }
+
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltFileFactory)]
         public void OpenDisposedInputStream(Factory factoryType)
