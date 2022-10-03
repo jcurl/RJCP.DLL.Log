@@ -293,12 +293,16 @@
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
             using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
                 receiver.Open();
-                byte[] buffer = new byte[65536];
 
+                byte[] buffer = new byte[65536];
                 Udp.Send(src, ep).Dispose();
                 PacketReadResult result = await receiver.ReadAsync(buffer);
                 Assert.That(result.ReceivedBytes, Is.EqualTo(8));
                 Assert.That(result.Channel, Is.EqualTo(0));
+                Assert.That(buffer[0..8],
+                    Is.EqualTo(
+                        new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                    ).AsCollection);
             }
         }
 
@@ -313,8 +317,8 @@
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
             using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
                 receiver.Open();
-                byte[] buffer = new byte[65536];
 
+                byte[] buffer = new byte[65536];
                 ValueTask<PacketReadResult> task = receiver.ReadAsync(buffer);
                 Thread.Sleep(100);
                 Udp.Send(src, ep).Dispose();
@@ -322,6 +326,10 @@
                 PacketReadResult result = await task;
                 Assert.That(result.ReceivedBytes, Is.EqualTo(8));
                 Assert.That(result.Channel, Is.EqualTo(0));
+                Assert.That(buffer[0..8],
+                    Is.EqualTo(
+                        new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                    ).AsCollection);
             }
         }
 
@@ -337,17 +345,27 @@
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
             using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
                 receiver.Open();
-                byte[] buffer = new byte[65536];
 
+                byte[] buffer = new byte[65536];
                 Udp.Send(src1, ep).Dispose();
                 PacketReadResult result1 = await receiver.ReadAsync(buffer);
                 Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
                 Assert.That(result1.Channel, Is.EqualTo(0));
+                Assert.That(buffer[0..8],
+                    Is.EqualTo(
+                        new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                    ).AsCollection);
 
+
+                buffer = new byte[65536];
                 Udp.Send(src2, ep).Dispose();
                 PacketReadResult result2 = await receiver.ReadAsync(buffer);
                 Assert.That(result2.ReceivedBytes, Is.EqualTo(8));
                 Assert.That(result2.Channel, Is.EqualTo(1));
+                Assert.That(buffer[0..8],
+                    Is.EqualTo(
+                        new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                    ).AsCollection);
             }
         }
 
@@ -362,30 +380,49 @@
             IPEndPoint src2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8001);
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
             using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
-                byte[] buffer = new byte[65536];
                 receiver.Open();
 
                 using (Udp udp1 = new Udp(src1, ep))
                 using (Udp udp2 = new Udp(src2, ep)) {
+                    byte[] buffer = new byte[65536];
                     udp1.Send();
                     PacketReadResult result1 = await receiver.ReadAsync(buffer);
                     Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
                     Assert.That(result1.Channel, Is.EqualTo(0));
+                    Assert.That(buffer[0..8],
+                        Is.EqualTo(
+                            new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                        ).AsCollection);
 
+                    buffer = new byte[65536];
                     udp2.Send();
                     PacketReadResult result2 = await receiver.ReadAsync(buffer);
                     Assert.That(result2.ReceivedBytes, Is.EqualTo(8));
                     Assert.That(result2.Channel, Is.EqualTo(1));
+                    Assert.That(buffer[0..8],
+                        Is.EqualTo(
+                            new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                        ).AsCollection);
 
+                    buffer = new byte[65536];
                     udp1.Send();
                     result1 = await receiver.ReadAsync(buffer);
                     Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
                     Assert.That(result1.Channel, Is.EqualTo(0));
+                    Assert.That(buffer[0..8],
+                        Is.EqualTo(
+                            new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                        ).AsCollection);
 
+                    buffer = new byte[65536];
                     udp2.Send();
                     result2 = await receiver.ReadAsync(buffer);
                     Assert.That(result2.ReceivedBytes, Is.EqualTo(8));
                     Assert.That(result2.Channel, Is.EqualTo(1));
+                    Assert.That(buffer[0..8],
+                        Is.EqualTo(
+                            new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
+                        ).AsCollection);
                 }
             }
         }

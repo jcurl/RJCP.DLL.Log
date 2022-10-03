@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using Infrastructure.IO;
     using Resources;
@@ -181,11 +182,21 @@
 
         private PacketReadResult ReadInternal(Memory<byte> buffer)
         {
-            byte[] bytes = buffer.ToArray();
             EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 
             try {
-                int read = m_Socket.ReceiveFrom(bytes, 0, buffer.Length, SocketFlags.None, ref remote);
+#if NET6_0_OR_GREATER
+                // This is the quickest fix, but ReceiveFromAsync would be better.
+                int read = m_Socket.ReceiveFrom(buffer.Span, SocketFlags.None, ref remote);
+#else
+                // .NET 5 and earlier doesn't have a ReceiveFrom() that works with a Memory<byte>. So we need to convert
+                // the buffer to an array in place.
+                byte[] localBuff;
+                if (!MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> segment))
+                    return new PacketReadResult(0, 0);
+                localBuff = segment.Array;
+                int read = m_Socket.ReceiveFrom(localBuff, 0, localBuff.Length, SocketFlags.None, ref remote);
+#endif
                 lock (m_ChannelLock) {
                     // As we don't expect to have many different sources, a list with a loop is likely faster.
                     IPEndPoint remoteIp = (IPEndPoint)remote;
