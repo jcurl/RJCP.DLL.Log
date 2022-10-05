@@ -114,6 +114,45 @@
         }
 
         /// <summary>
+        /// Gets the number of channels that are currently decoded.
+        /// </summary>
+        /// <value>The channel count.</value>
+        /// <remarks>
+        /// Provides the number of channels identified at the time of the call. If other proceses are waiting on data
+        /// with <see cref="ReadAsync(Memory{byte})"/>, this value might change.
+        /// </remarks>
+        public int ChannelCount
+        {
+            get
+            {
+                lock (m_ChannelLock) {
+                    return m_Channels.Count;
+                }
+            }
+        }
+
+        /// <summary>
+        /// An event that is called when a new channel is obtained.
+        /// </summary>
+        /// <remarks>
+        /// Exceptions should not occur in this method.
+        /// </remarks>
+        public event EventHandler<PacketNewChannelEventArgs> NewChannel;
+
+        /// <summary>
+        /// Handles the <see cref="NewChannel"/> event.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="newChannel">
+        /// The <see cref="PacketNewChannelEventArgs"/> instance containing the event data.
+        /// </param>
+        protected virtual void OnNewChannel(object sender, PacketNewChannelEventArgs newChannel)
+        {
+            EventHandler<PacketNewChannelEventArgs> handler = NewChannel;
+            if (handler != null) handler(sender, newChannel);
+        }
+
+        /// <summary>
         /// Opens this instance.
         /// </summary>
         /// <exception cref="InvalidOperationException">
@@ -207,6 +246,7 @@
                     }
 
                     m_Channels.Add(remoteIp);
+                    OnNewChannel(this, new PacketNewChannelEventArgs(m_Channels.Count - 1));
                     return new PacketReadResult(read, m_Channels.Count - 1);
                 }
             } catch (SocketException ex) {

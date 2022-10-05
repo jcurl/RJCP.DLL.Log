@@ -262,10 +262,13 @@
 
         private static Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream input)
         {
-            if (input.InputStream == null)
-                throw new NotImplementedException("Packet inputs not supported");
+            if (input.InputStream != null)
+                return Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
 
-            return Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
+            if (input.InputPacket != null)
+                return Global.Instance.DltReaderFactory.CreateAsync(input.InputPacket);
+
+            throw new InvalidOperationException("No reader for the input format");
         }
     }
 }

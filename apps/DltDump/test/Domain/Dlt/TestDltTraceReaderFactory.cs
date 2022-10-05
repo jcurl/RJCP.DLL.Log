@@ -60,6 +60,7 @@
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <returns>The <see cref="ITraceReader{DltTraceLineBase}"/> object the factory knows how to create.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(Stream stream)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -71,15 +72,23 @@
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>The <see cref="ITraceReader{DltTraceLineBase}"/> object the factory knows how to create.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
             return Task.FromResult(GetTraceReader());
         }
 
+        /// <summary>
+        /// Creates a mocked <see cref="ITraceReader{DltTraceLineBase}"/>.
+        /// </summary>
+        /// <param name="packet">The packet reader interface.</param>
+        /// <returns>The <see cref="ITraceReader{DltTraceLineBase}"/> object the factory knows how to create.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="packet"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet)
         {
-            throw new NotImplementedException();
+            if (packet == null) throw new ArgumentNullException(nameof(packet));
+            return Task.FromResult(GetTraceReader());
         }
 
         private ITraceReader<DltTraceLineBase> GetTraceReader()

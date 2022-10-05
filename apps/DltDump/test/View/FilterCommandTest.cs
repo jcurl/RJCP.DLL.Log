@@ -160,6 +160,27 @@
         }
         #endregion
 
+        #region Input Packet Service
+        [Test]
+        public void PacketInput()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestPacketReaderFactory testFactory = new TestPacketReaderFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("pkt", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    "pkt://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+            }
+        }
+        #endregion
+
         #region Position option
         [Test]
         public void ShowPosition()

@@ -108,6 +108,8 @@
     <Compile Include="Domain\Dlt\Pcap\Ng\SectionHeaderBlock.cs" />
     <Compile Include="Domain\Dlt\Pcap\PacketDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\UnknownPcapFileFormatException.cs" />
+    <Compile Include="Domain\Dlt\TracePacketReader.cs" />
+    <Compile Include="Domain\Dlt\TracePacketReaderFactory.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\IPacket.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
+    <Compile Include="Infrastructure\IO\PacketNewChannelEventArgs.cs" />
     <Compile Include="Infrastructure\IO\PacketReadResult.cs" />
     <Compile Include="Infrastructure\IO\TimerEventArgs.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
