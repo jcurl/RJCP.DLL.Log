@@ -1,0 +1,65 @@
+@startuml InputStreamFactory
+
+skinparam rectangle {
+    bordercolor transparent
+    shadowing false
+}
+
+rectangle {
+    class DltDumpTraceDecoderFactory
+
+    DltDumpTraceDecoderFactory -u- DltFileTraceDecoderFactory : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltSerialTraceDecoderFactory : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltTraceDecoderFactory : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltPcapTraceDecoder : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltFileTraceFilterDecoder : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltSerialTraceFilterDecoder : <<instantiate>>
+    DltDumpTraceDecoderFactory -u- DltNetworkTraceFilterDecoder : <<instantiate>>
+}
+
+rectangle {
+    class DltDumpTraceReaderFactory {
+        +CreateAsync(stream: Stream)
+        +CreateAsync(fileName: string)
+        +CreateAsync(packet: IPacket)
+    }
+
+    DltDumpTraceReaderFactory *-u- DltDumpTraceDecoderFactory
+
+    class TracePacketReaderFactory
+
+    DltDumpTraceReaderFactory -d- TracePacketReaderFactory : <<uses>>
+
+    class TraceReader
+    class TracePacketReader
+
+    TracePacketReaderFactory -d-> TraceReader : <<returns>>
+    TracePacketReaderFactory -d-> TracePacketReader : <<returns>>
+
+    TracePacketReader o-u- DltDumpTraceDecoderFactory : <<uses on new channel>>
+    TraceReader -u- DltDumpTraceDecoderFactory : <<use once>>
+
+    class UdpPacketReceiver
+
+    TracePacketReader o-d- UdpPacketReceiver
+}
+
+rectangle {
+    class DltUdpPacketReceiverFactory
+    class DltUdpPacketReceiver
+
+    DltUdpPacketReceiverFactory -d-> DltUdpPacketReceiver : <<instantiates>>
+    DltUdpPacketReceiver *-d- UdpPacketReceiver
+}
+
+class FilterApp
+note left {
+    Instantiates the IInputStream, getting
+    the DltUdpPacketReceiver, giving it to
+    DltDumpTraceReaderFactory to give to
+    the TracePacketReader for decoding.
+}
+FilterApp -r-> DltDumpTraceReaderFactory
+FilterApp -d-> DltUdpPacketReceiverFactory : <<gets UdpPacketReceiver>>
+
+@enduml

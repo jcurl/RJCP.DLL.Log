@@ -20,8 +20,17 @@ loop Process File
 
     end
 
-    FilterApp -> IInputStream : get_InputStream()
-    return Stream
+    alt Stream based input
+
+        FilterApp -> IInputStream : get_InputStream()
+        return Stream
+
+    else Packet based input
+
+        FilterApp -> IInputStream : get_InputPacket()
+        return IPacket
+
+    end
 
     note over FilterApp
         Process Input

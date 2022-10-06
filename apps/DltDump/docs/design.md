@@ -23,36 +23,39 @@ implementation in an incremental manner).
     - [2.3.2. Filtering and Output](#232-filtering-and-output)
       - [2.3.2.1. Initialization](#2321-initialization)
       - [2.3.2.2. Instantiating a Stream from the Input Path](#2322-instantiating-a-stream-from-the-input-path)
-        - [2.3.2.2.1. Implementing a IInputStreamFactory](#23221-implementing-a-iinputstreamfactory)
       - [2.3.2.3. Decoder Factory](#2323-decoder-factory)
-        - [2.3.2.3.1. Adding a new InputFormat](#23231-adding-a-new-inputformat)
       - [2.3.2.4. The Output Stream, Context and Filter](#2324-the-output-stream-context-and-filter)
   - [2.4. Domain](#24-domain)
     - [2.4.1. InputStreamFactory and IInputStream](#241-inputstreamfactory-and-iinputstream)
-    - [2.4.2. DLT Trace Decoder (AutoSAR PRS format)](#242-dlt-trace-decoder-autosar-prs-format)
-    - [2.4.3. DLT Trace Decoder for PCAP and PCAPNG](#243-dlt-trace-decoder-for-pcap-and-pcapng)
-      - [2.4.3.1. PCAP-NG Design](#2431-pcap-ng-design)
-      - [2.4.3.2. Supported Link Types for PCAP and PCAPNG](#2432-supported-link-types-for-pcap-and-pcapng)
-      - [2.4.3.3. Handling Connections within a PCAP File](#2433-handling-connections-within-a-pcap-file)
-        - [2.4.3.3.1. IPv4 Packet Fragmentation by the Network Stack](#24331-ipv4-packet-fragmentation-by-the-network-stack)
-        - [2.4.3.3.2. Issues with IP Fragmentation Reassembly](#24332-issues-with-ip-fragmentation-reassembly)
-        - [2.4.3.3.3. DLT Packet Fragmentation by the Client](#24333-dlt-packet-fragmentation-by-the-client)
-      - [2.4.3.4. Unsupported Features for PCAP / PCAPNG Decoding](#2434-unsupported-features-for-pcap--pcapng-decoding)
-    - [2.4.4. Trace Output](#244-trace-output)
-      - [2.4.4.1. Console Output](#2441-console-output)
-      - [2.4.4.2. Text File Output](#2442-text-file-output)
-      - [2.4.4.3. DLT File Output](#2443-dlt-file-output)
-      - [2.4.4.4. File Templates for DLT and Text Output](#2444-file-templates-for-dlt-and-text-output)
-      - [2.4.4.5. Input File Concatenation](#2445-input-file-concatenation)
-      - [2.4.4.6. Splitting Output Files](#2446-splitting-output-files)
-      - [2.4.4.7. Detailed Logic for Splitting and Concatenating Files](#2447-detailed-logic-for-splitting-and-concatenating-files)
-      - [2.4.4.8. IOutputStream Object Lifetime](#2448-ioutputstream-object-lifetime)
-      - [2.4.4.9. On Flush](#2449-on-flush)
-    - [2.4.5. The Filter and the Context](#245-the-filter-and-the-context)
-      - [2.4.5.1. Output Chaining](#2451-output-chaining)
-      - [2.4.5.2. Context Implementation](#2452-context-implementation)
-    - [2.4.6. Decoder Extension on Line Decoding](#246-decoder-extension-on-line-decoding)
-      - [2.4.6.1. DltTraceDecoder writing to IOutputStream](#2461-dlttracedecoder-writing-to-ioutputstream)
+      - [2.4.1.1. Implementing a IInputStreamFactory](#2411-implementing-a-iinputstreamfactory)
+      - [2.4.1.2. Different Types of IInputStream](#2412-different-types-of-iinputstream)
+    - [2.4.2. DLT Decoders](#242-dlt-decoders)
+      - [2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)](#2421-dlt-trace-decoder-autosar-prs-format)
+      - [2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG](#2422-dlt-trace-decoder-for-pcap-and-pcapng)
+        - [2.4.2.2.1. PCAP-NG Design](#24221-pcap-ng-design)
+        - [2.4.2.2.2. Supported Link Types for PCAP and PCAPNG](#24222-supported-link-types-for-pcap-and-pcapng)
+        - [2.4.2.2.3. Handling Connections within a PCAP File](#24223-handling-connections-within-a-pcap-file)
+        - [2.4.2.2.4. IPv4 Packet Fragmentation by the Network Stack](#24224-ipv4-packet-fragmentation-by-the-network-stack)
+        - [2.4.2.2.5. Issues with IP Fragmentation Reassembly](#24225-issues-with-ip-fragmentation-reassembly)
+        - [2.4.2.2.6. DLT Packet Fragmentation by the Client](#24226-dlt-packet-fragmentation-by-the-client)
+        - [2.4.2.2.7. Unsupported Features for PCAP / PCAPNG Decoding](#24227-unsupported-features-for-pcap--pcapng-decoding)
+      - [2.4.2.3. Adding a new InputFormat](#2423-adding-a-new-inputformat)
+      - [2.4.2.4. The Packet Reader](#2424-the-packet-reader)
+    - [2.4.3. Trace Output](#243-trace-output)
+      - [2.4.3.1. Console Output](#2431-console-output)
+      - [2.4.3.2. Text File Output](#2432-text-file-output)
+      - [2.4.3.3. DLT File Output](#2433-dlt-file-output)
+      - [2.4.3.4. File Templates for DLT and Text Output](#2434-file-templates-for-dlt-and-text-output)
+      - [2.4.3.5. Input File Concatenation](#2435-input-file-concatenation)
+      - [2.4.3.6. Splitting Output Files](#2436-splitting-output-files)
+      - [2.4.3.7. Detailed Logic for Splitting and Concatenating Files](#2437-detailed-logic-for-splitting-and-concatenating-files)
+      - [2.4.3.8. IOutputStream Object Lifetime](#2438-ioutputstream-object-lifetime)
+      - [2.4.3.9. On Flush](#2439-on-flush)
+    - [2.4.4. The Filter and the Context](#244-the-filter-and-the-context)
+      - [2.4.4.1. Output Chaining](#2441-output-chaining)
+      - [2.4.4.2. Context Implementation](#2442-context-implementation)
+    - [2.4.5. Decoder Extension on Line Decoding](#245-decoder-extension-on-line-decoding)
+      - [2.4.5.1. DltTraceDecoder writing to IOutputStream](#2451-dlttracedecoder-writing-to-ioutputstream)
   - [2.5. Infrastructure](#25-infrastructure)
     - [2.5.1. Version Information](#251-version-information)
 
@@ -310,9 +313,9 @@ The `FilterApp` initializes all objects it needs from the `Domain` layer.
 
 It will loop over all the inputs given in the `FilterConfig`. The
 `InputStreamFactory` knows how to take the input file which is a URI string, and
-generates an appropriate stream. This stream could be a file, serial port, or a
-TCP stream. The `IInputStream` provides additional methods which can
-asynchronously connect the stream if it is required (files don't need to be
+generates an appropriate stream. This stream could be a file, serial port, TCP
+stream, or a UDP stream. The `IInputStream` provides additional methods which
+can asynchronously connect the stream if it is required (files don't need to be
 connected, where network streams do).
 
 The `IInputStream` provides additional information about how to instantiate a
@@ -354,26 +357,6 @@ Other schemes can be added later, such as `http://`, or `https://` that can use
 underlying .NET stream implementations. The decoder just needs a stream and to
 know if the timestamps are generated locally, or come from the stream.
 
-###### 2.3.2.2.1. Implementing a IInputStreamFactory
-
-When implementing a new `IInputStreamFactory`:
-
-* Create a new class that implements `IInputStream`.
-* Create a new class that implements `IInputStreamFactory`, preferably derived
-  instead from `InputStreamFactoryBase`.
-* The new factory checks the stream and instantiates the specific
-  `IInputStream`.
-* Modify the `InputStreamFactory` class to add the scheme and reference the
-  newly created factory class.
-
-The sequence of how the `FilterApp` uses the `IInputStreamFactory` is given:
-
-![InputStreamCreate](out/diagrams/inputstream/Domain.InputStream_Sequence.svg)
-
-When calling `Close()`, the internal stream is disposed of, this allows a new
-call to `Open()`, so the same URI can be reused in a loop (e.g. for retries).
-Once `Dispose()` is called, the `IInputStream` object can no longer be used.
-
 ##### 2.3.2.3. Decoder Factory
 
 The decoder factory is an implementation that is told what kind of decoder to
@@ -388,25 +371,6 @@ which it has presumably received from the `IInputStream`.
 * Checks the type of URI from `IInputStream`
 * Creates a decoder based on TCP, Serial, File. Online mode or not.
 * Handles PCAP and UDP streams
-
-###### 2.3.2.3.1. Adding a new InputFormat
-
-Adding a new `InputFormat` is a little more work, e.g. reading a WireShark file,
-that contains DLT packets transmitted as UDP. It requires:
-
-* Adding a new element to `InputFormat`.
-* If there are aliases to the `InputFormat`, the `CheckInputFormat` method in
-  `CmdOptions` should handle this.
-* The `FilterApp` should handle the case if the user explicitly specified this
-  format on the command line
-* The `InputStreamFactory` should know how to create the `InputStream`. When
-  reading from a file, you might want to modify `DltFileStream`.
-* All the `IOutputStream` objects should handle this input format. It should
-  know how to construct the binary version of the output packet, e.g.
-  `DltOutput`.
-* The `DltDumpTraceReaderFactory` then creates a specific instance of the
-  factory for reading the input format. You'll need to implement the decoder as
-  well.
 
 ##### 2.3.2.4. The Output Stream, Context and Filter
 
@@ -461,11 +425,59 @@ returns a stream and other metadata:
 | `file://../file.dlt` | Storage Header                    | No       | File                     |
 | `ser:..`             | `DLS\1`                           | No       | Local (online mode)      |
 | `tcp://...`          | DLT                               | Yes      | Local (online mode)      |
+| `udp://...`          | DLT                               | No       | Local (online mode)      |
 
 Connecting the stream should be done by the `FilterApp` application in an
 asynchronous manner before giving to the decoder.
 
-#### 2.4.2. DLT Trace Decoder (AutoSAR PRS format)
+##### 2.4.1.1. Implementing a IInputStreamFactory
+
+When implementing a new `IInputStreamFactory`:
+
+* Create a new class that implements `IInputStream`.
+* Create a new class that implements `IInputStreamFactory`, preferably derived
+  instead from `InputStreamFactoryBase`.
+* The new factory checks the stream and instantiates the specific
+  `IInputStream`.
+* Modify the `InputStreamFactory` class to add the scheme and reference the
+  newly created factory class.
+
+The sequence of how the `FilterApp` uses the `IInputStreamFactory` is given:
+
+![InputStreamCreate](out/diagrams/inputstream/Domain.InputStream_Sequence.svg)
+
+When calling `Close()`, the internal stream is disposed of, this allows a new
+call to `Open()`, so the same URI can be reused in a loop (e.g. for retries).
+Once `Dispose()` is called, the `IInputStream` object can no longer be used.
+
+##### 2.4.1.2. Different Types of IInputStream
+
+There are two different types of `IInputStream` objects. The most common type
+decodes byte streams and is connection oriented. These are files, TCP streams
+and serial ports. Reading the PCAP format is considered as a file. The core
+implementation `RJCP.Diagnostics.Log.TraceReader` is used to read the stream.
+
+The second format, which requires more implementation work, is packet based,
+with data returned as packets implemented with the `IPacket` interface. As
+packet inputs are connectionless, there may be multiple simultaneous talkers,
+requiring distinction between them by having multiple different decoders. The
+reader is the custom `TracePacketReader` in the `DltDump` project.
+
+#### 2.4.2. DLT Decoders
+
+The `DltDumpTraceReaderFactory` is the usual factory that the `FilterApp` uses
+to instantiate the reader to decode data from the `IInputStream`. It uses
+internally the `DltDumpTraceDecoderFactory` which creates the appropriate
+decoder given:
+
+* the `InputFormat` (serial, file, pcap, network)
+* if in `OnlineMode` (how to generate the time stamp)
+* what the `IOutputStream` is (output and filtering)
+
+The `TraceReaderFactory` is used for `Stream` inputs, or
+`TracePacketReaderFactory` for `IPacket` inputs.
+
+##### 2.4.2.1. DLT Trace Decoder (AutoSAR PRS format)
 
 There are three decoders implemented in the DLT package for reading a stream of
 bytes and interpreting DLT contents, implemented as per the [AutoSAR R20-11
@@ -486,7 +498,7 @@ constructed. Information about the decoded packet is part of the
 `IDltLineBuilder` object maintained internally in the decoder and must also be
 made present to the binary writer.
 
-#### 2.4.3. DLT Trace Decoder for PCAP and PCAPNG
+##### 2.4.2.2. DLT Trace Decoder for PCAP and PCAPNG
 
 A decoder can be implemented that can decode either a PCAP or PCAPNG file
 format, with detection based on the initial 4 bytes of the file:
@@ -541,7 +553,7 @@ The implementation assumes that each packet is complete, that is, it contains an
 integer number of complete DLT packets. As such, after decoding each Ethernet
 frame, the underlying DLT decoder should be flushed.
 
-##### 2.4.3.1. PCAP-NG Design
+###### 2.4.2.2.1. PCAP-NG Design
 
 Writing a PCAP-NG decoder is a little more work, as there may be multiple
 section header blocks, and per block, there may be multiple interfaces. This
@@ -593,7 +605,7 @@ method:
   following block types:
   * `0x00000006` - Enhanced Packet Block
 
-##### 2.4.3.2. Supported Link Types for PCAP and PCAPNG
+###### 2.4.2.2.2. Supported Link Types for PCAP and PCAPNG
 
 The `PacketDecoder` should support the following Link Types defined by [Link
 Type](https://www.tcpdump.org/linktypes.html)
@@ -602,7 +614,7 @@ Type](https://www.tcpdump.org/linktypes.html)
 * `LINKTYPE_LINUX_SLL` = 0x71 (113)
   * With a 6 byte address, being the MAC of the interface being recorded.
 
-##### 2.4.3.3. Handling Connections within a PCAP File
+###### 2.4.2.2.3. Handling Connections within a PCAP File
 
 There are two scenarios in which UDP packets may not fit within a single UDP
 frame:
@@ -620,7 +632,7 @@ The design to handle these two cases are presented:
 
 ![PCAP](out/diagrams/dltpacketdecoder/DltPcapPacketDecoder.svg)
 
-###### 2.4.3.3.1. IPv4 Packet Fragmentation by the Network Stack
+###### 2.4.2.2.4. IPv4 Packet Fragmentation by the Network Stack
 
 In the first case of IP fragmentation, the IPv4 source address, destination
 address and fragmentation fields (identifier, offset, more fragments) are to be
@@ -654,7 +666,7 @@ For each packet received, `PacketDecoder` then checks:
   * Other results are an error, the packets with the fragmentation offset are
     discarded (after logging) and the packet is added to a new `IpFragment`.
 
-###### 2.4.3.3.2. Issues with IP Fragmentation Reassembly
+###### 2.4.2.2.5. Issues with IP Fragmentation Reassembly
 
 The following scenarios can occur in a PCAP/PCAP-NG file:
 
@@ -696,7 +708,7 @@ It should be noted that PCAP-NG files where the same packet is seen on multiple
 interfaces will not see duplicated packets, as interfaces are seggregated
 through the `InterfaceDescriptionBlock`.
 
-###### 2.4.3.3.3. DLT Packet Fragmentation by the Client
+###### 2.4.2.2.6. DLT Packet Fragmentation by the Client
 
 In the second case of the client fragmenting the payload and transmitting
 multiple packets, the virtual connection must be tracked, each connection in the
@@ -721,7 +733,7 @@ and the addresses to receive (which can be a multicast sink). As each virtual
 connection has its own `DltPcapNetworkTraceFilterDecoder`, this handles the
 second case avoiding corruption should DLT streams be interleaved.
 
-##### 2.4.3.4. Unsupported Features for PCAP / PCAPNG Decoding
+###### 2.4.2.2.7. Unsupported Features for PCAP / PCAPNG Decoding
 
 The following limitations are applied:
 
@@ -732,7 +744,47 @@ The following limitations are applied:
 * Only IPv4 will be supported, until real-world examples exist of IPv6 which can
   be tested with.
 
-#### 2.4.4. Trace Output
+##### 2.4.2.3. Adding a new InputFormat
+
+Adding a new `InputFormat` is a little more work, e.g. reading a WireShark file,
+that contains DLT packets transmitted as UDP. It requires:
+
+* Adding a new element to `InputFormat`.
+* If there are aliases to the `InputFormat`, the `CheckInputFormat` method in
+  `CmdOptions` should handle this.
+* The `FilterApp` should handle the case if the user explicitly specified this
+  format on the command line
+* The `InputStreamFactory` should know how to create the `InputStream`. When
+  reading from a file, you might want to modify `DltFileStream`.
+* All the `IOutputStream` objects should handle this input format. It should
+  know how to construct the binary version of the output packet, e.g.
+  `DltOutput`.
+* The `DltDumpTraceReaderFactory` then creates a specific instance of the
+  factory for reading the input format. You'll need to implement the decoder as
+  well.
+
+##### 2.4.2.4. The Packet Reader
+
+For types, like the UDP input, the `TracePacketReader` takes individual packets
+and gives the packet to a decoder. As packets are connectionless and can
+originate from any source, the source must be verified and a "channel" is
+established. For example, the `UdpPacketReceiver` defines a channel as a pair of
+the source address and port (where the destination is known because a
+`UdpPacketReceiver` can only have one receiver address and port).
+
+The `TracePacketReader` then instantiates a new decoder (it is given the
+`DltDumpTraceDecoderFactory`) every time a new channel is seen. This allows
+packets to be properly reconstructed, even if they only send partial DLT packets
+per UDP packet. It is quite viable that there are multiple devices sending to
+the same end point being received and have no synchronization with one another.
+
+For example, the `DltDumpTraceReaderFactory` is given the `UdpPacketReceiver`
+previously opened by the `DltUdpPacketReceiver`. It passes this and the decoder
+factory to `TracePacketReader` to start decoding lines.
+
+![TracePacketReader](out/diagrams/domainpacketreader/InputStreamFactory.svg)
+
+#### 2.4.3. Trace Output
 
 There are multiple output sinks, each shall also implement the `IOutputStream`.
 The sinks are:
@@ -761,12 +813,12 @@ on the output file name:
 * `*.dlt`: DLT File Output
 * Any other file name: Text File Output
 
-##### 2.4.4.1. Console Output
+##### 2.4.3.1. Console Output
 
 This class knows only how to output the DLT trace line to the console. The
 construction of this object must know if the position should be printed or not.
 
-##### 2.4.4.2. Text File Output
+##### 2.4.3.2. Text File Output
 
 For consistent output to a text file in UTF8 format, it is possible to write to
 a text file output. When using shell redirection on Windows Power Shell, the
@@ -780,7 +832,7 @@ not.
 It must maintain a text stream, the file name of the output, automatically split
 the output on each line as required by the inputs.
 
-##### 2.4.4.3. DLT File Output
+##### 2.4.3.3. DLT File Output
 
 The DLT file output writer implements both methods for writing data, one only
 containing the DLT line, the other containing the DLT line with the binary
@@ -799,7 +851,7 @@ be constructed and written.
 This output writer also maintains a binary stream, the file name based on a
 template, the size of the output stream on when to split.
 
-##### 2.4.4.4. File Templates for DLT and Text Output
+##### 2.4.3.4. File Templates for DLT and Text Output
 
 The functionality for writing DLT and text files have components in common and
 should be implemented in the `OutputBase`:
@@ -837,7 +889,7 @@ the `%FILE%` from `SetInput`, the `%CDATE%`, `%CTIME%` and `%CDATETIME%` from
 the first `Write` just before opening the file. The `%CTR%` is maintained
 internally.
 
-##### 2.4.4.5. Input File Concatenation
+##### 2.4.3.5. Input File Concatenation
 
 Input files shall be concatenated if the output file name is independent of the
 input file name. All inputs will be processed one after the other, and split as
@@ -849,7 +901,7 @@ every input, there is a separate output file.
 
 Rule: `AllowConcatenation = !%FILE%`
 
-##### 2.4.4.6. Splitting Output Files
+##### 2.4.3.6. Splitting Output Files
 
 If the `Split` option is provided so that files should be split, then files will
 be split and dependent on the variables `%CTR%` and `%CDATETIME%`, `%CDATE%`,
@@ -863,7 +915,7 @@ above mentioned variables.
 
 Rule: `AllowSplit = %CTR% || %CDATE% || %CTIME% || %CDATETIME%`
 
-##### 2.4.4.7. Detailed Logic for Splitting and Concatenating Files
+##### 2.4.3.7. Detailed Logic for Splitting and Concatenating Files
 
 To handle the logic of input files being converted to output files, it is split
 into two logical paths, depending on `AllowConcatenation`. For the current
@@ -930,7 +982,7 @@ writes files.
     * Otherwise, add to the Segments list.
       * `FileMode = Force ? CreateNew : Create`
 
-##### 2.4.4.8. IOutputStream Object Lifetime
+##### 2.4.3.8. IOutputStream Object Lifetime
 
 As indicated above, it is important that this object is created once and used
 for all input files as in the previous section on concatenating output files.
@@ -938,7 +990,7 @@ The `IOutputStream` is then used directly by the `FilterApp` or used by the
 decoder. But the `FilterApp` always calls when a new file is processed, between
 instantiations of the decoder.
 
-##### 2.4.4.9. On Flush
+##### 2.4.3.9. On Flush
 
 When the input stream has reached end of file, or the decoder is closed, the
 `DltDecoder` has the method `Flush()` called. This should result in the
@@ -947,7 +999,7 @@ remaining data in the packet being written to the `IOutputStream`. The
 stream, thus causing problems as in the previous section about the object
 lifetime.
 
-#### 2.4.5. The Filter and the Context
+#### 2.4.4. The Filter and the Context
 
 The filter is used for matching conditions of a trace line, as given by user
 input. The context maintains information for when a filter matches, so that
@@ -976,7 +1028,7 @@ required. The `Context` object maintains:
 * A history of lines for the `--before-context` option
 * A counter of how many lines should be given for the `--after-context` option
 
-##### 2.4.5.1. Output Chaining
+##### 2.4.4.1. Output Chaining
 
 The filter and the context shall implement the `IOutputStream` interface. It
 shall have a constructor allowing another `IOutputStream`, which the filter and
@@ -999,7 +1051,7 @@ separation of the output format from the filtering.
 
 The property `SupportsBinary` and the method `SetInput` are a passthrough.
 
-##### 2.4.5.2. Context Implementation
+##### 2.4.4.2. Context Implementation
 
 The `Context` class implements checking the filter and notifying of changes. It
 must necessarily have copy operations for the duration of the history given by
@@ -1036,13 +1088,13 @@ On further iteration and new lines, the history buffer is not updated, while
 `context.IsAfterContext()` is true, which also decrements the internal counter
 for how many lines should be printed.
 
-#### 2.4.6. Decoder Extension on Line Decoding
+#### 2.4.5. Decoder Extension on Line Decoding
 
 The property `IOutputStream.SupportsBinary` can be used to determine if the
 `IOutputStream` object should be given to a `DltTraceDecoder`, or be parsed by
 the `FilterApp`.
 
-##### 2.4.6.1. DltTraceDecoder writing to IOutputStream
+##### 2.4.5.1. DltTraceDecoder writing to IOutputStream
 
 While in the use case for console output, the line is given by the result of
 `GetLineAsync()`, the ability to write to a file requires knowledge of the DLT
