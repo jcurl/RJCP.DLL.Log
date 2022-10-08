@@ -278,7 +278,10 @@
   <data name="Help510_InputTcp" xml:space="preserve">
     <value>tcp://&lt;hostname&gt;[:&lt;port&gt;] - connect to a trace server via TCP. If the port is not provided, the default of 3490 is assumed. Time stamps are taken from the local computer.</value>
   </data>
-  <data name="Help515_InputSerial" xml:space="preserve">
+  <data name="Help515_InputUdp" xml:space="preserve">
+    <value>udp://&lt;localip|mcast&gt;[:port] - listen on the local IPv4 address specified (for all interfaces, provide 0.0.0.0), or on a multicast IPv4 address in the range 224.0.0.0-239.255.255.255. The default port 3490 is assumed. Time stamps are taken from the local computer.</value>
+  </data>
+  <data name="Help520_InputSerial" xml:space="preserve">
     <value>ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr.</value>
   </data>
   <data name="Help800_ExitCodes" xml:space="preserve">

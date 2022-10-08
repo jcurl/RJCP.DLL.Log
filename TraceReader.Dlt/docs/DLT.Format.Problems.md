@@ -43,8 +43,9 @@ following issues are well known:
   meaning of the content of the packet. The length of the packet is no longer
   reliable.
 * Encapsulation within UDP packets may result in larger chunks of data being
-  lost, up to 1400 bytes. If a fragmented UDP packet contains DLT then a large
-  chunk of that data may be lost.
+  lost, up to 1472 bytes. If a UDP packet is lost, and the DLT packets are
+  fragmented over multiple UDP packets (as opposed to IPv4 fragmentation),
+  synchronisation must occur
 * Buffer handling errors in implementations when sending data may result in
   corruption of the DLT packets before the data is even sent. In this case, an
   arbitrary amount of data may be lost anywhere in the stream, even a TCP stream
@@ -96,21 +97,21 @@ that a packet is valid or not.
 
 For example, let's assume that the first byte of this message is lost.
 
-| Bytes         | Description                               |
-| ------------- | ----------------------------------------- |
-| `3d`          | Version 1, Session Id, ECU Id, Time Stamp |
-| `7f`          | Counter 127                               |
-| `00 28`       | Length                                    |
-| `45 43 55 31` | ECU1                                      |
-| `00 00 00 32` | SessionId = 50                            |
-| `00 00 30 20` | Time Stamp                                |
-| `41`          | Message Info (Verbose, LOG_INFO)          |
-| `01`          | One Argument                              |
-| `41 50 50 31` | APP1                                      |
-| `43 54 58 31` | CTX1                                      |
-| `00 82 00 00` | Argument #1 String                        |
-| `08 00`       | Argument #1 String length 8 bytes         |
-| `4d 65 73 73 61 67 65 00` | "Message"                     |
+| Bytes                     | Description                               |
+| ------------------------- | ----------------------------------------- |
+| `3d`                      | Version 1, Session Id, ECU Id, Time Stamp |
+| `7f`                      | Counter 127                               |
+| `00 28`                   | Length                                    |
+| `45 43 55 31`             | ECU1                                      |
+| `00 00 00 32`             | SessionId = 50                            |
+| `00 00 30 20`             | Time Stamp                                |
+| `41`                      | Message Info (Verbose, LOG_INFO)          |
+| `01`                      | One Argument                              |
+| `41 50 50 31`             | APP1                                      |
+| `43 54 58 31`             | CTX1                                      |
+| `00 82 00 00`             | Argument #1 String                        |
+| `08 00`                   | Argument #1 String length 8 bytes         |
+| `4d 65 73 73 61 67 65 00` | "Message"                                 |
 
 Consider now the first byte is lost, as could be on a serial stream.
 
@@ -173,7 +174,7 @@ correctness of each packet and its boundaries.
 If a Fibex file is provided, it may not have any errors, and must also perfectly
 match for heuristics to be applied. If the wrong dynamic data is provided in the
 Fibex file (or specifically, the length of the dynamic data is different to that
-described by the Fibex file), heuristcs may discard an actually correct packet.
+described by the Fibex file), heuristics may discard an actually correct packet.
 
 An implementor of the DLT decoder must decide if the Fibex file is wrong (then
 assume the packet length is correct), or there was corruption in the data and
@@ -234,7 +235,7 @@ confusion.
 
 To avoid even that problem, one could define the concept of sessions, where each
 packet has a value which is the same for a single stream, so that the assumption
-an ecapsulated packet has a different session can be ignored (or identified as
+an encapsulated packet has a different session can be ignored (or identified as
 such, making it clear there are multiple recordings in the log).
 
 Negatively, this proposal necessarily increases the size of a DLT message, which

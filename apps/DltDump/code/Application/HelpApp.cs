@@ -91,7 +91,8 @@
             Write(2, 4, HelpResources.Help506_InputFilePcap);
             Write(2, 4, HelpResources.Help507_InputFilePcapNg);
             Write(2, 4, HelpResources.Help510_InputTcp);
-            Write(2, 4, HelpResources.Help515_InputSerial);
+            Write(2, 4, HelpResources.Help515_InputUdp);
+            Write(2, 4, HelpResources.Help520_InputSerial);
             Write();
             Write(HelpResources.Help800_ExitCodes);
             Write();

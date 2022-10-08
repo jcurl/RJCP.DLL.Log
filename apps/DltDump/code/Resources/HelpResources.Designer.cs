@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class HelpResources {
@@ -486,11 +486,20 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to udp://&lt;localip|mcast&gt;[:port] - listen on the local IPv4 address specified (for all interfaces, provide 0.0.0.0), or on a multicast IPv4 address in the range 224.0.0.0-239.255.255.255. The default port 3490 is assumed. Time stamps are taken from the local computer..
+        /// </summary>
+        internal static string Help515_InputUdp {
+            get {
+                return ResourceManager.GetString("Help515_InputUdp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr..
         /// </summary>
-        internal static string Help515_InputSerial {
+        internal static string Help520_InputSerial {
             get {
-                return ResourceManager.GetString("Help515_InputSerial", resourceCulture);
+                return ResourceManager.GetString("Help520_InputSerial", resourceCulture);
             }
         }
         

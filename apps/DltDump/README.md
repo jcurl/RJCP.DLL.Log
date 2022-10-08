@@ -11,21 +11,22 @@ DltDump is a tool that reads DLT Version 1 formatted files.
   - [1.6. Filtering](#16-filtering)
 - [2. Common Use Cases](#2-common-use-cases)
   - [2.1. Recording Data from a TCP Stream](#21-recording-data-from-a-tcp-stream)
-  - [2.2. Recording data from a Serial Stream](#22-recording-data-from-a-serial-stream)
-  - [2.3. Recording data from a Serial Stream in the Network Format](#23-recording-data-from-a-serial-stream-in-the-network-format)
-  - [2.4. Converting a Recorded File to Text](#24-converting-a-recorded-file-to-text)
-  - [2.5. Converting a PCAP File to DLT](#25-converting-a-pcap-file-to-dlt)
-  - [2.6. Search for a String](#26-search-for-a-string)
-  - [2.7. Search for a Regular Expression](#27-search-for-a-regular-expression)
-  - [2.8. Filter for a Range of Dates](#28-filter-for-a-range-of-dates)
-  - [2.9. Case Insensitive Search](#29-case-insensitive-search)
-  - [2.10. Printing Context (like 'grep')](#210-printing-context-like-grep)
-  - [2.11. Filtering for an Application Identifier](#211-filtering-for-an-application-identifier)
-  - [2.12. Other Filters](#212-other-filters)
-  - [2.13. Concatenating files](#213-concatenating-files)
-  - [2.14. Splitting files](#214-splitting-files)
-  - [2.15. Splitting files on Input based on Time Stamp](#215-splitting-files-on-input-based-on-time-stamp)
-  - [2.16. Searching for Corruption on the Input DLT File](#216-searching-for-corruption-on-the-input-dlt-file)
+  - [2.2. Recording data sent via UDP](#22-recording-data-sent-via-udp)
+  - [2.3. Recording data from a Serial Stream](#23-recording-data-from-a-serial-stream)
+  - [2.4. Recording data from a Serial Stream in the Network Format](#24-recording-data-from-a-serial-stream-in-the-network-format)
+  - [2.5. Converting a Recorded File to Text](#25-converting-a-recorded-file-to-text)
+  - [2.6. Converting a PCAP File to DLT](#26-converting-a-pcap-file-to-dlt)
+  - [2.7. Search for a String](#27-search-for-a-string)
+  - [2.8. Search for a Regular Expression](#28-search-for-a-regular-expression)
+  - [2.9. Filter for a Range of Dates](#29-filter-for-a-range-of-dates)
+  - [2.10. Case Insensitive Search](#210-case-insensitive-search)
+  - [2.11. Printing Context (like 'grep')](#211-printing-context-like-grep)
+  - [2.12. Filtering for an Application Identifier](#212-filtering-for-an-application-identifier)
+  - [2.13. Other Filters](#213-other-filters)
+  - [2.14. Concatenating files](#214-concatenating-files)
+  - [2.15. Splitting files](#215-splitting-files)
+  - [2.16. Splitting files on Input based on Time Stamp](#216-splitting-files-on-input-based-on-time-stamp)
+  - [2.17. Searching for Corruption on the Input DLT File](#217-searching-for-corruption-on-the-input-dlt-file)
 - [3. Detailed Usage](#3-detailed-usage)
   - [3.1. Input Formats](#31-input-formats)
   - [3.2. Time Stamps](#32-time-stamps)
@@ -79,7 +80,7 @@ DltDump can read from:
 
 * A file on disk;
   * As recorded by a logger, containing a storage header; or
-  * binary data, recorded from a TCP stream (e.g. with netcat), or serial.
+  * binary data, recorded from a TCP stream (e.g. with `netcat`), or serial.
   * Recorded with a PCAP or PCAP-NG file
 * a TCP server; or
 * a Serial port.
@@ -121,7 +122,19 @@ The input format is assumed to be in the network format. Data recorded by the
 network TCP stream uses the time stamp of the PC at the time the message is
 seen.
 
-### 2.2. Recording data from a Serial Stream
+### 2.2. Recording data sent via UDP
+
+Devices may send data to a unicast or a multicast address. Unicast address must
+be the IPv4 address of a local interface. Alternatively join a multicast group
+and listen for DLT messages.
+
+Listen on the multicast group 224.0.1.1
+
+```sh
+dltdump --output record.dlt udp://239.255.1.1
+```
+
+### 2.3. Recording data from a Serial Stream
 
 To record data from `/dev/ttyUSB0`:
 
@@ -138,7 +151,7 @@ dltdump /output:record.dlt ser:COM1,115200,8,n,1
 The packets are assumed to have a serial header `DLS\1`. Data recorded by the
 serial port uses the time stamp of the PC at the time the message is seen.
 
-### 2.3. Recording data from a Serial Stream in the Network Format
+### 2.4. Recording data from a Serial Stream in the Network Format
 
 Some devices may not send the `DLS\1` header, but only send the standard header.
 It is recommended to use the serial header on serial streams due to common
@@ -149,7 +162,7 @@ Problems](../../TraceReader.Dlt/docs/DLT.Format.Problems.md).
 dltdump --output record.dlt --format net ser:/dev/ttyUSB0,115200,8,n,1
 ```
 
-### 2.4. Converting a Recorded File to Text
+### 2.5. Converting a Recorded File to Text
 
 To read a recorded DLT file and convert it to text. The extension `.txt` is used
 to know that the output should be written in text form, instead of a DLT packet.
@@ -158,7 +171,7 @@ to know that the output should be written in text form, instead of a DLT packet.
 dltdump --output convert.txt record.dlt
 ```
 
-### 2.5. Converting a PCAP File to DLT
+### 2.6. Converting a PCAP File to DLT
 
 To convert an existing PCAP or PCAP-NG file to a DLT, the input extension must
 be `.pcap` or `.pcapng`, and the output extension must be `.dlt`.
@@ -171,7 +184,7 @@ Invalid packets, including those that have only partial captures, are ignored.
 They are not printed on the command line, or put in the log file. Only packets
 with the destination port 3490 are captured.
 
-### 2.6. Search for a String
+### 2.7. Search for a String
 
 Search for a specific string in the output and print to the console
 
@@ -181,7 +194,7 @@ dltdump -s substring record.dlt
 
 This is conceptually similar to doing a "grep" over the input.
 
-### 2.7. Search for a Regular Expression
+### 2.8. Search for a Regular Expression
 
 Likewise, .NET regular expressions are supported
 
@@ -192,7 +205,7 @@ dltdump -r "\\d+" record.dlt
 This searches for the regular expression `\d+`, which matches for all lines that
 have a number.
 
-### 2.8. Filter for a Range of Dates
+### 2.9. Filter for a Range of Dates
 
 Return all time stamps that are either after, or before a particular date. This
 helps create a log file that has only a specific range.
@@ -204,7 +217,7 @@ This specific example will only return lines in the range 18th June 2022, time
 dltdump --not-before 2022-06-18T10:00:00 --not-after 2022-06-18T10:05:00
 ```
 
-### 2.9. Case Insensitive Search
+### 2.10. Case Insensitive Search
 
 If the string to be sought should be case insensitive, add the option `i`:
 
@@ -212,7 +225,7 @@ If the string to be sought should be case insensitive, add the option `i`:
 dltdump -i -s substring record.dlt
 ```
 
-### 2.10. Printing Context (like 'grep')
+### 2.11. Printing Context (like 'grep')
 
 If you want to see the lines before and after a match, use the context options
 `-A` (after) and `-B` (before):
@@ -221,7 +234,7 @@ If you want to see the lines before and after a match, use the context options
 dltdump -s substring -A 10 -B 2 record.dlt
 ```
 
-### 2.11. Filtering for an Application Identifier
+### 2.12. Filtering for an Application Identifier
 
 If you only want to see logs from a particular application on the console:
 
@@ -235,7 +248,7 @@ Or if you want to output the result to a new file `filtered.dlt`
 dltdump --appid APP1 --output filtered.dlt record.dlt
 ```
 
-### 2.12. Other Filters
+### 2.13. Other Filters
 
 The options for filtering are:
 
@@ -251,7 +264,7 @@ The options for filtering are:
 You can provide the filters, they have a logical "and" relationship. Providing
 the same filter option (e.g. `appid`) has a logical "or" relationship.
 
-### 2.13. Concatenating files
+### 2.14. Concatenating files
 
 If you have multiple files, you can parse and join them together. The ordering
 is important (no sorting of the input files are made):
@@ -266,7 +279,7 @@ Or join many PCAP files into one DLT file
 dltdump --output result.dlt file001.pcap file002.pcap file003.pcap
 ```
 
-### 2.14. Splitting files
+### 2.15. Splitting files
 
 If you have a large file, you can split it up into many smaller files. This
 example takes the input `record.dlt` and splits it up into files named
@@ -276,7 +289,7 @@ example takes the input `record.dlt` and splits it up into files named
 dltdump --split 100M --output split_%CTR%.dlt record.dlt
 ```
 
-### 2.15. Splitting files on Input based on Time Stamp
+### 2.16. Splitting files on Input based on Time Stamp
 
 An extension of splitting the files is to record data, and to split the output
 into files of particular sizes, with the file name having the time stamp when
@@ -286,7 +299,7 @@ the file was started.
 dltdump --split 50M --output record_%CDATETIME%.dlt tcp://192.158.1.10
 ```
 
-### 2.16. Searching for Corruption on the Input DLT File
+### 2.17. Searching for Corruption on the Input DLT File
 
 If the "dlt-viewer" isn't showing data as you'd expect from recorded input, you
 can filter for SKIP data, and show the position of the input file. Let's say
