@@ -1,6 +1,7 @@
 #ifndef RJCP_DLT_XX_H
 #define RJCP_DLT_XX_H
 
+#include <array>
 #include <cstddef>
 
 #include "sockaddr4.h"

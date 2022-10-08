@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include "config.h"
 #include "udp4.h"
 
 rjcp::net::udp4::~udp4() noexcept
@@ -44,11 +45,82 @@ int rjcp::net::udp4::reuseaddr(bool reuse) noexcept
     }
 
     int value = reuse ? 1 : 0;
-    int result = ::setsockopt(this->m_socket_fd, SOL_SOCKET, SO_REUSEADDR, &value, sizeof(value));
-    if (result < 0) {
+    return ::setsockopt(this->m_socket_fd, SOL_SOCKET, SO_REUSEADDR,
+        &value, sizeof(value));
+}
+
+int rjcp::net::udp4::multicast_loop(sockaddr4& group, bool enabled) noexcept
+{
+    if (!group.is_valid() || !this->is_open()) {
+        errno = EINVAL;
         return -1;
     }
+
+#ifdef HAVE_IP_MULTICAST_LOOP
+    char loopch = enabled ? 1 : 0;
+    return ::setsockopt(this->m_socket_fd, IPPROTO_IP, IP_MULTICAST_LOOP,
+        &loopch, sizeof(loopch));
+#else
     return 0;
+#endif
+}
+
+int rjcp::net::udp4::multicast_join(sockaddr4& addr) noexcept
+{
+    if (!addr.is_valid() || !this->is_open()) {
+        errno = EINVAL;
+        return -1;
+    }
+
+#ifdef HAVE_IP_MULTICAST_IF
+    ::sockaddr_in localaddr = addr.get();
+    return ::setsockopt(this->m_socket_fd, IPPROTO_IP, IP_MULTICAST_IF,
+        &(localaddr.sin_addr), sizeof(in_addr));
+#else
+    return 0;
+#endif
+}
+
+int rjcp::net::udp4::multicast_ttl(int ttl) noexcept
+{
+    if (ttl <= 0 || ttl > 255 || !this->is_open()) {
+        errno = EINVAL;
+        return -1;
+    }
+
+#ifdef HAVE_IP_MULTICAST_TTL
+    unsigned char mttl = ttl;
+    return ::setsockopt(this->m_socket_fd, IPPROTO_IP, IP_MULTICAST_TTL,
+        &mttl, sizeof(mttl));
+#else
+    return 0;
+#endif
+}
+
+int rjcp::net::udp4::set_sendbuf(int sendbuf) noexcept
+{
+    if (sendbuf <= 0) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    return ::setsockopt(this->m_socket_fd, SOL_SOCKET, SO_SNDBUF,
+        &sendbuf, sizeof(sendbuf));
+}
+
+int rjcp::net::udp4::get_sendbuf() noexcept
+{
+    if (!this->is_open()) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int buffsize;
+    socklen_t optlen = sizeof(buffsize);
+    int res = ::getsockopt(this->m_socket_fd, SOL_SOCKET, SO_SNDBUF,
+        &buffsize, &optlen);
+    if (res < 0) return res;
+    return buffsize;
 }
 
 int rjcp::net::udp4::bind(sockaddr4& addr) noexcept
