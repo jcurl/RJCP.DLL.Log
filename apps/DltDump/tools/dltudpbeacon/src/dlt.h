@@ -43,11 +43,14 @@ namespace rjcp::log {
         auto write(const std::string& message) noexcept -> int;
 
     private:
+        static constexpr int max_dlt_stdhdr_len = 16;  // Maximum size of the standard header. It can be smaller
+        static constexpr int max_dlt_exthdr_len = 10;  // Maximum size of the extended header.
+
         rjcp::net::udp4& m_sender;
         const rjcp::net::sockaddr4& m_dest;
         std::uint8_t m_count{0};
-        std::array<uint8_t, 12> m_stdhdr;
-        std::array<uint8_t, 10> m_exthdr;
+        std::array<uint8_t, max_dlt_stdhdr_len> m_stdhdr;
+        std::array<uint8_t, max_dlt_exthdr_len> m_exthdr;
     };
 }
 

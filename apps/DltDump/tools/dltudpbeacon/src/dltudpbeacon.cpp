@@ -1,12 +1,14 @@
+#include <cerrno>
+#include <chrono>
+#include <cstring>
 #include <iostream>
 #include <memory>
-#include <vector>
 #include <sstream>
-#include <chrono>
+#include <string_view>
 #include <thread>
-#include <cerrno>
-#include <cstring>
+#include <vector>
 
+#include "dltudpbeacon.h"
 #include "dlt.h"
 #include "udp4.h"
 #include "sockaddr4.h"
@@ -29,8 +31,8 @@ auto main(int argc, char* argv[]) -> int
         return 1;
     }
 
-    rjcp::net::sockaddr4 src(arguments[1], 3490);
-    rjcp::net::sockaddr4 dest("239.255.42.99", 3490);
+    rjcp::net::sockaddr4 src(arguments[1], dlt_port);
+    rjcp::net::sockaddr4 dest(tx_multicast, dlt_port);
     if (!dest.is_valid()) {
         std::cout << "Usage: " << arguments[0] << " <localaddrip>" << std::endl;
         std::cout << " Invalid address" << std::endl;
@@ -46,8 +48,6 @@ auto main(int argc, char* argv[]) -> int
 
     int bufsize = udp.get_sendbuf();
     std::cout << "Buffer size for socket: " << bufsize << std::endl;
-    //if (udp.set_sendbuf(1480) < 0)
-    //    write_error("setsockopt(SO_SENDBUF)");
 
     if (udp.multicast_loop(dest, false) < 0)
         write_error("setsockopt(IP_MULTICAST_LOOP)");
@@ -66,15 +66,18 @@ auto main(int argc, char* argv[]) -> int
 
     rjcp::log::dlt dlt(udp, dest, "ECU1", "APP1", "CTX1");
 
+    constexpr int loops = 1000;     // Some arbitrary number before we finish
+    constexpr int frequency = 2;    // 2 messages per second
+    constexpr int delay = 1000 / frequency;
     int num = 1;
-    while(num < 1000) {
+    while(num < loops) {
         std::stringstream ss;
         ss << "A DLT message from " << arguments[1] << ". Count is " << num;
         if (dlt.write(ss.str()) < 0)
             write_error("dlt.write()");
 
         num++;
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
 
     udp.close();

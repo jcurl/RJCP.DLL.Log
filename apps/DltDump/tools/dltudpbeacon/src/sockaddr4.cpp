@@ -6,12 +6,17 @@
 
 #include <cstring>
 #include <iostream>
+#include <limits>
 
 #include "sockaddr4.h"
 
+// In IPv4, the port number is 16-bits (uint16_t), so this is the maximum port
+// number allowed.
+constexpr int max_port = std::numeric_limits<uint16_t>::max();
+
 rjcp::net::sockaddr4::sockaddr4(const std::string& addr, int port) noexcept
 {
-    if (port < 0 || port > 65535) {
+    if (port < 0 || port > max_port) {
         this->m_addr_in.sin_family = 0;
         return;
     }

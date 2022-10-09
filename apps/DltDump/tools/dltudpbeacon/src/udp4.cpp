@@ -1,16 +1,21 @@
-#include <iostream>
-#include <string>
-#include <memory>
-#include <cerrno>
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include <cerrno>
+#include <iostream>
+#include <limits>
+#include <memory>
+#include <string>
+
 #include "config.h"
 #include "udp4.h"
+
+// In IPv4, the port number is 16-bits (uint16_t), so this is the maximum port
+// number allowed.
+constexpr int max_ttl = std::numeric_limits<uint8_t>::max();
 
 rjcp::net::udp4::~udp4() noexcept
 {
@@ -83,7 +88,7 @@ auto rjcp::net::udp4::multicast_join(sockaddr4& addr) noexcept -> int
 
 auto rjcp::net::udp4::multicast_ttl(int ttl) noexcept -> int
 {
-    if (ttl <= 0 || ttl > 255 || !this->is_open()) {
+    if (ttl <= 0 || ttl > max_ttl || !this->is_open()) {
         errno = EINVAL;
         return -1;
     }
