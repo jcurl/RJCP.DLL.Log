@@ -40,7 +40,7 @@ namespace rjcp::log {
          * @param message The payload string
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int write(const std::string& message) noexcept;
+        auto write(const std::string& message) noexcept -> int;
 
     private:
         rjcp::net::udp4& m_sender;

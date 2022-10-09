@@ -21,7 +21,7 @@ static void write_error(const std::string& message)
     write_error(message, errno);
 }
 
-int main(int argc, char* argv[])
+auto main(int argc, char* argv[]) -> int
 {
     std::vector<std::string> arguments(argv, argv + argc);
     if (arguments.size() != 2) {

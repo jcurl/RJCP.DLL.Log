@@ -35,14 +35,14 @@ namespace rjcp::net {
          * @return true if this instance is valid.
          * @return false if this instance was initialized incorrectly.
          */
-        bool is_valid() const noexcept;
+        auto is_valid() const noexcept -> bool;
 
         /**
          * @brief Gets the ::sockaddr_in reference, that can be used with sock API.
          *
          * @return const ::sockaddr_in& the socket structure to give to sock API.
          */
-        const ::sockaddr_in& get() const noexcept;
+        auto get() const noexcept -> const ::sockaddr_in&;
 
     private:
         ::sockaddr_in m_addr_in;

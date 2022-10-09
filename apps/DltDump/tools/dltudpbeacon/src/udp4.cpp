@@ -17,7 +17,7 @@ rjcp::net::udp4::~udp4() noexcept
     close();
 }
 
-int rjcp::net::udp4::open() noexcept
+auto rjcp::net::udp4::open() noexcept -> int
 {
     if (this->m_socket_fd != -1) {
         errno = EINVAL;
@@ -32,12 +32,12 @@ int rjcp::net::udp4::open() noexcept
     return 0;
 }
 
-bool rjcp::net::udp4::is_open() const noexcept
+auto rjcp::net::udp4::is_open() const noexcept -> bool
 {
     return this->m_socket_fd != -1;
 }
 
-int rjcp::net::udp4::reuseaddr(bool reuse) noexcept
+auto rjcp::net::udp4::reuseaddr(bool reuse) noexcept -> int
 {
     if (!this->is_open()) {
         errno = EINVAL;
@@ -49,7 +49,7 @@ int rjcp::net::udp4::reuseaddr(bool reuse) noexcept
         &value, sizeof(value));
 }
 
-int rjcp::net::udp4::multicast_loop(sockaddr4& group, bool enabled) noexcept
+auto rjcp::net::udp4::multicast_loop(sockaddr4& group, bool enabled) noexcept -> int
 {
     if (!group.is_valid() || !this->is_open()) {
         errno = EINVAL;
@@ -65,7 +65,7 @@ int rjcp::net::udp4::multicast_loop(sockaddr4& group, bool enabled) noexcept
 #endif
 }
 
-int rjcp::net::udp4::multicast_join(sockaddr4& addr) noexcept
+auto rjcp::net::udp4::multicast_join(sockaddr4& addr) noexcept -> int
 {
     if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
@@ -81,7 +81,7 @@ int rjcp::net::udp4::multicast_join(sockaddr4& addr) noexcept
 #endif
 }
 
-int rjcp::net::udp4::multicast_ttl(int ttl) noexcept
+auto rjcp::net::udp4::multicast_ttl(int ttl) noexcept -> int
 {
     if (ttl <= 0 || ttl > 255 || !this->is_open()) {
         errno = EINVAL;
@@ -97,7 +97,7 @@ int rjcp::net::udp4::multicast_ttl(int ttl) noexcept
 #endif
 }
 
-int rjcp::net::udp4::set_sendbuf(int sendbuf) noexcept
+auto rjcp::net::udp4::set_sendbuf(int sendbuf) noexcept -> int
 {
     if (sendbuf <= 0) {
         errno = EINVAL;
@@ -108,7 +108,7 @@ int rjcp::net::udp4::set_sendbuf(int sendbuf) noexcept
         &sendbuf, sizeof(sendbuf));
 }
 
-int rjcp::net::udp4::get_sendbuf() noexcept
+auto rjcp::net::udp4::get_sendbuf() noexcept -> int
 {
     if (!this->is_open()) {
         errno = EINVAL;
@@ -123,7 +123,7 @@ int rjcp::net::udp4::get_sendbuf() noexcept
     return buffsize;
 }
 
-int rjcp::net::udp4::bind(sockaddr4& addr) noexcept
+auto rjcp::net::udp4::bind(sockaddr4& addr) noexcept -> int
 {
     if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
@@ -135,7 +135,7 @@ int rjcp::net::udp4::bind(sockaddr4& addr) noexcept
         reinterpret_cast<const ::sockaddr*>(&addr.get()), sizeof(::sockaddr_in));
 }
 
-int rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept
+auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept -> int
 {
     if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
@@ -154,7 +154,7 @@ int rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buf
     return 0;
 }
 
-int rjcp::net::udp4::close() noexcept
+auto rjcp::net::udp4::close() noexcept -> int
 {
     if (this->is_open()) {
         errno = EINVAL;

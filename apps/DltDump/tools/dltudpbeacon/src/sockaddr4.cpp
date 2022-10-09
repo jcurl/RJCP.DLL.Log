@@ -22,13 +22,13 @@ rjcp::net::sockaddr4::sockaddr4(const std::string& addr, int port) noexcept
     this->m_addr_in.sin_port = htons(port);
 }
 
-bool rjcp::net::sockaddr4::is_valid() const noexcept
+auto rjcp::net::sockaddr4::is_valid() const noexcept -> bool
 {
     return !(this->m_addr_in.sin_family != AF_INET ||
         this->m_addr_in.sin_addr.s_addr == INADDR_NONE);
 }
 
-const ::sockaddr_in& rjcp::net::sockaddr4::get() const noexcept
+auto rjcp::net::sockaddr4::get() const noexcept -> const ::sockaddr_in&
 {
     return this->m_addr_in;
 }

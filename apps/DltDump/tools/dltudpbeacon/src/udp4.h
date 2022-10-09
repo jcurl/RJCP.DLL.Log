@@ -28,7 +28,7 @@ namespace rjcp::net {
          *
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int open() noexcept;
+        auto open() noexcept -> int;
 
         /**
          * @brief Tests if the socket is opened
@@ -36,7 +36,7 @@ namespace rjcp::net {
          * @return true if the socket is already open.
          * @return false if the socket is not open.
          */
-        bool is_open() const noexcept;
+        auto is_open() const noexcept -> bool;
 
         /**
          * @brief Enable the multicast loop to enable or disable the loopback of
@@ -49,7 +49,7 @@ namespace rjcp::net {
          * @param enabled If loopback is enabled
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int multicast_loop(sockaddr4& group, bool enabled) noexcept;
+        auto multicast_loop(sockaddr4& group, bool enabled) noexcept -> int;
 
         /**
          * @brief Set the local device for a multicast socket.
@@ -57,7 +57,7 @@ namespace rjcp::net {
          * @param addr The local interface to set
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int multicast_join(sockaddr4& addr) noexcept;
+        auto multicast_join(sockaddr4& addr) noexcept -> int;
 
         /**
          * @brief Set or read the time-to-live value of outgoing multicast
@@ -66,7 +66,7 @@ namespace rjcp::net {
          * @param ttl The Time To Live field set for the multicast packets.
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int multicast_ttl(int ttl) noexcept;
+        auto multicast_ttl(int ttl) noexcept -> int;
 
         /**
          * @brief Set the socket option for reuse
@@ -76,7 +76,7 @@ namespace rjcp::net {
          * @param reuse a boolean value if the socket address should be reused or not
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int reuseaddr(bool reuse) noexcept;
+        auto reuseaddr(bool reuse) noexcept -> int;
 
         /**
          * @brief Set the amount of send buffer for the socket.
@@ -84,7 +84,7 @@ namespace rjcp::net {
          * @param sendbuf The size of the bytes to send.
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int set_sendbuf(int sendbuf) noexcept;
+        auto set_sendbuf(int sendbuf) noexcept -> int;
 
         /**
          * @brief Get the amount of send buffer for the socket.
@@ -92,7 +92,7 @@ namespace rjcp::net {
          * @return int The amount of send buffer if the result is positive, else
          * if -1 an error occurred. Check errno.
          */
-        int get_sendbuf() noexcept;
+        auto get_sendbuf() noexcept -> int;
 
         /**
          * @brief Bind the socket to a particular address and port.
@@ -100,7 +100,7 @@ namespace rjcp::net {
          * @param addr The address to bind to.
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int bind(sockaddr4& addr) noexcept;
+        auto bind(sockaddr4& addr) noexcept -> int;
 
         /**
          * @brief Sends a UDP datagram to the specified address.
@@ -109,14 +109,14 @@ namespace rjcp::net {
          * @param buffer The binary data to send.
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept;
+        auto send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept -> int;
 
         /**
          * @brief Closes the UDP socket that it can't be used.
          *
          * @return int Success if zero, -1 on error. Check errno.
          */
-        int close() noexcept;
+        auto close() noexcept -> int;
 
     private:
         int m_socket_fd{-1};

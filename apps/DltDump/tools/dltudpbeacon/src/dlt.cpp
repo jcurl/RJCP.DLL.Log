@@ -30,7 +30,7 @@ rjcp::log::dlt::dlt(rjcp::net::udp4& sender, const rjcp::net::sockaddr4& dest, c
     write4hdr(ctxid, &this->m_exthdr[6], 4);
 }
 
-int rjcp::log::dlt::write(const std::string& message) noexcept
+auto rjcp::log::dlt::write(const std::string& message) noexcept -> int
 {
     // Length of the packet is:
     //  the size of the standard header
