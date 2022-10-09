@@ -4,6 +4,12 @@ project(dltudpbeacon CXX)
 include(CheckSymbolExists)
 include(CheckLibraryExists)
 
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
+if(CLANG_TIDY_EXE)
+    # For info, see here: https://clang.llvm.org/extra/clang-tidy/
+    set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=bugprone-*,modernize-*,cppcoreguidelines-*")
+endif()
+
 set(SOURCES
     src/dltudpbeacon.cpp
     src/sockaddr4.cpp
@@ -14,6 +20,9 @@ set(SOURCES
 include_directories("${PROJECT_BINARY_DIR}")
 
 add_executable(dltudpbeacon ${SOURCES})
+if(CLANG_TIDY_EXE)
+    set_target_properties(dltudpbeacon PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+endif()
 
 target_compile_features(dltudpbeacon PUBLIC cxx_std_17)
 
