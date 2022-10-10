@@ -7,7 +7,11 @@ include(CheckLibraryExists)
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
     # For info, see here: https://clang.llvm.org/extra/clang-tidy/
-    set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}" "-checks=bugprone-*,modernize-*,cppcoreguidelines-*")
+    set(CLANG_TIDY_COMMAND "${CLANG_TIDY_EXE}"
+        "-checks=bugprone-*,\
+                 modernize-*,\
+                 cppcoreguidelines-*,\
+                 -clang-diagnostic-unused-const-variable")
 endif()
 
 set(SOURCES
