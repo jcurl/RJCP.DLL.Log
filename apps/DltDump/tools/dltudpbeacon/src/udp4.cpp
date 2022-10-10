@@ -120,7 +120,7 @@ auto rjcp::net::udp4::get_sendbuf() noexcept -> int
         return -1;
     }
 
-    int buffsize;
+    int buffsize = 0;
     socklen_t optlen = sizeof(buffsize);
     int res = ::getsockopt(this->m_socket_fd, SOL_SOCKET, SO_SNDBUF,
         &buffsize, &optlen);

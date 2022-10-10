@@ -92,6 +92,7 @@ static void write32le(uint8_t *buffer, uint32_t value)
     buffer[3] = (value >> 24) & 0xFF;
 }
 
+// NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init): the two arrays are initalized in the body
 rjcp::log::dlt::dlt(rjcp::net::udp4& sender, const rjcp::net::sockaddr4& dest, const std::string& ecuid, const std::string& appid, const std::string& ctxid) noexcept
     : m_sender{sender}
     , m_dest{dest}

@@ -15,13 +15,11 @@
 constexpr int max_port = std::numeric_limits<uint16_t>::max();
 
 rjcp::net::sockaddr4::sockaddr4(const std::string& addr, int port) noexcept
+    : m_addr_in{}
 {
-    if (port < 0 || port > max_port) {
-        this->m_addr_in.sin_family = 0;
+    if (port < 0 || port > max_port)
         return;
-    }
 
-    memset(&this->m_addr_in, 0, sizeof(::sockaddr_in));
     this->m_addr_in.sin_family = AF_INET;
     this->m_addr_in.sin_addr.s_addr = ::inet_addr(const_cast<char*>(addr.c_str()));
     this->m_addr_in.sin_port = htons(port);
