@@ -112,6 +112,16 @@ namespace rjcp::net {
         auto send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept -> int;
 
         /**
+         * @brief Sends a UDP datagram to the specified address of a particular length.
+         *
+         * @param addr The address to send to.
+         * @param buffer The binary data to send.
+         * @param length The length of data to send from the start.
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        auto send(const sockaddr4& addr, const std::vector<uint8_t>& buffer, std::size_t length) noexcept -> int;
+
+        /**
          * @brief Closes the UDP socket that it can't be used.
          *
          * @return int Success if zero, -1 on error. Check errno.

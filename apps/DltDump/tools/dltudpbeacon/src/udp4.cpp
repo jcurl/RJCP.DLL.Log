@@ -142,6 +142,11 @@ auto rjcp::net::udp4::bind(sockaddr4& addr) noexcept -> int
 
 auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept -> int
 {
+    return this->send(addr, buffer, buffer.size());
+}
+
+auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer, std::size_t length) noexcept -> int
+{
     if (!addr.is_valid() || !this->is_open()) {
         errno = EINVAL;
         return -1;
@@ -149,7 +154,7 @@ auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& bu
 
     int nbytes = ::sendto(
         this->m_socket_fd,
-        buffer.data(), buffer.size(),
+        buffer.data(), length,
         0,
         reinterpret_cast<const ::sockaddr*>(&addr.get()), sizeof(::sockaddr_in));
 
