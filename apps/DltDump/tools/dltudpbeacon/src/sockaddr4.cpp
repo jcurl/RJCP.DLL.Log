@@ -21,7 +21,7 @@ rjcp::net::sockaddr4::sockaddr4(const std::string& addr, int port) noexcept
         return;
 
     this->m_addr_in.sin_family = AF_INET;
-    this->m_addr_in.sin_addr.s_addr = ::inet_addr(const_cast<char*>(addr.c_str()));
+    this->m_addr_in.sin_addr.s_addr = ::inet_addr(addr.c_str());
     this->m_addr_in.sin_port = htons(port);
 }
 

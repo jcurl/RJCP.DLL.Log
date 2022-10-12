@@ -135,9 +135,10 @@ auto rjcp::net::udp4::bind(sockaddr4& addr) noexcept -> int
         return -1;
     }
 
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): Systems programming.
+    auto localaddr = reinterpret_cast<const ::sockaddr*>(&addr.get());
     return ::bind(
-        this->m_socket_fd,
-        reinterpret_cast<const ::sockaddr*>(&addr.get()), sizeof(::sockaddr_in));
+        this->m_socket_fd, localaddr, sizeof(::sockaddr_in));
 }
 
 auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& buffer) noexcept -> int
@@ -152,11 +153,12 @@ auto rjcp::net::udp4::send(const sockaddr4& addr, const std::vector<uint8_t>& bu
         return -1;
     }
 
-    int nbytes = ::sendto(
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): Systems programming.
+    auto destaddr = reinterpret_cast<const ::sockaddr*>(&addr.get());
+    ssize_t nbytes = ::sendto(
         this->m_socket_fd,
         buffer.data(), length,
-        0,
-        reinterpret_cast<const ::sockaddr*>(&addr.get()), sizeof(::sockaddr_in));
+        0, destaddr, sizeof(::sockaddr_in));
 
     if (nbytes < 0)
         return -1;
