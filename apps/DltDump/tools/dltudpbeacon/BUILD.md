@@ -8,7 +8,8 @@ The project requires C++17 and CMake 3.10 or later. It is tested using the GNU T
   - [2.2. Providing Compiler Flags](#22-providing-compiler-flags)
   - [2.3. Providing a DEBUG build](#23-providing-a-debug-build)
   - [2.4. Selecting the Compiler](#24-selecting-the-compiler)
-  - [2.5. Building the Software](#25-building-the-software)
+  - [2.5. Enabling Sanitizers](#25-enabling-sanitizers)
+  - [2.6. Building the Software](#26-building-the-software)
 
 ## 1. Tested Environments
 
@@ -67,7 +68,19 @@ For cross compiling, provide a toolchain file, e.g.
 cmake .. -DCMAKE_TOOLCHAIN_FILE=../toolchain/qcc710_x86_64
 ```
 
-### 2.5. Building the Software
+### 2.5. Enabling Sanitizers
+
+Sanitizers are provided by
+[arsenm/sanitizers-cmake](cmake/modules/sanitizers/VERSION.md).
+
+To build with sanitizers:
+
+```sh
+cmake .. -DSANITIZE_ADDRESS=on
+VERBOSE=1 make
+```
+
+### 2.6. Building the Software
 
 If you'd like to see information about how the software is built:
 

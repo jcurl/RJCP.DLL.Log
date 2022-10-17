@@ -4,6 +4,10 @@ project(dltudpbeacon CXX)
 include(CheckSymbolExists)
 include(CheckLibraryExists)
 
+# See https://github.com/arsenm/sanitizers-cmake
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/sanitizers" ${CMAKE_MODULE_PATH})
+find_package(Sanitizers)
+
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
     # For info, see here: https://clang.llvm.org/extra/clang-tidy/
@@ -37,7 +41,8 @@ if("${CMAKE_CXX_FLAGS}" STREQUAL "")
         target_compile_options(dltudpbeacon PRIVATE -Wall -Wextra)
     endif()
 endif()
-message(STATUS "Compiler '${CMAKE_CXX_COMPILER_ID}' with override options '${CMAKE_CXX_FLAGS}'")
+
+add_sanitizers(dltudpbeacon)
 
 # Search for the 'socket' natively, or in libsocket.
 CHECK_SYMBOL_EXISTS(socket "arpa/inet.h" HAVE_SOCKET)
