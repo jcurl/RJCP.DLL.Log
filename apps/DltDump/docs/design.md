@@ -39,8 +39,11 @@ implementation in an incremental manner).
         - [2.4.2.2.5. Issues with IP Fragmentation Reassembly](#24225-issues-with-ip-fragmentation-reassembly)
         - [2.4.2.2.6. DLT Packet Fragmentation by the Client](#24226-dlt-packet-fragmentation-by-the-client)
         - [2.4.2.2.7. Unsupported Features for PCAP / PCAPNG Decoding](#24227-unsupported-features-for-pcap--pcapng-decoding)
-      - [2.4.2.3. Adding a new InputFormat](#2423-adding-a-new-inputformat)
-      - [2.4.2.4. The Packet Reader](#2424-the-packet-reader)
+      - [2.4.2.3. Decoding TECMP in a PCAP file](#2423-decoding-tecmp-in-a-pcap-file)
+        - [2.4.2.3.1. TECMP Header](#24231-tecmp-header)
+        - [2.4.2.3.2. TECMP Payload](#24232-tecmp-payload)
+      - [2.4.2.4. Adding a new InputFormat](#2424-adding-a-new-inputformat)
+      - [2.4.2.5. The Packet Reader](#2425-the-packet-reader)
     - [2.4.3. Trace Output](#243-trace-output)
       - [2.4.3.1. Console Output](#2431-console-output)
       - [2.4.3.2. Text File Output](#2432-text-file-output)
@@ -658,7 +661,7 @@ For each packet received, `PacketDecoder` then checks:
     (including the UDP header). The IP fragment must always be reassembled, even
     if the source port and destination port do not match a DLT packet. That is
     because an IP fragment later could use this fragment and result in possible
-    dataloss otherwise. If the result of `IpFragments.AddFragment` returns:
+    data loss otherwise. If the result of `IpFragments.AddFragment` returns:
   * `IpFragmentResult.Incomplete`, no decoding is required.
   * `IpFragmentResult.Reassembled`, the packet should be decoded, getting the
     UDP source and destination ports, using `Connection.GetDltDecoder` and all
@@ -705,7 +708,7 @@ It is expected that routers, switches and Operating Systems implement
 fragmentation correctly.
 
 It should be noted that PCAP-NG files where the same packet is seen on multiple
-interfaces will not see duplicated packets, as interfaces are seggregated
+interfaces will not see duplicated packets, as interfaces are segregated
 through the `InterfaceDescriptionBlock`.
 
 ###### 2.4.2.2.6. DLT Packet Fragmentation by the Client
@@ -744,7 +747,73 @@ The following limitations are applied:
 * Only IPv4 will be supported, until real-world examples exist of IPv6 which can
   be tested with.
 
-##### 2.4.2.3. Adding a new InputFormat
+##### 2.4.2.3. Decoding TECMP in a PCAP file
+
+A TECMP format capture, described by [Technica Engineering on their GitHub
+v1.6](https://raw.githubusercontent.com/Technica-Engineering/libtecmp/master/docs/TECMP_User_Manual_V1.6.pdf)
+is a capture protocol wrapping around various other protocols. We will only
+support Ethernet capture and log streams. Other types will be ignored.
+
+Integration for capturing the PCAP file is done directly in the `PacketDecoder`
+class, where the link type and IP packets are dissected.
+
+There is no special consideration required for the Interface Description Block,
+nor the Enhanced Packet Capture Block. The following properties are considered
+for a TECMP file in the following sections.
+
+Incomplete payloads will be discarded.
+
+###### 2.4.2.3.1. TECMP Header
+
+This section doesn't duplicate the format of a TECMP header, but just notes how
+it will be interpreted.
+
+* The protocol is 0x99FE
+  * It may be preceded by VLAN tags
+* There is, per packet, one TECMP header, and may be multiple payload
+  structures.
+* The version shall be 3.
+* Only the capture message type
+  [`TECMP_MSG_TYPE_LOG_STREAM`](https://github.com/wireshark/wireshark/blob/51a6dfffc7d9ba65c07d5affd559457dd9a48130/epan/dissectors/packet-tecmp.c#L276)
+  (0x03) is considered.
+* Only the capture data type
+  [`TECMP_DATA_TYPE_ETH`](https://github.com/wireshark/wireshark/blob/51a6dfffc7d9ba65c07d5affd559457dd9a48130/epan/dissectors/packet-tecmp.c#L312)
+  (0x0080) is considered.
+* For the initial version, the CM Flags will be interpreted as such:
+
+  | CMFlags | Meaning                      | Supported | Action            |
+  | ------- | ---------------------------- | --------- | ----------------- |
+  | xx10    | Start of a Segmented Message | No        | Logged as warning |
+  | xx00    | Within a Segmented Message   | No        | Logged as warning |
+  | xx01    | End of a Segmented Message   | No        | Logged as warning |
+  | xx11    | Unsegmented Message          | Yes       | Will be decoded   |
+
+  * Bits 1 and 0 are listed in the table above.
+  * Bit 15 is an Overflow. If this is detected, a warning will be logged.
+
+###### 2.4.2.3.2. TECMP Payload
+
+There may be one or more payload blocks per TECMP header. The following notes on
+how it will be interpreted:
+
+* The time stamp will be ignored. It's based on the PTP protocol, and is not
+  relevant to the wall clock time. We will use the time stamp as given in the
+  Wireshark trace instead, as we are not synchronising different inputs.
+* The length of the captured packet for this payload will be used to check for
+  overflows.
+  * Only if the complete payload is in this packet, will it be decoded.
+* The data flags (for a log stream of type Ethernet)
+
+  | Bit | Meaning          | Action                      |
+  | --- | ---------------- | --------------------------- |
+  | b15 | Overflow if set  | Will be logged as a warning |
+  | b13 | CRC Error if set | Will be logged as a warning |
+
+* The source MAC and destination MAC are not used, but if they were, it should
+  come from the payload of the TECMP packet, not the header before the protocol
+  identifier 0x99FE.
+
+##### 2.4.2.4. Adding a new InputFormat
 
 Adding a new `InputFormat` is a little more work, e.g. reading a WireShark file,
 that contains DLT packets transmitted as UDP. It requires:
@@ -763,7 +832,7 @@ that contains DLT packets transmitted as UDP. It requires:
   factory for reading the input format. You'll need to implement the decoder as
   well.
 
-##### 2.4.2.4. The Packet Reader
+##### 2.4.2.5. The Packet Reader
 
 For types, like the UDP input, the `TracePacketReader` takes individual packets
 and gives the packet to a decoder. As packets are connectionless and can
@@ -1017,8 +1086,8 @@ The flow for no context is simple:
 
 ![Filter No Context](out/diagrams/domainfilternocontext/Domain.Filter.NoContext.svg)
 
-The flow with context is slightly complexer and can be used to identify the more
-general use case:
+The flow with context is slightly more complex and can be used to identify the
+more general use case:
 
 ![Filter with Context](out/diagrams/domainfiltercontext/Domain.Filter.Context.svg)
 
