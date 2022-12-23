@@ -26,9 +26,12 @@ For reference, the specifications can be found at:
   - [4.1. Ethernet Frame](#41-ethernet-frame)
   - [4.2. Linux Cooked Frame](#42-linux-cooked-frame)
 - [5. Protocol](#5-protocol)
-- [6. IPv4 Protocol](#6-ipv4-protocol)
-  - [6.1. IP Fragmentation](#61-ip-fragmentation)
-- [7. UDP Protocol](#7-udp-protocol)
+- [6. TECMP Protocol](#6-tecmp-protocol)
+  - [6.1. TECMP Header](#61-tecmp-header)
+  - [6.2. TECMP Payload](#62-tecmp-payload)
+- [7. IPv4 Protocol](#7-ipv4-protocol)
+  - [7.1. IP Fragmentation](#71-ip-fragmentation)
+- [8. UDP Protocol](#8-udp-protocol)
 
 I wrote this document to help write the software and have a fast reference for
 decoding PCAP frames. This might be useful for similar implementations.
@@ -376,11 +379,100 @@ SLL](https://www.tcpdump.org/linktypes/LINKTYPE_LINUX_SLL.html).
 
 The supported protocols are:
 
-* 0x0800 - IPv4
 * 0x8100 - 802.1q Virtual LAN
   * If present, the next two bytes represent the VLAN and Priority Code Point.
+* 0x99FE - TECMP
+* 0x0800 - IPv4
 
-## 6. IPv4 Protocol
+## 6. TECMP Protocol
+
+See [TECMP User Manual
+v1.6](https://raw.githubusercontent.com/Technica-Engineering/libtecmp/master/docs/TECMP_User_Manual_V1.6.pdf).
+
+### 6.1. TECMP Header
+
+```text
+                           1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    0 |           Device ID           |            Counter            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    4 |    Version    |    Msg Type   |           Data Type           |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    8 |           Reserved            |           CM Flags            |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   12 /                                                               /
+      /                         TECMP Payload                         /
+```
+
+Values are in big-endian
+
+* Device ID: Unique device sending / recording the packets.
+* Counter: 16 bit monotonic, wrap-around counter
+* Version: Expected to be 3
+* Msg Type: TECMP_MSG_TYPE_LOG_STREAM (0x03)
+* Data Type: TECMP_DATA_TYPE_ETH (0x0080)
+* CM Flags
+
+  | CMFlags (bits) | Meaning                                                       |
+  | -------------- | ------------------------------------------------------------- |
+  | [1:0] 10       | Start of a Segmented Message                                  |
+  | [1:0] 00       | Within a Segmented Message                                    |
+  | [1:0] 01       | End of a Segmented Message                                    |
+  | [1:0] 11       | Unsegmented Message                                           |
+  | [2] 1          | SPY                                                           |
+  | [3] 1          | Multiframe, can send multiple Interface IDs in a single frame |
+  | [14:4]         | Reserved                                                      |
+  | [15] 1         | Capture Module overflow                                       |
+
+  e.g. 0x000F
+
+  * Unsegmented message (0x03)
+  * SPY message (0x04)
+  * Multi-frame message (0x08)
+  * No capture module overflow
+
+### 6.2. TECMP Payload
+
+There may be multiple sections of this payload immediately after the TECMP
+header.
+
+```text
+                           1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   12 |                         Interface ID                          |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   16 |                       Time stamp 63..32                       |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   20 |                       Time stamp 31..0                        |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   24 |            Length             |          Data Flags           |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   28 /                                                               /
+      /                            Payload                            /
+      /                                                               /
+```
+
+* Interface ID: uniquely identifies the log data / bus / link
+* Timestamp:
+  * Bits [61..0] are the number of nanoseconds since 1/1/1970 from a
+  PTP clock. Independent of the Wireshark recording timestamp.
+  * Bit 62: Timestamp recalculation
+  * Bit 63: Valid for TECMP_MSG_TYPE_LOG_STREAM
+    * 0 = Synchronised with a PTP clock
+    * 1 = Lost synchronisation after 250ms
+* Length: Length of the payload (not including this header)
+* Data Flags: Values for TECMP_DATA_TYPE_ETH
+
+  | Data Flags Bit | Meaning   |
+  | -------------- | --------- |
+  | [12:0]         | Reserved  |
+  | [13]           | CRC Error |
+  | [14]           | TX        |
+  | [15]           | Overflow  |
+
+## 7. IPv4 Protocol
 
 See [RFC 791](https://datatracker.ietf.org/doc/html/rfc791).
 
@@ -433,7 +525,7 @@ then the length is 20 bytes.
   of the source and destination.
 * Options: Optional data, present if the IHL is more than 0x5.
 
-### 6.1. IP Fragmentation
+### 7.1. IP Fragmentation
 
 When IPv4 fragmentation occurs, the data is fragmented over multiple IPv4
 packets. Each new packet has a new IPv4 header recalculated with a new length
@@ -454,7 +546,7 @@ following fields:
 * The protocol identifier.
 * The identification field.
 
-The length of the packet is uknown, until the final packet is received. The
+The length of the packet is unknown, until the final packet is received. The
 final packet is identified as having the MF bit set to zero. The length is then
 calculated from the data length and the fragmentation offset.
 
@@ -462,7 +554,7 @@ The ordering of the fragmented IP packets is undefined, but it is observed often
 on Linux that the last packet is transmitted first. However, this is not
 guaranteed.
 
-## 7. UDP Protocol
+## 8. UDP Protocol
 
 The UDP protocol starts immediately after the IPv4 header, and is described by
 [RFC 768](https://datatracker.ietf.org/doc/html/rfc768)
