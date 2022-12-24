@@ -58,21 +58,73 @@
             int offset;
             switch (m_LinkType) {
             case LinkTypes.LINKTYPE_ETHERNET:
-                offset = GetIpHdrEthernetOffset(buffer);
+                offset = ScanEthernetHeader(buffer);
                 break;
             case LinkTypes.LINKTYPE_LINUX_SLL:
-                offset = GetIpHdrSllOffset(buffer);
+                offset = ScanSslHeader(buffer);
                 break;
             default:
                 throw new UnknownPcapFileFormatException(AppResources.DomainPcapUnknownLinkFormat);
             }
-            if (offset == -1) return Array.Empty<DltTraceLineBase>();
+            if (offset < 0) return Array.Empty<DltTraceLineBase>();
 
-            int ipLen = BitOperations.To16ShiftBigEndian(buffer[(offset + 2)..]);
-            if (ipLen < 20 || ipLen > buffer.Length - offset) return Array.Empty<DltTraceLineBase>();
+            ushort proto;
+            proto = GetProto(buffer[offset..]);
+            if (proto == 0) return Array.Empty<DltTraceLineBase>();
+
+            if (proto == 0x8100) {
+                // Outer VLAN
+                offset += 4;
+                proto = GetProto(buffer[offset..]);
+                if (proto == 0) return Array.Empty<DltTraceLineBase>();
+
+                if (proto == 0x8100) {
+                    // Inner VLAN
+                    offset += 4;
+                    proto = GetProto(buffer[offset..]);
+                    if (proto == 0) return Array.Empty<DltTraceLineBase>();
+                }
+            }
+
+            if (proto == 0x0800) {
+                return ScanIpHeader(buffer[(offset + 2)..], timeStamp, position + offset + 2);
+            }
+            return Array.Empty<DltTraceLineBase>();
+        }
+
+        private static int ScanEthernetHeader(ReadOnlySpan<byte> buffer)
+        {
+            if (buffer.Length < 14) return -1;
+            return 12;
+        }
+
+        private static int ScanSslHeader(ReadOnlySpan<byte> buffer)
+        {
+            if (buffer.Length < 16) return -1;
+            return 14;
+        }
+
+        private static ushort GetProto(ReadOnlySpan<byte> buffer)
+        {
+            if (buffer.Length < 4) return 0;
+
+            ushort proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer));
+            return proto;
+        }
+
+        private IEnumerable<DltTraceLineBase> ScanIpHeader(ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
+        {
+            // * IPv4 Header = 20 bytes (src, dest, proto, length)
+            // * UDP Header = 8 bytes (src port, dest port, length, checksum)
+            // * DLT Header + Message ID = 8 bytes
+            // -> Total = 36 bytes (minimum size for a minimum DLT packet in a UDP frame)
+            if (buffer.Length < 36) return Array.Empty<DltTraceLineBase>();
+
+            int ipLen = BitOperations.To16ShiftBigEndian(buffer[2..]);
+            if (ipLen < 20 || ipLen > buffer.Length) return Array.Empty<DltTraceLineBase>();
 
             // The IPv4 packet, see https://datatracker.ietf.org/doc/html/rfc791
-            ReadOnlySpan<byte> ipPacket = buffer[offset..(offset + ipLen)];
+            ReadOnlySpan<byte> ipPacket = buffer[..ipLen];
 
             // Check IPv4 fields that UDP is present.
             if ((ipPacket[0] & 0xF0) != 0x40) return Array.Empty<DltTraceLineBase>();    // Not IPv4
@@ -92,71 +144,11 @@
                 // This is a fragmented IP packet
                 int fragId = BitOperations.To16ShiftBigEndian(ipPacket[4..]);
                 int hcs = BitOperations.To16ShiftBigEndian(ipPacket[10..]);
-                return DecodeDltFragments(srcAddr, dstAddr, fragOffset, fragId, mf, hcs, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
+                return DecodeDltFragments(srcAddr, dstAddr, fragOffset, fragId, mf, hcs, ipPacket[ihl..ipLen], timeStamp, position + ihl);
             } else {
                 // This is a single UDP packet
-                return DecodeDltPacket(srcAddr, dstAddr, ipPacket[ihl..ipLen], timeStamp, position + offset + ihl);
+                return DecodeDltPacket(srcAddr, dstAddr, ipPacket[ihl..ipLen], timeStamp, position + ihl);
             }
-        }
-
-        private static int GetIpHdrEthernetOffset(ReadOnlySpan<byte> buffer)
-        {
-            // Layer 2 Ethernet frame
-
-            // An Ethernet frame must be at least 64 bytes. The FCS (4 bytes) might not be present. So our buffer must
-            // be a minimum of 60 bytes. See https://wiki.wireshark.org/Ethernet. We choose to ignore this constraint,
-            // as WireShark ignores it also.
-
-            // In the Ethernet payload, we expect a IPv4 packet, with DLT header (no 802.1q tag)
-            // * Eth Header = 6 (src) + 6 (dst) + 2 (proto) = 14 bytes
-            // * IPv4 Header = 20 bytes (src, dest, proto, length)
-            // * UDP Header = 8 bytes (src port, dest port, length, checksum)
-            // * DLT Header + Message ID = 8 bytes
-            // -> Total = 50 bytes (minimum size for a minimum DLT packet in a UDP frame)
-
-            if (buffer.Length < 50) return -1;
-
-            int offset;
-            short proto = BitOperations.To16ShiftBigEndian(buffer[12..]);
-            if (proto != unchecked((short)0x8100)) {
-                offset = 14;
-            } else {
-                proto = BitOperations.To16ShiftBigEndian(buffer[16..]);
-                offset = 18;
-            }
-
-            // This is not an IPv4 prototype packet.
-            if (proto != 0x0800) return -1;
-
-            return offset;
-        }
-
-        private static int GetIpHdrSllOffset(ReadOnlySpan<byte> buffer)
-        {
-            // Layer 2 Linux Self Cooked. See https://www.tcpdump.org/linktypes/LINKTYPE_LINUX_SLL.html
-
-            // In the Ethernet payload, we expect a IPv4 packet, with DLT header (no 802.1q tag)
-            // * SLL Header = 16 bytes (no 802.1q header)
-            // * IPv4 Header = 20 bytes (src, dest, proto, length)
-            // * UDP Header = 8 bytes (src port, dest port, length, checksum)
-            // * DLT Header + Message ID = 8 bytes
-            // -> Total = 52 bytes (minimum size for a minimum DLT packet in a UDP frame)
-
-            if (buffer.Length < 52) return -1;
-
-            int offset;
-            int proto = BitOperations.To16ShiftBigEndian(buffer[14..]);
-            if (proto != unchecked((short)0x8100)) {
-                offset = 16;
-            } else {
-                proto = BitOperations.To16ShiftBigEndian(buffer[18..]);
-                offset = 20;
-            }
-
-            // This is not an IPv4 prototype packet.
-            if (proto != 0x0800) return -1;
-
-            return offset;
         }
 
         private Connection GetConnection(int srcAddr, int dstAddr)
