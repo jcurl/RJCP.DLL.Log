@@ -74,19 +74,19 @@
             if (!m_PacketEnumerator.MoveNext())
                 return new ValueTask<PacketReadResult>(new PacketReadResult(0, 0));
 
-            var packet = m_PacketEnumerator.Current;
-            if (m_ChannelCount <= packet.channel) {
-                m_ChannelCount = packet.channel + 1;
-                OnNewChannel(this, new PacketNewChannelEventArgs(packet.channel));
+            var (channel, data) = m_PacketEnumerator.Current;
+            if (m_ChannelCount <= channel) {
+                m_ChannelCount = channel + 1;
+                OnNewChannel(this, new PacketNewChannelEventArgs(channel));
             }
 
-            if (buffer.Length < packet.data.Length) {
-                packet.data.AsSpan(0, buffer.Length).CopyTo(buffer.Span);
-                return new ValueTask<PacketReadResult>(new PacketReadResult(buffer.Length, packet.channel));
+            if (buffer.Length < data.Length) {
+                data.AsSpan(0, buffer.Length).CopyTo(buffer.Span);
+                return new ValueTask<PacketReadResult>(new PacketReadResult(buffer.Length, channel));
             }
 
-            packet.data.CopyTo(buffer);
-            return new ValueTask<PacketReadResult>(new PacketReadResult(packet.data.Length, packet.channel));
+            data.CopyTo(buffer);
+            return new ValueTask<PacketReadResult>(new PacketReadResult(data.Length, channel));
         }
 
         /// <summary>
