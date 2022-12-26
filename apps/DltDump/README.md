@@ -82,6 +82,8 @@ DltDump can read from:
   * As recorded by a logger, containing a storage header; or
   * binary data, recorded from a TCP stream (e.g. with `netcat`), or serial.
   * Recorded with a PCAP or PCAP-NG file
+    * From UDP packets in IPv4
+    * From TECMP packets, as UDP in IPv4
 * a TCP server; or
 * a Serial port.
 
