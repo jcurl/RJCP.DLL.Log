@@ -417,17 +417,18 @@
                 Console.WriteLine($"Packet Size = {i} of {bytePacket.Length}");
                 using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
                     IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
-                        packetDecoder.DecodePacket(bytePacket[0..i], Time1, 20));
+                        packetDecoder.DecodePacket(bytePacket.AsSpan(0, i), Time1, 20));
                     Assert.That(lines.Count, Is.EqualTo(0));
                 }
             }
         }
 
-        private static int[] CorruptLengths = {
+        private static readonly int[] CorruptLengths = {
             0, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
             108, 110, 65535
         };
-        [TestCaseSource("CorruptLengths")]
+
+        [TestCaseSource(nameof(CorruptLengths))]
         public void CorruptLength(int length)
         {
             (byte lhi, byte llo) = Split16(length);
