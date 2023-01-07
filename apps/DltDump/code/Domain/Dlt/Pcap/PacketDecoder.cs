@@ -224,27 +224,23 @@
                 if (ethBuff.Length < 14) {
                     Log.Pcap.TraceEvent(TraceEventType.Warning,
                         "TECMP packet partial payload at 0x{0}, TECMP payload too small, length {1}", position, ethBuff.Length);
-
-                    // Assume this packet is correct, but contains irrelevant payload. Look for the next one.
-                    goto NextPacket;
+                } else {
+                    (int poffset, ushort proto) = ScanVlanHeader(ethBuff[12..]);
+                    switch (proto) {
+                    case 0x800:
+                        // We have to be careful here, the output of the ScanIpHeader returns the same collection as it did
+                        // last time, just the content may now be different. Thus, we must do this check before scanning the
+                        // payload, else, we'll discard the last result.
+                        if (payload != null && lines == null)
+                            lines = new List<DltTraceLineBase>(payload);
+                        payload = ScanIpHeader(ethBuff[(poffset + 12)..], timeStamp, position + 16 + 12 + poffset);
+                        lines?.AddRange(payload);
+                        break;
+                    default:
+                        break;
+                    }
                 }
 
-                (int poffset, ushort proto) = ScanVlanHeader(ethBuff[12..]);
-                switch (proto) {
-                case 0x800:
-                    // We have to be careful here, the output of the ScanIpHeader returns the same collection as it did
-                    // last time, just the content may now be different. Thus, we must do this check before scanning the
-                    // payload, else, we'll discard the last result.
-                    if (payload != null && lines == null)
-                        lines = new List<DltTraceLineBase>(payload);
-                    payload = ScanIpHeader(ethBuff[(poffset + 12)..], timeStamp, position + 16 + 12 + poffset);
-                    lines?.AddRange(payload);
-                    break;
-                default:
-                    break;
-                }
-
-NextPacket:
                 buffer = buffer[(16 + length)..];
                 position += length + 16;
                 if (buffer.Length == 0) return TecmpResult(lines, payload);

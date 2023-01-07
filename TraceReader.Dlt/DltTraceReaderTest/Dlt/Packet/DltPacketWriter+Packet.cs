@@ -86,8 +86,6 @@
                 m_Packet[0] = (byte)(m_Packet[0] & 0x1F | (version << 5));
             }
 
-            public void BigEndian() { BigEndian(true); }
-
             public void BigEndian(bool bigEndian)
             {
                 if (!m_HasStandardHeader) throw new InvalidOperationException("Standard Header not yet constructed");
