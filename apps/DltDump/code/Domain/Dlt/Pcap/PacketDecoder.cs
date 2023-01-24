@@ -76,6 +76,7 @@
             case 0x800:
                 return ScanIpHeader(buffer[offset..], timeStamp, position + offset);
             case 0x99FE:
+            case 0x2090:
                 return ScanTecmpHeader(buffer[offset..], timeStamp, position + offset);
             default:
                 return Array.Empty<DltTraceLineBase>();

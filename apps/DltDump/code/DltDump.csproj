@@ -16,7 +16,7 @@
     <RootNamespace>RJCP.App.DltDump</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2022, Jason Curl</Copyright>
+    <Copyright>(C) 2022-2023, Jason Curl</Copyright>
     <Company></Company>
 
     <Description>A command line tool to read a DLT file.</Description>
