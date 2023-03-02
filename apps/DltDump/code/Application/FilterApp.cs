@@ -88,7 +88,13 @@
 
             List<IInputStream> inputs = new List<IInputStream>();
             foreach (string uri in m_Config.Input) {
-                IInputStream input = Global.Instance.InputStreamFactory.Create(uri);
+                IInputStream input;
+                try {
+                    input = Global.Instance.InputStreamFactory.Create(uri);
+                } catch (InputStreamException ex) {
+                    Terminal.WriteLine(AppResources.FilterCheckError_Invalid, uri, ex.Message);
+                    return null;
+                }
 
                 // In case of an error, and we return, the list and its contents are just garbage collected. They are
                 // not disposed of as there is nothing to dispose (until it is opened).
