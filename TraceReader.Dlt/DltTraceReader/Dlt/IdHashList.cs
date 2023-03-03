@@ -19,7 +19,7 @@
     {
         public static IdHashList Instance { get; } = new IdHashList();
 
-        private struct IdEntry
+        private readonly struct IdEntry
         {
             public int Identifier { get; }
 
