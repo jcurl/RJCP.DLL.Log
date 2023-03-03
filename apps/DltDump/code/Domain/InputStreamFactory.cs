@@ -27,9 +27,7 @@
             if (scheme == null) throw new ArgumentNullException(nameof(scheme));
 
             if (factory == null) {
-                if (m_Factories.ContainsKey(scheme)) {
-                    m_Factories.Remove(scheme);
-                }
+                m_Factories.Remove(scheme);
                 return;
             }
 
