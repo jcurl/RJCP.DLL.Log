@@ -24,9 +24,7 @@
         {
             get
             {
-                if (m_Encoding == null) {
-                    m_Encoding = GetDefaultEncoding();
-                }
+                m_Encoding ??= GetDefaultEncoding();
                 return m_Encoding;
             }
             set

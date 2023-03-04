@@ -64,9 +64,7 @@
         {
             get
             {
-                if (base.Text == null) {
-                    base.Text = BuildArgumentText();
-                }
+                base.Text ??= BuildArgumentText();
                 return base.Text;
             }
             set { base.Text = value; }

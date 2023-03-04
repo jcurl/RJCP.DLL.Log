@@ -162,13 +162,11 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (m_Format == null) {
-                m_Format = string.Format("PCAP file ({0}), version {1}.{2}. Link Type = {3}. SnapLen = {4}. FCS Length = {5}. Resolution = {6}",
-                    IsLittleEndian ? "little endian" : "big endian",
-                    MajorVersion, MinorVersion,
-                    LinkType, SnapLen, FcsLen,
-                    Resolution);
-            }
+            m_Format ??= string.Format("PCAP file ({0}), version {1}.{2}. Link Type = {3}. SnapLen = {4}. FCS Length = {5}. Resolution = {6}",
+                IsLittleEndian ? "little endian" : "big endian",
+                MajorVersion, MinorVersion,
+                LinkType, SnapLen, FcsLen,
+                Resolution);
             return m_Format;
         }
     }

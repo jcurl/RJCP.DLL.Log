@@ -33,7 +33,7 @@
 
         protected DltTraceLineBase DecodeLine(DltFactory factory, DltType dltType, byte[] data, string fileName)
         {
-            if (factory == null) factory = new DltFactory(DltFactoryType.File);
+            factory ??= new DltFactory(DltFactoryType.File);
 
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50

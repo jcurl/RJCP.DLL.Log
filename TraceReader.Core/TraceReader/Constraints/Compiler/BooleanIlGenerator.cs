@@ -362,9 +362,7 @@
 
         public bool Evaluate(ITraceLine line)
         {
-            if (m_EvaluationDelegate == null) {
-                m_EvaluationDelegate = (EvaluateDelegate)m_EvaluationMethod.CreateDelegate(typeof(EvaluateDelegate));
-            }
+            m_EvaluationDelegate ??= (EvaluateDelegate)m_EvaluationMethod.CreateDelegate(typeof(EvaluateDelegate));
             return m_EvaluationDelegate(m_ConstraintTable, line);
         }
     }

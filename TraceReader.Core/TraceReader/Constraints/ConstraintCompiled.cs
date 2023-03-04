@@ -30,7 +30,7 @@
                     }
                 }
 
-                if (expr == null) expr = Node(constraint);
+                expr ??= Node(constraint);
                 return expr;
             }
         }
@@ -45,9 +45,7 @@
         /// <exception cref="ConstraintException">No constraints defined or Error in expression</exception>
         public IConstraintBase Build(IEnumerator<Token> tokens)
         {
-            if (m_ExpressionTree == null) {
-                m_ExpressionTree = new ExpressionTree(tokens);
-            }
+            m_ExpressionTree ??= new ExpressionTree(tokens);
             return this;
         }
 
@@ -57,9 +55,7 @@
         /// </summary>
         public IConstraintBase Compile()
         {
-            if (m_CompiledEvaluation == null) {
-                m_CompiledEvaluation = new BooleanCompiler(m_ExpressionTree);
-            }
+            m_CompiledEvaluation ??= new BooleanCompiler(m_ExpressionTree);
             return this;
         }
 

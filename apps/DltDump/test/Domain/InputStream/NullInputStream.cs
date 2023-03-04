@@ -32,8 +32,7 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            if (InputStream == null)
-                InputStream = new MemoryStream(Array.Empty<byte>());
+            InputStream ??= new MemoryStream(Array.Empty<byte>());
         }
 
         public virtual Task<bool> ConnectAsync()

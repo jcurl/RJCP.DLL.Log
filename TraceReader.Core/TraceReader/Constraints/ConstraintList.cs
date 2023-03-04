@@ -29,7 +29,7 @@
         /// <param name="tokens">The list of tokens in order.</param>
         public IConstraintBase Build(IEnumerator<Token> tokens)
         {
-            if (m_Tokens == null) m_Tokens = tokens;
+            m_Tokens ??= tokens;
             return this;
         }
 

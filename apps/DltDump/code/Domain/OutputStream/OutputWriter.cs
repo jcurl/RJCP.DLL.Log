@@ -113,8 +113,7 @@
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
 
-            Stream stream = m_FileStream;
-            if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
+            Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             if (buffer == null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), AppResources.InfraArgOutOfRangeNegative);
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), AppResources.InfraArgOutOfRangeNegative);
@@ -139,8 +138,7 @@
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
 
-            Stream stream = m_FileStream;
-            if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
+            Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             try {
                 stream.Write(buffer);
                 Length += buffer.Length;
@@ -158,8 +156,7 @@
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
 
-            Stream stream = m_FileStream;
-            if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
+            Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             try {
                 stream.Flush();
             } catch (Exception ex) {

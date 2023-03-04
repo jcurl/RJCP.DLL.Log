@@ -41,9 +41,7 @@
         {
             get
             {
-                if (base.Text == null) {
-                    base.Text = Service.ToString() ?? string.Empty;
-                }
+                base.Text ??= Service.ToString() ?? string.Empty;
                 return base.Text;
             }
             set { base.Text = value; }

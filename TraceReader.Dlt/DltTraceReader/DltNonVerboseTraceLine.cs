@@ -77,9 +77,7 @@
         {
             get
             {
-                if (m_Text == null) {
-                    m_Text = string.Format("[{0}] {1}", unchecked((uint)MessageId), base.Text);
-                }
+                m_Text ??= string.Format("[{0}] {1}", unchecked((uint)MessageId), base.Text);
                 return m_Text;
             }
             set { m_Text = value; }
