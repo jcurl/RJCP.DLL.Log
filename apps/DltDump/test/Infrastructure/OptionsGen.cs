@@ -1,6 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Infrastructure
 {
-    using RJCP.CodeQuality.OSInfo;
+    using RJCP.Core.Environment;
 
     /// <summary>
     /// A support class for generating Operating System dependent option strings.

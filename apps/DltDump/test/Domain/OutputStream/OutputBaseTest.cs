@@ -7,7 +7,7 @@
     using Domain.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-    using RJCP.CodeQuality.OSInfo;
+    using RJCP.Core.Environment;
     using TestResources;
 
     [TestFixture]

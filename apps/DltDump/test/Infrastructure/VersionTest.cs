@@ -20,7 +20,7 @@
         {
             string copyright = Version.GetAssemblyCopyright(typeof(VersionTest));
 
-            Assert.That(copyright, Is.EqualTo("(C) 2022, Jason Curl"));
+            Assert.That(copyright, Is.EqualTo("(C) 2022-2023, Jason Curl"));
         }
     }
 }

@@ -6,6 +6,7 @@
     using Microsoft.Win32.SafeHandles;
     using Native.Win32;
     using Resources;
+    using RJCP.Core.Environment;
 
     public sealed class DetailedFileInfo : IEquatable<DetailedFileInfo>
     {
@@ -33,7 +34,7 @@
             if (!File.Exists(FileName))
                 throw new FileNotFoundException(AppResources.InfraFileNotFound, FileName);
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            if (Platform.IsWinNT()) {
                 SafeFileHandle file = Kernel32.CreateFile(fileName, 0,
                     Kernel32.FileShare.FILE_SHARE_READ | Kernel32.FileShare.FILE_SHARE_WRITE | Kernel32.FileShare.FILE_SHARE_DELETE,
                     IntPtr.Zero, Kernel32.CreationDisposition.OPEN_EXISTING,
