@@ -1,6 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Infrastructure
 {
-    using RJCP.Core.Environment;
+    using RJCP.Core.CommandLine;
 
     /// <summary>
     /// A support class for generating Operating System dependent option strings.
@@ -13,14 +13,17 @@
 
         static OptionsGen()
         {
-            if (Platform.IsWinNT()) {
+            switch (Options.DefaultOptionsStyle) {
+            case OptionsStyle.Windows:
                 ShortOptionSymbol = "/";
                 LongOptionSymbol = "/";
                 AssignmentSymbol = ":";
-            } else {
+                break;
+            default:
                 ShortOptionSymbol = "-";
                 LongOptionSymbol = "--";
                 AssignmentSymbol = "=";
+                break;
             }
         }
 

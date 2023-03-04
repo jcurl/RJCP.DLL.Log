@@ -1,21 +1,24 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using Resources;
-    using RJCP.Core.Environment;
+    using RJCP.Core.CommandLine;
     using Services;
 
     public static class HelpApp
     {
         static HelpApp()
         {
-            if (Platform.IsWinNT()) {
+            switch (Options.DefaultOptionsStyle) {
+            case OptionsStyle.Windows:
                 ShortOptionSymbol = "/";
                 LongOptionSymbol = "/";
                 AssignmentSymbol = ":";
-            } else {
+                break;
+            default:
                 ShortOptionSymbol = "-";
                 LongOptionSymbol = "--";
                 AssignmentSymbol = "=";
+                break;
             }
         }
 
