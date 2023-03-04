@@ -178,18 +178,20 @@
         public void AutoFlush(int milliSeconds)
         {
             if (m_AutoFlushTask != null) return;
-            Stream stream = m_FileStream;
-            if (stream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
+            if (m_FileStream == null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
 
             m_AutoFlushTask = new CancelTask((t) => {
                 while (true) {
+                    Stream stream = m_FileStream;
+                    if (stream == null) return;
+
                     if (t.WaitHandle.WaitOne(milliSeconds)) {
                         // We're cancelled, so exit the thread.
                         return;
                     }
                     try {
                         lock (m_CloseLock) {
-                            if (IsOpen) m_FileStream.Flush();
+                            if (IsOpen) stream.Flush();
                         }
                     } catch (Exception) {
                         // Ignore background flush operations. Assume they're permanent.
