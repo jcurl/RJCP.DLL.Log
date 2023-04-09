@@ -46,7 +46,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.2">
+    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.3">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <ProjectReference Include="..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
