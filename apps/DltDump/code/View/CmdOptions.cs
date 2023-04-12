@@ -341,6 +341,8 @@
                             split = split * 1024 * 1024 * 1024;
                             break;
                         default:
+                            // We will never get here, unless the regular expression has more unit modifiers which isn't
+                            // caught by our case statement.
                             throw new InvalidOperationException(AppResources.OptionSplitParseError);
                         }
                     }
@@ -445,6 +447,8 @@
             case DltTypeFilter.State: return DltType.APP_TRACE_STATE;
             case DltTypeFilter.VFB: return DltType.APP_TRACE_VFB;
             default:
+                // We should never get here, as numbers are handled first, followed by exact matches
+                // for the enum. If we do though, then handle it as an error.
                 string msg = string.Format(AppResources.OptionInvalidFilterType, dltTypeFilter);
                 throw new ArgumentException(msg, nameof(dltTypeFilter));
             }

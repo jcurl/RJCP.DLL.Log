@@ -564,6 +564,26 @@
             }
         }
 
+        [Test]
+        public void SearchEcuIdDuplicate()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("ecuid"), "AAAA,ECU1,AAAA", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2).Or.EqualTo(3));
+            }
+        }
+
         [TestCase("APP1", 1)]
         [TestCase("app1", 0)]
         [TestCase("xxx", 0)]
@@ -623,6 +643,26 @@
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
                 Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2));
+            }
+        }
+
+        [Test]
+        public void SearchAppIdDuplicate()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("appid"), "AAAA,APP1,AAAA", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2).Or.EqualTo(3));
             }
         }
 
@@ -688,6 +728,26 @@
             }
         }
 
+        [Test]
+        public void SearchCtsIdDuplicate()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("ctxid"), "AAAA,CTX1,AAAA", "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2).Or.EqualTo(3));
+            }
+        }
+
         [TestCase("127", 1)]
         [TestCase("128", 0)]
         public void SearchSessionId(string session, int count)
@@ -726,6 +786,26 @@
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
                 Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(1));
+            }
+        }
+
+        [Test]
+        public void SearchSessionIdDuplicate()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("sessionid", "127,127,128"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(2).Or.EqualTo(3));
             }
         }
 
@@ -983,6 +1063,47 @@
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
                 Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+            }
+        }
+
+        [Test]
+        public void DltTypeDuplicate()
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("type", "info,warn,warn,error"), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.Success));
+                global.WriteStd();
+                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.DltTypeFilters.Count, Is.EqualTo(3).Or.EqualTo(4));
+            }
+        }
+
+        [TestCase("foobar")]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("-")]
+        public void DltTypeInvalid(string dltType)
+        {
+            using (TestApplication global = new TestApplication()) {
+                ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
+                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
+
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("type", dltType), "net://127.0.0.1"
+                }), Is.EqualTo(ExitCode.OptionsError));
+                global.WriteStd();
             }
         }
 
