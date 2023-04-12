@@ -83,6 +83,7 @@
         private Constraint m_Session;
         private Constraint m_MessageType;
         private Constraint m_Time;
+        private Constraint m_MessageId;
         private bool m_Verbose;
         private bool m_NonVerbose;
         private bool m_Control;
@@ -186,6 +187,15 @@
         }
 
         /// <summary>
+        /// Adds the message identifier to the filter.
+        /// </summary>
+        /// <param name="sessionId">The message identifier.</param>
+        public void AddMessageId(int messageId)
+        {
+            m_MessageId = AddConstraint(m_MessageId, new DltMessageId(messageId));
+        }
+
+        /// <summary>
         /// Adds the time range to filter. This can only be set once.
         /// </summary>
         /// <param name="notBefore">The time stamp that messages not before should be shown.</param>
@@ -276,6 +286,11 @@
 
             if (m_MessageType != null) {
                 constraint.Expr(m_MessageType);
+                filtered = true;
+            }
+
+            if (m_MessageId != null) {
+                constraint.Expr(m_MessageId);
                 filtered = true;
             }
 

@@ -74,6 +74,7 @@
             Write(2, 4, HelpResources.Help375_Verbose);
             Write(2, 4, HelpResources.Help380_NonVerbose);
             Write(2, 4, HelpResources.Help385_Control);
+            Write(2, 4, HelpResources.Help386_MessageId);
             Write(2, 4, HelpResources.Help390_DateNotAfter);
             Write(2, 4, HelpResources.Help395_DateNotBefore);
             Write(2, 4, HelpResources.Help400_BeforeContext);

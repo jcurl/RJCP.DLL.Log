@@ -273,5 +273,47 @@
                 _ = new Constraint().Awake(new TimeSpan(int.MaxValue * TimeSpan.TicksPerMillisecond + 1));
             }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
+
+        [Test]
+        public void MessageIdentifierMatch()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            DltTraceLineBase line = builder
+                .SetApplicationId("APP1")
+                .SetMessageId(42)
+                .SetIsVerbose(false)
+                .GetResult();
+
+            Constraint c = new Constraint().DltMessageId(42);
+            Assert.That(c.Check(line), Is.True);
+        }
+
+        [Test]
+        public void MessageIdentifierNoMatch()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            DltTraceLineBase line = builder
+                .SetApplicationId("APP1")
+                .SetMessageId(42)
+                .SetIsVerbose(false)
+                .GetResult();
+
+            Constraint c = new Constraint().DltMessageId(43);
+            Assert.That(c.Check(line), Is.False);
+        }
+
+        [Test]
+        public void MessageIdentifierVerbose()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            DltTraceLineBase line = builder
+                .SetApplicationId("APP1")
+                .SetIsVerbose(true)
+                .AddArgument(new Dlt.Args.StringDltArg("Test"))
+                .GetResult();
+
+            Constraint c = new Constraint().DltMessageId(43);
+            Assert.That(c.Check(line), Is.False);
+        }
     }
 }

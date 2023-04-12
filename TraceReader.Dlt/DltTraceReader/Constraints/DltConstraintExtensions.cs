@@ -116,5 +116,17 @@
         {
             return constraint.Expr(new Awake(deviceTime));
         }
+
+        /// <summary>
+        /// Checks that <see cref="DltNonVerboseTraceLine.MessageId"/> matches.
+        /// </summary>
+        /// <param name="constraint">The <see cref="Constraint"/> to apply the expression for.</param>
+        /// <param name="messageId">The message identifier to match.</param>
+        /// <returns>The <see cref="Constraint"/> object for chaining.</returns>
+        /// <exception cref="InvalidOperationException">Constraints expression is read only.</exception>
+        public static Constraint DltMessageId(this Constraint constraint, int messageId)
+        {
+            return constraint.Expr(new DltMessageId(messageId));
+        }
     }
 }

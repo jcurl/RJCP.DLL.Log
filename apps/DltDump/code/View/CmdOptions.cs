@@ -246,6 +246,17 @@
         /// <value>The date messages should not be after.</value>
         public DateTime? NotAfter { get; private set; }
 
+        [Option("messageid")]
+        private readonly List<string> m_MessageIdString = new List<string>();
+
+        private readonly List<int> m_MessageId = new List<int>();
+
+        /// <summary>
+        /// The message identifiers that should match.
+        /// </summary>
+        /// <value>The message identifiers.</value>
+        public IReadOnlyList<int> MessageId { get { return m_MessageId; } }
+
         /// <summary>
         /// Gets the list of arguments which are inputs for DLT streams.
         /// </summary>
@@ -258,6 +269,7 @@
             CheckContext();
             CheckSplit();
             CheckDates();
+            CheckMessageId();
 
             try {
                 // Interpret the strings and convert to the correct DltType.
@@ -355,6 +367,25 @@
                 if (NotBefore.Value > NotAfter.Value) {
                     string message = string.Format(AppResources.OptionInvalidDateNotBeforeAfterOrder,
                         NotBefore.Value, NotAfter.Value);
+                    throw new OptionException(message);
+                }
+            }
+        }
+
+        private void CheckMessageId()
+        {
+            foreach (string messageId in m_MessageIdString) {
+                if (string.IsNullOrWhiteSpace(messageId)) {
+                    string message = string.Format(AppResources.OptionInvalidMessageId, "<empty>");
+                    throw new OptionException(message);
+                }
+
+                if (uint.TryParse(messageId, NumberStyles.None, CultureInfo.InvariantCulture, out uint result)) {
+                    // Type cast the uint into an integer, as this is the base type for C#, even though everywhere else it's
+                    // unsigned.
+                    m_MessageId.Add(unchecked((int)result));
+                } else {
+                    string message = string.Format(AppResources.OptionInvalidMessageId, messageId);
                     throw new OptionException(message);
                 }
             }

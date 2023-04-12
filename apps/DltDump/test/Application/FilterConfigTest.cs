@@ -381,5 +381,47 @@
 
             Assert.That(config.GetFilter().Check(TestLines.Control), Is.EqualTo(result));
         }
+
+        [TestCase(42, true)]
+        [TestCase(43, false)]
+        [TestCase(-1, false)]
+        public void FilterDltMessageId(int messageId, bool result)
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageId(messageId);
+
+            Assert.That(config.GetFilter().Check(TestLines.NonVerbose), Is.EqualTo(result));
+        }
+
+        [TestCase(42, true)]
+        [TestCase(43, false)]
+        [TestCase(-1, false)]
+        public void FilterDltMessageIdWithArgs(int messageId, bool result)
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageId(messageId);
+
+            Assert.That(config.GetFilter().Check(TestLines.NonVerboseWithArgs), Is.EqualTo(result));
+        }
+
+        [Test]
+        public void FilterDltMessageIds()
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageId(42);
+            config.AddMessageId(43);
+
+            Assert.That(config.GetFilter().Check(TestLines.NonVerbose), Is.True);
+        }
+
+        [Test]
+        public void FilterDltMessageIdsNoMatch()
+        {
+            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            config.AddMessageId(41);
+            config.AddMessageId(43);
+
+            Assert.That(config.GetFilter().Check(TestLines.NonVerbose), Is.False);
+        }
     }
 }

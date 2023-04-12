@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -642,6 +642,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string OptionInvalidFilterType {
             get {
                 return ResourceManager.GetString("OptionInvalidFilterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid message identifier {0}, must be an integer.
+        /// </summary>
+        internal static string OptionInvalidMessageId {
+            get {
+                return ResourceManager.GetString("OptionInvalidMessageId", resourceCulture);
             }
         }
         

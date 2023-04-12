@@ -138,5 +138,35 @@
                        DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature +
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
+
+        public static readonly DltNonVerboseTraceLine NonVerboseWithArgs = new DltNonVerboseTraceLine(42, new[] { new StringDltArg("Message 1") }) {
+            EcuId = "ECU1",
+            ApplicationId = "APP1",
+            ContextId = "CTX1",
+            Position = 3,
+            Line = 0,
+            Count = 127,
+            Type = DltType.LOG_INFO,
+            TimeStamp = DateTime.UtcNow - TimeSpan.FromSeconds(2),
+            DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
+            Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.MessageTypeFeature +
+                       DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                       DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+        };
+
+        public static readonly DltNonVerboseTraceLine NonVerbose = new DltNonVerboseTraceLine(42) {
+            EcuId = "ECU1",
+            ApplicationId = "APP1",
+            ContextId = "CTX1",
+            Position = 3,
+            Line = 0,
+            Count = 127,
+            Type = DltType.LOG_INFO,
+            TimeStamp = DateTime.UtcNow - TimeSpan.FromSeconds(2),
+            DeviceTimeStamp = new TimeSpan(0, 0, 1, 20, 544),
+            Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.MessageTypeFeature +
+                       DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature +
+                       DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
+        };
     }
 }

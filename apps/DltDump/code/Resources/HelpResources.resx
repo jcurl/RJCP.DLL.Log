@@ -216,6 +216,10 @@
     <value>{1}control
   Match lines that are a control message (including the timing message).</value>
   </data>
+  <data name="Help386_MessageId" xml:space="preserve">
+    <value>{1}messageid{2}value, value, value
+ filters for the specific message identifiers given</value>
+  </data>
   <data name="Help390_DateNotAfter" xml:space="preserve">
     <value>{0}not-after{2}&lt;datetime&gt;
   Filter for messages that are at this date/time and earlier. Local time can be given as YYYY-MM-DDTHH:MM:SS (2022-06-18T10:30:00), universal time can be given as  YY-MM-DDZHH:MM:SS (2022-06-18Z08:30:00).</value>

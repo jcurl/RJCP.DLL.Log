@@ -372,4 +372,7 @@
   <data name="FilterCheckError_Invalid" xml:space="preserve">
     <value>Invalid input {0} ({1})</value>
   </data>
+  <data name="OptionInvalidMessageId" xml:space="preserve">
+    <value>Invalid message identifier {0}, must be an integer</value>
+  </data>
 </root>

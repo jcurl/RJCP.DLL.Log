@@ -316,6 +316,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}messageid{2}value, value, value
+        /// filters for the specific message identifiers given.
+        /// </summary>
+        internal static string Help386_MessageId {
+            get {
+                return ResourceManager.GetString("Help386_MessageId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}not-after{2}&lt;datetime&gt;
         ///  Filter for messages that are at this date/time and earlier. Local time can be given as YYYY-MM-DDTHH:MM:SS (2022-06-18T10:30:00), universal time can be given as  YY-MM-DDZHH:MM:SS (2022-06-18Z08:30:00)..
         /// </summary>

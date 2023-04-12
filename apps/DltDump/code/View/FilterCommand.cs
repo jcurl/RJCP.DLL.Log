@@ -48,7 +48,8 @@
             }
 
             HashSet<string> identifiers = new HashSet<string>();
-            HashSet<int> sessionids = new HashSet<int>();
+            HashSet<int> sessionIds = new HashSet<int>();
+            HashSet<int> messageIds = new HashSet<int>();
             HashSet<DltType> types = new HashSet<DltType>();
 
             foreach (string ecuId in options.EcuId) {
@@ -73,11 +74,18 @@
             identifiers.Clear();
 
             foreach (int session in options.SessionId) {
-                if (sessionids.Contains(session)) continue;
+                if (sessionIds.Contains(session)) continue;
                 config.AddSessionId(session);
-                sessionids.Add(session);
+                sessionIds.Add(session);
             }
-            sessionids.Clear();
+            sessionIds.Clear();
+
+            foreach (int messageId in options.MessageId) {
+                if (messageIds.Contains(messageId)) continue;
+                config.AddMessageId(messageId);
+                messageIds.Add(messageId);
+            }
+            messageIds.Clear();
 
             foreach (DltType type in options.DltTypeFilters) {
                 if (types.Contains(type)) continue;
