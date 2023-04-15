@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="547px" preserveAspectRatio="none" style="width:885px;height:547px;background:#FFFFFF;" version="1.1" viewBox="0 0 885 547" width="885px" zoomAndPan="magnify"><defs><filter height="300%" id="f1brukpje9fhpy" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><rect fill="#FFFFFF" height="80" style="stroke:#000000;stroke-width:1.5;" width="327" x="7" y="130"/><rect fill="#FFFFFF" height="298" style="stroke:#000000;stroke-width:1.5;" width="349" x="251" y="243"/><!--MD5=[06101e4da8c8fcc4a97e2ba82a35373c]
+class FibexOptions--><rect codeLine="17" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FibexOptions" style="stroke:#A80036;stroke-width:1.5;" width="104" x="23" y="146"/><ellipse cx="38" cy="162" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M40.7656,157.875 Q40.9219,157.6563 41.1094,157.5469 Q41.2969,157.4375 41.5156,157.4375 Q41.8906,157.4375 42.125,157.6953 Q42.3594,157.9531 42.3594,158.5625 L42.3594,160.0156 Q42.3594,160.625 42.125,160.8906 Q41.8906,161.1563 41.5156,161.1563 Q41.1719,161.1563 40.9688,160.9531 Q40.7656,160.7656 40.6563,160.25 Q40.6094,159.8906 40.4219,159.7031 Q40.0938,159.3281 39.4844,159.1094 Q38.875,158.8906 38.25,158.8906 Q37.4844,158.8906 36.8516,159.2188 Q36.2188,159.5469 35.7266,160.2969 Q35.2344,161.0469 35.2344,162.0781 L35.2344,163.1719 Q35.2344,164.4063 36.125,165.2266 Q37.0156,166.0469 38.6094,166.0469 Q39.5469,166.0469 40.2031,165.7969 Q40.5938,165.6406 41.0156,165.2031 Q41.2813,164.9375 41.4297,164.8594 Q41.5781,164.7813 41.7813,164.7813 Q42.1094,164.7813 42.3672,165.0391 Q42.625,165.2969 42.625,165.6406 Q42.625,165.9844 42.2813,166.3906 Q41.7813,166.9688 40.9844,167.2969 Q39.9063,167.75 38.6094,167.75 Q37.0938,167.75 35.8906,167.125 Q34.9063,166.625 34.2188,165.5547 Q33.5313,164.4844 33.5313,163.2031 L33.5313,162.0469 Q33.5313,160.7188 34.1484,159.5703 Q34.7656,158.4219 35.8594,157.8047 Q36.9531,157.1875 38.1875,157.1875 Q38.9219,157.1875 39.5703,157.3516 Q40.2188,157.5156 40.7656,157.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="72" x="52" y="166.9102">FibexOptions</text><line style="stroke:#A80036;stroke-width:1.5;" x1="24" x2="126" y1="178" y2="178"/><line style="stroke:#A80036;stroke-width:1.5;" x1="24" x2="126" y1="186" y2="186"/><!--MD5=[e5922fba914e36fe048c00bebd120a2e]
+class FibexFile--><rect codeLine="18" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FibexFile" style="stroke:#A80036;stroke-width:1.5;" width="81" x="236.5" y="146"/><ellipse cx="251.5" cy="162" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M254.2656,157.875 Q254.4219,157.6563 254.6094,157.5469 Q254.7969,157.4375 255.0156,157.4375 Q255.3906,157.4375 255.625,157.6953 Q255.8594,157.9531 255.8594,158.5625 L255.8594,160.0156 Q255.8594,160.625 255.625,160.8906 Q255.3906,161.1563 255.0156,161.1563 Q254.6719,161.1563 254.4688,160.9531 Q254.2656,160.7656 254.1563,160.25 Q254.1094,159.8906 253.9219,159.7031 Q253.5938,159.3281 252.9844,159.1094 Q252.375,158.8906 251.75,158.8906 Q250.9844,158.8906 250.3516,159.2188 Q249.7188,159.5469 249.2266,160.2969 Q248.7344,161.0469 248.7344,162.0781 L248.7344,163.1719 Q248.7344,164.4063 249.625,165.2266 Q250.5156,166.0469 252.1094,166.0469 Q253.0469,166.0469 253.7031,165.7969 Q254.0938,165.6406 254.5156,165.2031 Q254.7813,164.9375 254.9297,164.8594 Q255.0781,164.7813 255.2813,164.7813 Q255.6094,164.7813 255.8672,165.0391 Q256.125,165.2969 256.125,165.6406 Q256.125,165.9844 255.7813,166.3906 Q255.2813,166.9688 254.4844,167.2969 Q253.4063,167.75 252.1094,167.75 Q250.5938,167.75 249.3906,167.125 Q248.4063,166.625 247.7188,165.5547 Q247.0313,164.4844 247.0313,163.2031 L247.0313,162.0469 Q247.0313,160.7188 247.6484,159.5703 Q248.2656,158.4219 249.3594,157.8047 Q250.4531,157.1875 251.6875,157.1875 Q252.4219,157.1875 253.0703,157.3516 Q253.7188,157.5156 254.2656,157.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="49" x="265.5" y="166.9102">FibexFile</text><line style="stroke:#A80036;stroke-width:1.5;" x1="237.5" x2="316.5" y1="178" y2="178"/><line style="stroke:#A80036;stroke-width:1.5;" x1="237.5" x2="316.5" y1="186" y2="186"/><!--MD5=[faf2c4775fa75bd5320ececefd5a4339]
+class FrameMapSimple--><rect codeLine="24" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FrameMapSimple" style="stroke:#A80036;stroke-width:1.5;" width="130" x="313" y="477"/><ellipse cx="328" cy="493" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M330.7656,488.875 Q330.9219,488.6563 331.1094,488.5469 Q331.2969,488.4375 331.5156,488.4375 Q331.8906,488.4375 332.125,488.6953 Q332.3594,488.9531 332.3594,489.5625 L332.3594,491.0156 Q332.3594,491.625 332.125,491.8906 Q331.8906,492.1563 331.5156,492.1563 Q331.1719,492.1563 330.9688,491.9531 Q330.7656,491.7656 330.6563,491.25 Q330.6094,490.8906 330.4219,490.7031 Q330.0938,490.3281 329.4844,490.1094 Q328.875,489.8906 328.25,489.8906 Q327.4844,489.8906 326.8516,490.2188 Q326.2188,490.5469 325.7266,491.2969 Q325.2344,492.0469 325.2344,493.0781 L325.2344,494.1719 Q325.2344,495.4063 326.125,496.2266 Q327.0156,497.0469 328.6094,497.0469 Q329.5469,497.0469 330.2031,496.7969 Q330.5938,496.6406 331.0156,496.2031 Q331.2813,495.9375 331.4297,495.8594 Q331.5781,495.7813 331.7813,495.7813 Q332.1094,495.7813 332.3672,496.0391 Q332.625,496.2969 332.625,496.6406 Q332.625,496.9844 332.2813,497.3906 Q331.7813,497.9688 330.9844,498.2969 Q329.9063,498.75 328.6094,498.75 Q327.0938,498.75 325.8906,498.125 Q324.9063,497.625 324.2188,496.5547 Q323.5313,495.4844 323.5313,494.2031 L323.5313,493.0469 Q323.5313,491.7188 324.1484,490.5703 Q324.7656,489.4219 325.8594,488.8047 Q326.9531,488.1875 328.1875,488.1875 Q328.9219,488.1875 329.5703,488.3516 Q330.2188,488.5156 330.7656,488.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="98" x="342" y="497.9102">FrameMapSimple</text><line style="stroke:#A80036;stroke-width:1.5;" x1="314" x2="442" y1="509" y2="509"/><line style="stroke:#A80036;stroke-width:1.5;" x1="314" x2="442" y1="517" y2="517"/><!--MD5=[e01f93db2ad86ee5a8eed444ec8a8e6b]
+class FrameMapDefault--><rect codeLine="27" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FrameMapDefault" style="stroke:#A80036;stroke-width:1.5;" width="130" x="267" y="368"/><ellipse cx="282" cy="384" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M284.7656,379.875 Q284.9219,379.6563 285.1094,379.5469 Q285.2969,379.4375 285.5156,379.4375 Q285.8906,379.4375 286.125,379.6953 Q286.3594,379.9531 286.3594,380.5625 L286.3594,382.0156 Q286.3594,382.625 286.125,382.8906 Q285.8906,383.1563 285.5156,383.1563 Q285.1719,383.1563 284.9688,382.9531 Q284.7656,382.7656 284.6563,382.25 Q284.6094,381.8906 284.4219,381.7031 Q284.0938,381.3281 283.4844,381.1094 Q282.875,380.8906 282.25,380.8906 Q281.4844,380.8906 280.8516,381.2188 Q280.2188,381.5469 279.7266,382.2969 Q279.2344,383.0469 279.2344,384.0781 L279.2344,385.1719 Q279.2344,386.4063 280.125,387.2266 Q281.0156,388.0469 282.6094,388.0469 Q283.5469,388.0469 284.2031,387.7969 Q284.5938,387.6406 285.0156,387.2031 Q285.2813,386.9375 285.4297,386.8594 Q285.5781,386.7813 285.7813,386.7813 Q286.1094,386.7813 286.3672,387.0391 Q286.625,387.2969 286.625,387.6406 Q286.625,387.9844 286.2813,388.3906 Q285.7813,388.9688 284.9844,389.2969 Q283.9063,389.75 282.6094,389.75 Q281.0938,389.75 279.8906,389.125 Q278.9063,388.625 278.2188,387.5547 Q277.5313,386.4844 277.5313,385.2031 L277.5313,384.0469 Q277.5313,382.7188 278.1484,381.5703 Q278.7656,380.4219 279.8594,379.8047 Q280.9531,379.1875 282.1875,379.1875 Q282.9219,379.1875 283.5703,379.3516 Q284.2188,379.5156 284.7656,379.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="98" x="296" y="388.9102">FrameMapDefault</text><line style="stroke:#A80036;stroke-width:1.5;" x1="268" x2="396" y1="400" y2="400"/><line style="stroke:#A80036;stroke-width:1.5;" x1="268" x2="396" y1="408" y2="408"/><!--MD5=[be4a6a470a2f40522cd2bd41ceedb415]
+class FrameMapEcu--><rect codeLine="31" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FrameMapEcu" style="stroke:#A80036;stroke-width:1.5;" width="112" x="330" y="259"/><ellipse cx="345" cy="275" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M347.7656,270.875 Q347.9219,270.6563 348.1094,270.5469 Q348.2969,270.4375 348.5156,270.4375 Q348.8906,270.4375 349.125,270.6953 Q349.3594,270.9531 349.3594,271.5625 L349.3594,273.0156 Q349.3594,273.625 349.125,273.8906 Q348.8906,274.1563 348.5156,274.1563 Q348.1719,274.1563 347.9688,273.9531 Q347.7656,273.7656 347.6563,273.25 Q347.6094,272.8906 347.4219,272.7031 Q347.0938,272.3281 346.4844,272.1094 Q345.875,271.8906 345.25,271.8906 Q344.4844,271.8906 343.8516,272.2188 Q343.2188,272.5469 342.7266,273.2969 Q342.2344,274.0469 342.2344,275.0781 L342.2344,276.1719 Q342.2344,277.4063 343.125,278.2266 Q344.0156,279.0469 345.6094,279.0469 Q346.5469,279.0469 347.2031,278.7969 Q347.5938,278.6406 348.0156,278.2031 Q348.2813,277.9375 348.4297,277.8594 Q348.5781,277.7813 348.7813,277.7813 Q349.1094,277.7813 349.3672,278.0391 Q349.625,278.2969 349.625,278.6406 Q349.625,278.9844 349.2813,279.3906 Q348.7813,279.9688 347.9844,280.2969 Q346.9063,280.75 345.6094,280.75 Q344.0938,280.75 342.8906,280.125 Q341.9063,279.625 341.2188,278.5547 Q340.5313,277.4844 340.5313,276.2031 L340.5313,275.0469 Q340.5313,273.7188 341.1484,272.5703 Q341.7656,271.4219 342.8594,270.8047 Q343.9531,270.1875 345.1875,270.1875 Q345.9219,270.1875 346.5703,270.3516 Q347.2188,270.5156 347.7656,270.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="80" x="359" y="279.9102">FrameMapEcu</text><line style="stroke:#A80036;stroke-width:1.5;" x1="331" x2="441" y1="291" y2="291"/><line style="stroke:#A80036;stroke-width:1.5;" x1="331" x2="441" y1="299" y2="299"/><!--MD5=[3a8397c8ba1a7d5f821d36f60afa19d1]
+class FrameMapEcuSimple--><rect codeLine="35" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="FrameMapEcuSimple" style="stroke:#A80036;stroke-width:1.5;" width="151" x="432.5" y="368"/><ellipse cx="447.5" cy="384" fill="#ADD1B2" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M450.2656,379.875 Q450.4219,379.6563 450.6094,379.5469 Q450.7969,379.4375 451.0156,379.4375 Q451.3906,379.4375 451.625,379.6953 Q451.8594,379.9531 451.8594,380.5625 L451.8594,382.0156 Q451.8594,382.625 451.625,382.8906 Q451.3906,383.1563 451.0156,383.1563 Q450.6719,383.1563 450.4688,382.9531 Q450.2656,382.7656 450.1563,382.25 Q450.1094,381.8906 449.9219,381.7031 Q449.5938,381.3281 448.9844,381.1094 Q448.375,380.8906 447.75,380.8906 Q446.9844,380.8906 446.3516,381.2188 Q445.7188,381.5469 445.2266,382.2969 Q444.7344,383.0469 444.7344,384.0781 L444.7344,385.1719 Q444.7344,386.4063 445.625,387.2266 Q446.5156,388.0469 448.1094,388.0469 Q449.0469,388.0469 449.7031,387.7969 Q450.0938,387.6406 450.5156,387.2031 Q450.7813,386.9375 450.9297,386.8594 Q451.0781,386.7813 451.2813,386.7813 Q451.6094,386.7813 451.8672,387.0391 Q452.125,387.2969 452.125,387.6406 Q452.125,387.9844 451.7813,388.3906 Q451.2813,388.9688 450.4844,389.2969 Q449.4063,389.75 448.1094,389.75 Q446.5938,389.75 445.3906,389.125 Q444.4063,388.625 443.7188,387.5547 Q443.0313,386.4844 443.0313,385.2031 L443.0313,384.0469 Q443.0313,382.7188 443.6484,381.5703 Q444.2656,380.4219 445.3594,379.8047 Q446.4531,379.1875 447.6875,379.1875 Q448.4219,379.1875 449.0703,379.3516 Q449.7188,379.5156 450.2656,379.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="119" x="461.5" y="388.9102">FrameMapEcuSimple</text><line style="stroke:#A80036;stroke-width:1.5;" x1="433.5" x2="582.5" y1="400" y2="400"/><line style="stroke:#A80036;stroke-width:1.5;" x1="433.5" x2="582.5" y1="408" y2="408"/><!--MD5=[06e973f5a4c58802c349aafb6ea6f544]
+class IFrame--><rect codeLine="3" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="48" id="IFrame" style="stroke:#A80036;stroke-width:1.5;" width="72" x="799" y="21"/><ellipse cx="814" cy="37" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M814.9531,33.6406 L814.9531,40.2969 L816.6719,40.2969 Q817.2813,40.2969 817.5469,40.5313 Q817.8125,40.7656 817.8125,41.1563 Q817.8125,41.5313 817.5469,41.7656 Q817.2813,42 816.6719,42 L811.5313,42 Q810.9219,42 810.6563,41.7656 Q810.3906,41.5313 810.3906,41.1406 Q810.3906,40.7656 810.6563,40.5313 Q810.9219,40.2969 811.5313,40.2969 L813.25,40.2969 L813.25,33.6406 L811.5313,33.6406 Q810.9219,33.6406 810.6563,33.4063 Q810.3906,33.1719 810.3906,32.7813 Q810.3906,32.4063 810.6563,32.1719 Q810.9219,31.9375 811.5313,31.9375 L816.6719,31.9375 Q817.2813,31.9375 817.5469,32.1719 Q817.8125,32.4063 817.8125,32.7813 Q817.8125,33.1719 817.5469,33.4063 Q817.2813,33.6406 816.6719,33.6406 L814.9531,33.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="40" x="828" y="41.9102">IFrame</text><line style="stroke:#A80036;stroke-width:1.5;" x1="800" x2="870" y1="53" y2="53"/><line style="stroke:#A80036;stroke-width:1.5;" x1="800" x2="870" y1="61" y2="61"/><!--MD5=[036264de158f92bb7e563a0642b9a679]
+class IFrameMap--><rect codeLine="4" fill="#FEFECE" filter="url(#f1brukpje9fhpy)" height="75.6719" id="IFrameMap" style="stroke:#A80036;stroke-width:1.5;" width="427" x="281.5" y="7"/><ellipse cx="459.25" cy="23" fill="#B4A7E5" rx="11" ry="11" style="stroke:#A80036;stroke-width:1.0;"/><path d="M460.2031,19.6406 L460.2031,26.2969 L461.9219,26.2969 Q462.5313,26.2969 462.7969,26.5313 Q463.0625,26.7656 463.0625,27.1563 Q463.0625,27.5313 462.7969,27.7656 Q462.5313,28 461.9219,28 L456.7813,28 Q456.1719,28 455.9063,27.7656 Q455.6406,27.5313 455.6406,27.1406 Q455.6406,26.7656 455.9063,26.5313 Q456.1719,26.2969 456.7813,26.2969 L458.5,26.2969 L458.5,19.6406 L456.7813,19.6406 Q456.1719,19.6406 455.9063,19.4063 Q455.6406,19.1719 455.6406,18.7813 Q455.6406,18.4063 455.9063,18.1719 Q456.1719,17.9375 456.7813,17.9375 L461.9219,17.9375 Q462.5313,17.9375 462.7969,18.1719 Q463.0625,18.4063 463.0625,18.7813 Q463.0625,19.1719 462.7969,19.4063 Q462.5313,19.6406 461.9219,19.6406 L460.2031,19.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="63" x="479.75" y="27.9102">IFrameMap</text><line style="stroke:#A80036;stroke-width:1.5;" x1="282.5" x2="707.5" y1="39" y2="39"/><line style="stroke:#A80036;stroke-width:1.5;" x1="282.5" x2="707.5" y1="47" y2="47"/><ellipse cx="292.5" cy="58" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="310" x="301.5" y="62.4189">GetFrame(id: int, appId: string, ctxId: string, ecuId: string): IFrame</text><ellipse cx="292.5" cy="71.8359" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="401" x="301.5" y="76.2549">TryGetFrame(id: int, appId: string, ctxId: string, ecuId: string, out IFrame frame): bool</text><!--MD5=[28a5705e9871828bb3fe982ef06a2020]
+link IFrameMap to IFrame--><path codeLine="9" d="M708.88,45 C743.6,45 775.69,45 798.82,45 " fill="none" id="IFrameMap-IFrame" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="54" x="726.75" y="38.4951">«returns»</text><!--MD5=[38f13198d099cd62ff9969af362f77cc]
+reverse link IFrameMap to FibexFile--><path codeLine="19" d="M411.77,92.96 C379.49,111.17 344.01,131.19 317.56,146.11 " fill="none" id="IFrameMap-backto-FibexFile" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="408.44,86.8,429.3,83.07,415.32,99,408.44,86.8" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[817395f8a631344f0d6a8ed45416aaa3]
+link FibexOptions to FibexFile--><path codeLine="20" d="M127.02,170 C159.18,170 200.07,170 231.04,170 " fill="none" id="FibexOptions-to-FibexFile" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="236.31,170,227.31,166,231.31,170,227.31,174,236.31,170" style="stroke:#A80036;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="73" x="145.25" y="163.4951">«configures»</text><!--MD5=[0597df94ac1a00629a8044dd3be7d0ac]
+reverse link IFrameMap to FrameMapSimple--><path codeLine="25" d="M594,94.89 C618.05,113.87 637,138.5 637,169 C637,169 637,169 637,393 C637,476.8 519.74,496.27 443.02,500.04 " fill="none" id="IFrameMap-backto-FrameMapSimple" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="589.84,100.53,577.6,83.23,597.96,89.12,589.84,100.53" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[f10b55889cc1ad8549c6187764f74427]
+reverse link IFrameMap to FrameMapDefault--><path codeLine="28" d="M500.42,103.72 C502.83,159.89 498.67,245.55 460,307 C443.01,334 413.83,354.14 387.61,367.92 " fill="none" id="IFrameMap-backto-FrameMapDefault" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="493.41,103.77,499.2,83.38,507.38,102.93,493.41,103.77" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[ac055036135f1f12edaea9019d6044ab]
+reverse link FrameMapDefault to FrameMapSimple--><path codeLine="29" d="M347.2,428.35 C354.05,444.29 361.95,462.68 368.04,476.83 " fill="none" id="FrameMapDefault-backto-FrameMapSimple" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="341.98,416.22,340.6792,423.3128,346.7261,427.2415,348.0269,420.1487,341.98,416.22" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[fd91fabe1079187162ec049d51a0dfc9]
+reverse link IFrameMap to FrameMapEcu--><path codeLine="32" d="M469.36,101.51 C446.22,151.61 413.33,222.82 396.62,259 " fill="none" id="IFrameMap-backto-FrameMapEcu" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="463.11,98.36,477.85,83.13,475.82,104.23,463.11,98.36" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[ee19720802d3d7d1615288c70cb40c46]
+reverse link FrameMapEcu to FrameMapDefault--><path codeLine="33" d="M368.4,318.88 C360.3,334.93 350.91,353.54 343.69,367.83 " fill="none" id="FrameMapEcu-backto-FrameMapDefault" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="374.28,307.22,368.0067,310.7762,368.8766,317.9346,375.1498,314.3785,374.28,307.22" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[5d21c3e16021790ac14f145ddf727831]
+reverse link IFrameMap to FrameMapEcuSimple--><path codeLine="36" d="M518.62,102.66 C519.55,106.12 520.36,109.59 521,113 C539.4,211.29 533,238.72 521,338 C519.81,347.88 517.41,358.57 514.99,367.74 " fill="none" id="IFrameMap-backto-FrameMapEcuSimple" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="511.82,104.38,512.23,83.2,525.12,100.01,511.82,104.38" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[7f2547a19517fe81a72b9572345624f5]
+reverse link FrameMapEcuSimple to FrameMapSimple--><path codeLine="37" d="M469.59,424.61 C449.25,441.36 424.71,461.55 406.15,476.83 " fill="none" id="FrameMapEcuSimple-backto-FrameMapSimple" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="479.79,416.22,472.6161,416.9519,470.5325,423.8554,477.7064,423.1235,479.79,416.22" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[de1b61c110d26ba988b08afba9bba0cd]
+reverse link FibexFile to FrameMapDefault--><path codeLine="40" d="M257.71,205.92 C254.93,212.42 252.51,219.28 251,226 C240.1,274.57 227.32,294.21 251,338 C257.63,350.27 268.48,360.15 280.11,367.91 " fill="none" id="FibexFile-backto-FrameMapDefault" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="263.34,194,257.1579,197.7123,258.2069,204.8467,264.389,201.1344,263.34,194" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[e5f0d41e495265503c848e4e0a3f318c]
+reverse link FibexFile to FrameMapSimple--><path codeLine="41" d="M245.77,204.31 C238.92,213.58 232.63,224.11 229,235 C203.39,311.83 204.93,348.72 250,416 C267.9,442.72 297.47,462.95 323.69,476.85 " fill="none" id="FibexFile-backto-FrameMapSimple" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="253.95,194.07,247.0799,196.2611,246.4601,203.4456,253.3302,201.2544,253.95,194.07" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[2c00bc7c6580ee4ab7605bb2ccc83e4e]
+reverse link FibexFile to FrameMapEcu--><path codeLine="42" d="M309.06,203.65 C326.44,221.34 347.49,242.78 363.18,258.76 " fill="none" id="FibexFile-backto-FrameMapEcu" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="299.85,194.27,301.1982,201.354,308.2557,202.8341,306.9076,195.7501,299.85,194.27" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[ff841b9029139e599decc0975b555865]
+reverse link FibexFile to FrameMapEcuSimple--><path codeLine="43" d="M278.09,207.24 C280.81,237.21 289.05,279.21 313,307 C330.18,326.93 388.83,350.75 437.36,367.93 " fill="none" id="FibexFile-backto-FrameMapEcuSimple" style="stroke:#A80036;stroke-width:1.0;"/><polygon fill="#A80036" points="277.17,194.01,273.5949,200.2725,278.0006,205.9812,281.5757,199.7187,277.17,194.01" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[fc58ca3bc2839938413b9d3f899e1b38]
+@startuml DLT.DecoderFibex
+allowmixing
+
+interface IFrame
+interface IFrameMap {
+    +GetFrame(id: int, appId: string, ctxId: string, ecuId: string): IFrame
+    +TryGetFrame(id: int, appId: string, ctxId: string, ecuId: string, out IFrame frame): bool
+}
+
+IFrameMap -r- IFrame : <<returns>>
+
+skinparam rectangle {
+    'bordercolor transparent
+    shadowing false
+}
+
+rectangle {
+    class FibexOptions
+    class FibexFile
+    IFrameMap <|.d. FibexFile
+    FibexOptions -r-> FibexFile : <<configures>>
+}
+
+rectangle {
+    class FrameMapSimple
+    FrameMapSimple .u..|> IFrameMap
+
+    class FrameMapDefault
+    FrameMapDefault .u..|> IFrameMap
+    FrameMapDefault *-d-FrameMapSimple
+
+    class FrameMapEcu
+    FrameMapEcu .u..|> IFrameMap
+    FrameMapEcu *-d- FrameMapDefault
+
+    class FrameMapEcuSimple
+    FrameMapEcuSimple .u..|> IFrameMap
+    FrameMapEcuSimple *-d- FrameMapSimple
+}
+
+FibexFile *-d- FrameMapDefault
+FibexFile *-d- FrameMapSimple
+FibexFile *-d- FrameMapEcu
+FibexFile *-d- FrameMapEcuSimple
+@enduml
+
+@startuml DLT.DecoderFibex
+allowmixing
+
+interface IFrame
+interface IFrameMap {
+    +GetFrame(id: int, appId: string, ctxId: string, ecuId: string): IFrame
+    +TryGetFrame(id: int, appId: string, ctxId: string, ecuId: string, out IFrame frame): bool
+}
+
+IFrameMap -r- IFrame : <<returns>>
+
+skinparam rectangle {
+    shadowing false
+}
+
+rectangle {
+    class FibexOptions
+    class FibexFile
+    IFrameMap <|.d. FibexFile
+    FibexOptions -r-> FibexFile : <<configures>>
+}
+
+rectangle {
+    class FrameMapSimple
+    FrameMapSimple .u..|> IFrameMap
+
+    class FrameMapDefault
+    FrameMapDefault .u..|> IFrameMap
+    FrameMapDefault *-d-FrameMapSimple
+
+    class FrameMapEcu
+    FrameMapEcu .u..|> IFrameMap
+    FrameMapEcu *-d- FrameMapDefault
+
+    class FrameMapEcuSimple
+    FrameMapEcuSimple .u..|> IFrameMap
+    FrameMapEcuSimple *-d- FrameMapSimple
+}
+
+FibexFile *-d- FrameMapDefault
+FibexFile *-d- FrameMapSimple
+FibexFile *-d- FrameMapEcu
+FibexFile *-d- FrameMapEcuSimple
+@enduml
+
+PlantUML version 1.2022.1(Tue Feb 01 19:19:58 CET 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: GB
+--></g></svg>

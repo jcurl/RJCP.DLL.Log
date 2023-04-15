@@ -1,0 +1,24 @@
+@startuml DLT.DecoderNonVerbose
+class DltTraceDecoderBase
+DltTraceDecoderBase -r-> INonVerboseDltDecoder : <<uses>>
+DltTraceDecoderBase o-d- NonVerboseDltDecoder
+
+interface INonVerboseDltDecoder {
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+}
+
+class NonVerboseByteDecoder
+INonVerboseDltDecoder <|.d. NonVerboseByteDecoder
+
+interface IFrameMap
+class FrameMap
+IFrameMap <|.l. FrameMap
+
+class NonVerboseDltDecoder
+INonVerboseDltDecoder <|.d. NonVerboseDltDecoder
+NonVerboseDltDecoder *-r- NonVerboseByteDecoder
+NonVerboseDltDecoder o-d- IFrameMap
+
+class Main
+Main .r. FrameMap : <<instantiates>>
+@enduml

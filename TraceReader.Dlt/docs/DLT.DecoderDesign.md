@@ -41,11 +41,19 @@ The decoder is based on the [DLT Format](DLT.Format.md).
     - [3.3.1. Variations to DLT Viewer 2.19.0 STABLE](#331-variations-to-dlt-viewer-2190-stable)
   - [3.4. Extending the Control Decoders](#34-extending-the-control-decoders)
 - [4. Decoding Non-Verbose Messages](#4-decoding-non-verbose-messages)
-  - [4.1. Byte-based Non-Verbose Decoder (Default Implementation)](#41-byte-based-non-verbose-decoder-default-implementation)
-  - [4.2. Considerations for a Non-Verbose DLT Decoder](#42-considerations-for-a-non-verbose-dlt-decoder)
-    - [4.2.1. Software Version Notifications](#421-software-version-notifications)
-    - [4.2.2. Multiple ECUs](#422-multiple-ecus)
-    - [4.2.3. Consistency Checking via Heuristics](#423-consistency-checking-via-heuristics)
+  - [4.1. Considerations for a Non-Verbose DLT Decoder](#41-considerations-for-a-non-verbose-dlt-decoder)
+    - [4.1.1. Multiple ECUs](#411-multiple-ecus)
+    - [4.1.2. Consistency Checking via Heuristics](#412-consistency-checking-via-heuristics)
+  - [4.2. Byte-based Non-Verbose Decoder (Default Implementation)](#42-byte-based-non-verbose-decoder-default-implementation)
+  - [4.3. Non-Verbose Decoder based on an External Definition File](#43-non-verbose-decoder-based-on-an-external-definition-file)
+  - [4.4. Describing the Frame for a Message](#44-describing-the-frame-for-a-message)
+    - [4.4.1. Implementation of a FIBEX file](#441-implementation-of-a-fibex-file)
+      - [4.4.1.1. FIBEX File Format](#4411-fibex-file-format)
+      - [4.4.1.2. Using the ECU ID](#4412-using-the-ecu-id)
+      - [4.4.1.3. Mapping the APP/CTX/MSG identifiers](#4413-mapping-the-appctxmsg-identifiers)
+      - [4.4.1.4. Extensions for a Unique Message Identifier](#4414-extensions-for-a-unique-message-identifier)
+      - [4.4.1.5. Extensions for the ECU Identifier](#4415-extensions-for-the-ecu-identifier)
+      - [4.4.1.6. Design of the FIBEX with an IFrameMap](#4416-design-of-the-fibex-with-an-iframemap)
 - [5. Trace Lines](#5-trace-lines)
 
 ## 1. DLT Trace Decoder
@@ -768,7 +776,22 @@ This implementation has no non-verbose DLT decoder. It provides a default
 implementation by the `NonVerboseByteDecoder()` that understands the message
 identifier at the start, followed by an arbitrary payload.
 
-### 4.1. Byte-based Non-Verbose Decoder (Default Implementation)
+### 4.1. Considerations for a Non-Verbose DLT Decoder
+
+#### 4.1.1. Multiple ECUs
+
+The Non-Verbose decoder should support one FIBEX file per ECU identifier. A
+single device may have multiple ECU Identifiers, one per processor, which have
+their own external FIBEX file. A log file may have more than one ECU present.
+
+#### 4.1.2. Consistency Checking via Heuristics
+
+Similar to verbose files, when a valid FIBEX file is provided, this can provide
+information about the expected length of each payload message. If the FIBEX file
+expects more or less data than is actually transmitted, this can be used as a
+heuristic to determine a valid DLT packet.
+
+### 4.2. Byte-based Non-Verbose Decoder (Default Implementation)
 
 When a non-verbose message is seen, the `DltTraceDecoderBase` creates a new
 message of type `DltType.DLT_TYPE_UNKNOWN` (which cannot be set by any input
@@ -778,41 +801,180 @@ The software design is reasonably generic enough to be allow an implementation
 for a full-featured non-verbose converter, that can read an external file and
 create trace lines based on an input payload.
 
-![Dlt Non-Verbose Byte Decoder](out/diagrams/DLT.DecoderNonVerboseByteOnly/DLT.DecoderNonVerboseByteOnly.svg)
+![DLT Non-Verbose Byte Decoder](out/diagrams/DLT.DecoderNonVerboseByteOnly/DLT.DecoderNonVerboseByteOnly.svg)
 
-### 4.2. Considerations for a Non-Verbose DLT Decoder
+### 4.3. Non-Verbose Decoder based on an External Definition File
 
-#### 4.2.1. Software Version Notifications
+To be able to interpret an the byte blob data, a description of how to interpret
+the data must be provided. There are two formats suggested by the DLT standards:
 
-The Non-Verbose decoder, which derives from `INonVerboseDltDecoder` should have
-a mechanism that it can be told to load any arbitrary external file at any time
-while decoding, to support the requirement (AutoSAR SWS Diagnostics Log and
-Trace 4.2.2, but has been removed in later versions of the PRS specification):
+* FIBEX Specification
+* ARXML Specification
 
-> Service Name: `GetSoftwareVersion`
->
-> In Non Verbose Mode this string shall be used to associate and identify a
-> correct description file to the transmitted data. Because Message IDs and its
-> associated arguments can vary on different SW versions a correct mapping of
-> SW-version and description file is very important. In the associated
-> description file this string for SW-version shall also be enclosed.
+The decoder doesn't describe the file format, but gets the frames and PDUs from
+an `IFrameMap` object, that when given an ECU, AppId, CtxId and Message ID, it
+can return an `IFrame` object which describes the arguments to construct the
+trace line.
 
-The software would need to be modified so that on creation of a
-`GetSoftwareVersionResponse` message, the non-verbose decoder can be notified of
-a new FIBEX file to load data from.
+![DLT NonVerbose IFrame](out/diagrams/DLT.DecoderNonVerbose/DLT.DecoderNonVerbose.svg)
 
-#### 4.2.2. Multiple ECUs
+### 4.4. Describing the Frame for a Message
 
-The Non-Verbose decoder should support one FIBEX file per ECU identifier. A
-single device may have multiple ECU Identifiers, one per processor, which have
-their own external FIBEX file. A log file may have more than one ECU present.
+#### 4.4.1. Implementation of a FIBEX file
 
-#### 4.2.3. Consistency Checking via Heuristics
+##### 4.4.1.1. FIBEX File Format
 
-Similar to verbose files, when a valid FIBEX file is provided, this can provide
-information about the expected length of each payload message. If the FIBEX file
-expects more or less data than is actually transmitted, this can be used as a
-heuristic to determine a valid DLT packet.
+The AutoSAR specification 4.3.0 describes the format of the FIBEX file. Further,
+an example of the FIBEX file is given by [Covesa
+DLT-Viewer](https://github.com/COVESA/dlt-viewer/blob/7cc40f853d357faa904f89a4203f0c613358d110/plugin/examples/nonverboseplugin_configuration.xml).
+
+Comparing the specification against the implementation of DLT-Viewer, we see
+that:
+
+```xml
+<fx:FIBEX xmlns:fx="http://www.asam.net/xml/fbx" xmlns:ho="http://www.asam.net/xml" xmlns:can="http://www.asam.net/xml/fbx/can" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.asam.net/xml/fbx xml_schema\fibex.xsd http://www.asam.net/xml/fbx/can  xml_schema\fibex4can.xsd" VERSION="3.1.0">
+
+<fx:ELEMENTS>
+  <fx:ECUS>
+    <fx:ECU ID="ECUI">
+      <!-- all information in the inner section will be ignored -->
+    </fx:ECU>
+  </fx:ECUS>
+  <fx:PDUS>
+    <fx:PDU ID="xxxx">
+      <ho:DESC>string if a constant string</ho:DESC>
+      <fx:BYTE-LENGTH>n</fx:BYTE-LENGTH>
+    </fx:PDU>
+    <fx:PDU ID="xxxx">
+      <ho:SHORT-NAME>name</ho:SHORT-NAME>
+      <fx:BYTE-LENGTH>n</fx:BYTE-LENGTH>
+      <fx:SIGNAL-INSTANCES>
+        <fx:SIGNAL-INSTANCE ID="ssss">
+          <fx:SEQUENCE-NUMBER>n</fx:SEQUENCE-NUMBER> <!-- field is ignored -->
+          <fx:SIGNAL-REF ID-REF="S_UINT8"/>
+        </fx:SIGNAL-INSTANCE>
+      </fx:SIGNAL-INSTANCES>
+    </fx:PDU>
+  </fx:PDUS>
+  <fx:FRAMES>
+    <fx:FRAME ID="ID_xxxxx">
+      <fx:BYTE-LENGTH>n</fx:BYTE-LENGTH>
+      <fx:PDU-INSTANCES>
+        <fx:PDU-INSTANCE ID="ignored">
+          <fx:PDU-REF ID-REF="xxxx"/> <!-- Points to <PDU ID="xxxx">...</PDU> -->
+          <fx:SEQUENCE-NUMBER>n</fx:SEQUENCE-NUMBER> <!-- ignored -->
+        </fx:PDU-INSTANCE>
+      </fx:PDU-INSTANCES>
+      <fx:MANUFACTURER-EXTENSION>
+        <MESSAGE_TYPE>DLT_LOG_TYPE</MESSAGE_TYPE>
+        <MESSAGE_INFO>DLT_LOG_DEBUG</MESSAGE_INFO>
+        <APPLICATION_ID>APPI</APPLICATION_ID> <!-- spec says APPLICATIONID -->
+        <CONTEXT_ID>CTXI</CONTEXT_ID> <!-- spec says CONTEXTID -->
+      </fx:MANUFACTURER-EXTENSION>
+    </fx:FRAME>
+  </fx:FRAMES>
+</fx:ELEMENTS>
+```
+
+The file will be parsed using a document reader, instead of being loaded into
+memory. A Fibex file may consist of thousands of messages and would otherwise
+need during the load hundreds, of not thousands of megabytes.
+
+This optimisation therefore assumes the order of elements is `ECUS`, `PDUS` and
+then `FRAMES`, so that when a `FRAME` is read, it already has the referenced
+`PDU` from earlier.
+
+##### 4.4.1.2. Using the ECU ID
+
+While the COVESA DLT-Viewer does not interpret the ECU, this software can
+optionally allow multiple FIBEX files belonging to multiple ECUs at the same
+time, but so long as each individual FIBEX file describes only one ECU (or a
+portion there-of).
+
+It is expected that the ECU is at the top of the FIBEX file.
+
+##### 4.4.1.3. Mapping the APP/CTX/MSG identifiers
+
+The COVESA DLT-Viewer obtains the `IFrame` for a given message:
+
+* In reading in the FIBEX file, a global mapping of the message identifier to
+  the frame is created, independent of the application and context identifier.
+  If the message emitted by the ECU does not contain an extended header with
+  this information, then this global mapping is used. i.e. only the message
+  identifier is used to obtain the frame in this case.
+* A second mapping is created, that for each frame is grouped by each unique
+  combination of application and context identifier. If a message to decode
+  contains an extended header, thus meaning that the application and context
+  identifier is defined, then this second mapping is used to find the frame, and
+  not the first mapping. This allows the message identifier in a FIBEX file to
+  be reused, so long as the application and context identifier are unique.
+
+The DLT Viewer maintains both mappings, and always assumes that the FIBEX file
+contains an application and context identifier for all messages.
+
+Note that the XML standard requires that the `ID` fields be unique within an XML
+file. The parser shall also make this assumption, so the mappings which allow
+the message to duplicate so long as the combination of ID, Application ID,
+Context ID are unique are only valid when merging multiple FIBEX files into a
+single in-memory representation. The parser shall also assume conformant XML
+files.
+
+##### 4.4.1.4. Extensions for a Unique Message Identifier
+
+May projects do not use the extended header, but the DLT Viewer only knows the
+messages that it decodes. If there is a duplicate message identifier, no warning
+diagnostic is generated, so long as the application and context identifier
+differ.
+
+This implementation will allow checks should the message identifier be not
+unique, irrespective of the application and context identifier.
+
+##### 4.4.1.5. Extensions for the ECU Identifier
+
+The DLT Viewer ignores the ECU Identifier. However, many logs contain multiple
+ECUs in a single file to be parsed. The implementation shall also allow parsing
+the ECU field, so that if the file contains a standard header with the ECU ID,
+this can be used in addition to group the message identifiers, allowing
+duplicate message identifiers across multiple different ECUs.
+
+##### 4.4.1.6. Design of the FIBEX with an IFrameMap
+
+Performance is of importance, so a preference towards multiple classes instead
+of a single generic class that check the configuration repeatedly is preferred.
+
+To support the extensions, which differ in behaviour from the DLT Viewer, there
+will be a `FibexOptions` enumeration (as flags, only required when loading the
+FIBEX file):
+
+* `WithEcuId`: Uses the extensions for the ECU Identifier.
+* `WithoutExtHeader`: Uses the extensions to ignore the application and context
+  identifier.
+
+Based on the options, it shall load the Fibex file and create the in-memory data
+structures as required.
+
+![DLT Fibex](out/diagrams/DLT.DecoderFibex/DLT.DecoderFibex.svg)
+
+Only one of the data structures is used by `FibexFile`
+
+* `FrameMapDefault`: Same behaviour as COVESA DLT Viewer
+* `FrameMapSimple`: Only map the message identifier. Useful if it's known that
+  logs don't contain application and context identifier information.
+* `FrameMapEcu`: Map each ECU to a `FrameMapDefault`
+* `FrameMapEcuSimple`: Map each ECU to a `FrameMapSimple`
+
+The default options would be `FrameMapDefault`, the most full-featured is
+`FrameMapEcu`.
+
+When the class `FibexFile` loads the FIBEX file, it inserts the ECU, App,
+Context and Message identifier in the delegated `IFrameMap` object. If there is
+a duplicate message, an exception `FibexDuplicateKeyException` would be raised.
+
+Thus, if the `FrameMapSimple` is used, and any message identifier is duplicated,
+regardless of the application, context and ECU identifier, the exception would
+be raised. If `FrameMapDefault` is used, then the exception is only raised in
+the case that there is a duplicate message for the same Application, Context and
+Message identifier.
 
 ## 5. Trace Lines
 
@@ -832,3 +994,7 @@ The `DltTraceDecoder` uses provides the data it parses to its `IDltLineBuilder`
 to construct the trace line it will return later. This allows the base
 implementation `DltTraceDecoderBase` to be extended to create other types of
 trace lines, without having to encapsulate (wrap) or create temporary copies.
+
+A non-verbose `DltNonVerboseTraceLine` derives from a `DltVerboseTraceLine` and
+only contains the extra information which is the message identifier read from
+the trace file.

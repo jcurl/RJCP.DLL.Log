@@ -1,0 +1,45 @@
+@startuml DLT.DecoderFibex
+allowmixing
+
+interface IFrame
+interface IFrameMap {
+    +GetFrame(id: int, appId: string, ctxId: string, ecuId: string): IFrame
+    +TryGetFrame(id: int, appId: string, ctxId: string, ecuId: string, out IFrame frame): bool
+}
+
+IFrameMap -r- IFrame : <<returns>>
+
+skinparam rectangle {
+    'bordercolor transparent
+    shadowing false
+}
+
+rectangle {
+    class FibexOptions
+    class FibexFile
+    IFrameMap <|.d. FibexFile
+    FibexOptions -r-> FibexFile : <<configures>>
+}
+
+rectangle {
+    class FrameMapSimple
+    FrameMapSimple .u..|> IFrameMap
+
+    class FrameMapDefault
+    FrameMapDefault .u..|> IFrameMap
+    FrameMapDefault *-d-FrameMapSimple
+
+    class FrameMapEcu
+    FrameMapEcu .u..|> IFrameMap
+    FrameMapEcu *-d- FrameMapDefault
+
+    class FrameMapEcuSimple
+    FrameMapEcuSimple .u..|> IFrameMap
+    FrameMapEcuSimple *-d- FrameMapSimple
+}
+
+FibexFile *-d- FrameMapDefault
+FibexFile *-d- FrameMapSimple
+FibexFile *-d- FrameMapEcu
+FibexFile *-d- FrameMapEcuSimple
+@enduml
