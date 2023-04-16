@@ -8,6 +8,13 @@
     public interface INonVerboseDltDecoder
     {
         /// <summary>
+        /// Gets the message map, which maps identifiers into frames consisting of arguments to construct a
+        /// <see cref="DltTraceLine"/>.
+        /// </summary>
+        /// <value>The message map.</value>
+        IFrameMap FrameMap { get; }
+
+        /// <summary>
         /// Decodes the specified buffer as a verbose payload.
         /// </summary>
         /// <param name="buffer">The buffer that should be decoded.</param>

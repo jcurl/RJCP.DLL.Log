@@ -5,19 +5,19 @@
     using RJCP.Core;
 
     /// <summary>
-    /// Decodes non-verbose payloads, not interpreting the contents.
+    /// Decodes non-verbose payloads.
     /// </summary>
-    public class NonVerboseByteDecoder : INonVerboseDltDecoder
+    public class NonVerboseDltDecoder : INonVerboseDltDecoder
     {
         /// <summary>
-        /// Gets the message map, which maps identifiers into frames consisting of arguments to construct a
+        /// Gets the frame map, which maps identifiers into frames consisting of arguments to construct a
         /// <see cref="DltTraceLine"/>.
         /// </summary>
-        /// <value>The message map.</value>
+        /// <value>The frame map.</value>
         public IFrameMap FrameMap { get { return null; } }
 
         /// <summary>
-        /// Decodes the specified buffer as a verbose payload.
+        /// Decodes the specified buffer.
         /// </summary>
         /// <param name="buffer">The buffer that should be decoded.</param>
         /// <param name="lineBuilder">

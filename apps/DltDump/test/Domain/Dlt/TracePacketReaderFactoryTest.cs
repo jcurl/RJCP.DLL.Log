@@ -1,7 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     using System;
-    using Infrastructure.IO;
     using NUnit.Framework;
     using RJCP.Diagnostics.Log.Decoder;
 
@@ -21,7 +20,7 @@
         {
             TracePacketReaderFactory factory = new TracePacketReaderFactory(new DltTraceDecoderFactory());
             Assert.That(async () => {
-                _ = await factory.CreateAsync((IPacket)null);
+                _ = await factory.CreateAsync(null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
     }
