@@ -53,6 +53,7 @@
     <ProjectReference Include="..\..\..\datastructures\Datastructures\RJCP.Core.Datastructures.csproj" />
     <ProjectReference Include="..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
     <ProjectReference Include="..\..\..\textutils\code\RJCP.Core.Text.csproj" />
+    <ProjectReference Include="..\..\..\xml\Xml\RJCP.Core.Xml.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -249,14 +250,17 @@
     <Compile Include="Dlt\DltTypeExtension.cs" />
     <Compile Include="Dlt\IdHashList.cs" />
     <Compile Include="Dlt\IDltLineBuilder.cs" />
-    <Compile Include="Dlt\NonVerbose\Fibex\FibexDuplicateKeyException.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\FibexFile.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\FibexLoadErrorEventArgs.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\FibexWarnings.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\FibexOptions.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\Frame.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapDefault.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapEcu.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapEcuSimple.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\IFrameMapLoader.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapSimple.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\Pdu.cs" />
     <Compile Include="Dlt\NonVerbose\IFrame.cs" />
     <Compile Include="Dlt\NonVerbose\IFrameMap.cs" />
     <Compile Include="Dlt\NonVerbose\INonVerboseDltDecoder.cs" />

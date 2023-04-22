@@ -153,6 +153,9 @@
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
     <Compile Include="Dlt\IdHashListAccessor.cs" />
     <Compile Include="Dlt\IdHashListTest.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\FIbexFileMergeTest.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\FibexFileTest.cs" />
+    <Compile Include="Dlt\NonVerbose\Fibex\FibexFileTestBase.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapDefaultTest.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapDefaultAccessor.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\Map\FrameMapEcuAccessor.cs" />
@@ -165,6 +168,7 @@
     <Compile Include="Dlt\NonVerbose\NonVerboseByteDecoderTest.cs" />
     <Compile Include="Dlt\NonVerbose\NonVerboseByteDecoderTestBase.cs" />
     <Compile Include="Dlt\NonVerbose\TestFrame.cs" />
+    <Compile Include="Dlt\NonVerbose\TestPdu.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter.cs" />
@@ -179,6 +183,12 @@
     <Compile Include="Dlt\Verbose\VerboseDltDecoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
     <Compile Include="TestSetupFixture.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestResources\Fibex\dlt-viewer-example.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
