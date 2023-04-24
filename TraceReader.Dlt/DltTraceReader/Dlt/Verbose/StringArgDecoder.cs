@@ -52,7 +52,6 @@
             if (strLength == 0) {
                 data = string.Empty;
             } else {
-
                 int cu;
                 switch (coding) {
                 case StringEncodingType.Ascii:

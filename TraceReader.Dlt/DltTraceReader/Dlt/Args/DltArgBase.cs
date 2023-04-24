@@ -42,6 +42,7 @@
         /// Appends the argument to the end of the <see cref="StringBuilder"/>.
         /// </summary>
         /// <param name="strBuilder">The string builder to append this argument to.</param>
+        /// <returns>The reference to the original string builder.</returns>
         public abstract StringBuilder Append(StringBuilder strBuilder);
     }
 }
