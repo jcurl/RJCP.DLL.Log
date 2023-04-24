@@ -277,7 +277,6 @@
     <Compile Include="Dlt\Verbose\StringArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\UnsignedIntArgDecoder.cs" />
     <Compile Include="Dlt\Verbose\VerboseArgDecoder.cs" />
-    <Compile Include="Dlt\Verbose\VerboseArgDecoderBase.cs" />
     <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

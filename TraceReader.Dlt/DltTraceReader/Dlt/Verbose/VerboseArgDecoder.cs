@@ -10,7 +10,7 @@
     /// This class inspects the contents of the verbose argument and calls the appropriate specialized decoder to decode
     /// the argument. This decoder can be used for decoding any kind of verbose argument.
     /// </remarks>
-    public class VerboseArgDecoder : VerboseArgDecoderBase
+    public sealed class VerboseArgDecoder : IVerboseArgDecoder
     {
         private const int TypeInfoMask = 0x67F0;
         private const int BoolType = 0x0010;
@@ -38,7 +38,7 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             switch (typeInfo & TypeInfoMask) {
             case BoolType:
@@ -54,7 +54,7 @@
             case RawType:
                 return m_RawArgDecoder.Decode(typeInfo, buffer, msbf, out arg);
             default:
-                return DecodeError("unknown type info", out arg);
+                return DltArgError.Get("unknown type info", out arg);
             }
         }
     }

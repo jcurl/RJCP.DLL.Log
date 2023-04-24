@@ -6,7 +6,7 @@
     /// <summary>
     /// Decode a verbose payload assuming this is a boolean.
     /// </summary>
-    public class BoolArgDecoder : VerboseArgDecoderBase
+    public sealed class BoolArgDecoder : IVerboseArgDecoder
     {
         /// <summary>
         /// Decodes the DLT verbose argument given in the current buffer.
@@ -22,10 +22,10 @@
         /// The length of the argument decoded, to allow advancing to the next argument. In case the argument cannot be
         /// decoded, the argument is <see langword="null"/> and the result is -1.
         /// </returns>
-        public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0)
-                return DecodeError("'Bool' unsupported type info", out arg);
+                return DltArgError.Get("'Bool' unsupported type info", out arg);
 
             int argLength;
             int typeLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
@@ -47,11 +47,11 @@
                 argLength = 16;
                 break;
             default:
-                return DecodeError("'Bool' unsupported type length 0x{0:x}", typeLength, out arg);
+                return DltArgError.Get("'Bool' unsupported type length 0x{0:x}", typeLength, out arg);
             }
 
             if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + argLength)
-                return DecodeError("'Bool' insufficient buffer length {0}", buffer.Length, out arg);
+                return DltArgError.Get("'Bool' insufficient buffer length {0}", buffer.Length, out arg);
 
             arg = new BoolDltArg(buffer[4] != 0);
             return DltConstants.TypeInfo.TypeInfoSize + argLength;

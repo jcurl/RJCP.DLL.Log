@@ -8,7 +8,7 @@
     /// <remarks>
     /// Can decode 8, 16, 32 or 64 bit signed integer values.
     /// </remarks>
-    public class SignedIntArgDecoder : IntegerArgDecoder
+    public sealed class SignedIntArgDecoder : IntegerArgDecoder
     {
         /// <summary>
         /// Creates the 8-bit numeric argument instance.

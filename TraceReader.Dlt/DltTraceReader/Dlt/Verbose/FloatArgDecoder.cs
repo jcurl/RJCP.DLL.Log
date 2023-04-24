@@ -14,7 +14,7 @@
     /// shall be returned.
     /// </para>
     /// </remarks>
-    public class FloatArgDecoder : VerboseArgDecoderBase
+    public sealed class FloatArgDecoder : IVerboseArgDecoder
     {
         /// <summary>
         /// Decodes the DLT verbose argument given in the current buffer.
@@ -27,35 +27,35 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0)
-                return DecodeError("'Float' unsupported type info", out arg);
+                return DltArgError.Get("'Float' unsupported type info", out arg);
 
             int argLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
             switch (argLength) {
             case DltConstants.TypeInfo.TypeLength128bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 16)
-                    return DecodeError("'Float' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Float' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 16)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 16;
             case DltConstants.TypeInfo.TypeLength64bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 8)
-                    return DecodeError("'Float' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Float' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Decode64Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 8;
             case DltConstants.TypeInfo.TypeLength32bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 4)
-                    return DecodeError("'Float' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Float' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Decode32Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 4;
             case DltConstants.TypeInfo.TypeLength16bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 2)
-                    return DecodeError("'Float' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Float' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 2)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 2;
             default:
-                return DecodeError("'Float' unsupported type length 0x{0:x}", argLength, out arg);
+                return DltArgError.Get("'Float' unsupported type length 0x{0:x}", argLength, out arg);
             }
         }
 

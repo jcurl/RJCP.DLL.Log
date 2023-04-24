@@ -7,7 +7,7 @@
     /// <summary>
     /// Base class for integer decoder classes.
     /// </summary>
-    public abstract class IntegerArgDecoder : VerboseArgDecoderBase
+    public abstract class IntegerArgDecoder : IVerboseArgDecoder
     {
         /// <summary>
         /// Creates the 64-bit numeric argument instance.
@@ -55,10 +55,10 @@
         /// The number of decoded bytes, which represent the encoded argument, or -1 if decoding fails.
         /// </returns>
         /// <remarks>This decoder cannot decode fields with the VARI bit or FIXP bit set.</remarks>
-        public override int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             if ((typeInfo & (DltConstants.TypeInfo.VariableInfo | DltConstants.TypeInfo.FixedPoint)) != 0)
-                return DecodeError("'Integer' unsupported type info", out arg);
+                return DltArgError.Get("'Integer' unsupported type info", out arg);
 
             IntegerEncodingType coding =
                 (IntegerEncodingType)((typeInfo & DltConstants.TypeInfo.CodingMask) >> DltConstants.TypeInfo.CodingBitShift);
@@ -66,31 +66,31 @@
             switch (argLength) {
             case DltConstants.TypeInfo.TypeLength128bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 16)
-                    return DecodeError("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 16)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 16;
             case DltConstants.TypeInfo.TypeLength64bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 8)
-                    return DecodeError("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Decode64Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 8;
             case DltConstants.TypeInfo.TypeLength32bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 4)
-                    return DecodeError("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Decode32Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 4;
             case DltConstants.TypeInfo.TypeLength16bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 2)
-                    return DecodeError("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Decode16Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 2;
             case DltConstants.TypeInfo.TypeLength8bit:
                 if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 1)
-                    return DecodeError("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
                 arg = Create8BitArgument(buffer[DltConstants.TypeInfo.TypeInfoSize], coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 1;
             default:
-                return DecodeError("'Integer' unsupported type length 0x{0:x}", argLength, out arg);
+                return DltArgError.Get("'Integer' unsupported type length 0x{0:x}", argLength, out arg);
             }
         }
 

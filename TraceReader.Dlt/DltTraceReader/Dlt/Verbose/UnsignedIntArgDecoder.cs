@@ -6,7 +6,7 @@
     /// Unsigned integer argument decoder.
     /// </summary>
     /// <remarks>Can decode 8, 16, 32 or 64 bit unsigned integer values.</remarks>
-    public class UnsignedIntArgDecoder : IntegerArgDecoder
+    public sealed class UnsignedIntArgDecoder : IntegerArgDecoder
     {
         /// <summary>
         /// Creates the 8-bit numeric argument instance.
