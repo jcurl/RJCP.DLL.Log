@@ -4,6 +4,7 @@
     using Dlt;
     using Dlt.Control;
     using Dlt.NonVerbose;
+    using RJCP.Diagnostics.Log.Dlt.Verbose;
 
     /// <summary>
     /// Decodes a DLT frame from the definition of a standard header.
@@ -21,7 +22,43 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltTraceDecoder(bool online) : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+        public DltTraceDecoder(bool online)
+            : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        public DltTraceDecoder(IFrameMap map) : base(map) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="online">
+        /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
+        /// </param>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        public DltTraceDecoder(bool online, IFrameMap map)
+            : base(GetVerboseDecoder(), GetNonVerboseDecoder(map), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
+        /// </summary>
+        /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
+        /// <param name="nonVerboseDecoder">The object that knows how to decode non-verbose payloads.</param>
+        /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>
+        /// <param name="lineBuilder">The line builder responsible for constructing each DLT line.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="verboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="nonVerboseDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="controlDecoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="lineBuilder"/> is <see langword="null"/>
+        /// </exception>
+        protected DltTraceDecoder(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
+            : base(verboseDecoder, nonVerboseDecoder, controlDecoder, lineBuilder) { }
 
         /// <summary>
         /// Searches for the start of the DLT frame.

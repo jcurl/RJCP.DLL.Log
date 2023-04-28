@@ -6,6 +6,7 @@
     using Dlt.Packet;
     using NUnit.Framework;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// Common test code for control decoders.
@@ -41,50 +42,29 @@
         /// </list>
         /// </remarks>
         protected ControlDecoderTestBase(DecoderType decoderType, Endianness endian, int serviceId, Type requestType, Type responseType)
-            : this(decoderType, endian, serviceId, requestType, responseType, null, null) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ControlDecoderTestBase{TReqDecoder, TResDecoder}"/> class.
-        /// </summary>
-        /// <param name="decoderType">The decoder that should be used to test the byte sequence.</param>
-        /// <param name="endian">Indicates the endianness flag to set in the standard header.</param>
-        /// <param name="serviceId">The service identifier that is expected to be generated.</param>
-        /// <param name="requestType">Type of the request that is expected to be generated.</param>
-        /// <param name="responseType">Type of the response that is expected to be generated.</param>
-        /// <param name="factory">The custom factory to test lines.</param>
-        /// <param name="ctlDecoder">The control decoder to use.</param>
-        /// <remarks>
-        /// The <paramref name="decoderType"/> defines the type of decoder that is used to decode the control payload.
-        /// <list type="bullet">
-        /// <item>
-        /// <see cref="DecoderType.Line"/>: The payload is put in a proper DLT packet with storage header, and the main
-        /// decoder is used.
-        /// </item>
-        /// <item>
-        /// <see cref="DecoderType.Packet"/>: The <see cref="ControlDltDecoder"/> is used to decode the payload.
-        /// </item>
-        /// <item>
-        /// <see cref="DecoderType.Specialized"/>: The <see cref="TReqDecoder"/> or <see cref="TResDecoder"/> is used to
-        /// decode the payload.
-        /// </item>
-        /// </list>
-        /// </remarks>
-        protected ControlDecoderTestBase(DecoderType decoderType, Endianness endian, int serviceId, Type requestType, Type responseType,
-            DltFactory factory, IControlDltDecoder ctlDecoder) : base(decoderType, endian)
+            : base(decoderType, endian)
         {
             ServiceId = serviceId;
             m_RequestType = requestType;
             m_ResponseType = responseType;
-            m_CustomFactory = factory;
-            m_CustomDecoder = ctlDecoder;
         }
 
         protected int ServiceId { get; }
 
         private readonly Type m_RequestType;
         private readonly Type m_ResponseType;
-        private readonly DltFactory m_CustomFactory;
-        private readonly IControlDltDecoder m_CustomDecoder;
+
+        /// <summary>
+        /// A custom factory for creating our TraceReader.
+        /// </summary>
+        /// <value>The custom factory.</value>
+        protected virtual DltFactory CustomFactory { get { return null; } }
+
+        /// <summary>
+        /// Gets the custom control decoder.
+        /// </summary>
+        /// <value>The custom control decoder.</value>
+        protected virtual IControlDltDecoder CustomDecoder { get { return new ControlDltDecoder(); } }
 
         /// <summary>
         /// Decodes the specified decoder type.
@@ -136,7 +116,7 @@
 
         private void DecodeLine(DltType dltType, byte[] data, string fileName, out IControlArg service)
         {
-            DltTraceLineBase line = DecodeLine(m_CustomFactory, dltType, data, fileName);
+            DltTraceLineBase line = DecodeLine(CustomFactory, dltType, data, fileName);
             Assert.That(line, Is.TypeOf<DltControlTraceLine>());
             DltControlTraceLine control = (DltControlTraceLine)line;
             service = control.Service;
@@ -153,14 +133,7 @@
             lineBuilder.SetDltType(dltType);
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
-            IControlDltDecoder dltDecoder;
-            if (m_CustomDecoder != null) {
-                dltDecoder = m_CustomDecoder;
-            } else {
-                dltDecoder = new ControlDltDecoder();
-            }
-
-            int length = dltDecoder.Decode(data, lineBuilder);
+            int length = CustomDecoder.Decode(data, lineBuilder);
             service = lineBuilder.ControlPayload;
             Assert.That(length, Is.EqualTo(data.Length));
         }

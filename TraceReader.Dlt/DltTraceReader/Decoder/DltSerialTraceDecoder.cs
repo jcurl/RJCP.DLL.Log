@@ -21,7 +21,25 @@
         /// <param name="online">
         /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
         /// </param>
-        public DltSerialTraceDecoder(bool online) : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+        public DltSerialTraceDecoder(bool online)
+            : base(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder(online)) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        public DltSerialTraceDecoder(IFrameMap map)
+            : base(GetVerboseDecoder(), GetNonVerboseDecoder(map), new ControlDltDecoder(), new DltLineBuilder()) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltSerialTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="online">
+        /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
+        /// </param>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        public DltSerialTraceDecoder(bool online, IFrameMap map)
+            : base(GetVerboseDecoder(), GetNonVerboseDecoder(map), new ControlDltDecoder(), new DltLineBuilder(online)) { }
 
         private readonly static byte[] marker = { 0x44, 0x4C, 0x53, 0x01 };
 

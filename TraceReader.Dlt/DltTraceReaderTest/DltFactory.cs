@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Dlt;
+    using Dlt.NonVerbose;
     using Dlt.Packet;
     using RJCP.CodeQuality.NUnitExtensions;
 
@@ -12,6 +13,12 @@
         public DltFactory(DltFactoryType factoryType)
         {
             FactoryType = factoryType;
+        }
+
+        public DltFactory(DltFactoryType factoryType, IFrameMap map)
+        {
+            FactoryType = factoryType;
+            Map = map;
         }
 
         public DltFactory(DltFactoryType factoryType, TraceReaderFactory<DltTraceLineBase> factory)
@@ -24,6 +31,8 @@
 
         private TraceReaderFactory<DltTraceLineBase> Factory { get; }
 
+        private IFrameMap Map { get; }
+
         public Task<ITraceReader<DltTraceLineBase>> DltReaderFactory(Stream stream)
         {
             if (Factory != null) {
@@ -32,11 +41,11 @@
 
             switch (FactoryType) {
             case DltFactoryType.Standard:
-                return new DltTraceReaderFactory().CreateAsync(stream);
+                return new DltTraceReaderFactory(Map).CreateAsync(stream);
             case DltFactoryType.File:
-                return new DltFileTraceReaderFactory().CreateAsync(stream);
+                return new DltFileTraceReaderFactory(Map).CreateAsync(stream);
             case DltFactoryType.Serial:
-                return new DltSerialTraceReaderFactory().CreateAsync(stream);
+                return new DltSerialTraceReaderFactory(Map).CreateAsync(stream);
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }
@@ -93,19 +102,6 @@
                 return writer.NewPacket().NonVerbose(deviceTime, payload).StorageHeader(storageTime);
             case DltFactoryType.Serial:
                 return writer.NewPacket().NonVerbose(deviceTime, payload).SerialMarker();
-            default:
-                throw new InvalidOperationException($"Unknown Factory {FactoryType}");
-            }
-        }
-
-        public DateTime ExpectedTimeStamp(DateTime storageTime)
-        {
-            switch (FactoryType) {
-            case DltFactoryType.Standard:
-            case DltFactoryType.Serial:
-                return new DateTime(1970, 1, 1);
-            case DltFactoryType.File:
-                return storageTime;
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }

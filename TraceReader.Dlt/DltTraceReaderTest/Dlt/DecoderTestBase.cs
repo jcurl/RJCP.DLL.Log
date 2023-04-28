@@ -3,6 +3,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Dlt.Packet;
+    using Dlt.NonVerbose;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 
@@ -22,18 +23,24 @@
         }
 
         protected DecoderTestBase(DecoderType decoderType, Endianness endian)
+            : this(decoderType, endian, null) { }
+
+        protected DecoderTestBase(DecoderType decoderType, Endianness endian, IFrameMap map)
         {
             Type = decoderType;
             Endian = endian;
+            Map = map;
         }
 
         protected DecoderType Type { get; }
 
         protected Endianness Endian { get; }
 
+        protected IFrameMap Map { get; }
+
         protected DltTraceLineBase DecodeLine(DltFactory factory, DltType dltType, byte[] data, string fileName)
         {
-            factory ??= new DltFactory(DltFactoryType.File);
+            factory ??= new DltFactory(DltFactoryType.File, Map);
 
             using (DltPacketWriter writer = new DltPacketWriter() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50

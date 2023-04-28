@@ -58,10 +58,17 @@
     public class SwInjectionCustomClassTest : ControlDecoderTestBase<CustomSwInjectionRequestDecoder, SwInjectionResponseDecoder>
     {
         public SwInjectionCustomClassTest(DecoderType decoderType, Endianness endian)
-            : base(decoderType, endian, 0x1011, typeof(CustomSwInjectionRequest), typeof(SwInjectionResponse),
-                  new DltFactory(DltFactoryType.File, new CustomDltFileTraceReaderFactory()),
-                  new CustomDltDecoder())
-        { }
+            : base(decoderType, endian, 0x1011, typeof(CustomSwInjectionRequest), typeof(SwInjectionResponse)) { }
+
+        protected override DltFactory CustomFactory
+        {
+            get { return new DltFactory(DltFactoryType.File, new CustomDltFileTraceReaderFactory()); }
+        }
+
+        protected override IControlDltDecoder CustomDecoder
+        {
+            get { return new CustomDltDecoder(); }
+        }
 
         [Test]
         public void CustomReq()

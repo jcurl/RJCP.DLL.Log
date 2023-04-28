@@ -20,6 +20,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
         /// </summary>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        public DltFileTraceDecoder(IFrameMap map) : base(map) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltFileTraceDecoder"/> class.
+        /// </summary>
         /// <param name="verboseDecoder">The object that knows how to decode verbose payloads.</param>
         /// <param name="nonVerboseDecoder">The object that knows how to decode non-verbose payloads.</param>
         /// <param name="controlDecoder">The object that knows how to decode control payloads.</param>

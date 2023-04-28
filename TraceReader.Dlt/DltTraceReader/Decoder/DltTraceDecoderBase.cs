@@ -27,10 +27,21 @@
         /// <summary>
         /// Gets the verbose decoder that should be used when instantiating this class.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A <see cref="IVerboseDltDecoder"/>.</returns>
         protected static IVerboseDltDecoder GetVerboseDecoder()
         {
             return new VerboseDltDecoder(new VerboseArgDecoder());
+        }
+
+        /// <summary>
+        /// Gets the non-verbose decoder that should be used when instantiating this class.
+        /// </summary>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        /// <returns>A <see cref="INonVerboseDltDecoder"/>.</returns>
+        protected static INonVerboseDltDecoder GetNonVerboseDecoder(IFrameMap map)
+        {
+            if (map == null) return new NonVerboseByteDecoder();
+            return new NonVerboseDltDecoder(map);
         }
 
         /// <summary>
@@ -42,6 +53,17 @@
         /// </remarks>
         protected DltTraceDecoderBase()
             : this(GetVerboseDecoder(), new NonVerboseByteDecoder(), new ControlDltDecoder(), new DltLineBuilder()) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
+        /// </summary>
+        /// <param name="map">The <see cref="IFrameMap"/> used to decode non-verbose payloads.</param>
+        /// <remarks>
+        /// Instantiate a trace decoder using recommended default decoders. This class must still be extended on how to
+        /// find the start of a frame, and the size of data that can be skipped when searching for a frame.
+        /// </remarks>
+        protected DltTraceDecoderBase(IFrameMap map)
+            : this(GetVerboseDecoder(), GetNonVerboseDecoder(map), new ControlDltDecoder(), new DltLineBuilder()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceDecoderBase"/> class.
@@ -533,16 +555,16 @@
                 if (payloadLength == -1) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
                     if (string.IsNullOrEmpty(error)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded",
+                        Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded",
                             m_PosMap.Position);
                     } else {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded, {1}",
+                        Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded, {1}",
                             m_PosMap.Position, error);
                     }
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                    Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
                         m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     return false;
                 }

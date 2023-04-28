@@ -161,5 +161,18 @@
             Assert.That(dltLine.Features.ApplicationId, Is.True);
             Assert.That(dltLine.Features.ContextId, Is.True);
         }
+
+        private static DateTime ExpectedTimeStamp(this DltFactory factory, DateTime storageTime)
+        {
+            switch (factory.FactoryType) {
+            case DltFactoryType.Standard:
+            case DltFactoryType.Serial:
+                return new DateTime(1970, 1, 1);
+            case DltFactoryType.File:
+                return storageTime;
+            default:
+                throw new InvalidOperationException($"Unknown Factory {factory.FactoryType}");
+            }
+        }
     }
 }
