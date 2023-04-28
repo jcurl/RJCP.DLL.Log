@@ -53,7 +53,12 @@
             if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + argLength)
                 return DltArgError.Get("'Bool' insufficient buffer length {0}", buffer.Length, out arg);
 
-            arg = new BoolDltArg(buffer[4] != 0);
+            bool boolArg = false;
+            for (int i = 0; i < argLength && !boolArg; i++) {
+                boolArg = buffer[DltConstants.TypeInfo.TypeInfoSize + i] != 0;
+            }
+
+            arg = new BoolDltArg(boolArg);
             return DltConstants.TypeInfo.TypeInfoSize + argLength;
         }
     }
