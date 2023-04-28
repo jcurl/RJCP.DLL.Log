@@ -15,6 +15,12 @@
         IFrameMap FrameMap { get; }
 
         /// <summary>
+        /// If not <see langword="null"/>, use the fallback decoder in case of decoder errors.
+        /// </summary>
+        /// <value>The fallback decoder.</value>
+        INonVerboseDltDecoder Fallback { get; }
+
+        /// <summary>
         /// Decodes the specified buffer as a verbose payload.
         /// </summary>
         /// <param name="buffer">The buffer that should be decoded.</param>

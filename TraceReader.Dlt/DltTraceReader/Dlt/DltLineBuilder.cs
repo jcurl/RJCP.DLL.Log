@@ -94,6 +94,7 @@
             NumberOfArgs = 0;
             m_Arguments.Clear();
             ControlPayload = null;
+            m_ErrorMessage = null;
             return this;
         }
 
@@ -630,6 +631,17 @@
             string message = m_ErrorMessage;
             m_ErrorMessage = null;
             return message;
+        }
+
+        /// <summary>
+        /// Determines if an error message has been set.
+        /// </summary>
+        /// <returns>
+        /// Returns <see langword="true"/> if an error message has been set, otherwise <see langword="false"/>.
+        /// </returns>
+        public bool HasErrorMessage()
+        {
+            return m_ErrorMessage != null;
         }
     }
 }

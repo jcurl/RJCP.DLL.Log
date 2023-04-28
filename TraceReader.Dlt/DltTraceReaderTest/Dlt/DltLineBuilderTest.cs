@@ -946,5 +946,28 @@
             Assert.That(controlLine.Service.ServiceId, Is.EqualTo(-1));
             Assert.That(controlLine.Service.DefaultType, Is.EqualTo(DltType.CONTROL_TIME));
         }
+
+        [Test]
+        public void DltSetErrorMessage()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetErrorMessage("Error message");
+            Assert.That(builder.HasErrorMessage(), Is.True);
+
+            string error = builder.ResetErrorMessage();
+            Assert.That(error, Is.EqualTo("Error message"));
+            Assert.That(builder.HasErrorMessage(), Is.False);
+        }
+
+        [Test]
+        public void DltSetErrorMessageWithReset()
+        {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder.SetErrorMessage("Error message");
+            Assert.That(builder.HasErrorMessage(), Is.True);
+
+            builder.Reset();
+            Assert.That(builder.HasErrorMessage(), Is.False);
+        }
     }
 }

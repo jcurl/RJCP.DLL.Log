@@ -343,5 +343,13 @@
         /// </summary>
         /// <returns>The last error message, or <see langword="null"/> if none was set.</returns>
         string ResetErrorMessage();
+
+        /// <summary>
+        /// Determines if an error message has been set.
+        /// </summary>
+        /// <returns>
+        /// Returns <see langword="true"/> if an error message has been set, otherwise <see langword="false"/>.
+        /// </returns>
+        bool HasErrorMessage();
     }
 }

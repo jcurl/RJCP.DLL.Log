@@ -17,6 +17,12 @@
         public IFrameMap FrameMap { get { return null; } }
 
         /// <summary>
+        /// If not <see langword="null"/>, use the fallback decoder in case of decoder errors.
+        /// </summary>
+        /// <value>The fallback decoder.</value>
+        public INonVerboseDltDecoder Fallback { get { return null; } }
+
+        /// <summary>
         /// Decodes the specified buffer as a verbose payload.
         /// </summary>
         /// <param name="buffer">The buffer that should be decoded.</param>
@@ -33,6 +39,7 @@
                 if (buffer.Length < 4) {
                     lineBuilder.SetMessageId(0);
                     arg = new NonVerboseDltArg(Array.Empty<byte>());
+                    lineBuilder.SetErrorMessage("Buffer too small to contain the message identifier ({0} bytes)", buffer.Length);
                 } else {
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     lineBuilder.SetMessageId(messageId);
