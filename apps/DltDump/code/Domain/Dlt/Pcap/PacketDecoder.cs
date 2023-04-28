@@ -300,7 +300,7 @@
                         // Shouldn't ever get here, because the array is empty. But just in case.
                         Log.Pcap.TraceEvent(TraceEventType.Error,
                             "Discarded fragmented UDP packets on second attempt, reason {0}, fragment identifier {1:x4}, Timestamp {2:u}",
-                            result, fragId, timeStamp);
+                            result, unchecked((ushort)fragId), timeStamp);
                         return Array.Empty<DltTraceLineBase>();
                     }
                     retry = true;
@@ -313,7 +313,7 @@
                         }
                         Log.Pcap.TraceEvent(TraceEventType.Warning,
                             "Discarded fragmented UDP packets, reason {0}, fragment identifier {1:x4}, Timestamp {2:u}. Discarded: Packet Offset, Frag Offset {3}",
-                            result, fragId, timeStamp, sb.ToString());
+                            result, unchecked((ushort)fragId), timeStamp, sb.ToString());
                     }
                     connection.DiscardFragments(fragId);
                     break;
