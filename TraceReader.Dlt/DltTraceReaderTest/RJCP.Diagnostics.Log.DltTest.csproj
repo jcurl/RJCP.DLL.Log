@@ -78,6 +78,7 @@
     <Compile Include="Dlt\Args\RawDltArgTest.cs" />
     <Compile Include="Dlt\Args\SignedIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\StringDltArgTest.cs" />
+    <Compile Include="Dlt\Args\UnknownNonVerboseDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnknownVerboseDltArgTest.cs" />
     <Compile Include="Dlt\Args\UnsignedIntDltArgTest.cs" />
     <Compile Include="Dlt\ControlArgs\CustomConnectionInfoTest.cs" />

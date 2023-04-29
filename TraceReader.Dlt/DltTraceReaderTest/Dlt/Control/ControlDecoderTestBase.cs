@@ -6,7 +6,6 @@
     using Dlt.Packet;
     using NUnit.Framework;
     using RJCP.Core;
-    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// Common test code for control decoders.

@@ -21,10 +21,10 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (Data == null || Data.Length == 0) return "(00)";
+            // Data can't be null, as a ReadOnlySpan can never be null (value type), provided by the .ctor.
+            if (Data.Length == 0) return "(00)";
 
-            int strLength = 10;
-            if (Data != null) strLength += Data.Length * 3;
+            int strLength = 10 + Data.Length * 3;
             StringBuilder strBuilder = new StringBuilder(strLength);
             return Append(strBuilder).ToString();
         }
@@ -36,10 +36,9 @@
         /// <returns>The reference to the original string builder.</returns>
         public override StringBuilder Append(StringBuilder strBuilder)
         {
-            if (Data == null || Data.Length == 0) {
-                strBuilder.Append("(00)");
-                return strBuilder;
-            }
+            // Data can't be null, as a ReadOnlySpan can never be null (value type), provided by the .ctor.
+            if (Data.Length == 0) return strBuilder.Append("(00)");
+
             strBuilder.Append($"({Data.Length:x2}) ");
             HexConvert.ConvertToHex(strBuilder, Data);
             return strBuilder;

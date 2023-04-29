@@ -13,6 +13,9 @@
             byte[] value = Array.Empty<byte>();
             RawDltArg rawArg = new RawDltArg(value);
             Assert.That(rawArg.ToString(), Is.EqualTo(string.Empty));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -20,6 +23,9 @@
         {
             RawDltArg rawDltArg = new RawDltArg(null);
             Assert.That(rawDltArg.ToString(), Is.EqualTo(string.Empty));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(rawDltArg.Append(sb).ToString(), Is.EqualTo(string.Empty));
         }
 
         [TestCase(0x00, "00")]
@@ -33,6 +39,9 @@
             byte[] arg = { value };
             RawDltArg rawArg = new RawDltArg(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [TestCase(0x00, 0x00, "00 00")]
@@ -46,6 +55,9 @@
             byte[] arg = { v1, v2 };
             RawDltArg rawArg = new RawDltArg(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [Test]
@@ -62,6 +74,9 @@
 
             RawDltArg rawArg = new RawDltArg(data);
             Assert.That(rawArg.ToString(), Is.EqualTo(builder.ToString()));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(builder.ToString()));
         }
     }
 }

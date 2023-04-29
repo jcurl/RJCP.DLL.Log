@@ -8,6 +8,12 @@
     /// </summary>
     public class UnknownVerboseDltArg : UnknownDltArg
     {
+        private static byte[] GetArray(ReadOnlySpan<byte> buffer)
+        {
+            if (buffer.Length < 4) throw new ArgumentException("Buffer too small", nameof(buffer));
+            return buffer[4..].ToArray();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UnknownVerboseDltArg"/> class with the given byte array.
         /// </summary>
@@ -16,7 +22,7 @@
         /// first 4 bytes should contain the type information.
         /// </param>
         /// <param name="msbf">Indicates the endianness when decoding. This is provided by the standard header.</param>
-        public UnknownVerboseDltArg(ReadOnlySpan<byte> buffer, bool msbf) : base(buffer[4..].ToArray())
+        public UnknownVerboseDltArg(ReadOnlySpan<byte> buffer, bool msbf) : base(GetArray(buffer))
         {
             TypeInfo = new DltTypeInfo(buffer);
             IsBigEndian = msbf;
@@ -54,12 +60,10 @@
         /// </remarks>
         public override string ToString()
         {
-            int strLength = 60;
-            if (Data != null) strLength += Data.Length * 3;
-            if (TypeInfo.Bytes != null) strLength += TypeInfo.Bytes.Length * 3;
+            // Data can't be null, as a ReadOnlySpan can never be null (value type), provided by the .ctor.
+            int strLength = 60 + Data.Length * 3 + TypeInfo.Bytes.Length * 3;
 
-            StringBuilder strBuilder = new StringBuilder(strLength);
-            return Append(strBuilder).ToString();
+            return Append(new StringBuilder(strLength)).ToString();
         }
 
         /// <summary>
@@ -69,10 +73,11 @@
         /// <returns>The reference to the original string builder.</returns>
         public override StringBuilder Append(StringBuilder strBuilder)
         {
+            // Data can't be null, as a ReadOnlySpan can never be null (value type), provided by the .ctor.
             strBuilder.Append("Type Info: ");
             TypeInfo.Append(strBuilder).Append(" Data: ");
 
-            if (Data == null || Data.Length == 0) return strBuilder;
+            if (Data.Length == 0) return strBuilder;
             HexConvert.ConvertToHex(strBuilder, Data);
             return strBuilder;
         }

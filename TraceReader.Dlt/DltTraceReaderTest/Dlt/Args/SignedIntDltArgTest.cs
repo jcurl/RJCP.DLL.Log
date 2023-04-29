@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -24,6 +25,9 @@
         {
             SignedIntDltArg signedInt = new SignedIntDltArg(value);
             Assert.That(signedInt.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(signedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
     }
 }

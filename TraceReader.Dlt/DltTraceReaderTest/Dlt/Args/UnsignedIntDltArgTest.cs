@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -26,6 +27,9 @@
             Assert.That(unsignedInt.ToString(), Is.EqualTo(output));
             Assert.That(unsignedInt.Data, Is.EqualTo(unchecked((long)value)));
             Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(unsignedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [TestCase(-1, "18446744073709551615")]
@@ -52,6 +56,9 @@
             Assert.That(unsignedInt.ToString(), Is.EqualTo(output));
             Assert.That(unsignedInt.Data, Is.EqualTo(value));
             Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(unchecked((ulong)value)));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(unsignedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
     }
 }

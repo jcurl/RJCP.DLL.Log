@@ -5,7 +5,6 @@
     using System.Xml;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-    using static System.Net.WebRequestMethods;
 
     public class FibexFileTestBase
     {

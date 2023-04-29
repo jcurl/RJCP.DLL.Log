@@ -2,8 +2,8 @@
 {
     using System.IO;
     using System.Threading.Tasks;
-    using Dlt.Packet;
     using Dlt.NonVerbose;
+    using Dlt.Packet;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
 

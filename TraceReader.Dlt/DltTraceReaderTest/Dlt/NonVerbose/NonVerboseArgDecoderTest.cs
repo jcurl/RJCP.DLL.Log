@@ -38,7 +38,7 @@
         public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
             if (buffer.Length < pdu.PduLength) {
-                arg = new DltArgError($"Insufficient payload buffer {pdu.PduLength} for float16 argument");
+                arg = new DltArgError("Insufficient payload buffer {0} for float16 argument", pdu.PduLength);
                 return -1;
             }
             if (pdu.PduLength < 2) {

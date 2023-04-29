@@ -14,7 +14,7 @@
         /// Initializes a new instance of the <see cref="NonVerboseDltArg"/> class.
         /// </summary>
         /// <param name="data">The data.</param>
-        public NonVerboseDltArg(byte[] data) : base(data ?? Array.Empty<byte>()) { }
+        public NonVerboseDltArg(ReadOnlySpan<byte> data) : base(data.ToArray()) { }
 
         /// <summary>
         /// Returns a <see cref="string" /> that represents this instance.

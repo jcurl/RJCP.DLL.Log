@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -16,6 +17,9 @@
         {
             Float64DltArg floatArg = new Float64DltArg(value);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [Test]
@@ -26,6 +30,9 @@
 
             Float64DltArg floatArg = new Float64DltArg(number);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [TestCase(new byte[] { 0xEC, 0x34, 0xD2, 0x52, 0x79, 0x83, 0x44, 0x40 }, "41.0271")]
@@ -37,6 +44,9 @@
 
             Float64DltArg floatArg = new Float64DltArg(number);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }
 }

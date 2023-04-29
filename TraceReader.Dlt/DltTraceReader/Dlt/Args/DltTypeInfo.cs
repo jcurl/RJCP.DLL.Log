@@ -93,8 +93,6 @@
         /// <returns>A <see cref="string" /> that represents this instance.</returns>
         public override string ToString()
         {
-            if (Bytes == null || Bytes.Length == 0) return string.Empty;
-
             StringBuilder strBuilder = new StringBuilder(Bytes.Length * 3);
             HexConvert.ConvertToHex(strBuilder, Bytes);
             return strBuilder.ToString();
@@ -106,7 +104,6 @@
         /// <param name="strBuilder">The string builder to append this argument to.</param>
         public StringBuilder Append(StringBuilder strBuilder)
         {
-            if (Bytes == null || Bytes.Length == 0) return strBuilder;
             HexConvert.ConvertToHex(strBuilder, Bytes);
             return strBuilder;
         }

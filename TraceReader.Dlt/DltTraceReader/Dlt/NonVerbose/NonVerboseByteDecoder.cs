@@ -43,7 +43,7 @@
                 } else {
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     lineBuilder.SetMessageId(messageId);
-                    arg = new NonVerboseDltArg(buffer[4..].ToArray());
+                    arg = new NonVerboseDltArg(buffer[4..]);
                 }
                 lineBuilder.AddArgument(arg);
                 return buffer.Length;

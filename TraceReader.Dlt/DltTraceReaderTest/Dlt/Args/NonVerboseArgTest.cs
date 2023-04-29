@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
     using System;
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -13,6 +14,9 @@
             Assert.That(arg.Data.Length, Is.EqualTo(3));
             Assert.That(arg.Data, Is.EqualTo(new byte[] { 0x01, 0x02, 0x03 }));
             Assert.That(arg.ToString(), Is.EqualTo("---|01 02 03"));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(arg.Append(sb).ToString(), Is.EqualTo("---|01 02 03"));
         }
 
         [Test]
@@ -22,6 +26,9 @@
             Assert.That(arg.Data.Length, Is.EqualTo(3));
             Assert.That(arg.Data, Is.EqualTo(new byte[] { 0x65, 0x32, 0x0a }));
             Assert.That(arg.ToString(), Is.EqualTo("e2-|65 32 0a"));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(arg.Append(sb).ToString(), Is.EqualTo("e2-|65 32 0a"));
         }
 
         [Test]
@@ -34,6 +41,9 @@
             Assert.That(arg.Data.Length, Is.EqualTo(payload.Length));
             Assert.That(arg.Data, Is.EqualTo(payload));
             Assert.That(arg.ToString(), Is.Not.Empty);
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(arg.Append(sb).ToString(), Is.Not.Empty);
         }
     }
 }

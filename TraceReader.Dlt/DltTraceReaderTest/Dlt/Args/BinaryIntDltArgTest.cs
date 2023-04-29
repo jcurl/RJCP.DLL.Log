@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -70,6 +71,9 @@
             BinaryIntDltArg hexArg = new BinaryIntDltArg(value, length);
             Assert.That(hexArg.ToString(), Is.EqualTo(output));
             Assert.That(hexArg.Data, Is.EqualTo(value));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(hexArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -13,6 +14,9 @@
         {
             StringDltArg stringArg = new StringDltArg(input);
             Assert.That(stringArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(stringArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [Test]
@@ -21,6 +25,9 @@
             StringDltArg stringArg = new StringDltArg("string", StringEncodingType.Ascii);
             Assert.That(stringArg.ToString(), Is.EqualTo("string"));
             Assert.That(stringArg.Coding, Is.EqualTo(StringEncodingType.Ascii));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(stringArg.Append(sb).ToString(), Is.EqualTo("string"));
         }
     }
 }

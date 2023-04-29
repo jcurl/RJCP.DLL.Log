@@ -113,8 +113,8 @@
         public void DecodeAsciiEmptyString()
         {
             byte[] payload = Endian == Endianness.Little ?
-                new byte[] {0x01, 0x00, 0x00 } :
-                new byte[] {0x00, 0x01, 0x00 };
+                new byte[] { 0x01, 0x00, 0x00 } :
+                new byte[] { 0x00, 0x01, 0x00 };
 
             Decode(1, payload, "nv_StringAsciiEmpty", out IDltArg dltArg);
             Assert.That(dltArg, Is.TypeOf<StringDltArg>());

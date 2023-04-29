@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Args
 {
     using System.Globalization;
+    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]
@@ -14,6 +15,9 @@
         {
             Float32DltArg floatArg = new Float32DltArg(value);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
+
+            StringBuilder sb = new StringBuilder();
+            Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [TestCase(-10.123f)]
