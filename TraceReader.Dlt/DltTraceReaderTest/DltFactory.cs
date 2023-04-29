@@ -39,13 +39,26 @@
                 return Factory.CreateAsync(stream);
             }
 
+            if (Map != null) {
+                switch (FactoryType) {
+                case DltFactoryType.Standard:
+                    return new DltTraceReaderFactory(Map).CreateAsync(stream);
+                case DltFactoryType.File:
+                    return new DltFileTraceReaderFactory(Map).CreateAsync(stream);
+                case DltFactoryType.Serial:
+                    return new DltSerialTraceReaderFactory(Map).CreateAsync(stream);
+                default:
+                    throw new InvalidOperationException($"Unknown Factory {FactoryType}");
+                }
+            }
+
             switch (FactoryType) {
             case DltFactoryType.Standard:
-                return new DltTraceReaderFactory(Map).CreateAsync(stream);
+                return new DltTraceReaderFactory().CreateAsync(stream);
             case DltFactoryType.File:
-                return new DltFileTraceReaderFactory(Map).CreateAsync(stream);
+                return new DltFileTraceReaderFactory().CreateAsync(stream);
             case DltFactoryType.Serial:
-                return new DltSerialTraceReaderFactory(Map).CreateAsync(stream);
+                return new DltSerialTraceReaderFactory().CreateAsync(stream);
             default:
                 throw new InvalidOperationException($"Unknown Factory {FactoryType}");
             }

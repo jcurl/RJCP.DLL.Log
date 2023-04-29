@@ -61,6 +61,9 @@
     <Compile Include="DltControlTraceLineTest.cs" />
     <Compile Include="DltFactory.cs" />
     <Compile Include="DltFactoryType.cs" />
+    <Compile Include="DltSerialTraceReaderFactoryTest.cs" />
+    <Compile Include="DltTraceReaderFactoryTest.cs" />
+    <Compile Include="DltFileTraceReaderFactoryTest.cs" />
     <Compile Include="DltSkippedTraceLineTest.cs" />
     <Compile Include="DltTestData.cs" />
     <Compile Include="DltTime.cs" />
