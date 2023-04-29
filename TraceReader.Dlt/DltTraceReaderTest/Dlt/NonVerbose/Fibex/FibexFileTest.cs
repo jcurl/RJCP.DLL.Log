@@ -100,6 +100,12 @@
                 Assert.That(fibex.GetFrame(frame.Key, null, null, null),
                     Is.EqualTo(frame.Value).Using(FrameComparer.Comparer));
             }
+
+            Assert.That(fibex.TryGetFrame(10, null, null, null, out IFrame frame10), Is.True);
+            Assert.That(frame10.ToString(), Is.EqualTo("EcuID=TCB AppId=TEST CtxId=CON1 10 (LOG_INFO) [DLT non verbose test message.]"));
+
+            Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame11), Is.True);
+            Assert.That(frame11.ToString(), Is.EqualTo("EcuID=TCB AppId=APP1 CtxId=CON1 11 (LOG_WARN) [Buffer near limit. Free size:] S_UINT16 (2)"));
         }
 
         [Test]
