@@ -54,6 +54,8 @@ The decoder is based on the [DLT Format](DLT.Format.md).
       - [4.4.1.4. Extensions for a Unique Message Identifier](#4414-extensions-for-a-unique-message-identifier)
       - [4.4.1.5. Extensions for the ECU Identifier](#4415-extensions-for-the-ecu-identifier)
       - [4.4.1.6. Design of the FIBEX with an IFrameMap](#4416-design-of-the-fibex-with-an-iframemap)
+  - [4.5. Design for Non-Verbose Decoding](#45-design-for-non-verbose-decoding)
+    - [4.5.1. Extending with New PDU Types](#451-extending-with-new-pdu-types)
 - [5. Trace Lines](#5-trace-lines)
 
 ## 1. DLT Trace Decoder
@@ -975,6 +977,35 @@ regardless of the application, context and ECU identifier, the exception would
 be raised. If `FrameMapDefault` is used, then the exception is only raised in
 the case that there is a duplicate message for the same Application, Context and
 Message identifier.
+
+### 4.5. Design for Non-Verbose Decoding
+
+The `INonVerboseDltDecoder` is the interface which defines how the decoder can
+interpret the payload of non-verbose data. It is implemented by
+`NonVerboseDltDecoder` and can be replaced by a user implementation. It takes an
+`IFrameMap` that describes the sequence of PDUs and their datatypes and amount
+of data they accept.
+
+The `NonVerboseDltDecoder` obtains the message identifier (the first four bytes)
+using the current endianness described in the file format. From this, it
+identifies the PDUs. It iterates over all PDUs, consume the payload buffer to
+construct the arguments.
+
+ ![](out/diagrams/DLT.DecoderNonVerboseArgs/DLT.DecoderNonVerboseArgs.svg)
+
+#### 4.5.1. Extending with New PDU Types
+
+The class `NonVerboseArgDecoder` contains the mapping for a PDU string type, to
+a decoder in a binary stream to create the argument type. The typical steps to
+extend the decoder for your own type would be:
+
+* Create a new `MyTypeArg : IDltArg`
+* Create a new `MyTypeArgDecoder : INonVerboseArgDecoder`
+* Create a new `MyNonVerboseArgDecoder : NonVerboseArgDecoder` which registers
+  the PDU string to the new `INonVerboseArgDecoder`
+  * You can also unregister the decoders if you don't want it.
+* Pass the `MyNonVerboseArgDecoder` to `NonVerboseDltDecoder` when instantiating
+  it.
 
 ## 5. Trace Lines
 

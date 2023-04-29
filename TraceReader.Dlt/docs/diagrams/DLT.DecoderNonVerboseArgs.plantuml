@@ -1,0 +1,72 @@
+@startuml DLT.DecoderNonVerboseArgs
+class DltTraceDecoderBase
+DltTraceDecoderBase o-r- INonVerboseDltDecoder : <<uses>>
+
+interface INonVerboseDltDecoder
+class NonVerboseDltDecoder
+
+INonVerboseDltDecoder <|.d. NonVerboseDltDecoder
+
+interface INonVerboseArgDecoder
+class NonVerboseArgDecoder
+
+INonVerboseArgDecoder <|.d. NonVerboseArgDecoder
+
+NonVerboseDltDecoder *-r- INonVerboseArgDecoder
+NonVerboseDltDecoder *-d- NonVerboseArgDecoder : <<default>>
+
+class NonVerboseBoolArgDecoder
+class NonVerboseSignedIntArgDecoder
+class NonVerboseUnsignedIntArgDecoder
+class NonVerboseFloat32ArgDecoder
+class NonVerboseFloat64ArgDecoder
+class NonVerboseRawArgDecoder
+class NonVerboseStringArgDecoder
+class NonVerboseBinArgDecoder
+class NonVerboseHexArgDecoder
+class NonVerboseUnknownArgDecoder
+
+' INonVerboseArgDecoder <|.d.. NonVerboseBoolArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseSignedIntArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseUnsignedIntArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseFloat32ArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseFloat64ArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseRawArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseStringArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseBinArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseHexArgDecoder
+' INonVerboseArgDecoder <|.d.. NonVerboseUnknownArgDecoder
+
+NonVerboseArgDecoder *-d- NonVerboseBoolArgDecoder : <<S_BOOL>>
+NonVerboseArgDecoder *-d- NonVerboseSignedIntArgDecoder : <<S_SINT*>>
+NonVerboseArgDecoder *-d- NonVerboseUnsignedIntArgDecoder : <<S_UINT*>>
+NonVerboseArgDecoder *-d- NonVerboseFloat32ArgDecoder : <<S_FLOA32>>
+NonVerboseArgDecoder *-d- NonVerboseFloat64ArgDecoder : <<S_FLOA64>>
+NonVerboseArgDecoder *-d- NonVerboseRawArgDecoder : <<S_RAW, S_RAWD>>
+NonVerboseArgDecoder *-d- NonVerboseStringArgDecoder : <<S_STRG_ASCII, S_STRG_UTF8>>
+NonVerboseArgDecoder *-d- NonVerboseBinArgDecoder : <<S_BIN*>>
+NonVerboseArgDecoder *-d- NonVerboseHexArgDecoder : <<S_HEX*>>
+NonVerboseArgDecoder *-d- NonVerboseUnknownArgDecoder
+
+class BinaryIntDltArg
+class BoolDltArg
+class Float32DltArg
+class Float64DltArg
+class HexIntDltArg
+class RawDltArg
+class SignedIntDltArg
+class StringDltArg
+class UnsignedIntDltArg
+class UnknownNonVerboseDltArg
+
+NonVerboseBoolArgDecoder -d- BoolDltArg : <<creates>>
+NonVerboseSignedIntArgDecoder -d- SignedIntDltArg : <<creates>>
+NonVerboseUnsignedIntArgDecoder -d- UnsignedIntDltArg : <<creates>>
+NonVerboseFloat32ArgDecoder -d- Float32DltArg : <<creates>>
+NonVerboseFloat64ArgDecoder -d- Float64DltArg : <<creates>>
+NonVerboseRawArgDecoder -d- RawDltArg : <<creates>>
+NonVerboseStringArgDecoder -d- StringDltArg : <<creates>>
+NonVerboseBinArgDecoder -d- BinaryIntDltArg : <<creates>>
+NonVerboseHexArgDecoder -d- HexIntDltArg : <<creates>>
+NonVerboseUnknownArgDecoder -d- UnknownNonVerboseDltArg : <<creates>>
+@enduml
