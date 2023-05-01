@@ -3,6 +3,7 @@
     using System;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.Control;
     using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
@@ -12,6 +13,7 @@
     public sealed class DltPcapNetworkTraceFilterDecoder : DltTraceDecoder, IPcapTraceDecoder
     {
         private readonly IOutputStream m_OutputStream;
+        private readonly IDltLineBuilder m_LineBuilder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltPcapNetworkTraceFilterDecoder"/> class.
@@ -28,8 +30,12 @@
         /// <param name="map">The map for decoding non-verbose messages.</param>
         /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
         public DltPcapNetworkTraceFilterDecoder(IOutputStream outputStream, IFrameMap map)
-            : base(map)
+            : this(outputStream, map, new DltLineBuilder(false)) { }
+
+        private DltPcapNetworkTraceFilterDecoder(IOutputStream outputStream, IFrameMap map, IDltLineBuilder lineBuilder)
+            : base(GetVerboseDecoder(), GetNonVerboseDecoder(map), new ControlDltDecoder(), lineBuilder)
         {
+            m_LineBuilder = lineBuilder;
             m_OutputStream = outputStream;
         }
 
@@ -73,23 +79,10 @@
         /// Gets or sets the packet time stamp.
         /// </summary>
         /// <value>The packet time stamp.</value>
-        public DateTime PacketTimeStamp { get; set; }
-
-        /// <summary>
-        /// Parses any headers at the start of the packet.
-        /// </summary>
-        /// <param name="dltPacket">
-        /// The DLT packet where offset zero is the start of the packet found, including the marker as returned by
-        /// <see cref="DltTraceDecoder.ScanStartFrame"/>.
-        /// </param>
-        /// <param name="lineBuilder">The line builder.</param>
-        /// <returns>
-        /// Returns <see langword="true"/> always, as there is no prefix header that needs to be parsed.
-        /// </returns>
-        protected override bool ParsePrefixHeader(ReadOnlySpan<byte> dltPacket, IDltLineBuilder lineBuilder)
+        public DateTime PacketTimeStamp
         {
-            lineBuilder.SetTimeStamp(PacketTimeStamp);
-            return true;
+            get { return m_LineBuilder.TimeStamp; }
+            set { m_LineBuilder.SetTimeStamp(value); }
         }
     }
 }
