@@ -23,32 +23,43 @@
         private long m_Position;
         private uint m_ExpectedLength;
         private long m_DiscardLength;
-
         private bool m_FileCorrupted;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DltPcapNgDecoder"/> class without an output stream or filter.
+        /// Initializes a new instance of the <see cref="DltPcapNgDecoder" /> class without an output stream or filter.
         /// </summary>
-        public DltPcapNgDecoder()
+        /// <param name="factory">The factory to return a <see cref="IPcapTraceDecoder"/>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
+        public DltPcapNgDecoder(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            m_BlockReader = new BlockReader();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DltPcapNgDecoder"/> class.
-        /// </summary>
-        /// <param name="outputStream">The output stream.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="outputStream"/> is <see langword="null"/>.
-        /// </exception>
-        public DltPcapNgDecoder(IOutputStream outputStream)
-        {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
-            m_BlockReader = new BlockReader(outputStream);
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            m_BlockReader = new BlockReader(factory);
         }
 
         private readonly List<DltTraceLineBase> m_List = new List<DltTraceLineBase>();
 
+        /// <summary>
+        /// Decodes data from the buffer and returns a read only collection of trace lines.
+        /// </summary>
+        /// <param name="buffer">The buffer data that should be decoded.</param>
+        /// <param name="position">The position in the stream where the data begins.</param>
+        /// <returns>An enumerable collection of the decoded lines.</returns>
+        /// <exception cref="ObjectDisposedException">This object has been disposed.</exception>
+        /// <exception cref="UnknownPcapFileFormatException">Indicates that the file is corrupted.</exception>
+        /// <remarks>
+        /// The <see cref="ITraceDecoder.Decode(ReadOnlySpan{byte},long)"/> method shall accept any number of bytes for
+        /// decoding. It should also consume all data that is received, so that data which is not processed is buffered
+        /// locally by the decoder.
+        /// <para>
+        /// On return, this method should return a read only collection of trace lines that were fully decoded. If no
+        /// lines were decoded, it should return an empty collection (and avoid <see langword="null"/>).
+        /// </para>
+        /// <para>
+        /// If there was a problem decoding that decoding can no longer continue, an exception should normally be
+        /// raised, that will be propagated to the caller. In case that the caller should see that processing finished
+        /// normally, but before the stream is finished, return <see langword="null"/>.
+        /// </para>
+        /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
             if (m_IsDisposed)
@@ -184,6 +195,15 @@
             return m_List;
         }
 
+        /// <summary>
+        /// Flushes any data that is locally cached, and returns any pending trace lines.
+        /// </summary>
+        /// <returns>A read only collection of the decoded lines.</returns>
+        /// <exception cref="UnknownPcapFileFormatException">Corruption was encountered in the PCAP file.</exception>
+        /// <remarks>
+        /// Flushing a decoder typically happens by the trace reader when the stream is finished, so that any remaining
+        /// data the decoder may have can be returned to the user application (including error trace lines).
+        /// </remarks>
         public IEnumerable<DltTraceLineBase> Flush()
         {
             if (m_FileCorrupted)

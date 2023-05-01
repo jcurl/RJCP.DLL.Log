@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Text;
     using NUnit.Framework;
+    using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
     [TestFixture]
     public class TecmpPacketDecoderTest
     {
+        private static readonly ITraceDecoderFactory<DltTraceLineBase> DefaultPcapFactory = new PcapTraceDecoderFactory();
+
         private static readonly DateTime Time1 = new DateTime(2022, 4, 24, 17, 2, 54, DateTimeKind.Utc).AddMilliseconds(580);
 
         #region Packet Building for common testing
@@ -143,7 +146,7 @@
 
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(1));
@@ -183,7 +186,7 @@
             AddDltPayload(payload2, "DLT Argument test string 2");
             AddTecmpPayload(packet, payload2);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(2));
@@ -216,7 +219,7 @@
             AddDltPayload(payload3, "DLT Argument test string 3");
             AddTecmpPayload(packet, payload3);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(3));
@@ -243,7 +246,7 @@
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));
@@ -265,7 +268,7 @@
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));
@@ -286,7 +289,7 @@
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));
@@ -305,7 +308,7 @@
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(1));
@@ -322,7 +325,7 @@
             AddTecmpHeader(packet);
             AddTecmpPayload(packet, new List<byte>());
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));
@@ -347,7 +350,7 @@
             }));
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));
@@ -378,7 +381,7 @@
             }));
             AddTecmpPayload(packet, payload2);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(1));
@@ -415,7 +418,7 @@
             byte[] bytePacket = packet.ToArray();
             for (int i = 0; i < bytePacket.Length; i++) {
                 Console.WriteLine($"Packet Size = {i} of {bytePacket.Length}");
-                using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+                using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                     IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                         packetDecoder.DecodePacket(bytePacket.AsSpan(0, i), Time1, 20));
                     Assert.That(lines.Count, Is.EqualTo(0));
@@ -455,7 +458,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x2e, 0x2e, 0x00         // [94..9E]
             });
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET)) {
+            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines.Count, Is.EqualTo(0));

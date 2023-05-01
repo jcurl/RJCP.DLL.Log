@@ -9,6 +9,7 @@
     using RJCP.Core;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// A DLT decoder that extracts DLT from UDP packets in a PCAP / PCAP-NG file, determining the format from the
@@ -16,17 +17,36 @@
     /// </summary>
     public class DltPcapTraceDecoder : ITraceDecoder<DltTraceLineBase>
     {
-        private readonly IOutputStream m_OutputStream;
+        private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
         private ITraceDecoder<DltTraceLineBase> m_PcapDecoder;
         private readonly byte[] m_Header = new byte[4];
         private int m_HeaderLength;
 
-        public DltPcapTraceDecoder() { }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapTraceDecoder"/> class.
+        /// </summary>
+        public DltPcapTraceDecoder() : this(null, null) { }
 
-        public DltPcapTraceDecoder(IOutputStream outputStream)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        public DltPcapTraceDecoder(IOutputStream outputStream) : this(outputStream, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="map">The map used for decoding non-verbose messages.</param>
+        public DltPcapTraceDecoder(IFrameMap map) : this(null, map) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapTraceDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        /// <param name="map">The map used for decoding non-verbose messages.</param>
+        public DltPcapTraceDecoder(IOutputStream outputStream, IFrameMap map)
         {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
-            m_OutputStream = outputStream;
+            m_TraceDecoderFactory = new PcapTraceDecoderFactory(outputStream, map);
         }
 
         /// <summary>
@@ -76,21 +96,13 @@
             int magicBytes = BitOperations.To32ShiftLittleEndian(header);
             switch (magicBytes) {
             case 0x0A0D0D0A:
-                if (m_OutputStream == null) {
-                    m_PcapDecoder = new DltPcapNgDecoder();
-                } else {
-                    m_PcapDecoder = new DltPcapNgDecoder(m_OutputStream);
-                }
+                m_PcapDecoder = new DltPcapNgDecoder(m_TraceDecoderFactory);
                 return;
             case unchecked((int)0xA1B2C3D4):
             case unchecked((int)0xA1B23C4D):
             case unchecked((int)0xD4C3B2A1):
             case 0x4D3CB2A1:
-                if (m_OutputStream == null) {
-                    m_PcapDecoder = new DltPcapLegacyDecoder();
-                } else {
-                    m_PcapDecoder = new DltPcapLegacyDecoder(m_OutputStream);
-                }
+                m_PcapDecoder = new DltPcapLegacyDecoder(m_TraceDecoderFactory);
                 return;
             }
 

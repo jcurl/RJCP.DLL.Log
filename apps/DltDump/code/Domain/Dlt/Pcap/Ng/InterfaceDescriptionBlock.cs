@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using Domain.Dlt.Pcap.Ng.Options;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
@@ -21,12 +22,13 @@
         /// </param>
         /// <param name="position">The position in the stream where the block starts.</param>
         /// <returns>The <see cref="InterfaceDescriptionBlock"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         /// <remarks>
         /// This block does not check the identifier (it must be the <see cref="BlockCodes.InterfaceDescriptionBlock"/> or the
         /// length fields (which must be the same length as <paramref name="buffer"/>). It is assumed that the component
         /// calling this method has already checked the fields are correct (see <see cref="BlockReader"/>).
         /// </remarks>
-        internal static InterfaceDescriptionBlock GetInterfaceDescriptionBlock(ReadOnlySpan<byte> buffer, bool littleEndian, IOutputStream outputStream, long position)
+        internal static InterfaceDescriptionBlock GetInterfaceDescriptionBlock(ReadOnlySpan<byte> buffer, bool littleEndian, ITraceDecoderFactory<DltTraceLineBase> factory, long position)
         {
             if (buffer.Length < 20) {
                 Log.Pcap.TraceEvent(TraceEventType.Warning,
@@ -65,9 +67,7 @@
                 return null;
             }
 
-            PacketDecoder decoder = outputStream == null ?
-                new PacketDecoder(linkType) :
-                new PacketDecoder(linkType, outputStream);
+            PacketDecoder decoder = new PacketDecoder(linkType, factory);
             return new InterfaceDescriptionBlock(buffer.Length, options, decoder) {
                 LinkType = linkType,
                 SnapLength = snapLen

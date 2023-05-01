@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
@@ -17,24 +18,20 @@
     {
         private const int MinimumBlockSize = 12;
         private readonly List<InterfaceDescriptionBlock> m_Interfaces = new List<InterfaceDescriptionBlock>();
-        private readonly IOutputStream m_OutputStream;
         private bool m_HasSectionHeader = false;
         private bool m_LittleEndian;
+        private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockReader"/> class.
         /// </summary>
-        public BlockReader() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BlockReader"/> class.
-        /// </summary>
-        /// <param name="outputStream">
-        /// The output stream which is used when calling <see cref="DecodeBlock(ReadOnlySpan{byte}, long)"/>.
-        /// </param>
-        public BlockReader(IOutputStream outputStream)
+        /// <param name="factory">The factory to return a <see cref="IPcapTraceDecoder"/>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
+        public BlockReader(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            m_OutputStream = outputStream;
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+
+            m_TraceDecoderFactory = factory;
         }
 
         /// <summary>
@@ -169,7 +166,7 @@
                 ClearInterfaces();
                 break;
             case BlockCodes.InterfaceDescriptionBlock:
-                block = InterfaceDescriptionBlock.GetInterfaceDescriptionBlock(buffer, littleEndian, m_OutputStream, position);
+                block = InterfaceDescriptionBlock.GetInterfaceDescriptionBlock(buffer, littleEndian, m_TraceDecoderFactory, position);
                 m_Interfaces.Add(block as InterfaceDescriptionBlock);
                 break;
             }

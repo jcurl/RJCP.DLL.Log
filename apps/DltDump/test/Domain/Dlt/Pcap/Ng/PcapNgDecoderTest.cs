@@ -19,7 +19,7 @@
     [TestFixture(typeof(DltPcapNgDecoder), false)]
     [TestFixture(typeof(DltPcapTraceDecoder), true)]
     [TestFixture(typeof(DltPcapTraceDecoder), false)]
-    public class PcapNgDecoderTest<TDec> : PcapDecoderTestBase where TDec : class, ITraceDecoder<DltTraceLineBase>, new()
+    public class PcapNgDecoderTest<TDec> : PcapDecoderTestBase where TDec : class, ITraceDecoder<DltTraceLineBase>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PcapNgDecoderTest{TDec}"/> class.
@@ -36,27 +36,18 @@
 
         private TDec Create(bool nullOutput)
         {
-            if (nullOutput) {
-                if (typeof(TDec) == typeof(DltPcapNgDecoder)) return new DltPcapNgDecoder(null) as TDec;
-                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(null) as TDec;
-            } else if (MemOutputStream != null) {
-                if (typeof(TDec) == typeof(DltPcapNgDecoder))
-                    return new DltPcapNgDecoder(MemOutputStream) as TDec;
-                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(MemOutputStream) as TDec;
-            } else {
-                if (typeof(TDec) == typeof(DltPcapNgDecoder)) return new DltPcapNgDecoder() as TDec;
+            ITraceDecoderFactory<DltTraceLineBase> factory;
+            if (nullOutput || MemOutputStream == null) {
+                factory = new PcapTraceDecoderFactory(null, null);
+                if (typeof(TDec) == typeof(DltPcapNgDecoder)) return new DltPcapNgDecoder(factory) as TDec;
                 if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder() as TDec;
+            } else {
+                factory = new PcapTraceDecoderFactory(MemOutputStream, null);
+                if (typeof(TDec) == typeof(DltPcapNgDecoder)) return new DltPcapNgDecoder(factory) as TDec;
+                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(MemOutputStream, null) as TDec;
             }
 
             throw new NotImplementedException();
-        }
-
-        [Test]
-        public void NullOutputStream()
-        {
-            Assert.That(() => {
-                _ = Create(true);
-            }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [TestCaseSource(nameof(ReadChunks))]

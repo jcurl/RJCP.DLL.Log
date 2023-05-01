@@ -63,7 +63,7 @@
                 case InputFormat.Network:
                     return new DltTraceDecoderFactory(OnlineMode, FrameMap).Create();
                 case InputFormat.Pcap:
-                    return new DltPcapTraceDecoder();
+                    return new DltPcapTraceDecoder(FrameMap);
                 default:
                     throw new InvalidOperationException(AppResources.InfraDltInvalidFormat);
                 }
@@ -77,7 +77,7 @@
             case InputFormat.Network:
                 return new DltNetworkTraceFilterDecoder(OutputStream, OnlineMode, FrameMap);
             case InputFormat.Pcap:
-                return new DltPcapTraceDecoder(OutputStream);
+                return new DltPcapTraceDecoder(OutputStream, FrameMap);
             default:
                 throw new InvalidOperationException(AppResources.InfraDltInvalidFormat);
             }

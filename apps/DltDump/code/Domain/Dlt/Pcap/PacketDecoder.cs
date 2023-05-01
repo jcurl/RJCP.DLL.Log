@@ -6,6 +6,7 @@
     using System.Text;
     using Resources;
     using RJCP.Core;
+    using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
     /// <summary>
@@ -14,24 +15,20 @@
     public sealed class PacketDecoder : IDisposable
     {
         private readonly int m_LinkType;
-        private readonly IOutputStream m_OutputStream;
+        private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
         private readonly Dictionary<ConnectionKey, Connection> m_Connections = new Dictionary<ConnectionKey, Connection>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PacketDecoder"/> class.
         /// </summary>
         /// <param name="linkType">Type of the link, as defined in the PCAP file.</param>
+        /// <param name="factory">The factory to return a <see cref="IPcapTraceDecoder"/>.</param>
         /// <exception cref="UnknownPcapFileFormatException">The link type is not supported.</exception>
-        public PacketDecoder(int linkType) : this(linkType, null) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDecoder"/> class.
-        /// </summary>
-        /// <param name="linkType">Type of the link, as defined in the PCAP file.</param>
-        /// <param name="outputStream">The output stream, where to write to.</param>
-        /// <exception cref="UnknownPcapFileFormatException">The link type is not supported.</exception>
-        public PacketDecoder(int linkType, IOutputStream outputStream)
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
+        public PacketDecoder(int linkType, ITraceDecoderFactory<DltTraceLineBase> factory)
         {
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+
             switch (linkType) {
             case LinkTypes.LINKTYPE_ETHERNET:
             case LinkTypes.LINKTYPE_LINUX_SLL:
@@ -40,7 +37,7 @@
             default:
                 throw new UnknownPcapFileFormatException(AppResources.DomainPcapUnknownLinkFormat);
             }
-            m_OutputStream = outputStream;
+            m_TraceDecoderFactory = factory;
         }
 
         /// <summary>
@@ -261,13 +258,13 @@
         {
             ConnectionKey key = new ConnectionKey(srcAddr, dstAddr);
             if (!m_Connections.TryGetValue(key, out Connection connection)) {
-                connection = new Connection(srcAddr, dstAddr, m_OutputStream);
+                connection = new Connection(srcAddr, dstAddr, m_TraceDecoderFactory);
                 m_Connections.Add(key, connection);
             }
             return connection;
         }
 
-        private DltPcapNetworkTraceFilterDecoder GetDecoder(int srcAddr, short srcPort, int dstAddr, short dstPort)
+        private IPcapTraceDecoder GetDecoder(int srcAddr, short srcPort, int dstAddr, short dstPort)
         {
             Connection connection = GetConnection(srcAddr, dstAddr);
             return connection.GetDltDecoder(srcPort, dstPort);
@@ -329,7 +326,7 @@
             int udpLen;
 
             ReadOnlySpan<byte> dltBuffer;
-            DltPcapNetworkTraceFilterDecoder decoder = null;
+            IPcapTraceDecoder decoder = null;
             List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
 
             foreach (IpFragment fragment in fragments.GetFragments()) {
@@ -360,7 +357,7 @@
                     position = fragment.Position;
                 }
 
-                lines.AddRange(decoder.Decode(dltBuffer, position, false));
+                lines.AddRange(decoder.Decode(dltBuffer, position));
             }
             return lines;
         }
@@ -381,12 +378,9 @@
                 return Array.Empty<DltTraceLineBase>();
             }
 
-            DltPcapNetworkTraceFilterDecoder decoder = GetDecoder(srcAddr, srcPort, dstAddr, dstPort);
+            IPcapTraceDecoder decoder = GetDecoder(srcAddr, srcPort, dstAddr, dstPort);
             decoder.PacketTimeStamp = timeStamp;
-
-            // We decode but do not flush, as we handle each src:port, dst:port pair as it's own connection which is
-            // expected to be a continuous stream. Lost packets will result in corruption.
-            return decoder.Decode(udpBuffer[8..udpLen], position + 8, false);
+            return decoder.Decode(udpBuffer[8..udpLen], position + 8);
         }
 
         private bool m_IsDisposed;

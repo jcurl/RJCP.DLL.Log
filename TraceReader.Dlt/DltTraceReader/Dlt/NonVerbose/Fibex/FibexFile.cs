@@ -412,7 +412,7 @@
                 if (dltInfo == "DLT_LOG_INFO") return DltType.LOG_INFO;
                 if (dltInfo == "DLT_LOG_DEBUG") return DltType.LOG_DEBUG;
                 if (dltInfo == "DLT_LOG_VERBOSE") return DltType.LOG_VERBOSE;
-                return (DltType)DltConstants.MessageType.DltTypeLog;
+                return DltConstants.MessageType.DltTypeLog;
             } else if (dltType == "DLT_TYPE_APP_TRACE") {
                 if (dltInfo == "DLT_TRACE_VARIABLE") return DltType.APP_TRACE_VARIABLE;
                 if (dltInfo == "DLT_TRACE_FUNCTION_IN") return DltType.APP_TRACE_FUNCTION_IN;

@@ -96,7 +96,7 @@
     [TestFixture(typeof(DltPcapLegacyDecoder), false)]
     [TestFixture(typeof(DltPcapTraceDecoder), true)]
     [TestFixture(typeof(DltPcapTraceDecoder), false)]
-    public class PcapLegacyDecoderTest<TDec> : PcapDecoderTestBase where TDec : class, ITraceDecoder<DltTraceLineBase>, new()
+    public class PcapLegacyDecoderTest<TDec> : PcapDecoderTestBase where TDec : class, ITraceDecoder<DltTraceLineBase>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PcapLegacyDecoderTest{TDec}"/> class.
@@ -113,27 +113,18 @@
 
         private TDec Create(bool nullOutput)
         {
-            if (nullOutput) {
-                if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder(null) as TDec;
-                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(null) as TDec;
-            } else if (MemOutputStream != null) {
-                if (typeof(TDec) == typeof(DltPcapLegacyDecoder))
-                    return new DltPcapLegacyDecoder(MemOutputStream) as TDec;
-                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(MemOutputStream) as TDec;
-            } else {
-                if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder() as TDec;
+            ITraceDecoderFactory<DltTraceLineBase> factory;
+            if (nullOutput || MemOutputStream == null) {
+                factory = new PcapTraceDecoderFactory(null, null);
+                if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder(factory) as TDec;
                 if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder() as TDec;
+            } else {
+                factory = new PcapTraceDecoderFactory(MemOutputStream, null);
+                if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder(factory) as TDec;
+                if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder(MemOutputStream, null) as TDec;
             }
 
             throw new NotImplementedException();
-        }
-
-        [Test]
-        public void NullOutputStream()
-        {
-            Assert.That(() => {
-                _ = Create(true);
-            }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [TestCaseSource(nameof(ReadChunks))]

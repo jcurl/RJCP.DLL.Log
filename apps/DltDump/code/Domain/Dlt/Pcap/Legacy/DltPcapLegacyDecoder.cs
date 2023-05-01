@@ -17,32 +17,24 @@
         /// </summary>
         private const int PcapRecHdrLen = 16;
 
-        private readonly IOutputStream m_OutputStream;
+        private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
         private readonly byte[] m_Packet = new byte[65536];
         private int m_Length;
         private long m_Position;
         private uint m_ExpectedLength;
         private long m_DiscardLength;
-
         private PacketDecoder m_Decoder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltPcapLegacyDecoder"/> class without an output stream or
         /// filter.
         /// </summary>
-        public DltPcapLegacyDecoder() { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DltPcapLegacyDecoder"/> class.
-        /// </summary>
-        /// <param name="outputStream">The output stream.</param>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="outputStream"/> is <see langword="null"/>.
-        /// </exception>
-        public DltPcapLegacyDecoder(IOutputStream outputStream)
+        /// <param name="factory">The factory that creates a decoder of type <see cref="IPcapTraceDecoder"/>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
+        public DltPcapLegacyDecoder(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
-            m_OutputStream = outputStream;
+            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            m_TraceDecoderFactory = factory;
         }
 
         /// <summary>
@@ -59,12 +51,19 @@
         /// <param name="buffer">The buffer data that should be decoded.</param>
         /// <param name="position">The position in the stream where the data begins.</param>
         /// <returns>An enumerable collection of the decoded lines.</returns>
+        /// <exception cref="ObjectDisposedException">This object is disposed of.</exception>
         /// <remarks>
-        /// This method shall accept any number of bytes for decoding. It should also consume all data that is received,
-        /// so that data which is not processed is buffered locally by the decoder.
+        /// The <see cref="ITraceDecoder.Decode(ReadOnlySpan{byte},long)"/> method shall accept any number of bytes for
+        /// decoding. It should also consume all data that is received, so that data which is not processed is buffered
+        /// locally by the decoder.
         /// <para>
         /// On return, this method should return a read only collection of trace lines that were fully decoded. If no
         /// lines were decoded, it should return an empty collection (and avoid <see langword="null"/>).
+        /// </para>
+        /// <para>
+        /// If there was a problem decoding that decoding can no longer continue, an exception should normally be
+        /// raised, that will be propagated to the caller. In case that the caller should see that processing finished
+        /// normally, but before the stream is finished, return <see langword="null"/>.
         /// </para>
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
@@ -95,11 +94,7 @@
                     position += PcapFormat.HeaderLength;
                 }
 
-                if (m_OutputStream == null) {
-                    m_Decoder = new PacketDecoder(Format.LinkType);
-                } else {
-                    m_Decoder = new PacketDecoder(Format.LinkType, m_OutputStream);
-                }
+                m_Decoder = new PacketDecoder(Format.LinkType, m_TraceDecoderFactory);
 
                 if (Format != null && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
                     Log.Pcap.TraceEvent(TraceEventType.Information, "PCAP File: {0}", Format.ToString());

@@ -3,12 +3,13 @@
     using System;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// A DLT decoder for a network stream that can filter output and set the logging timestamp per packet when
     /// decoding.
     /// </summary>
-    public sealed class DltPcapNetworkTraceFilterDecoder : DltTraceDecoder
+    public sealed class DltPcapNetworkTraceFilterDecoder : DltTraceDecoder, IPcapTraceDecoder
     {
         private readonly IOutputStream m_OutputStream;
 
@@ -18,6 +19,16 @@
         /// <param name="outputStream">The output stream.</param>
         /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
         public DltPcapNetworkTraceFilterDecoder(IOutputStream outputStream)
+            : this(outputStream, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltPcapNetworkTraceFilterDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        /// <param name="map">The map for decoding non-verbose messages.</param>
+        /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
+        public DltPcapNetworkTraceFilterDecoder(IOutputStream outputStream, IFrameMap map)
+            : base(map)
         {
             m_OutputStream = outputStream;
         }

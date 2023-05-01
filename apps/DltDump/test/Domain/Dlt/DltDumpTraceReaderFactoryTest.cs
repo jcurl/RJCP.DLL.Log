@@ -7,6 +7,7 @@
     using NUnit.Framework;
     using RJCP.App.DltDump.Infrastructure.IO;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
@@ -17,6 +18,34 @@
     {
         private readonly string file = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
 
+        private readonly static byte[] PcapPacket = new byte[] {
+            0xD4, 0xC3, 0xB2, 0xA1,     // Magic Number (PCAP Legacy)
+            0x02, 0x00, 0x04, 0x00,     //   Version
+            0x00, 0x00, 0x00, 0x00,     //   Reserved
+            0x00, 0x00, 0x00, 0x00,     //   Reserved
+            0x00, 0x00, 0x04, 0x00,     //   Snaplen
+            0x01, 0x00, 0x00, 0x00,     //   Link type
+            0x88, 0x11, 0x19, 0x5F,     // Seconds
+            0x8F, 0xBD, 0x09, 0x00,     // Microseconds
+            0xFF, 0xFF, 0xFF, 0xFF,     // Captured packet length (to be overwritten)
+            0xFF, 0xFF, 0xFF, 0xFF,     // Original packet length (to be overwritten)
+            0x01, 0x00, 0x5e, 0x7F, 0x2A, 0xAA,  // Dest Mac
+            0x00, 0x50, 0x56, 0xC0, 0x00, 0x01,  // Src Mac
+            0x08, 0x00,                 // IPv4 Proto
+            0x45, 0x00,                 // IPv4 header (v4)
+            0xFF, 0xFF,                 // Total Length
+            0x71, 0xC3,                 // Identification
+            0x00, 0x00,                 // Flags, Frag Offset
+            0x01,                       // TTL
+            0x11,                       // UDP
+            0x00, 0x00,                 // Header Checksum (incorrect, but ignored)
+            0xC0, 0xA8, 0x01, 0x01,     // Source Address
+            0xC0, 0xA8, 0x01, 0x02,     // Destination Address
+            0x0D, 0xA2,                 // Source Port
+            0x0D, 0xA2,                 // Destination Port
+            0xFF, 0xFF,                 // UDP Length
+            0x00, 0x00,                 // UDP checksum (incorrect, but ignored)
+        };
         private readonly static byte[] StorageHeader = new byte[] {
             0x44, 0x4C, 0x54, 0x01,     // DLT1
             0xB7, 0xA8, 0xBB, 0x61, 0x20, 0xA0, 0x03, 0x00, // Time stamp
@@ -67,6 +96,18 @@
         {
             MemoryStream stream = new MemoryStream();
 
+            byte[] payload;
+            switch (lineType) {
+            case TestLineType.Verbose:
+                payload = VerbosePayload;
+                break;
+            case TestLineType.NonVerbose:
+                payload = NonVerbosePayload;
+                break;
+            default:
+                throw new ArgumentException("Invalid line type");
+            }
+
             switch (streamType) {
             case InputFormat.Network:
                 break;
@@ -76,21 +117,23 @@
             case InputFormat.Serial:
                 stream.Write(SerialHeader);
                 break;
+            case InputFormat.Pcap:
+                int captureLen = payload.Length + PcapPacket.Length - 40;
+                int ipv4len = captureLen - 14;
+                int udplen = ipv4len - 20;
+                byte[] packet = new byte[PcapPacket.Length];
+                Array.Copy(PcapPacket, packet, PcapPacket.Length);
+                BitOperations.Copy32ShiftLittleEndian(captureLen, packet, 32);  // Captured length
+                BitOperations.Copy32ShiftLittleEndian(captureLen, packet, 36);  // Original length
+                BitOperations.Copy16ShiftBigEndian(ipv4len, packet, 56);     // IPv4 length
+                BitOperations.Copy16ShiftBigEndian(udplen, packet, 78);      // UDP length
+                stream.Write(packet);
+                break;
             default:
                 throw new ArgumentException("Invalid stream type");
             }
 
-            switch (lineType) {
-            case TestLineType.Verbose:
-                stream.Write(VerbosePayload);
-                break;
-            case TestLineType.NonVerbose:
-                stream.Write(NonVerbosePayload);
-                break;
-            default:
-                throw new ArgumentException("Invalid line type");
-            }
-
+            stream.Write(payload);
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }
@@ -648,7 +691,7 @@
         {
             DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
                 InputFormat = InputFormat.Pcap,
-                OnlineMode = false,
+                OnlineMode = false
             };
             Assert.That(factory.InputFormat, Is.EqualTo(InputFormat.Pcap));
             Assert.That(factory.OnlineMode, Is.False);
@@ -658,6 +701,37 @@
 
             TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetPcapDecoderAndDecodeVerbose()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.Verbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                DltTraceLineBase line = await reader.GetLineAsync();
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+            }
+        }
+
+        [Test]
+        public async Task GetPcapDecoderAndDecodeNonVerbose()
+        {
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                FrameMap = FrameMap
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.NonVerbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                DltTraceLineBase line = await reader.GetLineAsync();
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+            }
         }
 
         [Test]
@@ -679,6 +753,43 @@
         }
 
         [Test]
+        public async Task GetPcapFilterWriterDecoderAndDecodeVerbose()
+        {
+            MemoryOutput output = new MemoryOutput();
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = output
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.Verbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                Assert.That(await reader.GetLineAsync(), Is.Null);
+                DltTraceLineBase line = output.Lines[0].Line;
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+            }
+        }
+
+        [Test]
+        public async Task GetPcapFilterWriterDecoderAndDecodeNonVerbose()
+        {
+            MemoryOutput output = new MemoryOutput();
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = output,
+                FrameMap = FrameMap
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.NonVerbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                Assert.That(await reader.GetLineAsync(), Is.Null);
+                DltTraceLineBase line = output.Lines[0].Line;
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+            }
+        }
+
+        [Test]
         public async Task GetPcapDecoderFilter()
         {
             DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
@@ -694,6 +805,41 @@
 
             TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
+        }
+
+        [Test]
+        public async Task GetPcapFilterDecoderAndDecodeVerbose()
+        {
+            MemoryOutput output = new MemoryOutput(false);
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = output
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.Verbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                DltTraceLineBase line = await reader.GetLineAsync();
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+            }
+        }
+
+        [Test]
+        public async Task GetPcapFilterDecoderAndDecodeNonVerbose()
+        {
+            MemoryOutput output = new MemoryOutput(false);
+            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+                InputFormat = InputFormat.Pcap,
+                OnlineMode = false,
+                OutputStream = output,
+                FrameMap = FrameMap
+            };
+
+            using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.NonVerbose)) {
+                ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
+                DltTraceLineBase line = await reader.GetLineAsync();
+                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+            }
         }
 
         [Test]
