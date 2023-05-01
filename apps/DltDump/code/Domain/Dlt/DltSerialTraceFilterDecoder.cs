@@ -4,6 +4,7 @@
     using Resources;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     public sealed class DltSerialTraceFilterDecoder : DltSerialTraceDecoder
     {
@@ -20,7 +21,22 @@
         /// <paramref name="outputStream"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
-        public DltSerialTraceFilterDecoder(IOutputStream outputStream, bool online) : base(online)
+        public DltSerialTraceFilterDecoder(IOutputStream outputStream, bool online)
+            : this(outputStream, online, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltSerialTraceFilterDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        /// <param name="online">
+        /// Set the <see cref="DltTraceLineBase.TimeStamp"/> to the time the message is decoded.
+        /// </param>
+        /// <param name="map">The map to decode non-verbose messages.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="outputStream"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
+        public DltSerialTraceFilterDecoder(IOutputStream outputStream, bool online, IFrameMap map) : base(online, map)
         {
             if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
             if (!outputStream.SupportsBinary)

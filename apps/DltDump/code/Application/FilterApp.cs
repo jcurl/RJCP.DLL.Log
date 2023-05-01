@@ -40,6 +40,7 @@
 
             Global.Instance.OutputStreamFactory.Force = m_Config.Force;
             Global.Instance.OutputStreamFactory.Split = m_Config.Split;
+            Global.Instance.DltReaderFactory.FrameMap = m_Config.FrameMap;
 
             int processed = 0;
             bool partial = false;

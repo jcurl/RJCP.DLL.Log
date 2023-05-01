@@ -4,6 +4,7 @@
     using Resources;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// A decoder that writes binary data to an <see cref="IOutputStream"/> supporting Binary.
@@ -21,6 +22,19 @@
         /// </exception>
         /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
         public DltFileTraceFilterDecoder(IOutputStream outputStream)
+            : this(outputStream, null) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DltFileTraceFilterDecoder"/> class.
+        /// </summary>
+        /// <param name="outputStream">The output stream.</param>
+        /// <param name="map">The map to decode non-verbose messages.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="outputStream"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
+        public DltFileTraceFilterDecoder(IOutputStream outputStream, IFrameMap map)
+            : base(map)
         {
             if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
             if (!outputStream.SupportsBinary)

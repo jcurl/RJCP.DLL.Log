@@ -186,6 +186,7 @@
     </Compile>
     <Compile Include="Services\FibexLogEntry.cs" />
     <Compile Include="Services\FibexMap.cs" />
+    <Compile Include="Services\FibexService.cs" />
     <Compile Include="Services\Terminal.cs" />
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />

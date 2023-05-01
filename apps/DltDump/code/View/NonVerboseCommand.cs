@@ -1,9 +1,9 @@
 ﻿namespace RJCP.App.DltDump.View
 {
-    using System;
     using System.Collections.Generic;
     using Application;
     using RJCP.Diagnostics.Log.Dlt.NonVerbose.Fibex;
+    using Services;
 
     public class NonVerboseCommand : ICommand
     {
@@ -12,10 +12,7 @@
 
         public NonVerboseCommand(CmdOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (options.NonVerboseMultiEcu) m_Options |= FibexOptions.WithEcuId;
-            if (options.NonVerboseNoExtHeader) m_Options |= FibexOptions.WithoutExtHeader;
-
+            m_Options = FibexService.GetOptions(options);
             m_FibexPaths = options.Fibex;
         }
 

@@ -48,6 +48,7 @@
     <ProjectReference Include="..\code\DltDump.csproj" />
     <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
     <ProjectReference Include="..\..\..\..\nunitextensions\CodeQuality\RJCP.CodeQuality.csproj" />
+    <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReaderTest\RJCP.Diagnostics.Log.DltTest.csproj" />
   </ItemGroup>
 
   <ItemGroup>

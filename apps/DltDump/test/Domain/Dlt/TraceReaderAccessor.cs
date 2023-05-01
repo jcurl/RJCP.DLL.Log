@@ -6,17 +6,17 @@
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
-    public class TraceReaderAccessor<T> : AccessorBase where T : DltTraceLineBase
+    public class TraceReaderAccessor : AccessorBase
     {
-        public TraceReaderAccessor(ITraceReader<T> reader)
-            : base(new PrivateObject(reader, new PrivateType(typeof(TraceReader<T>))))
+        public TraceReaderAccessor(ITraceReader<DltTraceLineBase> reader)
+            : base(new PrivateObject(reader, new PrivateType(typeof(TraceReader<DltTraceLineBase>))))
         {
             BindingFlags |= BindingFlags.NonPublic;
         }
 
-        public ITraceDecoder<T> Decoder
+        public ITraceDecoder<DltTraceLineBase> Decoder
         {
-            get { return (ITraceDecoder<T>)GetFieldOrProperty("m_Decoder"); }
+            get { return (ITraceDecoder<DltTraceLineBase>)GetFieldOrProperty("m_Decoder"); }
         }
     }
 }

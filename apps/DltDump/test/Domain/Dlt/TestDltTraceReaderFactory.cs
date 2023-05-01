@@ -7,6 +7,7 @@
     using Infrastructure.IO;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     public class TestDltTraceReaderFactory : IDltDumpTraceReaderFactory
     {
@@ -22,6 +23,12 @@
         /// <value>The input format that defines the decoder that should be created.</value>
         /// <remarks>This field is not used for the test mocks, as no files or binary data is interpreted.</remarks>
         public InputFormat InputFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets the frame map used for decoding non-verbose messages.
+        /// </summary>
+        /// <value>The frame map used for decoding non-verbose messages.</value>
+        public IFrameMap FrameMap { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating if in online mode.

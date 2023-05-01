@@ -7,6 +7,7 @@
     using Infrastructure.Constraints;
     using RJCP.Diagnostics.Log.Constraints;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// Configuration for the <see cref="FilterApp"/>.
@@ -30,6 +31,12 @@
         /// </summary>
         /// <value>The input streams for parsing.</value>
         public IReadOnlyList<string> Input { get; }
+
+        /// <summary>
+        /// Gets or sets the frame map that is used for decoding non-verbose messages.
+        /// </summary>
+        /// <value>The frame map used for decoding non-verbose messages.</value>
+        public IFrameMap FrameMap { get; set; }
 
         /// <summary>
         /// Print the position when outputting in text mode (console or file).

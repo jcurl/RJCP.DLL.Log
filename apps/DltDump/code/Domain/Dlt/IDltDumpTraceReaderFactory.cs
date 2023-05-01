@@ -4,6 +4,7 @@
     using Infrastructure.IO;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// Interface for the DLT Trace Reader Factory.
@@ -15,6 +16,12 @@
         /// </summary>
         /// <value>The input format that defines the decoder that should be created.</value>
         InputFormat InputFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets the frame map used for decoding non-verbose messages.
+        /// </summary>
+        /// <value>The frame map used for decoding non-verbose messages.</value>
+        public IFrameMap FrameMap { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating if in online mode.

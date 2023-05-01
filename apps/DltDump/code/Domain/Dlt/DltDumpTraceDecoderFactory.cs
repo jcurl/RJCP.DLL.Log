@@ -4,6 +4,7 @@
     using RJCP.App.DltDump.Resources;
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose;
 
     /// <summary>
     /// A decoder factory for all DltDump modes of decoding based on input formats, online mode and output filters.
@@ -15,6 +16,12 @@
         /// </summary>
         /// <value>The input format that defines the decoder that should be created.</value>
         public InputFormat InputFormat { get; set; }
+
+        /// <summary>
+        /// Gets or sets the frame map used for decoding non-verbose messages.
+        /// </summary>
+        /// <value>The frame map used for decoding non-verbose messages.</value>
+        public IFrameMap FrameMap { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating if in online mode.
@@ -50,11 +57,11 @@
             if (OutputStream == null || !OutputStream.SupportsBinary) {
                 switch (InputFormat) {
                 case InputFormat.File:
-                    return new DltFileTraceDecoderFactory().Create();
+                    return new DltFileTraceDecoderFactory(FrameMap).Create();
                 case InputFormat.Serial:
-                    return new DltSerialTraceDecoderFactory(OnlineMode).Create();
+                    return new DltSerialTraceDecoderFactory(OnlineMode, FrameMap).Create();
                 case InputFormat.Network:
-                    return new DltTraceDecoderFactory(OnlineMode).Create();
+                    return new DltTraceDecoderFactory(OnlineMode, FrameMap).Create();
                 case InputFormat.Pcap:
                     return new DltPcapTraceDecoder();
                 default:
@@ -64,11 +71,11 @@
 
             switch (InputFormat) {
             case InputFormat.File:
-                return new DltFileTraceFilterDecoder(OutputStream);
+                return new DltFileTraceFilterDecoder(OutputStream, FrameMap);
             case InputFormat.Serial:
-                return new DltSerialTraceFilterDecoder(OutputStream, OnlineMode);
+                return new DltSerialTraceFilterDecoder(OutputStream, OnlineMode, FrameMap);
             case InputFormat.Network:
-                return new DltNetworkTraceFilterDecoder(OutputStream, OnlineMode);
+                return new DltNetworkTraceFilterDecoder(OutputStream, OnlineMode, FrameMap);
             case InputFormat.Pcap:
                 return new DltPcapTraceDecoder(OutputStream);
             default:

@@ -6,6 +6,8 @@
     using Application;
     using Domain;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose.Fibex;
+    using Services;
 
     public class FilterCommand : ICommand
     {
@@ -32,6 +34,14 @@
                 BeforeContext = m_Options.BeforeContext,
                 AfterContext = m_Options.AfterContext
             };
+
+            // Load the Fibex files, and ensure that they're consistent.
+            if (m_Options.Fibex.Count > 0) {
+                FibexOptions fibexOptions = FibexService.GetOptions(m_Options);
+                config.FrameMap = FibexService.LoadFrameMap(m_Options.Fibex, fibexOptions);
+                if (config.FrameMap == null)
+                    return ExitCode.FibexError;
+            }
             BuildFilter(m_Options, config);
             FilterApp app = new FilterApp(config);
 
