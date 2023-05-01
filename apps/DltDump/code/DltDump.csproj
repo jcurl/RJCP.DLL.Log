@@ -68,6 +68,7 @@
     <Compile Include="Application\FilterApp.cs" />
     <Compile Include="Application\FilterConfig.cs" />
     <Compile Include="Application\HelpApp.cs" />
+    <Compile Include="Application\NonVerboseApp.cs" />
     <Compile Include="Application\VersionApp.cs" />
     <Compile Include="Domain\Context.cs" />
     <Compile Include="Domain\ContextPacket.cs" />
@@ -183,6 +184,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HelpResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\FibexLogEntry.cs" />
+    <Compile Include="Services\FibexMap.cs" />
     <Compile Include="Services\Terminal.cs" />
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="View\HelpCommand.cs" />
     <Compile Include="View\ICommand.cs" />
     <Compile Include="View\ICommandFactory.cs" />
+    <Compile Include="View\NonVerboseCommand.cs" />
   </ItemGroup>
 
   <ItemGroup>

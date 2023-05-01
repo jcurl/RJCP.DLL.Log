@@ -375,4 +375,13 @@
   <data name="OptionInvalidMessageId" xml:space="preserve">
     <value>Invalid message identifier {0}, must be an integer</value>
   </data>
+  <data name="FibexOpenError_NotFound" xml:space="preserve">
+    <value>Fibex File not Found {0}</value>
+  </data>
+  <data name="FibexApp_ErrorLoadingFibex" xml:space="preserve">
+    <value>Problem when loading FIBEX files: {0}</value>
+  </data>
+  <data name="FibexApp_FibexLoaded" xml:space="preserve">
+    <value>Success loading all Fibex files.</value>
+  </data>
 </root>

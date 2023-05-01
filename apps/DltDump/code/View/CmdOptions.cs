@@ -263,6 +263,36 @@
         /// <value>The input DLT streams to read.</value>
         public IReadOnlyList<string> Arguments { get { return m_Arguments; } }
 
+        /// <summary>
+        /// Gets the list of FIBEX sources.
+        /// </summary>
+        /// <value>The list of FIBEX sources.</value>
+        [Option('F', "fibex")]
+        private readonly List<string> m_Fibex = new List<string>();
+
+        public IReadOnlyList<string> Fibex { get { return m_Fibex; } }
+
+        /// <summary>
+        /// Indicates if decoding non-verbose should use the decoded ECUID if it exists.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if the ECUID should be used for decoding non-verbose payloads, otherwise
+        /// <see langword="false"/>.
+        /// </value>
+        [Option("nv-multiecu")]
+        public bool NonVerboseMultiEcu { get; private set; }
+
+        /// <summary>
+        /// Indicates if decoding non-verbose should ignore the extended header (application and context identifiers)
+        /// when decoding frames.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the application and context identifiers should be ignored when decoding frames; otherwise
+        /// <see langword="false"/>.
+        /// </value>
+        [Option("nv-noexthdr")]
+        public bool NonVerboseNoExtHeader { get; private set; }
+
         public void Check()
         {
             CheckInputFormat();

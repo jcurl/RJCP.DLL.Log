@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class AppResources {
@@ -246,6 +246,33 @@ namespace RJCP.App.DltDump.Resources {
         internal static string ErrorDumpBeingGenerated {
             get {
                 return ResourceManager.GetString("ErrorDumpBeingGenerated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Problem when loading FIBEX files: {0}.
+        /// </summary>
+        internal static string FibexApp_ErrorLoadingFibex {
+            get {
+                return ResourceManager.GetString("FibexApp_ErrorLoadingFibex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success loading all Fibex files..
+        /// </summary>
+        internal static string FibexApp_FibexLoaded {
+            get {
+                return ResourceManager.GetString("FibexApp_FibexLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fibex File not Found {0}.
+        /// </summary>
+        internal static string FibexOpenError_NotFound {
+            get {
+                return ResourceManager.GetString("FibexOpenError_NotFound", resourceCulture);
             }
         }
         

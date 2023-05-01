@@ -143,6 +143,7 @@
     <Compile Include="Infrastructure\Uri\UriExtensions_ParseQueryTest.cs" />
     <Compile Include="Infrastructure\VersionTest.cs" />
     <Compile Include="Resources\ResourcesTest.cs" />
+    <Compile Include="Services\FibexMapTest.cs" />
     <Compile Include="TestApplication.cs" />
     <Compile Include="TestResources\TestLines.cs" />
     <Compile Include="TestSetupFixture.cs" />
@@ -150,9 +151,23 @@
     <Compile Include="View\CommandLineTest.cs" />
     <Compile Include="View\FilterCommandTest.cs" />
     <Compile Include="View\HelpCommandTest.cs" />
+    <Compile Include="View\NonVerboseCommandTest.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="TestResources\Fibex\invalid\fibex-tcb-error-pduid.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\Fibex\valid\fibex-tcb2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestResources\Fibex\valid\fibex-tcb.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="testresources\fibex\valid\README.md" />
     <None Include="TestResources\Input\EmptyFile.pcap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

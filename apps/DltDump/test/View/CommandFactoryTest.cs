@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
     using System;
+    using System.IO;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -65,7 +66,7 @@
             }
         }
 
-        private readonly string EmptyFile = System.IO.Path.Combine(Deploy.TestDirectory, "Input", "EmptyFile.dlt");
+        private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
 
         [Test]
         public void GetFilterCommand()
@@ -75,6 +76,36 @@
                 CommandFactorySetup(cmd => { command = cmd; });
 
                 CommandLine.Run(new[] { EmptyFile });
+                Assert.That(command, Is.TypeOf<FilterCommand>());
+            }
+        }
+
+        private readonly string FibexFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Fibex", "valid", "fibex-tcb.xml");
+
+        [Test]
+        public void GetNonVerboseCommand()
+        {
+            using (new TestApplication()) {
+                ICommand command = null;
+                CommandFactorySetup(cmd => { command = cmd; });
+
+                CommandLine.Run(new[] {
+                    LongOpt("fibex", FibexFile)
+                });
+                Assert.That(command, Is.TypeOf<NonVerboseCommand>());
+            }
+        }
+
+        [Test]
+        public void GetFilterCommandWithFibex()
+        {
+            using (new TestApplication()) {
+                ICommand command = null;
+                CommandFactorySetup(cmd => { command = cmd; });
+
+                CommandLine.Run(new[] {
+                    LongOpt("fibex", FibexFile), EmptyFile
+                });
                 Assert.That(command, Is.TypeOf<FilterCommand>());
             }
         }

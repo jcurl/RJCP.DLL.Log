@@ -23,6 +23,10 @@
 
             if (options.Arguments.Count > 0) {
                 return new FilterCommand(options);
+            } else {
+                if (options.Fibex.Count > 0) {
+                    return new NonVerboseCommand(options);
+                }
             }
 
             return null;

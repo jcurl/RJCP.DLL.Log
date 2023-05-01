@@ -89,6 +89,12 @@
             Write(2, 4, HelpResources.Help425_Split);
             Write(2, 4, HelpResources.Help430_Log);
             Write();
+            Write(HelpResources.Help600_NonVerbose);
+            Write();
+            Write(2, 4, HelpResources.Help610_Fibex);
+            Write(2, 4, HelpResources.Help620_NvEcuId);
+            Write(2, 4, HelpResources.Help625_NvNoExtHdr);
+            Write();
             Write(HelpResources.Help500_Input);
             Write();
             Write(2, 4, HelpResources.Help505_InputFile);
@@ -106,6 +112,7 @@
             Write(2, 4, HelpResources.Help812_NoFilesProcessed);
             Write(2, 4, HelpResources.Help813_PartialFilesProcessed);
             Write(2, 4, HelpResources.Help814_OutputError);
+            Write(2, 4, HelpResources.Help815_FibexError);
             Write(2, 4, HelpResources.Help899_UnknownError);
             Write();
         }

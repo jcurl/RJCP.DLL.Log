@@ -288,6 +288,21 @@
   <data name="Help520_InputSerial" xml:space="preserve">
     <value>ser:port,baud,databits,parity,stopbits[,handshake] - receive data arriving via the serial port. Time stamps are taken from the local computer. By default, it is assumed that format is serial, with {1}format{2}ser. Valid values for the handshake are xon,rts,dtr.</value>
   </data>
+  <data name="Help600_NonVerbose" xml:space="preserve">
+    <value>Non-verbose messages need external description files to decode. The following options provide the additional information needed. If these options are used without input files, the files are checked for correctness.</value>
+  </data>
+  <data name="Help610_Fibex" xml:space="preserve">
+    <value>{0}F | {1}fibex{2}&lt;file1&gt;[,&lt;file2&gt;[,...]]
+  Specify a list FIBEX files that should be loaded to decode non-verbose</value>
+  </data>
+  <data name="Help620_NvEcuId" xml:space="preserve">
+    <value>{1}nv-multiecu
+  If provided, ensure the decoded ECUID matches the Fibex ECUID. Useful for loading multiple Fibex files from different ECUs at once.</value>
+  </data>
+  <data name="Help625_NvNoExtHdr" xml:space="preserve">
+    <value>{1}nv-noexthdr
+  If provided, ignore the Application and Context identifiers as decoded when mapping to frames in the Fibex file. Useful to ensure uniqueness of message identifiers if it's known in advance that the captured traces do not have an extended header.</value>
+  </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>
   </data>
@@ -308,6 +323,9 @@
   </data>
   <data name="Help814_OutputError" xml:space="preserve">
     <value>5 - There was a problem creating the output file.</value>
+  </data>
+  <data name="Help815_FibexError" xml:space="preserve">
+    <value>6 - There was a problem loading the non-verbose FIBEX files.</value>
   </data>
   <data name="Help899_UnknownError" xml:space="preserve">
     <value>255 - An unhandled exception occurred.</value>

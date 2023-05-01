@@ -19,7 +19,7 @@ namespace RJCP.App.DltDump.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class HelpResources {
@@ -514,6 +514,45 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non-verbose messages need external description files to decode. The following options provide the additional information needed. If these options are used without input files, the files are checked for correctness..
+        /// </summary>
+        internal static string Help600_NonVerbose {
+            get {
+                return ResourceManager.GetString("Help600_NonVerbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}F | {1}fibex{2}&lt;file1&gt;[,&lt;file2&gt;[,...]]
+        ///  Specify a list FIBEX files that should be loaded to decode non-verbose.
+        /// </summary>
+        internal static string Help610_Fibex {
+            get {
+                return ResourceManager.GetString("Help610_Fibex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}nv-multiecu
+        ///  If provided, ensure the decoded ECUID matches the Fibex ECUID. Useful for loading multiple Fibex files from different ECUs at once..
+        /// </summary>
+        internal static string Help620_NvEcuId {
+            get {
+                return ResourceManager.GetString("Help620_NvEcuId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {1}nv-noexthdr
+        ///  If provided, ignore the Application and Context identifiers as decoded when mapping to frames in the Fibex file. Useful to ensure uniqueness of message identifiers if it&apos;s known in advance that the captured traces do not have an extended header..
+        /// </summary>
+        internal static string Help625_NvNoExtHdr {
+            get {
+                return ResourceManager.GetString("Help625_NvNoExtHdr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The exit code of the application indicates if the command run with success or there was a problem..
         /// </summary>
         internal static string Help800_ExitCodes {
@@ -573,6 +612,15 @@ namespace RJCP.App.DltDump.Resources {
         internal static string Help814_OutputError {
             get {
                 return ResourceManager.GetString("Help814_OutputError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 6 - There was a problem loading the non-verbose FIBEX files..
+        /// </summary>
+        internal static string Help815_FibexError {
+            get {
+                return ResourceManager.GetString("Help815_FibexError", resourceCulture);
             }
         }
         

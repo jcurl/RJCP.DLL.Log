@@ -36,6 +36,11 @@
         OutputError = 5,
 
         /// <summary>
+        /// There was a problem decoding the non-verbose FIBEX files.
+        /// </summary>
+        FibexError = 6,
+
+        /// <summary>
         /// An unknown error occurred (an unhandled exception).
         /// </summary>
         UnknownError = 255
