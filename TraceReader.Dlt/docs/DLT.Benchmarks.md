@@ -32,28 +32,28 @@ $ dotnet exec RJCP.Diagnostics.Log.DltBenchmark.dll --filter *
 ```text
 Results = netcore31
 
-BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19043.1645 (21H1/May2021Update)
+BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19045
 Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical core(s)
-  [HOST] : .NET Core 3.1.24 (CoreCLR 4.700.22.16002, CoreFX 4.700.22.17909), X64 RyuJIT
+  [HOST] : .NET Core 3.1.32 (CoreCLR 4.700.22.55902, CoreFX 4.700.22.56512), X64 RyuJIT
 ```
 
 | Project 'dlt' Type     | Method                        | mean (netcore31) | stderr |
 |:-----------------------|:------------------------------|-----------------:|-------:|
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 17.40            | 0.07   |
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 17.26            | 0.06   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 17.65            | 0.07   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 17.82            | 0.07   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 18.27            | 0.07   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 18.48            | 0.08   |
-| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 16.74            | 0.07   |
-| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 16.98            | 0.07   |
-| DltDecoderArgBenchmark | DecodeBool                    | 8.57             | 0.04   |
-| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 53.53            | 0.20   |
-| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 53.94            | 0.18   |
-| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 43.75            | 0.17   |
-| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 44.50            | 0.09   |
-| DltDecoderBenchmark    | DecodeStringFilePackets       | 3800.71          | 11.26  |
-| DltDecoderBenchmark    | DecodeIntFilePackets          | 3387.49          | 0.84   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 20.25            | 0.11   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 18.67            | 0.10   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 21.49            | 0.11   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 19.45            | 0.11   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 19.01            | 0.10   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 17.62            | 0.06   |
+| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 17.16            | 0.05   |
+| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 17.34            | 0.06   |
+| DltDecoderArgBenchmark | DecodeBool                    | 9.41             | 0.03   |
+| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 53.52            | 0.20   |
+| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 53.92            | 0.23   |
+| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 44.20            | 0.14   |
+| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 42.62            | 0.12   |
+| DltDecoderBenchmark    | DecodeStringFilePackets       | 3794.67          | 5.30   |
+| DltDecoderBenchmark    | DecodeIntFilePackets          | 3423.19          | 8.62   |
 
 Description of the test results:
 
