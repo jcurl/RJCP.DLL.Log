@@ -7,13 +7,13 @@
         /// <summary>
         /// Defines instructions on how to build a verbose DLT packet.
         /// </summary>
-        public sealed class DltVerbosePacketBuilder
+        public sealed class DltPacketBuilder
         {
             private readonly int m_Count;
             private readonly Packet m_Packet = new Packet();
             private readonly DltPacketWriter m_DltPacketWriter;
 
-            internal DltVerbosePacketBuilder(DltPacketWriter packet)
+            internal DltPacketBuilder(DltPacketWriter packet)
             {
                 m_DltPacketWriter = packet;
                 m_Count = m_DltPacketWriter.Counter;
@@ -27,7 +27,7 @@
             /// <param name="msgType">The type of the message.</param>
             /// <param name="text">The text message argument.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder Line(TimeSpan time, DltType msgType, string text)
+            public DltPacketBuilder Line(TimeSpan time, DltType msgType, string text)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId);
@@ -43,7 +43,7 @@
             /// <param name="noar">The number of verbose arguments in the payload.</param>
             /// <param name="payload">The raw verbose payload data.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder Line(TimeSpan time, DltType msgType, int noar, byte[] payload)
+            public DltPacketBuilder Line(TimeSpan time, DltType msgType, int noar, byte[] payload)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId);
@@ -52,13 +52,13 @@
             }
 
             /// <summary>
-            /// Adds a payload for a control message
+            /// Prepares a Control message.
             /// </summary>
             /// <param name="time">The device time stamp.</param>
             /// <param name="msgType">The type of the message.</param>
             /// <param name="payload">The raw control payload data.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder Control(TimeSpan time, DltType msgType, byte[] payload)
+            public DltPacketBuilder Control(TimeSpan time, DltType msgType, byte[] payload)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
@@ -67,14 +67,32 @@
             }
 
             /// <summary>
-            /// Adds a payload for a non-verbose message
+            /// Prepares a Non-Verbose packet with no extended header.
             /// </summary>
             /// <param name="time">The device time stamp.</param>
             /// <param name="payload">The non-verbose payload.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder NonVerbose(TimeSpan time, byte[] payload)
+            public DltPacketBuilder NonVerbose(TimeSpan time, byte[] payload)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
+                if (payload != null) m_Packet.AddPayload(payload);
+                return this;
+            }
+
+            /// <summary>
+            /// Prepares a Non-Verbose packet with an extended header.
+            /// </summary>
+            /// <param name="time">The device time stamp.</param>
+            /// <param name="payload">The non-verbose payload.</param>
+            /// <returns>This object.</returns>
+            /// <remarks>
+            /// The message is created of an unknown DLT Type, because this should be ignored, and the value used from
+            /// the external Fibex file should be used.
+            /// </remarks>
+            public DltPacketBuilder NonVerboseExt(TimeSpan time, byte[] payload)
+            {
+                m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
+                m_Packet.CreateExtendedHeader((DltType)0, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
                 if (payload != null) m_Packet.AddPayload(payload);
                 return this;
             }
@@ -83,7 +101,7 @@
             /// Marks this packet as big endian. Only the flag is set.
             /// </summary>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder BigEndian()
+            public DltPacketBuilder BigEndian()
             {
                 return BigEndian(true);
             }
@@ -95,7 +113,7 @@
             /// Sets to Big Endian if <see langword="true"/>, else is set to Little Endian when <see langword="false"/>.
             /// </param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder BigEndian(bool bigEndian)
+            public DltPacketBuilder BigEndian(bool bigEndian)
             {
                 m_Packet.BigEndian(bigEndian);
                 return this;
@@ -107,7 +125,7 @@
             /// <param name="version">The version in the range 0 to 7.</param>
             /// <returns>This object.</returns>
             /// <remarks>The line must have already been constructed.</remarks>
-            public DltVerbosePacketBuilder Version(int version)
+            public DltPacketBuilder Version(int version)
             {
                 m_Packet.WriteStandardHeaderVersion(version);
                 return this;
@@ -118,17 +136,17 @@
             /// </summary>
             /// <param name="length">The length reported in the packet (not the actual packet length).</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder Length(int length)
+            public DltPacketBuilder Length(int length)
             {
                 m_Packet.SetLength(length);
                 return this;
             }
 
             /// <summary>
-            /// Creats a serial marker for this packet.
+            /// Creates a serial marker for this packet.
             /// </summary>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder SerialMarker()
+            public DltPacketBuilder SerialMarker()
             {
                 m_Packet.CreateSerialMarker();
                 return this;
@@ -139,9 +157,9 @@
             /// </summary>
             /// <param name="time">The DLT time of the logger.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder StorageHeader(DateTime time)
+            public DltPacketBuilder StorageHeader(DateTime time)
             {
-                m_Packet.CreateStorageHeader(time, m_DltPacketWriter.EcuId);
+                m_Packet.CreateStorageHeader(time, m_DltPacketWriter.EcuId ?? string.Empty);
                 return this;
             }
 
@@ -151,7 +169,7 @@
             /// <param name="time">The DLT time of the logger.</param>
             /// <param name="ecuId">The ECU ID to use in the storage header.</param>
             /// <returns>This object.</returns>
-            public DltVerbosePacketBuilder StorageHeader(DateTime time, string ecuId)
+            public DltPacketBuilder StorageHeader(DateTime time, string ecuId)
             {
                 m_Packet.CreateStorageHeader(time, ecuId);
                 return this;

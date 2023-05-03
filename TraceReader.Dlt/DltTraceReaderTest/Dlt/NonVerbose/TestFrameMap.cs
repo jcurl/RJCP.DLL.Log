@@ -9,12 +9,18 @@
 
         public TestFrameMap Add(int messageId, IPdu pdu)
         {
+            return Add(messageId, null, "APP1", "CTX1", DltType.LOG_INFO, pdu);
+        }
+
+        public TestFrameMap Add(int messageId, string ecuId, string appId, string ctxId, DltType msgType, IPdu pdu)
+        {
             if (pdu == null) throw new ArgumentNullException(nameof(pdu));
 
             TestFrame frame = new TestFrame(messageId).AddArgument(pdu);
-            frame.ApplicationId = "APP1";
-            frame.ContextId = "CTX1";
-            frame.MessageType = DltType.LOG_INFO;
+            frame.EcuId = ecuId;
+            frame.ApplicationId = appId;
+            frame.ContextId = ctxId;
+            frame.MessageType = msgType;
             m_Map.Add(messageId, frame);
 
             return this;

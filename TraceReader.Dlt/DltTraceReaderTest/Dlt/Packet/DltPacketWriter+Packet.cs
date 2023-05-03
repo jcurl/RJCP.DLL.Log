@@ -136,8 +136,6 @@
 
             public void AddPayload(byte[] data)
             {
-                if (m_HasExtendedHeader) throw new InvalidOperationException("Raw data must not have an extended header");
-
                 data.CopyTo(m_Packet, m_PayLoadPos);
                 m_PayLoadPos += data.Length;
                 m_PacketLength = m_PayLoadPos;

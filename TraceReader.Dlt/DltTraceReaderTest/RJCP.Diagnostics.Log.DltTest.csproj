@@ -187,7 +187,7 @@
     <Compile Include="Dlt\NonVerbose\TestFrame.cs" />
     <Compile Include="Dlt\NonVerbose\TestFrameMap.cs" />
     <Compile Include="Dlt\NonVerbose\TestPdu.cs" />
-    <Compile Include="Dlt\Packet\DltPacketWriter+DltVerbosePacketBuilder.cs" />
+    <Compile Include="Dlt\Packet\DltPacketWriter+DltPacketBuilder.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter+Packet.cs" />
     <Compile Include="Dlt\Packet\DltPacketWriter.cs" />
     <Compile Include="Dlt\Verbose\BoolArgDecoderTest.cs" />

@@ -485,21 +485,26 @@
                 offset += 4;
             }
 
+            bool isVerbose = false;
             if ((headerType & DltConstants.HeaderType.UseExtendedHeader) != 0) {
                 int messageInfo = standardHeader[offset];
 
-                m_DltLineBuilder.SetIsVerbose((messageInfo & DltConstants.MessageInfo.Verbose) != 0);
+                isVerbose = (messageInfo & DltConstants.MessageInfo.Verbose) != 0;
+                bool isControl = (messageInfo & DltConstants.MessageInfo.MessageTypeMaskMstp) == DltConstants.MessageInfo.MessageTypeControl;
+                m_DltLineBuilder.SetIsVerbose(isVerbose);
 
-                DltType messageType = GetMessageType(messageInfo);
-                if (messageType == DltType.UNKNOWN) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet at offset 0x{0:x} has invalid message info {1:x2}",
-                        m_PosMap.Position, messageInfo);
-                    return false;
+                if (isVerbose || isControl) {
+                    DltType messageType = GetMessageType(messageInfo);
+                    if (messageType == DltType.UNKNOWN) {
+                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet at offset 0x{0:x} has invalid message info {1:x2}",
+                            m_PosMap.Position, messageInfo);
+                        return false;
+                    }
+                    m_DltLineBuilder.SetDltType(messageType);
+
+                    byte noar = standardHeader[offset + 1];
+                    m_DltLineBuilder.SetNumberOfArgs(noar);
                 }
-                m_DltLineBuilder.SetDltType(messageType);
-
-                byte noar = standardHeader[offset + 1];
-                m_DltLineBuilder.SetNumberOfArgs(noar);
 
                 int appid = BitOperations.To32ShiftBigEndian(standardHeader[(offset + 2)..(offset + 6)]);
                 m_DltLineBuilder.SetApplicationId(IdHashList.Instance.ParseId(appid));
@@ -510,7 +515,7 @@
                 offset += 10;
 
                 // A control message can only be present when there's an extended header.
-                if (((int)messageType & DltConstants.MessageInfo.MessageTypeMaskMstp) == DltConstants.MessageInfo.MessageTypeControl) {
+                if (isControl) {
                     int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                     if (controlLength == -1) {
                         string error = m_DltLineBuilder.ResetErrorMessage();
@@ -532,7 +537,7 @@
                 }
             }
 
-            if (m_DltLineBuilder.IsVerbose) {
+            if (isVerbose) {
                 int payloadLength = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (payloadLength == -1) {
                     string error = m_DltLineBuilder.ResetErrorMessage();

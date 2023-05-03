@@ -96,11 +96,11 @@
 
                     lineBuilder.SetMessageId(messageId);
                     lineBuilder.SetDltType(frame.MessageType);
-                    if (lineBuilder.ApplicationId == null || lineBuilder.ContextId == null) {
+                    if (!lineBuilder.Features.ApplicationId || lineBuilder.Features.ContextId) {
                         lineBuilder.SetApplicationId(frame.ApplicationId ?? string.Empty);
                         lineBuilder.SetContextId(frame.ContextId ?? string.Empty);
                     }
-                    if (lineBuilder.EcuId == null) {
+                    if (!lineBuilder.Features.EcuId) {
                         lineBuilder.SetEcuId(frame.EcuId ?? string.Empty);
                     }
 

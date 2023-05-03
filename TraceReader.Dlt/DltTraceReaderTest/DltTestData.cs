@@ -48,7 +48,16 @@
 
         public static void IsLine1(this DltFactory factory, DltTraceLineBase line, int linenum, int count)
         {
-            Assert.That(line, Is.TypeOf<DltTraceLine>());
+            factory.IsLine1(line, linenum, count, false);
+        }
+
+        public static void IsLine1(this DltFactory factory, DltTraceLineBase line, int linenum, int count, bool nv)
+        {
+            if (!nv) {
+                Assert.That(line, Is.TypeOf<DltTraceLine>());
+            } else {
+                Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+            }
 
             DateTime expectedTime = factory.ExpectedTimeStamp(Time1);
             DltTraceLine dltLine = (DltTraceLine)line;
@@ -62,14 +71,19 @@
             Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
             Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
-            Assert.That(dltLine.Text, Is.EqualTo("Message 1"));
-            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 1"));
+            if (!nv) {
+                Assert.That(dltLine.Text, Is.EqualTo("Message 1"));
+                Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 1"));
+            } else {
+                Assert.That(dltLine.Text, Is.EqualTo("[1] Message 1"));
+                Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 1"));
+            }
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
             Assert.That(dltLine.Features.EcuId, Is.True);
             Assert.That(dltLine.Features.SessionId, Is.True);
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.Features.BigEndian, Is.False);
-            Assert.That(dltLine.Features.IsVerbose, Is.True);
+            Assert.That(dltLine.Features.IsVerbose, Is.Not.EqualTo(nv));
             Assert.That(dltLine.Features.MessageType, Is.True);
             Assert.That(dltLine.Features.ApplicationId, Is.True);
             Assert.That(dltLine.Features.ContextId, Is.True);

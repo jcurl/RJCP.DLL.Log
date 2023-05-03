@@ -65,9 +65,9 @@
         /// Constructs a new verbose DLT packet.
         /// </summary>
         /// <returns>The object to build a verbose DLT packet.</returns>
-        public DltVerbosePacketBuilder NewPacket()
+        public DltPacketBuilder NewPacket()
         {
-            return new DltVerbosePacketBuilder(this);
+            return new DltPacketBuilder(this);
         }
 
         /// <summary>
