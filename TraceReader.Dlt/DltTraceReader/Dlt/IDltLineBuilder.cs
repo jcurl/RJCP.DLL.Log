@@ -311,6 +311,12 @@
         IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments);
 
         /// <summary>
+        /// Resets all arguments, so the argument count is zero.
+        /// </summary>
+        /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
+        IDltLineBuilder ResetArguments();
+
+        /// <summary>
         /// Gets the control payload.
         /// </summary>
         /// <value>The control payload.</value>

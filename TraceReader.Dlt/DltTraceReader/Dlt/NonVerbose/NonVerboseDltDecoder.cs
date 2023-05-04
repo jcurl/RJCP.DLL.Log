@@ -105,7 +105,10 @@
                     }
 
                     int payloadLength = DecodePdus(buffer[4..], messageId, frame, lineBuilder);
-                    if (payloadLength == -1) return -1;
+                    if (payloadLength == -1) {
+                        lineBuilder.ResetArguments();
+                        return -1;
+                    }
                     return payloadLength + 4;
                 }
             } catch (Exception ex) {

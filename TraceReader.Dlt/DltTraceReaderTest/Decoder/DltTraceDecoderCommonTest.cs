@@ -9,6 +9,7 @@
     using Dlt.Packet;
     using IO;
     using NUnit.Framework;
+    using RJCP.Diagnostics.Log.Dlt.Args;
 
     [TestFixture(DltFactoryType.Standard)]
     [TestFixture(DltFactoryType.File)]
@@ -265,6 +266,28 @@
         }
 
         [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseEcuOverride(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                EcuId = "ECU1", Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
+                    new byte[] { 0x01, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x31, 0x00 }
+                ).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
+                    await WriteDltPacket(factory, readStream, true);
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
         public async Task WriteDltNonVerboseExtHdr(int maxBytes)
         {
             TestFrameMap map = new TestFrameMap()
@@ -304,6 +327,326 @@
                 using (Stream stream = writer.Stream())
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes)) {
                     await WriteDltPacket(factory, readStream, true);
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseNoPayload(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), Array.Empty<byte>()).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.Empty);          // Couldn't decode the message id.
+                    Assert.That(nvLine.ApplicationId, Is.Empty);  // Couldn't decode the message id.
+                    Assert.That(nvLine.ContextId, Is.Empty);      // Couldn't decode the message id.
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseNoMessage(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00 }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.Empty);          // Couldn't decode the message id.
+                    Assert.That(nvLine.ApplicationId, Is.Empty);  // Couldn't decode the message id.
+                    Assert.That(nvLine.ContextId, Is.Empty);      // Couldn't decode the message id.
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseMessageNoArg(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00 }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
+                    Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseMessageNoStringArgPayload(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00 }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
+                    Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(2));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseLengthMismatchTooShort(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00 }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
+                    Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(2));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseLengthMismatchTooLong(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
+                    Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseNoMap(int maxBytes)
+        {
+            DltFactory factory = GetFactory();
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.Empty);
+                    Assert.That(nvLine.ApplicationId, Is.Empty);
+                    Assert.That(nvLine.ContextId, Is.Empty);
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseEcuIdFallback(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, null, "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.Empty);
+                    Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
+                    Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseAppIdFallback(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU2", null, null, DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.Empty);
+                    Assert.That(nvLine.ContextId, Is.Empty);
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltNonVerboseNoMessageId(int maxBytes)
+        {
+            TestFrameMap map = new TestFrameMap()
+                .Add(1, "ECU1", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
+            DltFactory factory = GetFactory(map);
+
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                EcuId = "ECU2", Counter = 127, SessionId = 50
+            }) {
+                factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
+                    new byte[] { 0x02, 0x00, 0x00, 0x00, 0x0A, 0x00, 0x4D, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x31, 0x00 }
+                ).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltNonVerbose));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // Fallback
+                    Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
+                    DltNonVerboseTraceLine nvLine = (DltNonVerboseTraceLine)line;
+                    Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
+                    Assert.That(nvLine.ApplicationId, Is.Empty);
+                    Assert.That(nvLine.ContextId, Is.Empty);
+                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
+                    NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
+                    Assert.That(arg.Data.Length, Is.EqualTo(12));
                 }
             }
         }
