@@ -13,9 +13,9 @@
         public void DefaultBuilder()
         {
             IDltLineBuilder builder = new DltLineBuilder();
-            Assert.That(builder.EcuId, Is.Null);
-            Assert.That(builder.ApplicationId, Is.Null);
-            Assert.That(builder.ContextId, Is.Null);
+            Assert.That(builder.EcuId, Is.Empty);
+            Assert.That(builder.ApplicationId, Is.Empty);
+            Assert.That(builder.ContextId, Is.Empty);
             Assert.That(builder.Count, Is.EqualTo(DltTraceLineBase.InvalidCounter));
             Assert.That(builder.DltType, Is.EqualTo(DltType.UNKNOWN));
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
@@ -383,7 +383,7 @@
 
             builder.Reset();
             Assert.That(builder.Features.EcuId, Is.False);
-            Assert.That(builder.EcuId, Is.Null);
+            Assert.That(builder.EcuId, Is.Empty);
         }
 
         [Test]
@@ -401,7 +401,7 @@
 
             builder.Reset();
             Assert.That(builder.Features.EcuId, Is.False);
-            Assert.That(builder.EcuId, Is.Null);
+            Assert.That(builder.EcuId, Is.Empty);
         }
 
         [Test]
@@ -477,7 +477,7 @@
 
             builder.Reset();
             Assert.That(builder.Features.ApplicationId, Is.False);
-            Assert.That(builder.ApplicationId, Is.Null);
+            Assert.That(builder.ApplicationId, Is.Empty);
         }
 
         [Test]
@@ -495,7 +495,7 @@
 
             builder.Reset();
             Assert.That(builder.Features.ContextId, Is.False);
-            Assert.That(builder.ContextId, Is.Null);
+            Assert.That(builder.ContextId, Is.Empty);
         }
 
         [Test]

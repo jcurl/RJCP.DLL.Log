@@ -84,9 +84,9 @@
             // Remove all features, except the BigEndianFeature if it still remains
             Features -= ResetMask;
 
-            EcuId = null;
-            ApplicationId = null;
-            ContextId = null;
+            EcuId = string.Empty;
+            ApplicationId = string.Empty;
+            ContextId = string.Empty;
             MessageId = 0;
             Count = DltTraceLineBase.InvalidCounter;
             DltType = DltType.UNKNOWN;
@@ -126,9 +126,9 @@
                     Line = m_Line,
                     Position = Position,
                     TimeStamp = TimeStamp,
-                    EcuId = EcuId ?? string.Empty,
-                    ApplicationId = ApplicationId ?? string.Empty,
-                    ContextId = ContextId ?? string.Empty,
+                    EcuId = EcuId,
+                    ApplicationId = ApplicationId,
+                    ContextId = ContextId,
                     SessionId = SessionId,
                     Count = Count,
                     DeviceTimeStamp = DeviceTimeStamp,
@@ -147,9 +147,9 @@
                     Line = m_Line,
                     Position = Position,
                     TimeStamp = TimeStamp,
-                    EcuId = EcuId ?? string.Empty,
-                    ApplicationId = ApplicationId ?? string.Empty,
-                    ContextId = ContextId ?? string.Empty,
+                    EcuId = EcuId,
+                    ApplicationId = ApplicationId,
+                    ContextId = ContextId,
                     SessionId = SessionId,
                     Count = Count,
                     DeviceTimeStamp = DeviceTimeStamp,
@@ -161,9 +161,9 @@
                     Line = m_Line,
                     Position = Position,
                     TimeStamp = TimeStamp,
-                    EcuId = EcuId ?? string.Empty,
-                    ApplicationId = ApplicationId ?? string.Empty,
-                    ContextId = ContextId ?? string.Empty,
+                    EcuId = EcuId,
+                    ApplicationId = ApplicationId,
+                    ContextId = ContextId,
                     SessionId = SessionId,
                     Count = Count,
                     DeviceTimeStamp = DeviceTimeStamp,
@@ -262,7 +262,7 @@
         /// </remarks>
         public IDltLineBuilder SetStorageHeaderEcuId(string id)
         {
-            if (!Features.EcuId) EcuId = id;
+            if (!Features.EcuId) EcuId = id ?? string.Empty;
             return this;
         }
 
@@ -277,7 +277,7 @@
         /// </remarks>
         public IDltLineBuilder SetEcuId(string id)
         {
-            EcuId = id;
+            EcuId = id ?? string.Empty;
             Features += DltLineFeatures.EcuIdFeature;
             return this;
         }
@@ -299,7 +299,7 @@
         /// </remarks>
         public IDltLineBuilder SetApplicationId(string id)
         {
-            ApplicationId = id;
+            ApplicationId = id ?? string.Empty;
             Features += DltLineFeatures.AppIdFeature;
             return this;
         }
@@ -321,7 +321,7 @@
         /// </remarks>
         public IDltLineBuilder SetContextId(string id)
         {
-            ContextId = id;
+            ContextId = id ?? string.Empty;
             Features += DltLineFeatures.CtxIdFeature;
             return this;
         }

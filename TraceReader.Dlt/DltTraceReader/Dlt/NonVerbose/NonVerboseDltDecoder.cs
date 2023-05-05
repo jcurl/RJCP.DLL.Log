@@ -11,7 +11,6 @@
     public class NonVerboseDltDecoder : INonVerboseDltDecoder
     {
         private readonly INonVerboseArgDecoder m_ArgDecoder;
-        private readonly HashSet<int> m_Logged = new HashSet<int>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NonVerboseDltDecoder"/> class.
@@ -74,7 +73,7 @@
             // main decoder to print an error, set by `lineBuilder.SetErrorMessage()`, and still call the callback.
 
             if (FrameMap == null)
-                return DecodeFallback(buffer, lineBuilder);
+                return Fallback.Decode(buffer, lineBuilder);
 
             try {
                 if (buffer.Length < 4) {
@@ -87,9 +86,9 @@
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!FrameMap.TryGetFrame(messageId, lineBuilder.ApplicationId, lineBuilder.ContextId, lineBuilder.EcuId, out IFrame frame)) {
                         // Only log once per message.
-                        if (!m_Logged.Contains(messageId)) {
-                            m_Logged.Add(messageId);
-                            lineBuilder.SetErrorMessage("Missing message identifier {0} (0x{0:x})", messageId);
+                        if (ShouldLog(lineBuilder.EcuId, messageId)) {
+                            lineBuilder.SetErrorMessage("Missing message identifier, ECU={0}, App={1}, Ctx={2}, Id={3} (3x{0:x})",
+                                lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId, messageId);
                         }
                         return -1;
                     }
@@ -97,11 +96,11 @@
                     lineBuilder.SetMessageId(messageId);
                     lineBuilder.SetDltType(frame.MessageType);
                     if (!lineBuilder.Features.ApplicationId || lineBuilder.Features.ContextId) {
-                        lineBuilder.SetApplicationId(frame.ApplicationId ?? string.Empty);
-                        lineBuilder.SetContextId(frame.ContextId ?? string.Empty);
+                        lineBuilder.SetApplicationId(frame.ApplicationId);
+                        lineBuilder.SetContextId(frame.ContextId);
                     }
                     if (!lineBuilder.Features.EcuId) {
-                        lineBuilder.SetEcuId(frame.EcuId ?? string.Empty);
+                        lineBuilder.SetEcuId(frame.EcuId);
                     }
 
                     int payloadLength = DecodePdus(buffer[4..], messageId, frame, lineBuilder);
@@ -126,11 +125,13 @@
                 if (argLength < 0) {
                     if (argument is DltArgError argError) {
                         lineBuilder.SetErrorMessage(
-                            "Message 0x{0:x} arg {1} of {2}, {3}",
+                            "Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) arg {4} of {5}, {6}",
+                            lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId,
                             messageId, i + 1, frame.Arguments.Count, argError.Message);
                     } else {
                         lineBuilder.SetErrorMessage(
-                            "Message {0} (0x{0:x}) pdu {1} of {2} decoding error",
+                            "Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) pdu {4} of {5} decoding error",
+                            lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId,
                             messageId, i + 1, frame.Arguments.Count);
                     }
                     return -1;
@@ -143,9 +144,20 @@
             return payloadLength;
         }
 
-        private int DecodeFallback(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
+        private readonly Dictionary<string, HashSet<int>> m_Logged = new Dictionary<string, HashSet<int>>();
+
+        private bool ShouldLog(string ecuId, int messageId)
         {
-            return Fallback.Decode(buffer, lineBuilder);
+            bool result = m_Logged.TryGetValue(ecuId, out HashSet<int> msgId);
+            if (!result) {
+                msgId = new HashSet<int>();
+                msgId.Add(messageId);
+                m_Logged.Add(ecuId, msgId);
+                return true;
+            }
+            result = msgId.Contains(messageId);
+            if (!result) msgId.Add(messageId);
+            return result;
         }
     }
 }
