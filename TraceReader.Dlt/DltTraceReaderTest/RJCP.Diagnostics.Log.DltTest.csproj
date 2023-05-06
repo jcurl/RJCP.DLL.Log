@@ -50,6 +50,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Collections\ReadOnlyArrayListAccessor.cs" />
+    <Compile Include="Collections\ReadOnlyArrayListTest.cs" />
     <Compile Include="Constraints\DltConstraintExtensionsTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCommonTest.cs" />
     <Compile Include="Decoder\DltTraceDecoderCorruptTest.cs" />
