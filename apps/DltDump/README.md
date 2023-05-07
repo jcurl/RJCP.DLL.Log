@@ -591,23 +591,23 @@ same as the default behaviour.
 If you want to ensure decoding only for supported ECU IDs, provide the `--ecuid`
 option to additionally filter the ECUID.
 
-| nv-multiecu | nv-noexthdr | DLT ECUID         | DLT App/Ctx Id       | Result from Fibexes      | Notes             |
-| :---------: | :---------: | ----------------- | -------------------- | ------------------------ | ----------------- |
-|      X      |      -      | No ECU ID present | No Extended Header   | First Frame¹             | Same as "default" |
-|      X      |      -      | No ECU ID present | Present in Fibex     | Match first occurrence²  | Same as "default" |
-|      X      |      -      | No ECU ID present | Not Present in Fibex | Not Found³               | Same as "default" |
-|      X      |      -      | Matches a Fibex   | No Extended Header   | First for matching Fibex |                   |
-|      X      |      -      | Matches a Fibex   | Present in Fibex     | Match for matching Fibex |                   |
-|      X      |      -      | Matches a Fibex   | Not Present in Fibex | Not Found³               |                   |
-|      X      |      -      | Not in a Fibex    | No Extended Header   | First Frame¹             | Same as "default" |
-|      X      |      -      | Not in a Fibex    | Present in Fibex     | Match first occurrence²  | Same as "default" |
-|      X      |      -      | Not in a Fibex    | Not Present in Fibex | Not Found³               | Same as "default" |
+| nv-multiecu | nv-noexthdr | DLT ECUID         | DLT App/Ctx Id       | Result from Fibexes      | Notes                      |
+| :---------: | :---------: | ----------------- | -------------------- | ------------------------ | -------------------------- |
+|      X      |      -      | No ECU ID present | No Extended Header   | First Frame¹             | Same as "default"          |
+|      X      |      -      | No ECU ID present | Present in Fibex     | Match first occurrence²  | Same as "default"          |
+|      X      |      -      | No ECU ID present | Not Present in Fibex | Not Found³               | Same as "default"          |
+|      X      |      -      | Matches a Fibex   | No Extended Header   | First for matching Fibex |                            |
+|      X      |      -      | Matches a Fibex   | Present in Fibex     | Match for matching Fibex |                            |
+|      X      |      -      | Matches a Fibex   | Not Present in Fibex | Not Found³               |                            |
+|      X      |      -      | Not in a Fibex    | No Extended Header   | Not Found³               | Fallback to binary decoder |
+|      X      |      -      | Not in a Fibex    | Present in Fibex     | Not Found³               | Fallback to binary decoder |
+|      X      |      -      | Not in a Fibex    | Not Present in Fibex | Not Found³               | Fallback to binary decoder |
 
-| nv-multiecu | nv-noexthdr | DLT ECUID         | DLT App/Ctx Id | Result from Fibexes      | Notes                 |
-| :---------: | :---------: | ----------------- | -------------- | ------------------------ | --------------------- |
-|      X      |      X      | No ECU ID present | Ignored        | First Frame¹             | Same as `nv-noexthdr` |
-|      X      |      X      | Matches a Fibex   | Ignored        | First for matching Fibex |                       |
-|      X      |      X      | Not in a Fibex    | Ignored        | First Frame¹             | Same as `nv-noexthdr` |
+| nv-multiecu | nv-noexthdr | DLT ECUID         | DLT App/Ctx Id | Result from Fibexes      | Notes                      |
+| :---------: | :---------: | ----------------- | -------------- | ------------------------ | -------------------------- |
+|      X      |      X      | No ECU ID present | Ignored        | First Frame¹             | Same as `nv-noexthdr`      |
+|      X      |      X      | Matches a Fibex   | Ignored        | First for matching Fibex |                            |
+|      X      |      X      | Not in a Fibex    | Ignored        | Not Found³               | Fallback to binary decoder |
 
 Notes
 

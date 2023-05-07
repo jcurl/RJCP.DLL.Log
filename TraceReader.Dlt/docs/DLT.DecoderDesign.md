@@ -923,21 +923,22 @@ files.
 
 ##### 4.4.1.4. Extensions for a Unique Message Identifier
 
-May projects do not use the extended header, but the DLT Viewer only knows the
-messages that it decodes. If there is a duplicate message identifier, no warning
-diagnostic is generated, so long as the application and context identifier
-differ.
+If there is a duplicate message identifier, no warning diagnostic is generated
+by the dlt-viewer. This is acceptable, so long as the message identifier is
+unique for the application and context identifier.
 
 This implementation will allow checks should the message identifier be not
-unique, irrespective of the application and context identifier.
+unique, irrespective of the application and context identifier. This is useful
+if it is known in advance that the DLT messages being decoded do not have an
+extended header.
 
 ##### 4.4.1.5. Extensions for the ECU Identifier
 
 The DLT Viewer ignores the ECU Identifier. However, many logs contain multiple
-ECUs in a single file to be parsed. The implementation shall also allow parsing
-the ECU field, so that if the file contains a standard header with the ECU ID,
-this can be used in addition to group the message identifiers, allowing
-duplicate message identifiers across multiple different ECUs.
+ECUs in a single file. This implementation shall also allow parsing the ECU
+field in the external file, so that if the DLT log contains a standard header
+with the ECU ID, this can be used in addition to group the message identifiers,
+allowing duplicate message identifiers across multiple different ECUs.
 
 ##### 4.4.1.6. Design of the FIBEX with an IFrameMap
 
@@ -970,13 +971,14 @@ The default options would be `FrameMapDefault`, the most full-featured is
 
 When the class `FibexFile` loads the FIBEX file, it inserts the ECU, App,
 Context and Message identifier in the delegated `IFrameMap` object. If there is
-a duplicate message, an exception `FibexDuplicateKeyException` would be raised.
+a duplicate message, an event (not an exception) will be raised indicating a
+problem with loading and merging files.
 
 Thus, if the `FrameMapSimple` is used, and any message identifier is duplicated,
-regardless of the application, context and ECU identifier, the exception would
-be raised. If `FrameMapDefault` is used, then the exception is only raised in
-the case that there is a duplicate message for the same Application, Context and
-Message identifier.
+regardless of the application, context and ECU identifier, the event would be
+raised. If `FrameMapDefault` is used, then the event is only raised in the case
+that there is a duplicate message for the same Application, Context and Message
+identifier.
 
 ### 4.5. Design for Non-Verbose Decoding
 

@@ -150,8 +150,7 @@
         {
             bool result = m_Logged.TryGetValue(ecuId, out HashSet<int> msgId);
             if (!result) {
-                msgId = new HashSet<int>();
-                msgId.Add(messageId);
+                msgId = new HashSet<int> { messageId };
                 m_Logged.Add(ecuId, msgId);
                 return true;
             }

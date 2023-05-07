@@ -1,8 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Collections
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
     using NUnit.Framework;
 
     [TestFixture]

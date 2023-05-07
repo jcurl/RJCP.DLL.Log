@@ -100,10 +100,11 @@
         public bool TryGetFrame(int id, string appId, string ctxId, string ecuId, out IFrame frame)
         {
             if (ecuId != null) {
-                if (m_EcuFrames.TryGetValue(ecuId, out FrameMapSimple map)) {
-                    if (map.TryGetFrame(id, appId, ctxId, ecuId, out frame))
-                        return true;
+                if (!m_EcuFrames.TryGetValue(ecuId, out FrameMapSimple map)) {
+                    frame = null;
+                    return false;
                 }
+                return map.TryGetFrame(id, appId, ctxId, ecuId, out frame);
             }
             return m_Frames.TryGetFrame(id, appId, ctxId, ecuId, out frame);
         }
