@@ -7,7 +7,7 @@
 
     public class NonVerboseCommand : ICommand
     {
-        private readonly FibexOptions m_Options = FibexOptions.None;
+        private readonly FibexOptions m_Options;
         private readonly IEnumerable<string> m_FibexPaths;
 
         public NonVerboseCommand(CmdOptions options)

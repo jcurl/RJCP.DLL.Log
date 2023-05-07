@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Collections
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using NUnit.Framework;
 
     [TestFixture]
@@ -68,6 +69,7 @@
         }
 
         [Test]
+        [SuppressMessage("Assertion", "NUnit2014:Use SomeItemsConstraint for better assertion messages in case of failure", Justification = "Test specific method")]
         public void Contains()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };

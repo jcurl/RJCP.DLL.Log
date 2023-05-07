@@ -85,11 +85,6 @@
                 } else {
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                     if (!FrameMap.TryGetFrame(messageId, lineBuilder.ApplicationId, lineBuilder.ContextId, lineBuilder.EcuId, out IFrame frame)) {
-                        // Only log once per message.
-                        if (ShouldLog(lineBuilder.EcuId, messageId)) {
-                            lineBuilder.SetErrorMessage("Missing message identifier, ECU={0}, App={1}, Ctx={2}, Id={3} (3x{0:x})",
-                                lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId, messageId);
-                        }
                         return -1;
                     }
 
@@ -142,21 +137,6 @@
                 payloadLength += argLength;
             }
             return payloadLength;
-        }
-
-        private readonly Dictionary<string, HashSet<int>> m_Logged = new Dictionary<string, HashSet<int>>();
-
-        private bool ShouldLog(string ecuId, int messageId)
-        {
-            bool result = m_Logged.TryGetValue(ecuId, out HashSet<int> msgId);
-            if (!result) {
-                msgId = new HashSet<int> { messageId };
-                m_Logged.Add(ecuId, msgId);
-                return true;
-            }
-            result = msgId.Contains(messageId);
-            if (!result) msgId.Add(messageId);
-            return result;
         }
     }
 }
