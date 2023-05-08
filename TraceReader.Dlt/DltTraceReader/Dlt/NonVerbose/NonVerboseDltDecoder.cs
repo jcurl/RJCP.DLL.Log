@@ -1,7 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.NonVerbose
 {
     using System;
-    using System.Collections.Generic;
+    using System.Diagnostics;
     using Args;
     using RJCP.Core;
 
@@ -84,7 +84,11 @@
                     return buffer.Length;
                 } else {
                     int messageId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                    if (!FrameMap.TryGetFrame(messageId, lineBuilder.ApplicationId, lineBuilder.ContextId, lineBuilder.EcuId, out IFrame frame)) {
+                    if (!FrameMap.TryGetFrame(messageId,
+                      lineBuilder.Features.ApplicationId ? lineBuilder.ApplicationId : null,
+                      lineBuilder.Features.ContextId ? lineBuilder.ContextId : null,
+                      lineBuilder.Features.EcuId ? lineBuilder.EcuId : null,
+                      out IFrame frame)) {
                         return -1;
                     }
 

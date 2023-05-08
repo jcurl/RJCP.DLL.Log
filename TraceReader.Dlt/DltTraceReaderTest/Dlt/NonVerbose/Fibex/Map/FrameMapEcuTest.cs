@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using NUnit.Framework;
-    using RJCP.Diagnostics.Log.Dlt.ControlArgs;
 
     /// <summary>
     /// Defines test class FrameMapEcuTest.
