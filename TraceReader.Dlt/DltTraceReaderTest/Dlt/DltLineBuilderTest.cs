@@ -438,9 +438,9 @@
             Assert.That(line.Features.TimeStamp, Is.True);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449)));
 
-            // The Time Stamp is *not* reset, only the feature flag.
+            // The Time Stamp is *not* reset.
             builder.Reset();
-            Assert.That(builder.Features.TimeStamp, Is.False);
+            Assert.That(builder.Features.TimeStamp, Is.True);
             Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 21, 33, 14.3449)));
         }
 
