@@ -64,7 +64,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -84,7 +84,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -155,7 +155,7 @@
             Assert.That(fragments.Length, Is.EqualTo(24));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(3));
+            Assert.That(list, Has.Count.EqualTo(3));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(pos1));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -182,7 +182,7 @@
             // The last fragment wasn't added, as it was much newer (15 seconds or more) than the last fragment. The
             // existing collection should remain intact, so that it can be logged what is being dropped.
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -214,7 +214,7 @@
             // The last fragment wasn't added, as it was much newer (15 seconds or more) than the last fragment. The
             // existing collection should remain intact, so that it can be logged what is being dropped.
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
@@ -235,7 +235,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -253,7 +253,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -272,7 +272,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -294,7 +294,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -316,7 +316,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -338,7 +338,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -360,7 +360,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(20));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -381,7 +381,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
@@ -399,7 +399,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(16));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment3).AsCollection);
@@ -417,7 +417,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
@@ -435,7 +435,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(16));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment3).AsCollection);
@@ -453,7 +453,7 @@
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
@@ -472,7 +472,7 @@
             Assert.That(fragments.Length, Is.EqualTo(16));
 
             List<IpFragment> list = new List<IpFragment>(fragments.GetFragments());
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
             Assert.That(list[0].Position, Is.EqualTo(0));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);

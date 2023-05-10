@@ -12,7 +12,7 @@
         public void DefaultTraceLine()
         {
             DltTraceLine line = new DltTraceLine();
-            Assert.That(line.Arguments.Count, Is.EqualTo(0));
+            Assert.That(line.Arguments, Is.Empty);
             Assert.That(line.ApplicationId, Is.Null);
             Assert.That(line.ContextId, Is.Null);
             Assert.That(line.EcuId, Is.Null);
@@ -40,7 +40,7 @@
         public void TraceLineWithArgumentsArray()
         {
             DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
-            Assert.That(line.Arguments.Count, Is.EqualTo(1));
+            Assert.That(line.Arguments, Has.Count.EqualTo(1));
             Assert.That(line.Arguments[0], Is.TypeOf<StringDltArg>());
             Assert.That(line.ApplicationId, Is.Null);
             Assert.That(line.ContextId, Is.Null);

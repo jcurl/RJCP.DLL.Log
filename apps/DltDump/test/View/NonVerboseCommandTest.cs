@@ -57,8 +57,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFile)
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
             }
         }
@@ -73,8 +73,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFile), LongOpt("fibex", FibexFile2), LongOpt("nv-multiecu")
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
                 Assert.That(cmdOptions.Fibex[1], Is.EqualTo(FibexFile2));
             }
@@ -90,8 +90,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-multiecu")
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
                 Assert.That(cmdOptions.Fibex[1], Is.EqualTo(FibexFile2));
             }
@@ -107,8 +107,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-multiecu"), LongOpt("nv-noexthdr")
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
                 Assert.That(cmdOptions.Fibex[1], Is.EqualTo(FibexFile2));
             }
@@ -124,8 +124,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-noexthdr")
                 }), Is.EqualTo(ExitCode.FibexError));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
                 Assert.That(cmdOptions.Fibex[1], Is.EqualTo(FibexFile2));
             }
@@ -141,8 +141,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFileInv)
                 }), Is.EqualTo(ExitCode.FibexError));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFileInv));
             }
         }
@@ -157,8 +157,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", "foobar.xml")
                 }), Is.EqualTo(ExitCode.FibexError));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo("foobar.xml"));
             }
         }
@@ -173,8 +173,8 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexDir), LongOpt("nv-multiecu")
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.Fibex.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Is.Empty);
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexDir));
             }
         }

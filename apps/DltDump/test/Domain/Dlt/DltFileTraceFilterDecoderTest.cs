@@ -23,8 +23,8 @@
 
             decoder.Decode(Data.AsSpan(), 0);
             decoder.Flush();
-            Assert.That(memOutput.Lines.Count, Is.EqualTo(1));
-            Assert.That(memOutput.Lines[0].Packet.Length, Is.EqualTo(Data.Length));
+            Assert.That(memOutput.Lines, Has.Count.EqualTo(1));
+            Assert.That(memOutput.Lines[0].Packet, Has.Length.EqualTo(Data.Length));
             Assert.That(memOutput.Lines[0].Line.EcuId, Is.EqualTo("ECU1"));
         }
 
@@ -36,7 +36,7 @@
 
             decoder.Decode(SkipData.AsSpan(), 0);
             decoder.Flush();
-            Assert.That(memOutput.Lines.Count, Is.EqualTo(1));
+            Assert.That(memOutput.Lines, Has.Count.EqualTo(1));
             Assert.That(memOutput.Lines[0].Packet, Is.Null);
             Assert.That(memOutput.Lines[0].Line.EcuId, Is.EqualTo(""));
             Assert.That(memOutput.Lines[0].Line.ApplicationId, Is.EqualTo("SKIP"));

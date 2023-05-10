@@ -11,14 +11,14 @@
         public void ParseEmptyList()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList("");
-            Assert.That(list.Count, Is.EqualTo(0));
+            Assert.That(list, Is.Empty);
         }
 
         [Test]
         public void ParseSingleEntry()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList("one");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo("one"));
         }
 
@@ -32,7 +32,7 @@
         public void ParseListEntry(string uriPath)
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList(uriPath);
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0], Is.EqualTo("one"));
             Assert.That(list[1], Is.EqualTo("two"));
         }
@@ -41,7 +41,7 @@
         public void ParseWithQuotes()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList("' one '");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo(" one "));
         }
 
@@ -49,7 +49,7 @@
         public void ParseWithQuotesWithComma()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList("' one,two '");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo(" one,two "));
         }
 
@@ -60,7 +60,7 @@
         public void ParseWithQuotesMultiple(string uriPath)
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList(uriPath);
-            Assert.That(list.Count, Is.EqualTo(2));
+            Assert.That(list, Has.Count.EqualTo(2));
             Assert.That(list[0], Is.EqualTo(" one,two "));
             Assert.That(list[1], Is.EqualTo("three"));
         }
@@ -69,7 +69,7 @@
         public void ParseQuoteWithEscape()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList(@"'With \'quote\' '");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo("With 'quote' "));
         }
 
@@ -77,7 +77,7 @@
         public void ParseEscapeNonQuote()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList(@"\a");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo("a"));
         }
 
@@ -85,7 +85,7 @@
         public void ParseEscapeEscape()
         {
             IReadOnlyList<string> list = UriExtensions.ParseCommaSeparatedList(@"\\");
-            Assert.That(list.Count, Is.EqualTo(1));
+            Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0], Is.EqualTo(@"\"));
         }
 

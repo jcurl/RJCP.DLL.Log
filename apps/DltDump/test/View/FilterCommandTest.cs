@@ -66,7 +66,7 @@
 
                 // The command options don't really matter for FilterCommand, but useful to see that the options were
                 // properly generated.
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(file));
             }
         }
@@ -85,7 +85,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt"
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo("EmptyFile.dlt"));
             }
         }
@@ -101,7 +101,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
             }
         }
@@ -121,7 +121,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt", "EmptyFile2.dlt"
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo("EmptyFile.dlt"));
                 Assert.That(cmdOptions.Arguments[1], Is.EqualTo("EmptyFile2.dlt"));
             }
@@ -137,7 +137,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     EmptyFile, EmptyFile2
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(2));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(2));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.Arguments[1], Is.EqualTo(EmptyFile2));
             }
@@ -154,7 +154,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     new Uri(EmptyFile).AbsoluteUri
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(new Uri(EmptyFile).AbsoluteUri));
             }
         }
@@ -176,7 +176,7 @@
                     "pkt://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
         #endregion
@@ -192,7 +192,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("position"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.Position, Is.True);
             }
@@ -368,8 +368,8 @@
                     ShortOpt('s'), search, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchString, Has.Count.EqualTo(1));
             }
         }
 
@@ -389,8 +389,8 @@
                     ShortOpt('s'), search, LongOpt("string"), "foo", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchString, Has.Count.EqualTo(2));
             }
         }
 
@@ -410,8 +410,8 @@
                     ShortOpt('r'), search, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex, Has.Count.EqualTo(1));
             }
         }
 
@@ -431,8 +431,8 @@
                     ShortOpt('r'), search, LongOpt("regex"), "^foo$", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex, Has.Count.EqualTo(2));
             }
         }
 
@@ -454,9 +454,9 @@
                     ShortOpt('s'), search, LongOpt("regex"), regex, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchString, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.SearchRegex, Has.Count.EqualTo(1));
             }
         }
 
@@ -476,8 +476,8 @@
                     ShortOpt('s'), search, ShortOpt('i'), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchString.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchString, Has.Count.EqualTo(1));
             }
         }
 
@@ -497,8 +497,8 @@
                     ShortOpt('r'), search, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SearchRegex.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SearchRegex, Has.Count.EqualTo(1));
             }
         }
 
@@ -519,8 +519,8 @@
                     LongOpt("ecuid"), ecuId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.EcuId, Has.Count.EqualTo(1));
             }
         }
 
@@ -539,8 +539,8 @@
                     LongOpt("ecuid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.EcuId, Has.Count.EqualTo(2));
             }
         }
 
@@ -559,8 +559,8 @@
                     LongOpt("ecuid"), "AAAA,ECU1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.EcuId, Has.Count.EqualTo(2));
             }
         }
 
@@ -579,8 +579,8 @@
                     LongOpt("ecuid"), "AAAA,ECU1,AAAA", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.EcuId.Count, Is.EqualTo(2).Or.EqualTo(3));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.EcuId, Has.Count.EqualTo(2).Or.Count.EqualTo(3));
             }
         }
 
@@ -601,8 +601,8 @@
                     LongOpt("appid"), appId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.AppId, Has.Count.EqualTo(1));
             }
         }
 
@@ -621,8 +621,8 @@
                     LongOpt("appid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.AppId, Has.Count.EqualTo(2));
             }
         }
 
@@ -641,8 +641,8 @@
                     LongOpt("appid"), "AAAA,APP1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.AppId, Has.Count.EqualTo(2));
             }
         }
 
@@ -661,8 +661,8 @@
                     LongOpt("appid"), "AAAA,APP1,AAAA", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.AppId.Count, Is.EqualTo(2).Or.EqualTo(3));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.AppId, Has.Count.EqualTo(2).Or.Count.EqualTo(3));
             }
         }
 
@@ -683,8 +683,8 @@
                     LongOpt("ctxid"), ctxId, LongOpt("ignorecase"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.CtxId, Has.Count.EqualTo(1));
             }
         }
 
@@ -703,8 +703,8 @@
                     LongOpt("ctxid"), "AAAA,BBBB", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.CtxId, Has.Count.EqualTo(2));
             }
         }
 
@@ -723,8 +723,8 @@
                     LongOpt("ctxid"), "AAAA,CTX1", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.CtxId, Has.Count.EqualTo(2));
             }
         }
 
@@ -743,8 +743,8 @@
                     LongOpt("ctxid"), "AAAA,CTX1,AAAA", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.CtxId.Count, Is.EqualTo(2).Or.EqualTo(3));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.CtxId, Has.Count.EqualTo(2).Or.Count.EqualTo(3));
             }
         }
 
@@ -764,8 +764,8 @@
                     LongOpt("sessionid"), session, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.SessionId, Has.Count.EqualTo(1));
             }
         }
 
@@ -784,8 +784,8 @@
                     LongOpt("sessionid", "-1"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.SessionId, Has.Count.EqualTo(1));
             }
         }
 
@@ -804,8 +804,8 @@
                     LongOpt("sessionid", "127,127,128"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.SessionId.Count, Is.EqualTo(2).Or.EqualTo(3));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.SessionId, Has.Count.EqualTo(2).Or.Count.EqualTo(3));
             }
         }
 
@@ -824,7 +824,7 @@
                     LongOpt("verbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.VerboseMessage, Is.True);
             }
         }
@@ -844,7 +844,7 @@
                     LongOpt("verbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
                 Assert.That(cmdOptions.VerboseMessage, Is.True);
             }
         }
@@ -864,7 +864,7 @@
                     LongOpt("nonverbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.NonVerboseMessage, Is.True);
             }
         }
@@ -884,7 +884,7 @@
                     LongOpt("nonverbose"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
                 Assert.That(cmdOptions.NonVerboseMessage, Is.True);
             }
         }
@@ -904,7 +904,7 @@
                     LongOpt("control"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.ControlMessage, Is.True);
             }
         }
@@ -924,7 +924,7 @@
                     LongOpt("control"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
                 Assert.That(cmdOptions.ControlMessage, Is.True);
             }
         }
@@ -978,7 +978,7 @@
                     LongOpt("none"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
                 Assert.That(cmdOptions.None, Is.True);
             }
         }
@@ -1023,7 +1023,7 @@
                     LongOpt("type", dltFilterType), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
 
-                Assert.That(cmdOptions.DltTypeFilters.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.DltTypeFilters, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.DltTypeFilters[0], Is.EqualTo(result));
             }
         }
@@ -1043,7 +1043,7 @@
                     LongOpt("type", "info"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -1062,7 +1062,7 @@
                     LongOpt("type", "warn"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
             }
         }
 
@@ -1081,8 +1081,8 @@
                     LongOpt("type", "info,warn,warn,error"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.DltTypeFilters.Count, Is.EqualTo(3).Or.EqualTo(4));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.DltTypeFilters, Has.Count.EqualTo(3).Or.Count.EqualTo(4));
             }
         }
 
@@ -1132,7 +1132,7 @@
                 }), Is.EqualTo(ExitCode.Success));
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -1161,7 +1161,7 @@
                 }), Is.EqualTo(ExitCode.Success));
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
             }
         }
 
@@ -1190,7 +1190,7 @@
                 }), Is.EqualTo(ExitCode.Success));
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -1219,7 +1219,7 @@
                 }), Is.EqualTo(ExitCode.Success));
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
             }
         }
 
@@ -1252,7 +1252,7 @@
                 }), Is.EqualTo(ExitCode.Success));
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -1312,8 +1312,8 @@
                     LongOpt("messageid"), messageId, "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(count));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(count));
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(1));
             }
         }
 
@@ -1332,8 +1332,8 @@
                     LongOpt("messageid"), "42", LongOpt("messageid"), "43", "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(2));
             }
         }
 
@@ -1352,8 +1352,8 @@
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(2));
             }
         }
 
@@ -1372,8 +1372,8 @@
                     LongOpt("messageid", "42,42"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(1).Or.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(1).Or.Count.EqualTo(2));
             }
         }
 
@@ -1392,8 +1392,8 @@
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(2));
             }
         }
 
@@ -1412,8 +1412,8 @@
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
                 }), Is.EqualTo(ExitCode.Success));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
-                Assert.That(cmdOptions.MessageId.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Is.Empty);
+                Assert.That(cmdOptions.MessageId, Has.Count.EqualTo(2));
             }
         }
 
@@ -1453,7 +1453,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), LongOpt("before-context", "1"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
@@ -1471,7 +1471,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), ShortOpt('B', "1"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
@@ -1531,7 +1531,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), LongOpt("after-context", "1"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));
@@ -1549,7 +1549,7 @@
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), ShortOpt('A', "1"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
-                Assert.That(cmdOptions.Arguments.Count, Is.EqualTo(1));
+                Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));

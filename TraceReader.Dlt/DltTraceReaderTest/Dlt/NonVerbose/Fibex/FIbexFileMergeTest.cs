@@ -38,7 +38,7 @@
                 fibex.LoadFile(stream);
 
                 // No matter the mode, we are loading duplicate entries.
-                Assert.That(foundWarnings.Count, Is.EqualTo(1));
+                Assert.That(foundWarnings, Has.Count.EqualTo(1));
                 Assert.That(foundWarnings, Does.Contain(FibexWarnings.DuplicateEntry));
             }
         }
@@ -113,7 +113,7 @@
             using (Stream stream2 = GetStream(fibexDoc2)) {
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
-                Assert.That(foundWarnings.Count, Is.EqualTo(0));
+                Assert.That(foundWarnings, Is.Empty);
             }
             CompareFrames(fibex, DefaultFrames);
         }
@@ -139,7 +139,7 @@
             using (Stream stream2 = GetStream(fibexDoc2)) {
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
-                Assert.That(foundWarnings.Count, Is.EqualTo(0));
+                Assert.That(foundWarnings, Is.Empty);
             }
             CompareFrames(fibex, "TCB", DefaultFrames);
             CompareFrames(fibex, "TCB2", DefaultFramesTCB2);
@@ -166,7 +166,7 @@
             using (Stream stream2 = GetStream(fibexDoc2)) {
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
-                Assert.That(foundWarnings.Count, Is.EqualTo(1));
+                Assert.That(foundWarnings, Has.Count.EqualTo(1));
                 Assert.That(foundWarnings, Does.Contain(FibexWarnings.DuplicateEntry));
             }
         }
@@ -194,7 +194,7 @@
             using (Stream stream2 = GetStream(fibexDoc2)) {
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
-                Assert.That(foundWarnings.Count, Is.EqualTo(0));
+                Assert.That(foundWarnings, Is.Empty);
             }
             Assert.That(fibex.GetFrame(11, null, null, null),
                 Is.EqualTo(Frame11).Using(FrameComparer.Comparer));
@@ -232,7 +232,7 @@
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
 
-                Assert.That(foundWarnings.Count, Is.EqualTo(1));
+                Assert.That(foundWarnings, Has.Count.EqualTo(1));
                 Assert.That(foundWarnings, Does.Contain(FibexWarnings.DuplicateEntry));
             }
         }
@@ -260,7 +260,7 @@
             using (Stream stream2 = GetStream(fibexDoc2)) {
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
-                Assert.That(foundWarnings.Count, Is.EqualTo(0));
+                Assert.That(foundWarnings, Is.Empty);
             }
             Assert.That(fibex.GetFrame(11, null, null, null),
                 Is.EqualTo(Frame11).Using(FrameComparer.Comparer));
@@ -298,7 +298,7 @@
                 fibex.LoadFile(stream1);
                 fibex.LoadFile(stream2);
 
-                Assert.That(foundWarnings.Count, Is.EqualTo(1));
+                Assert.That(foundWarnings, Has.Count.EqualTo(1));
                 Assert.That(foundWarnings, Does.Contain(FibexWarnings.DuplicateEntry));
             }
         }

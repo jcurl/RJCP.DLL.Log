@@ -26,7 +26,7 @@
                 Assert.That(shbBlock.MajorVersion, Is.EqualTo(1));
                 Assert.That(shbBlock.MinorVersion, Is.EqualTo(0));
 
-                Assert.That(shbBlock.Options.Count, Is.EqualTo(3));
+                Assert.That(shbBlock.Options, Has.Count.EqualTo(3));
                 Assert.That(shbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.ShbHardware));
                 Assert.That(shbBlock.Options[0].Length, Is.EqualTo(54));
                 Assert.That(shbBlock.Options[0], Is.TypeOf<StringOption>());

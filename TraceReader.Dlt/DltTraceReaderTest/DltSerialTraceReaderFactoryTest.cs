@@ -37,7 +37,7 @@
 
                 Assert.That(dltLine.TimeStamp.Ticks, Is.EqualTo(DateTimeOffset.FromUnixTimeSeconds(0).UtcTicks));
 
-                Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+                Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
                 Assert.That(dltLine.Arguments[0], Is.TypeOf<UnsignedIntDltArg>());
                 UnsignedIntDltArg arg = (UnsignedIntDltArg)dltLine.Arguments[0];
                 Assert.That(arg.DataUnsigned, Is.EqualTo(0xEFBEADDEU));
@@ -58,7 +58,7 @@
                 DltNonVerboseTraceLine dltLine = (DltNonVerboseTraceLine)line;
 
                 Assert.That(dltLine.MessageId, Is.EqualTo(1));
-                Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+                Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
                 Assert.That(dltLine.Arguments[0], Is.TypeOf<UnsignedIntDltArg>());
                 UnsignedIntDltArg arg = (UnsignedIntDltArg)dltLine.Arguments[0];
                 Assert.That(arg.DataUnsigned, Is.EqualTo(0xEFBEADDEU));
@@ -77,7 +77,7 @@
                 DltNonVerboseTraceLine dltLine = (DltNonVerboseTraceLine)line;
 
                 Assert.That(dltLine.MessageId, Is.EqualTo(1));
-                Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+                Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
                 Assert.That(dltLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                 NonVerboseDltArg arg = (NonVerboseDltArg)dltLine.Arguments[0];
                 Assert.That(arg.Data, Is.EqualTo(new byte[] { 0xDE, 0xAD, 0xBE, 0xEF }));
@@ -98,7 +98,7 @@
                 // Ensure it's not the default
                 Assert.That(dltLine.TimeStamp.Ticks, Is.Not.EqualTo(DateTimeOffset.FromUnixTimeSeconds(0).UtcTicks));
 
-                Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+                Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
                 Assert.That(dltLine.Arguments[0], Is.TypeOf<UnsignedIntDltArg>());
                 UnsignedIntDltArg arg = (UnsignedIntDltArg)dltLine.Arguments[0];
                 Assert.That(arg.DataUnsigned, Is.EqualTo(0xEFBEADDEU));
@@ -122,7 +122,7 @@
                 Assert.That(dltLine.TimeStamp.Ticks, Is.Not.EqualTo(DateTimeOffset.FromUnixTimeSeconds(0).UtcTicks));
 
                 Assert.That(dltLine.MessageId, Is.EqualTo(1));
-                Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+                Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
                 Assert.That(dltLine.Arguments[0], Is.TypeOf<UnsignedIntDltArg>());
                 UnsignedIntDltArg arg = (UnsignedIntDltArg)dltLine.Arguments[0];
                 Assert.That(arg.DataUnsigned, Is.EqualTo(0xEFBEADDEU));

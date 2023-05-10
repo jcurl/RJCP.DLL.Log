@@ -160,7 +160,7 @@
             using (TDec decoder = Create()) {
                 // The IDB is incorrect, but shouldn't raise an error, only that packets on this interface are ignored.
                 var lines = Decode(decoder, new[] { PcapBlocks.ShbSmall, PcapBlocks.IdbSmallLinkEth, PcapBlocks.EpbData }, chunk);
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }
@@ -206,7 +206,7 @@
             using (TDec decoder = Create()) {
                 // There is a packet between SHB and IDB that is so large it wont' fit in internal buffers. It will be ignored.
                 var lines = Decode(decoder, new[] { PcapBlocks.ShbSmall, largePacket, PcapBlocks.IdbSmallLinkEth, PcapBlocks.EpbData }, chunk);
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }
@@ -219,7 +219,7 @@
             using (TDec decoder = Create()) {
                 // Large packet between IDB and EPB
                 var lines = Decode(decoder, new[] { PcapBlocks.ShbSmall, PcapBlocks.IdbSmallLinkEth, largePacket, PcapBlocks.EpbData }, chunk);
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }
@@ -233,7 +233,7 @@
                 var lines = Decode(decoder, new[] {
                     PcapBlocks.ShbSmall, PcapBlocks.IdbSmallLinkEth, PcapBlocks.EpbData, PcapBlocks.CustomSmall, PcapBlocks.EpbData
                 }, chunk);
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
@@ -250,7 +250,7 @@
                     PcapBlocks.ShbData, PcapBlocks.IdbData, PcapBlocks.EpbData,
                     PcapBlocks.ShbSmallBigEndian, PcapBlocks.IdbEthNanoSecBigEndian, PcapBlocks.EpbDataNanoBigEndian
                 }, chunk);
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622498)));
@@ -295,7 +295,7 @@
                     Decode(decoder, PcapBlocks.ShbData, chunk);
                 }, Throws.TypeOf<UnknownPcapFileFormatException>());
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }

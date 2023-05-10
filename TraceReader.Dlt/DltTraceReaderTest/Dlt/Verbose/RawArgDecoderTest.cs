@@ -39,7 +39,7 @@
             Decode(payload, "RawArgEmpty", out IDltArg verboseArg);
             Assert.That(verboseArg, Is.TypeOf<RawDltArg>());
             RawDltArg arg = (RawDltArg)verboseArg;
-            Assert.That(arg.Data.Length, Is.EqualTo(0));
+            Assert.That(arg.Data, Is.Empty);
         }
 
         [Test]

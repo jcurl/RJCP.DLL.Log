@@ -44,13 +44,13 @@
             MemoryOutput output = new MemoryOutput();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.True);
-                Assert.That(output.Lines.Count, Is.EqualTo(1));
+                Assert.That(output.Lines, Has.Count.EqualTo(1));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.Null);
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -60,7 +60,7 @@
             MemoryOutput output = new MemoryOutput();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
-                Assert.That(output.Lines.Count, Is.EqualTo(0));
+                Assert.That(output.Lines, Is.Empty);
             }
         }
 
@@ -72,13 +72,13 @@
             MemoryOutput output = new MemoryOutput();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet.AsSpan()), Is.True);
-                Assert.That(output.Lines.Count, Is.EqualTo(1));
+                Assert.That(output.Lines, Has.Count.EqualTo(1));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.EqualTo(new byte[] { 0x00, 0x01 }));
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -89,7 +89,7 @@
             MemoryOutput output = new MemoryOutput();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet.AsSpan()), Is.False);
-                Assert.That(output.Lines.Count, Is.EqualTo(0));
+                Assert.That(output.Lines, Is.Empty);
             }
         }
     }

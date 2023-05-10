@@ -28,7 +28,7 @@
         public void Default()
         {
             FibexMap map = new FibexMap(FibexOptions.None);
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
         }
 
         [Test]
@@ -38,7 +38,7 @@
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
             WriteLog(map.EventLog);
 
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
 
             Assert.That(map.TryGetFrame(10, null, null, null, out IFrame frame), Is.True);
             Assert.That(map.TryGetFrame(10, null, null, "TCB", out IFrame frameEcu), Is.True);
@@ -59,12 +59,12 @@
         {
             FibexMap map = new FibexMap(FibexOptions.None);
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
 
             Assert.That(map.LoadFibex(FibexTcb2), Is.False);
             WriteLog(map.EventLog);
 
-            Assert.That(map.EventLog.Count, Is.Not.EqualTo(0));
+            Assert.That(map.EventLog, Is.Not.Empty);
 
             Assert.That(map.TryGetFrame(10, null, null, null, out IFrame frame), Is.True);
             Assert.That(map.TryGetFrame(10, null, null, "TCB", out IFrame frameEcu), Is.True);
@@ -90,12 +90,12 @@
         {
             FibexMap map = new FibexMap(FibexOptions.WithEcuId);
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
 
             Assert.That(map.LoadFibex(FibexTcb2), Is.True);
             WriteLog(map.EventLog);
 
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
 
             // Because TCB was loaded first, this is the default.
             Assert.That(map.TryGetFrame(10, null, null, null, out IFrame frame), Is.True);
@@ -124,7 +124,7 @@
             Assert.That(map.LoadFibex(FibexDir), Is.False);
             WriteLog(map.EventLog);
 
-            Assert.That(map.EventLog.Count, Is.Not.EqualTo(0));
+            Assert.That(map.EventLog, Is.Not.Empty);
 
             Assert.That(map.TryGetFrame(10, null, null, null, out IFrame frame), Is.True);
             Assert.That(map.TryGetFrame(10, null, null, "TCB", out IFrame frameEcu), Is.True);
@@ -152,7 +152,7 @@
             Assert.That(map.LoadFibex(FibexDir), Is.True);
             WriteLog(map.EventLog);
 
-            Assert.That(map.EventLog.Count, Is.EqualTo(0));
+            Assert.That(map.EventLog, Is.Empty);
 
             // Because TCB was loaded first, this is the default.
             Assert.That(map.TryGetFrame(10, null, null, null, out IFrame frame), Is.True);

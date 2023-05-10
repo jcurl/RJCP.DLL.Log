@@ -67,7 +67,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(2));
+                Assert.That(output.Lines, Has.Count.EqualTo(2));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.Null);
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose2));
@@ -75,7 +75,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -88,7 +88,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(2));
+                Assert.That(output.Lines, Has.Count.EqualTo(2));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose2));
                 Assert.That(output.Lines[0].Packet, Is.Null);
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose));
@@ -96,7 +96,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -109,7 +109,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(3));
+                Assert.That(output.Lines, Has.Count.EqualTo(3));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.Null);
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose2));
@@ -119,7 +119,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         private static readonly byte[] packet1 = new byte[] { 0x00, 0x01 };
@@ -136,7 +136,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet3), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(2));
+                Assert.That(output.Lines, Has.Count.EqualTo(2));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.EqualTo(new byte[] { 0x00, 0x01 }));
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose2));
@@ -144,7 +144,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -157,7 +157,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet3), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(2));
+                Assert.That(output.Lines, Has.Count.EqualTo(2));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose2));
                 Assert.That(output.Lines[0].Packet, Is.EqualTo(new byte[] { 0x00, 0x02 }));
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose));
@@ -165,7 +165,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
 
         [Test]
@@ -178,7 +178,7 @@
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet3), Is.False);
 
-                Assert.That(output.Lines.Count, Is.EqualTo(3));
+                Assert.That(output.Lines, Has.Count.EqualTo(3));
                 Assert.That(output.Lines[0].Line, Is.EqualTo(TestLines.Verbose));
                 Assert.That(output.Lines[0].Packet, Is.EqualTo(new byte[] { 0x00, 0x01 }));
                 Assert.That(output.Lines[1].Line, Is.EqualTo(TestLines.Verbose2));
@@ -188,7 +188,7 @@
             }
 
             // Dispose for filterOutput was propagated.
-            Assert.That(output.Lines.Count, Is.EqualTo(0));
+            Assert.That(output.Lines, Is.Empty);
         }
     }
 }

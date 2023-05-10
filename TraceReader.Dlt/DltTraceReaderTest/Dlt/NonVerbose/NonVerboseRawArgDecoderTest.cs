@@ -44,7 +44,7 @@
             Assert.That(dltArg, Is.TypeOf<RawDltArg>());
 
             RawDltArg arg = (RawDltArg)dltArg;
-            Assert.That(arg.Data.Length, Is.EqualTo(0));
+            Assert.That(arg.Data, Is.Empty);
         }
 
         [TestCase(1)]

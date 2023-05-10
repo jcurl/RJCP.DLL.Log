@@ -14,7 +14,7 @@
         public void DefaultCollection(bool littleEndian)
         {
             PcapOptions options = new PcapOptions(littleEndian);
-            Assert.That(options.Count, Is.EqualTo(0));
+            Assert.That(options, Is.Empty);
             Assert.That(options.Contains(0), Is.False);
             Assert.That(options.IndexOf(0), Is.EqualTo(-1));
         }
@@ -31,7 +31,7 @@
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.EndOfOpt));
             Assert.That(option.Length, Is.EqualTo(0));
 
-            Assert.That(options.Count, Is.EqualTo(0));
+            Assert.That(options, Is.Empty);
             Assert.That(options.Contains(0), Is.False);
             Assert.That(options.IndexOf(0), Is.EqualTo(-1));
         }
@@ -58,7 +58,7 @@
             Assert.That(pcapOption.OptionCode, Is.EqualTo(optionCode));
             Assert.That(pcapOption.Length, Is.EqualTo(2));
 
-            Assert.That(options.Count, Is.EqualTo(1));
+            Assert.That(options, Has.Count.EqualTo(1));
             Assert.That(options.Contains(optionCode), Is.True);
             Assert.That(options.IndexOf(optionCode), Is.EqualTo(0));
             Assert.That(options[0].OptionCode, Is.EqualTo(optionCode));
@@ -71,7 +71,7 @@
             Assert.That(pcapOption.OptionCode, Is.EqualTo(optionCode));
             Assert.That(pcapOption.Length, Is.EqualTo(2));
 
-            Assert.That(options.Count, Is.EqualTo(2));
+            Assert.That(options, Has.Count.EqualTo(2));
             Assert.That(options.Contains(optionCode), Is.True);
             Assert.That(options.IndexOf(optionCode), Is.EqualTo(0));
             Assert.That(options.IndexOf(optionCode, 1), Is.EqualTo(1));
@@ -89,7 +89,7 @@
             Assert.That(pcapOption.OptionCode, Is.EqualTo(optionCode));
             Assert.That(pcapOption.Length, Is.EqualTo(3));
 
-            Assert.That(options.Count, Is.EqualTo(3));
+            Assert.That(options, Has.Count.EqualTo(3));
             Assert.That(options.Contains(optionCode), Is.True);
             Assert.That(options.IndexOf(optionCode), Is.EqualTo(2));
             Assert.That(options.IndexOf(optionCode, 1), Is.EqualTo(2));
@@ -306,7 +306,7 @@
             Assert.That(() => {
                 _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             }, Throws.TypeOf<InvalidOperationException>());
-            Assert.That(options.Count, Is.EqualTo(0));
+            Assert.That(options, Is.Empty);
         }
 
         [Test]
@@ -319,7 +319,7 @@
             Assert.That(() => {
                 _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             }, Throws.TypeOf<InvalidOperationException>());
-            Assert.That(options.Count, Is.EqualTo(1));
+            Assert.That(options, Has.Count.EqualTo(1));
             Assert.That(options[0], Is.TypeOf<SpeedOption>());
         }
 
@@ -361,7 +361,7 @@
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24));
             Assert.That(length, Is.EqualTo(164));
             Assert.That(options.IsReadOnly, Is.True);
-            Assert.That(options.Count, Is.EqualTo(3));
+            Assert.That(options, Has.Count.EqualTo(3));
 
             Assert.That(options[0].OptionCode, Is.EqualTo(OptionCodes.ShbHardware));
             Assert.That(options[0].Length, Is.EqualTo(0x36));
@@ -387,7 +387,7 @@
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, blockLen));
             Assert.That(length, Is.EqualTo(160));
             Assert.That(options.IsReadOnly, Is.True);
-            Assert.That(options.Count, Is.EqualTo(3));
+            Assert.That(options, Has.Count.EqualTo(3));
 
             Assert.That(options[0].OptionCode, Is.EqualTo(OptionCodes.ShbHardware));
             Assert.That(options[0].Length, Is.EqualTo(0x36));
@@ -409,7 +409,7 @@
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, 6));
             Assert.That(length, Is.EqualTo(-1));
             Assert.That(options.IsReadOnly, Is.False);
-            Assert.That(options.Count, Is.EqualTo(0));
+            Assert.That(options, Is.Empty);
         }
 
         [Test]
@@ -421,7 +421,7 @@
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, 72));
             Assert.That(length, Is.EqualTo(-1));
             Assert.That(options.IsReadOnly, Is.False);
-            Assert.That(options.Count, Is.EqualTo(0));
+            Assert.That(options, Is.Empty);
         }
 
         [Test]
@@ -443,14 +443,14 @@
             _ = options.Add(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(84, 44));
 
             Assert.That(options.IsReadOnly, Is.False);
-            Assert.That(options.Count, Is.EqualTo(1));
+            Assert.That(options, Has.Count.EqualTo(1));
             Assert.That(options[0].OptionCode, Is.EqualTo(OptionCodes.ShbOs));
 
             // Now decode the entire block
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, 164));
             Assert.That(length, Is.EqualTo(164));
             Assert.That(options.IsReadOnly, Is.True);
-            Assert.That(options.Count, Is.EqualTo(3));
+            Assert.That(options, Has.Count.EqualTo(3));
 
             Assert.That(options[0].OptionCode, Is.EqualTo(OptionCodes.ShbHardware));
             Assert.That(options[0].Length, Is.EqualTo(0x36));

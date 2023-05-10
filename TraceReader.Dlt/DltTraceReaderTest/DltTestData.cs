@@ -31,7 +31,7 @@
             Assert.That(skipLine.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(skipLine.ApplicationId, Is.EqualTo("SKIP"));
             Assert.That(skipLine.ContextId, Is.EqualTo("SKIP"));
-            Assert.That(skipLine.Arguments.Count, Is.EqualTo(4));
+            Assert.That(skipLine.Arguments, Has.Count.EqualTo(4));
             Assert.That(skipLine.Reason, Is.Not.Null);
             if (bytes > 0) Assert.That(skipLine.BytesSkipped, Is.EqualTo(bytes));
             Assert.That(skipLine.Text, Is.EqualTo($"Skipped: {skipLine.BytesSkipped} bytes; Reason: {skipLine.Reason}"));
@@ -70,7 +70,7 @@
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+            Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
             if (!nv) {
                 Assert.That(dltLine.Text, Is.EqualTo("Message 1"));
                 Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2310 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 1"));
@@ -104,7 +104,7 @@
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+            Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Warning"));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2320 {count} ECU1 APP1 CTX1 50 log warn verbose 1 Warning"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
@@ -133,7 +133,7 @@
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+            Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Message 3"));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2330 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 3"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
@@ -162,7 +162,7 @@
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
             Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(1));
+            Assert.That(dltLine.Arguments, Has.Count.EqualTo(1));
             Assert.That(dltLine.Text, Is.EqualTo("Message 2"));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.3000 {count} ECU1 APP1 CTX1 50 log info verbose 1 Message 2"));
             Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));

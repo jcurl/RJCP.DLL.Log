@@ -37,7 +37,7 @@
         {
             Uri uri = new Uri("http://address");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(0));
+            Assert.That(fields, Is.Empty);
         }
 
         [Test]
@@ -45,7 +45,7 @@
         {
             Uri uri = new Uri("http://address/");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(0));
+            Assert.That(fields, Is.Empty);
         }
 
         [Test]
@@ -53,7 +53,7 @@
         {
             Uri uri = new Uri("http://address/?");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(0));
+            Assert.That(fields, Is.Empty);
         }
 
         [Test]
@@ -61,7 +61,7 @@
         {
             Uri uri = new Uri("http://address/?a=b");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo("a"));
             Assert.That(fields[0].Value, Is.EqualTo("b"));
         }
@@ -71,7 +71,7 @@
         {
             Uri uri = new Uri("http://address/?%41%20%32= %42");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo("A 2"));
             Assert.That(fields[0].Value, Is.EqualTo(" B"));
         }
@@ -81,7 +81,7 @@
         {
             Uri uri = new Uri("http://address/?a=b&c=d");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(2));
+            Assert.That(fields, Has.Count.EqualTo(2));
             Assert.That(fields[0].Key, Is.EqualTo("a"));
             Assert.That(fields[0].Value, Is.EqualTo("b"));
             Assert.That(fields[1].Key, Is.EqualTo("c"));
@@ -93,7 +93,7 @@
         {
             Uri uri = new Uri("http://address/?=b");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo(string.Empty));
             Assert.That(fields[0].Value, Is.EqualTo("b"));
         }
@@ -103,7 +103,7 @@
         {
             Uri uri = new Uri("http://address/?a=");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo("a"));
             Assert.That(fields[0].Value, Is.EqualTo(string.Empty));
         }
@@ -113,7 +113,7 @@
         {
             Uri uri = new Uri("http://address/?a");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo("a"));
             Assert.That(fields[0].Value, Is.EqualTo(string.Empty));
         }
@@ -123,7 +123,7 @@
         {
             Uri uri = new Uri("http://address/?a=b?");
             var fields = uri.ParseQuery();
-            Assert.That(fields.Count, Is.EqualTo(1));
+            Assert.That(fields, Has.Count.EqualTo(1));
             Assert.That(fields[0].Key, Is.EqualTo("a"));
             Assert.That(fields[0].Value, Is.EqualTo("b?"));
         }

@@ -57,7 +57,7 @@
             }
 
             if (MemOutputStream != null) {
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
                 return (from line in MemOutputStream.Lines select line.Line).ToList();
             }
             return lines;
@@ -101,7 +101,7 @@
 
             List<DltTraceLineBase> lines = new List<DltTraceLineBase>(traceDecoder.Flush());
             if (MemOutputStream != null) {
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
                 return (from line in MemOutputStream.Lines select line.Line).ToList();
             }
 

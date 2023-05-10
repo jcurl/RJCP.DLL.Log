@@ -31,7 +31,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(1));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(4));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(4));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbName));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(50));
                 Assert.That(idbBlock.Options[0], Is.TypeOf<StringOption>());
@@ -67,7 +67,7 @@
                 InterfaceDescriptionBlock idbBlock = (InterfaceDescriptionBlock)block;
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(0));
+                Assert.That(idbBlock.Options, Is.Empty);
             }
         }
 
@@ -86,7 +86,7 @@
                 InterfaceDescriptionBlock idbBlock = (InterfaceDescriptionBlock)block;
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_LINUX_SLL));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(0));
+                Assert.That(idbBlock.Options, Is.Empty);
             }
         }
 
@@ -105,7 +105,7 @@
                 InterfaceDescriptionBlock idbBlock = (InterfaceDescriptionBlock)block;
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(0));
+                Assert.That(idbBlock.Options, Is.Empty);
 
                 Assert.That(idbBlock.GetTimeStamp(0x0005A846, 0xEC6805FE),
                     Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30).AddNanoSeconds(970622000)));
@@ -131,7 +131,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(1));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(1));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(1));
                 Assert.That(idbBlock.Options[0], Is.TypeOf<TimeResolutionOption>());
@@ -162,7 +162,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(1));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(1));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(1));
                 Assert.That(idbBlock.Options[0], Is.TypeOf<TimeResolutionOption>());
@@ -193,7 +193,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(1));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(1));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(1));
                 Assert.That(idbBlock.Options[0], Is.TypeOf<TimeResolutionOption>());
@@ -231,7 +231,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(1));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(1));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(1));
                 Assert.That(idbBlock.Options[0], Is.TypeOf<TimeResolutionOption>());
@@ -269,7 +269,7 @@
                 Assert.That(idbBlock.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 Assert.That(idbBlock.SnapLength, Is.EqualTo(0x40000));
 
-                Assert.That(idbBlock.Options.Count, Is.EqualTo(1));
+                Assert.That(idbBlock.Options, Has.Count.EqualTo(1));
                 Assert.That(idbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
                 Assert.That(idbBlock.Options[0].Length, Is.EqualTo(2));
                 Assert.That(idbBlock.Options[0], Is.Not.InstanceOf<TimeResolutionOption>());
@@ -489,7 +489,7 @@
                 DateTime timeStamp = new DateTime(2020, 6, 7, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000);
                 InterfaceDescriptionBlock idbBlock = (InterfaceDescriptionBlock)block;
                 IList<DltTraceLineBase> lines = idbBlock.DecodePacket(packet, timeStamp, 0).ToList();
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
 
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
@@ -516,7 +516,7 @@
                 InterfaceDescriptionBlock idbBlock = (InterfaceDescriptionBlock)block;
 
                 IList<DltTraceLineBase> lines = idbBlock.DecodePacket(packet, timeStamp, 0).ToList();
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
 
                 IList<DltTraceLineBase> memLines = (from line in output.Lines select line.Line).ToList();
 

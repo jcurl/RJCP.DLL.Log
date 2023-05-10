@@ -70,7 +70,7 @@
             if (isValid) {
                 Assert.That(line, Is.TypeOf<DltTraceLine>());
                 DltTraceLine message = (DltTraceLine)line;
-                Assert.That(message.Arguments.Count, Is.EqualTo(1));
+                Assert.That(message.Arguments, Has.Count.EqualTo(1));
                 arg = message.Arguments[0];
             } else {
                 Assert.That(line, Is.TypeOf<DltSkippedTraceLine>());
@@ -94,7 +94,7 @@
             int length = dltDecoder.Decode(data, lineBuilder);
             if (isValid) {
                 Assert.That(length, Is.EqualTo(data.Length));
-                Assert.That(lineBuilder.Arguments.Count, Is.EqualTo(1));
+                Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                 arg = lineBuilder.Arguments[0];
             } else {
                 Assert.That(length, Is.EqualTo(-1));

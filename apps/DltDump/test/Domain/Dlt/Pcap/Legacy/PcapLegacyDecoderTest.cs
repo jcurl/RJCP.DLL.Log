@@ -160,7 +160,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -197,7 +197,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -228,7 +228,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -259,7 +259,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -282,7 +282,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -305,7 +305,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -328,7 +328,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -351,7 +351,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -599,7 +599,7 @@
             using (TDec decoder = Create()) {
                 var lines = Decode(decoder, packet, chunk);
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Features.TimeStamp, Is.True);
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
@@ -630,7 +630,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -675,7 +675,7 @@
             using (TDec decoder = Create()) {
                 var lines = Decode(decoder, packet, chunk);
 
-                Assert.That(lines.Count, Is.EqualTo(4));
+                Assert.That(lines, Has.Count.EqualTo(4));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
                 Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
@@ -716,7 +716,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -782,7 +782,7 @@
             using (TDec decoder = Create()) {
                 var lines = Decode(decoder, packet, chunk);
 
-                Assert.That(lines.Count, Is.EqualTo(4));
+                Assert.That(lines, Has.Count.EqualTo(4));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
                 Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
@@ -823,7 +823,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -864,7 +864,7 @@
             using (TDec decoder = Create()) {
                 var lines = Decode(decoder, packet, chunk);
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 // Skipped line
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
                 Assert.That(lines[0].DeviceTimeStamp.Ticks, Is.EqualTo(0));
@@ -894,7 +894,7 @@
                 }
 
                 lines = Flush(decoder);
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
     }

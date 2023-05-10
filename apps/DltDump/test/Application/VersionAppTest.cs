@@ -27,7 +27,7 @@
                 VersionApp.ShowSimpleVersion();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }
@@ -40,7 +40,7 @@
                 VersionApp.ShowVersion();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(4));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(4));
                 Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }

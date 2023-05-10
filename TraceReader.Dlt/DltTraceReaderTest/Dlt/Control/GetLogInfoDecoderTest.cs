@@ -182,7 +182,7 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo(result));
-            Assert.That(response.AppIds.Count, Is.EqualTo(0));
+            Assert.That(response.AppIds, Is.Empty);
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(status));
         }
@@ -220,10 +220,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo("[get_log_info 3] APP1 (CTX1); eth0"));
-            Assert.That(response.AppIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Undefined));
@@ -257,10 +257,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo(result));
-            Assert.That(response.AppIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)unchecked((sbyte)logLevel)));
@@ -289,10 +289,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo(result));
-            Assert.That(response.AppIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Undefined));
@@ -333,10 +333,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo(result));
-            Assert.That(response.AppIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo(string.Empty));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo(string.Empty));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo((LogLevel)unchecked((sbyte)logLevel)));
@@ -367,10 +367,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo("[get_log_info 7] APP1 (CTX1 default default); eth0"));
-            Assert.That(response.AppIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo("stdin adaptor application"));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(1));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo("stdin adaptor context"));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
@@ -397,7 +397,7 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo("[get_log_info 7]"));
-            Assert.That(response.AppIds.Count, Is.EqualTo(0));
+            Assert.That(response.AppIds, Is.Empty);
             Assert.That(response.ComInterface, Is.EqualTo("eth0"));
             Assert.That(response.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
         }
@@ -482,10 +482,10 @@
 
             GetLogInfoResponse response = (GetLogInfoResponse)service;
             Assert.That(response.ToString(), Is.EqualTo("[get_log_info 7] APP1 (CTX1 default default, CTX2 default default, CTX3 default default); APP2 (CTX4 default default, CTX5 default default); APP3 (CTX6 default default, CTX7 default default, CTX8 default default, CTX9 default default); eth0"));
-            Assert.That(response.AppIds.Count, Is.EqualTo(3));
+            Assert.That(response.AppIds, Has.Count.EqualTo(3));
             Assert.That(response.AppIds[0].Name, Is.EqualTo("APP1"));
             Assert.That(response.AppIds[0].Description, Is.EqualTo("ADesc1"));
-            Assert.That(response.AppIds[0].ContextIds.Count, Is.EqualTo(3));
+            Assert.That(response.AppIds[0].ContextIds, Has.Count.EqualTo(3));
             Assert.That(response.AppIds[0].ContextIds[0].Name, Is.EqualTo("CTX1"));
             Assert.That(response.AppIds[0].ContextIds[0].Description, Is.EqualTo("Test1"));
             Assert.That(response.AppIds[0].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
@@ -500,7 +500,7 @@
             Assert.That(response.AppIds[0].ContextIds[2].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[1].Name, Is.EqualTo("APP2"));
             Assert.That(response.AppIds[1].Description, Is.EqualTo("ADesc2"));
-            Assert.That(response.AppIds[1].ContextIds.Count, Is.EqualTo(2));
+            Assert.That(response.AppIds[1].ContextIds, Has.Count.EqualTo(2));
             Assert.That(response.AppIds[1].ContextIds[0].Name, Is.EqualTo("CTX4"));
             Assert.That(response.AppIds[1].ContextIds[0].Description, Is.EqualTo("Test4"));
             Assert.That(response.AppIds[1].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));
@@ -511,7 +511,7 @@
             Assert.That(response.AppIds[1].ContextIds[1].TraceStatus, Is.EqualTo(ContextId.StatusDefaultTrace));
             Assert.That(response.AppIds[2].Name, Is.EqualTo("APP3"));
             Assert.That(response.AppIds[2].Description, Is.EqualTo("ADesc3"));
-            Assert.That(response.AppIds[2].ContextIds.Count, Is.EqualTo(4));
+            Assert.That(response.AppIds[2].ContextIds, Has.Count.EqualTo(4));
             Assert.That(response.AppIds[2].ContextIds[0].Name, Is.EqualTo("CTX6"));
             Assert.That(response.AppIds[2].ContextIds[0].Description, Is.EqualTo("Test6"));
             Assert.That(response.AppIds[2].ContextIds[0].LogLevel, Is.EqualTo(LogLevel.Default));

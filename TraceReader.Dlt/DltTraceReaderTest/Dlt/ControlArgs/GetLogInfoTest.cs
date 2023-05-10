@@ -148,7 +148,7 @@
             Assert.That(arg.ToString(), Is.EqualTo(result));
             Assert.That(arg.ComInterface, Is.EqualTo("eth0"));
             Assert.That(arg.Status, Is.EqualTo(status));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(0));
+            Assert.That(arg.AppIds, Is.Empty);
         }
 
         [TestCase(ControlResponse.StatusOk, "[get_log_info ok]")]
@@ -168,7 +168,7 @@
             Assert.That(arg.ToString(), Is.EqualTo(result));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(status));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(0));
+            Assert.That(arg.AppIds, Is.Empty);
         }
 
         [Test]
@@ -182,8 +182,8 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_log_info 7] APP1 ();"));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(1));
-            Assert.That(arg.AppIds[0].ContextIds.Count, Is.EqualTo(0));
+            Assert.That(arg.AppIds, Has.Count.EqualTo(1));
+            Assert.That(arg.AppIds[0].ContextIds, Is.Empty);
         }
 
         [TestCase(ContextId.StatusOff, "[get_log_info 7] APP1 (CTX1 info off);")]
@@ -202,8 +202,8 @@
             Assert.That(arg.ToString(), Is.EqualTo(result));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(1));
-            Assert.That(arg.AppIds[0].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(arg.AppIds, Has.Count.EqualTo(1));
+            Assert.That(arg.AppIds[0].ContextIds, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -220,8 +220,8 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_log_info 7] APP1 (CTX1 info on, CTX2 fatal on);"));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(1));
-            Assert.That(arg.AppIds[0].ContextIds.Count, Is.EqualTo(2));
+            Assert.That(arg.AppIds, Has.Count.EqualTo(1));
+            Assert.That(arg.AppIds[0].ContextIds, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -240,9 +240,9 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_log_info 7] APP1 (CTX1 info on); APP2 (VSIP info on);"));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(2));
-            Assert.That(arg.AppIds[0].ContextIds.Count, Is.EqualTo(1));
-            Assert.That(arg.AppIds[1].ContextIds.Count, Is.EqualTo(1));
+            Assert.That(arg.AppIds, Has.Count.EqualTo(2));
+            Assert.That(arg.AppIds[0].ContextIds, Has.Count.EqualTo(1));
+            Assert.That(arg.AppIds[1].ContextIds, Has.Count.EqualTo(1));
         }
 
         [Test]
@@ -263,9 +263,9 @@
             Assert.That(arg.ToString(), Is.EqualTo("[get_log_info 7] APP1 (CTX1 info on, CTX2 fatal on); APP2 (CTX3 info off, CTX4 fatal on);"));
             Assert.That(arg.ComInterface, Is.EqualTo(string.Empty));
             Assert.That(arg.Status, Is.EqualTo(GetLogInfoResponse.StatusFullInfo));
-            Assert.That(arg.AppIds.Count, Is.EqualTo(2));
-            Assert.That(arg.AppIds[0].ContextIds.Count, Is.EqualTo(2));
-            Assert.That(arg.AppIds[1].ContextIds.Count, Is.EqualTo(2));
+            Assert.That(arg.AppIds, Has.Count.EqualTo(2));
+            Assert.That(arg.AppIds[0].ContextIds, Has.Count.EqualTo(2));
+            Assert.That(arg.AppIds[1].ContextIds, Has.Count.EqualTo(2));
         }
     }
 }

@@ -13,14 +13,14 @@
         public void FilterConfigEmptyList()
         {
             FilterConfig config = new FilterConfig(Array.Empty<string>());
-            Assert.That(config.Input.Count, Is.EqualTo(0));
+            Assert.That(config.Input, Is.Empty);
         }
 
         [Test]
         public void FilterConfigSingleEntry()
         {
             FilterConfig config = new FilterConfig(new[] { "" });
-            Assert.That(config.Input.Count, Is.EqualTo(1));
+            Assert.That(config.Input, Has.Count.EqualTo(1));
         }
 
         [Test]

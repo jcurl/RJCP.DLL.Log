@@ -29,11 +29,11 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             term.StdErr.Write("standard error");
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("standard error"));
 
             term.StdOut.Write("standard output");
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("standard output"));
         }
 
@@ -42,11 +42,11 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             term.StdErr.Write("standard error : {0}", 1);
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("standard error : 1"));
 
             term.StdOut.Write("standard output : {0}", 0);
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("standard output : 0"));
         }
 
@@ -55,11 +55,11 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             term.StdErr.WriteLine("standard error");
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("standard error"));
 
             term.StdOut.WriteLine("standard output");
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("standard output"));
         }
 
@@ -68,11 +68,11 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             term.StdErr.WriteLine("standard error : {0}", 1);
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("standard error : 1"));
 
             term.StdOut.WriteLine("standard output : {0}", 0);
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(1));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(1));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("standard output : 0"));
         }
 
@@ -118,13 +118,13 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             Write(term.StdErr, line, charwise, writeLine);
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(3));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(3));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("print"));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[1], Is.EqualTo("format"));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[2], Is.EqualTo("line"));
 
             Write(term.StdOut, line, charwise, writeLine);
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(3));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(3));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("print"));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[1], Is.EqualTo("format"));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[2], Is.EqualTo("line"));
@@ -140,14 +140,14 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             Write(term.StdErr, line, charwise, true);
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(4));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(4));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[0], Is.EqualTo("print"));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[1], Is.EqualTo("format"));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[2], Is.EqualTo("line"));
             Assert.That(((VirtualStdErr)term.StdErr).Lines[3], Is.Empty);
 
             Write(term.StdOut, line, charwise, true);
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(4));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(4));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[0], Is.EqualTo("print"));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[1], Is.EqualTo("format"));
             Assert.That(((VirtualStdOut)term.StdOut).Lines[2], Is.EqualTo("line"));
@@ -170,14 +170,14 @@
         {
             VirtualTerminal term = new VirtualTerminal();
             Write(term.StdErr, line, charwise, writeLine);
-            Assert.That(((VirtualStdErr)term.StdErr).Lines.Count, Is.EqualTo(count));
+            Assert.That(((VirtualStdErr)term.StdErr).Lines, Has.Count.EqualTo(count));
             for (int i = 0; i < count; i++) {
                 string terminalLine = ((VirtualStdErr)term.StdErr).Lines[i];
                 Assert.That(terminalLine, Is.Empty, "StdErr {0} is not empty", i);
             }
 
             Write(term.StdOut, line, charwise, writeLine);
-            Assert.That(((VirtualStdOut)term.StdOut).Lines.Count, Is.EqualTo(count));
+            Assert.That(((VirtualStdOut)term.StdOut).Lines, Has.Count.EqualTo(count));
             for (int i = 0; i < count; i++) {
                 string terminalLine = ((VirtualStdOut)term.StdOut).Lines[i];
                 Assert.That(terminalLine, Is.Empty, "StdOut {0} is not empty", i);

@@ -118,7 +118,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.InputError));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -138,7 +138,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -230,7 +230,7 @@
 
                 // 3 lines to indicate connecting, the 4th line that it failed.
                 Assert.That(actualConnects, Is.EqualTo(expectedConnects));
-                Assert.That(global.StdOut.Lines.Count, Is.Not.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Not.Empty);
             }
         }
 
@@ -248,7 +248,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
             }
         }
 
@@ -267,7 +267,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.InputError));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -286,7 +286,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.InputError));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -302,7 +302,7 @@
                 // The user will be told also on the command line.
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(0));
+                Assert.That(global.StdOut.Lines, Is.Empty);
             }
         }
 
@@ -317,7 +317,7 @@
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
 
                 string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
                     TestLines.Verbose.TimeStamp.ToLocalTime()
@@ -339,7 +339,7 @@
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
 
                 string expectedLine = string.Format(
                     "00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
@@ -419,7 +419,7 @@
                 global.WriteStd();
 
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(2));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }
@@ -445,7 +445,7 @@
                 global.WriteStd();
 
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }
@@ -474,7 +474,7 @@
                 global.WriteStd();
 
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(3));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(3));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }
@@ -501,7 +501,7 @@
                 global.WriteStd();
 
                 // We're in offline mode, because the input is a file. This is regardless of the InputFormat.
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }
         }
@@ -521,7 +521,7 @@
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
 
                 string expectedLine = string.Format(
                     "00000003: {0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
@@ -633,7 +633,7 @@
 
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.OutputError));
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -656,7 +656,7 @@
                 }, Throws.TypeOf<NotSupportedException>());
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(1));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
             }
         }
 
@@ -821,7 +821,7 @@
 
                 Assert.That(result, Is.EqualTo(ExitCode.PartialFilesProcessed));
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines.Count, Is.EqualTo(2));
+                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(2));
 
                 string expectedLine = string.Format("{0} 80.5440 127 ECU1 APP1 CTX1 127 log info verbose 1 Message 1",
                     TestLines.Verbose.TimeStamp.ToLocalTime()

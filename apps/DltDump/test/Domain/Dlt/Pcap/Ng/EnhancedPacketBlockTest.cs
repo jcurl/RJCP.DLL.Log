@@ -24,7 +24,7 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -42,7 +42,7 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataNano : PcapBlocks.EpbDataNanoBigEndian, 0).ToList();
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -60,10 +60,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
 
                 var memLines = (from line in output.Lines select line.Line).ToList();
-                Assert.That(memLines.Count, Is.EqualTo(1));
+                Assert.That(memLines, Has.Count.EqualTo(1));
                 Assert.That(memLines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(memLines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(memLines[0].ContextId, Is.EqualTo("CTX1"));
@@ -82,7 +82,7 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -101,7 +101,7 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataNanoIntf1 : PcapBlocks.EpbDataNanoIntf1BigEndian, 0).ToList();
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -131,10 +131,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines0 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines0.Count, Is.EqualTo(0));
+                Assert.That(lines0, Is.Empty);
 
                 var lines1 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataIntf1 : PcapBlocks.EpbDataIntf1BigEndian, 0).ToList();
-                Assert.That(lines1.Count, Is.EqualTo(1));
+                Assert.That(lines1, Has.Count.EqualTo(1));
             }
         }
 
@@ -158,10 +158,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines0 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines0.Count, Is.EqualTo(0));
+                Assert.That(lines0, Is.Empty);
 
                 var lines1 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataIntf1 : PcapBlocks.EpbDataIntf1BigEndian, 0).ToList();
-                Assert.That(lines1.Count, Is.EqualTo(1));
+                Assert.That(lines1, Has.Count.EqualTo(1));
             }
         }
 
@@ -185,10 +185,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines0 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines0.Count, Is.EqualTo(0));
+                Assert.That(lines0, Is.Empty);
 
                 var lines1 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataIntf1 : PcapBlocks.EpbDataIntf1BigEndian, 0).ToList();
-                Assert.That(lines1.Count, Is.EqualTo(1));
+                Assert.That(lines1, Has.Count.EqualTo(1));
             }
         }
 
@@ -201,10 +201,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines0 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines0.Count, Is.EqualTo(1));
+                Assert.That(lines0, Has.Count.EqualTo(1));
 
                 var lines1 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataIntf1 : PcapBlocks.EpbDataIntf1BigEndian, 0).ToList();
-                Assert.That(lines1.Count, Is.EqualTo(0));
+                Assert.That(lines1, Is.Empty);
             }
         }
 
@@ -220,7 +220,7 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines = reader.DecodeBlock(epb, 0).ToList();
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -243,10 +243,10 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
                 var lines0 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
-                Assert.That(lines0.Count, Is.EqualTo(0));
+                Assert.That(lines0, Is.Empty);
 
                 var lines1 = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataIntf1 : PcapBlocks.EpbDataIntf1BigEndian, 0).ToList();
-                Assert.That(lines1.Count, Is.EqualTo(1));
+                Assert.That(lines1, Has.Count.EqualTo(1));
             }
         }
 
@@ -260,14 +260,14 @@
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 336).ToList();
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622000)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
 
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 472);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 664);
                 lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataNano : PcapBlocks.EpbDataNanoBigEndian, 808).ToList();
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30, DateTimeKind.Utc).AddNanoSeconds(970622498)));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
             }

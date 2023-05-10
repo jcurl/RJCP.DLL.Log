@@ -88,7 +88,7 @@
 
             CustomSwInjectionRequest request = (CustomSwInjectionRequest)service;
             Assert.That(request.ToString(), Is.EqualTo("[] 05 00 00 00 11 22 33 44 55"));
-            Assert.That(request.Payload.Length, Is.EqualTo(5));
+            Assert.That(request.Payload, Has.Length.EqualTo(5));
             Assert.That(request.Payload, Is.EqualTo(new byte[] { 0x11, 0x22, 0x33, 0x44, 0x55 }));
         }
     }

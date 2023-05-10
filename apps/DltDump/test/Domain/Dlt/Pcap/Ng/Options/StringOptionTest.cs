@@ -41,7 +41,7 @@
             StringOption strOption = (StringOption)option;
             Assert.That(strOption.Value, Is.EqualTo("TestString"));
 
-            Assert.That(options.Count, Is.EqualTo(1));
+            Assert.That(options, Has.Count.EqualTo(1));
             Assert.That(options.Contains(0), Is.False);
             Assert.That(options.IndexOf(0), Is.EqualTo(-1));
 

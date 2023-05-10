@@ -355,10 +355,10 @@
                     Assert.That(nvLine.EcuId, Is.Empty);          // Couldn't decode the message id.
                     Assert.That(nvLine.ApplicationId, Is.Empty);  // Couldn't decode the message id.
                     Assert.That(nvLine.ContextId, Is.Empty);      // Couldn't decode the message id.
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                    Assert.That(arg.Data, Is.Empty);
                 }
             }
         }
@@ -387,10 +387,10 @@
                     Assert.That(nvLine.EcuId, Is.Empty);          // Couldn't decode the message id.
                     Assert.That(nvLine.ApplicationId, Is.Empty);  // Couldn't decode the message id.
                     Assert.That(nvLine.ContextId, Is.Empty);      // Couldn't decode the message id.
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                    Assert.That(arg.Data, Is.Empty);
                 }
             }
         }
@@ -419,10 +419,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
                     Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(0));
+                    Assert.That(arg.Data, Is.Empty);
                 }
             }
         }
@@ -451,10 +451,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
                     Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(2));
+                    Assert.That(arg.Data, Has.Length.EqualTo(2));
                 }
             }
         }
@@ -483,10 +483,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
                     Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(2));
+                    Assert.That(arg.Data, Has.Length.EqualTo(2));
                 }
             }
         }
@@ -515,10 +515,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
                     Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                    Assert.That(arg.Data, Has.Length.EqualTo(5));
                 }
             }
         }
@@ -545,10 +545,10 @@
                     Assert.That(nvLine.EcuId, Is.Empty);
                     Assert.That(nvLine.ApplicationId, Is.Empty);
                     Assert.That(nvLine.ContextId, Is.Empty);
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                    Assert.That(arg.Data, Has.Length.EqualTo(5));
                 }
             }
         }
@@ -577,10 +577,10 @@
                     Assert.That(nvLine.EcuId, Is.Empty);
                     Assert.That(nvLine.ApplicationId, Is.EqualTo("APP2"));
                     Assert.That(nvLine.ContextId, Is.EqualTo("CTX2"));
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                    Assert.That(arg.Data, Has.Length.EqualTo(5));
                 }
             }
         }
@@ -609,10 +609,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.Empty);
                     Assert.That(nvLine.ContextId, Is.Empty);
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(5));
+                    Assert.That(arg.Data, Has.Length.EqualTo(5));
                 }
             }
         }
@@ -643,10 +643,10 @@
                     Assert.That(nvLine.EcuId, Is.EqualTo("ECU2"));
                     Assert.That(nvLine.ApplicationId, Is.Empty);
                     Assert.That(nvLine.ContextId, Is.Empty);
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                     NonVerboseDltArg arg = (NonVerboseDltArg)nvLine.Arguments[0];
-                    Assert.That(arg.Data.Length, Is.EqualTo(12));
+                    Assert.That(arg.Data, Has.Length.EqualTo(12));
                 }
             }
         }

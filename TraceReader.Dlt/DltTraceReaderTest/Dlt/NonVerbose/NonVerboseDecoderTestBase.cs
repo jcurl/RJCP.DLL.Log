@@ -92,13 +92,13 @@
             if (isValid) {
                 Assert.That(line, Is.TypeOf<DltNonVerboseTraceLine>());
                 DltNonVerboseTraceLine message = (DltNonVerboseTraceLine)line;
-                Assert.That(message.Arguments.Count, Is.EqualTo(1));
+                Assert.That(message.Arguments, Has.Count.EqualTo(1));
                 arg = message.Arguments[0];
             } else {
                 Assert.That(line, Is.TypeOf<DltSkippedTraceLine>().Or.TypeOf<DltNonVerboseTraceLine>());
                 if (line is DltNonVerboseTraceLine nvLine) {
                     // Ensure that if there was an error, we revert to the fallback decoder.
-                    Assert.That(nvLine.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(nvLine.Arguments, Has.Count.EqualTo(1));
                     Assert.That(nvLine.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                 }
                 arg = null;
@@ -120,12 +120,12 @@
             int length = CustomDecoder.Decode(data, lineBuilder);
             if (isValid) {
                 Assert.That(length, Is.EqualTo(data.Length));
-                Assert.That(lineBuilder.Arguments.Count, Is.EqualTo(1));
+                Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                 arg = lineBuilder.Arguments[0];
             } else {
                 if (length != -1) {
                     // Ensure that if there was an error, we revert to the fallback decoder.
-                    Assert.That(lineBuilder.Arguments.Count, Is.EqualTo(1));
+                    Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                     Assert.That(lineBuilder.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
                 }
                 arg = null;

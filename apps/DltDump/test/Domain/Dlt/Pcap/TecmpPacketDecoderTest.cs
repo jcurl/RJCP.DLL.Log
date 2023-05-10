@@ -149,7 +149,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -189,7 +189,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
@@ -222,7 +222,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(3));
+                Assert.That(lines, Has.Count.EqualTo(3));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
@@ -249,7 +249,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -271,7 +271,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -292,7 +292,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -311,7 +311,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -328,7 +328,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -353,7 +353,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -384,7 +384,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -421,7 +421,7 @@
                 using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                     IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                         packetDecoder.DecodePacket(bytePacket.AsSpan(0, i), Time1, 20));
-                    Assert.That(lines.Count, Is.EqualTo(0));
+                    Assert.That(lines, Is.Empty);
                 }
             }
         }
@@ -461,7 +461,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
     }

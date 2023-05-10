@@ -47,7 +47,7 @@
             using (DltTraceDecoder decoder = new DltTraceDecoder()) {
                 var lines = Decode(decoder, Data, false, chunkSize);
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -61,7 +61,7 @@
             using (DltTraceDecoder decoder = new DltTraceDecoder()) {
                 var lines = Decode(decoder, Data, true, chunkSize);
 
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
@@ -83,7 +83,7 @@
             using (DltTraceDecoder decoder = new DltTraceDecoder()) {
                 var lines = Decode(decoder, packet, true, chunkSize);
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
 
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
@@ -112,7 +112,7 @@
             using (DltTraceDecoder decoder = new DltTraceDecoder()) {
                 var lines = Decode(decoder, packet, true, chunkSize);
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
 
                 Assert.That(lines[0].EcuId, Is.EqualTo(""));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("SKIP"));
@@ -145,11 +145,11 @@
                 List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
 
                 lines.AddRange(decoder.Decode(packet.AsSpan(0, 4), 0, false));
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
 
                 lines.AddRange(decoder.Decode(packet.AsSpan(4), 4, true));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
 
                 Assert.That(lines[0].EcuId, Is.EqualTo(""));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("SKIP"));
@@ -187,13 +187,13 @@
                 // This special sequence causes the decoder to enter a if statement where there is no cached data (it's
                 // looking for a header), but there are skipped bytes.
                 lines.AddRange(decoder.Decode(packet.AsSpan(0, 59), 0, false));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
 
                 lines.AddRange(decoder.Decode(packet.AsSpan(59, 21), 59, false));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
 
                 lines.AddRange(decoder.Decode(packet.AsSpan(80), 80, true));
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
 
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));

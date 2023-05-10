@@ -21,7 +21,7 @@
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
 
-            Assert.That(list.Count, Is.EqualTo(array.Length));
+            Assert.That(list, Has.Count.EqualTo(array.Length));
             Assert.That(list.IsReadOnly, Is.True);
         }
 

@@ -49,7 +49,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -74,7 +74,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -100,7 +100,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -126,7 +126,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -156,7 +156,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
@@ -222,13 +222,13 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Features.IsVerbose, Is.False);
                 Assert.That(((DltNonVerboseTraceLine)lines[0]).MessageId, Is.EqualTo(1));
 
                 IList<IDltArg> args = ((DltNonVerboseTraceLine)lines[0]).Arguments;
-                Assert.That(args.Count, Is.EqualTo(1));
+                Assert.That(args, Has.Count.EqualTo(1));
             }
         }
 
@@ -248,13 +248,13 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Features.IsVerbose, Is.False);
                 Assert.That(((DltNonVerboseTraceLine)lines[0]).MessageId, Is.EqualTo(1));
 
                 IList<IDltArg> args = ((DltNonVerboseTraceLine)lines[0]).Arguments;
-                Assert.That(args.Count, Is.EqualTo(1));
+                Assert.That(args, Has.Count.EqualTo(1));
             }
         }
 
@@ -412,7 +412,7 @@
             using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(packet, Time1, 20));
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("Skipped: 59 bytes; Reason: Invalid packet standard header"));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string 2"));
@@ -488,7 +488,7 @@
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Position, Is.EqualTo(82));  // Offset 42 in first frame
@@ -506,7 +506,7 @@
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame1, Time2, 180));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time2));
                 Assert.That(lines[0].Position, Is.EqualTo(222));  // Offset 42 in 2nd frame
@@ -528,7 +528,7 @@
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
 
                 // The port is wrong. Manually check with the debugger there are no fragments.
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -544,7 +544,7 @@
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
 
                 // The port is wrong. Manually check with the debugger there are no fragments.
-                Assert.That(lines.Count, Is.EqualTo(0));
+                Assert.That(lines, Is.Empty);
             }
         }
 
@@ -559,7 +559,7 @@
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 262));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Position, Is.EqualTo(82));  // Offset 42 in first packet.
@@ -578,7 +578,7 @@
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(MiniFragFrame3, Time3, 200));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
                 Assert.That(lines[0].Position, Is.EqualTo(42));  // Offset 42 in first frame
@@ -599,7 +599,7 @@
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(MiniFragFrame1, Time3, 200));
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time3));
                 Assert.That(lines[0].Position, Is.EqualTo(242));  // Offset 42 in first frame
@@ -623,7 +623,7 @@
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(MiniFragFrame1, Time3, 400));
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame1, Time3b, 500), Is.Empty);
 
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time3));
                 Assert.That(lines[0].Position, Is.EqualTo(442));  // Offset 42 in first frame
@@ -821,7 +821,7 @@
                 Assert.That(lines, Is.Empty);
 
                 lines.AddRange(packetDecoder.DecodePacket(P1b, Time1, 0));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -837,7 +837,7 @@
                 Assert.That(lines, Is.Empty);
 
                 lines.AddRange(packetDecoder.DecodePacket(P2b, Time1, 0));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string1."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time1));
             }
@@ -856,12 +856,12 @@
                 Assert.That(lines, Is.Empty);
 
                 lines.AddRange(packetDecoder.DecodePacket(P1b, Time2, 0));
-                Assert.That(lines.Count, Is.EqualTo(1));
+                Assert.That(lines, Has.Count.EqualTo(1));
                 Assert.That(lines[0].Text, Is.EqualTo("DLT Argument test string.."));
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(Time2));  // Time when last part of packet is received
 
                 lines.AddRange(packetDecoder.DecodePacket(P2b, Time2, 0));
-                Assert.That(lines.Count, Is.EqualTo(2));
+                Assert.That(lines, Has.Count.EqualTo(2));
                 Assert.That(lines[1].Text, Is.EqualTo("DLT Argument test string1."));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(Time2));  // Time when last part of packet is received
             }

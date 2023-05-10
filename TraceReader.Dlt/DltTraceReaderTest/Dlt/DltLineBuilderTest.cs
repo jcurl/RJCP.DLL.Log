@@ -25,7 +25,7 @@
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(0));
             Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -61,7 +61,7 @@
             Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.False);
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(0));
+            Assert.That(dltLine.Arguments, Is.Empty);
         }
 
         [Test]
@@ -97,7 +97,7 @@
             Assert.That(dltLine.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(dltLine.Features.BigEndian, Is.False);
             Assert.That(dltLine.Features.IsVerbose, Is.True);
-            Assert.That(dltLine.Arguments.Count, Is.EqualTo(0));
+            Assert.That(dltLine.Arguments, Is.Empty);
         }
 
         [Test]
@@ -587,7 +587,7 @@
             Assert.That(builder.NumberOfArgs, Is.EqualTo(2));
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
-            Assert.That(line.Arguments.Count, Is.EqualTo(0));       // The number of arguments isn't used.
+            Assert.That(line.Arguments, Is.Empty);       // The number of arguments isn't used.
 
             builder.Reset();
             Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
@@ -600,20 +600,20 @@
             builder.SetDltType(DltType.LOG_INFO);
             builder.SetNumberOfArgs(1);
             builder.AddArgument(new CustomArg());
-            Assert.That(builder.Arguments.Count, Is.EqualTo(1));
+            Assert.That(builder.Arguments, Has.Count.EqualTo(1));
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
-            Assert.That(line.Arguments.Count, Is.EqualTo(1));
+            Assert.That(line.Arguments, Has.Count.EqualTo(1));
             Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
             Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
 
             // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
             // reference.
             builder.AddArgument(new CustomArg("foo"));
-            Assert.That(line.Arguments.Count, Is.EqualTo(1));
+            Assert.That(line.Arguments, Has.Count.EqualTo(1));
 
             builder.Reset();
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -624,10 +624,10 @@
             builder.SetNumberOfArgs(2);
             builder.AddArgument(new CustomArg());
             builder.AddArgument(new CustomArg("foo"));
-            Assert.That(builder.Arguments.Count, Is.EqualTo(2));
+            Assert.That(builder.Arguments, Has.Count.EqualTo(2));
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
-            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments, Has.Count.EqualTo(2));
             Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
             Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
             Assert.That(line.Arguments[1], Is.TypeOf<CustomArg>());
@@ -636,10 +636,10 @@
             // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
             // reference.
             builder.AddArgument(new CustomArg("bar"));
-            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments, Has.Count.EqualTo(2));
 
             builder.Reset();
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -652,10 +652,10 @@
                 new CustomArg(),
                 new CustomArg("foo")
             });
-            Assert.That(builder.Arguments.Count, Is.EqualTo(2));
+            Assert.That(builder.Arguments, Has.Count.EqualTo(2));
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
-            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments, Has.Count.EqualTo(2));
             Assert.That(line.Arguments[0], Is.TypeOf<CustomArg>());
             Assert.That(line.Arguments[0].ToString(), Is.EqualTo("custom"));
             Assert.That(line.Arguments[1], Is.TypeOf<CustomArg>());
@@ -664,10 +664,10 @@
             // Ensure the argument list is copied, not referenced. Note, the arguments themselves are copied as a
             // reference.
             builder.AddArgument(new CustomArg("bar"));
-            Assert.That(line.Arguments.Count, Is.EqualTo(2));
+            Assert.That(line.Arguments, Has.Count.EqualTo(2));
 
             builder.Reset();
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -676,7 +676,7 @@
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetNumberOfArgs(0);
             builder.AddArguments(null);
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -685,7 +685,7 @@
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetNumberOfArgs(0);
             builder.AddArguments(Array.Empty<IDltArg>());
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
@@ -694,7 +694,7 @@
             IDltLineBuilder builder = new DltLineBuilder();
             builder.SetNumberOfArgs(0);
             builder.AddArgument(null);
-            Assert.That(builder.Arguments.Count, Is.EqualTo(0));
+            Assert.That(builder.Arguments, Is.Empty);
         }
 
         [Test]
