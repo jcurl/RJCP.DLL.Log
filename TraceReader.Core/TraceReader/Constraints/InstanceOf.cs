@@ -19,7 +19,7 @@
         /// </exception>
         public InstanceOf(Type type)
         {
-            if (type == null)
+            if (type is null)
                 throw new ArgumentNullException(nameof(type));
             if (!typeof(ITraceLine).IsAssignableFrom(type))
                 throw new ArgumentException("Type must be derived from ITraceLine", nameof(type));

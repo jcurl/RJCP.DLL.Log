@@ -50,7 +50,7 @@
         /// </exception>
         public Context(Constraint filter, int before, int after)
         {
-            if (filter == null)
+            if (filter is null)
                 throw new ArgumentNullException(nameof(filter));
             if (before < 0)
                 throw new ArgumentOutOfRangeException(nameof(before));

@@ -30,7 +30,7 @@
         /// <returns>A new instance of a <see cref="DltFileTraceDecoder"/> object.</returns>
         public ITraceDecoder<DltTraceLineBase> Create()
         {
-            if (m_Map == null)
+            if (m_Map is null)
                 return new DltFileTraceDecoder();
 
             return new DltFileTraceDecoder(m_Map);

@@ -14,7 +14,7 @@
         /// Gets a value indicating if the target has been set / defined.
         /// </summary>
         /// <value><see langword="true"/> if this instance's target is set; otherwise, <see langword="false"/>.</value>
-        public bool IsTargetSet { get { return m_Target != null; } }
+        public bool IsTargetSet { get { return m_Target is object; } }
 
         /// <summary>
         /// Gets or sets the label to branch to.

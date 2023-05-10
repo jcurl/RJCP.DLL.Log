@@ -27,8 +27,8 @@
         /// </exception>
         public ContextOutput(Constraint filter, int beforeContext, int afterContext, IOutputStream output)
         {
-            if (filter == null) throw new ArgumentNullException(nameof(filter));
-            if (output == null) throw new ArgumentNullException(nameof(output));
+            if (filter is null) throw new ArgumentNullException(nameof(filter));
+            if (output is null) throw new ArgumentNullException(nameof(output));
             if (beforeContext < 0) throw new ArgumentOutOfRangeException(nameof(beforeContext));
             if (afterContext < 0) throw new ArgumentOutOfRangeException(nameof(afterContext));
 

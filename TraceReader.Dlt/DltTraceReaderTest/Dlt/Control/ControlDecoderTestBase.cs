@@ -165,7 +165,7 @@
                 } else {
                     Assert.That(testService, Is.Not.Null);
                 }
-                if (testService != null)
+                if (testService is object)
                     Assert.That(testService.DefaultType, Is.EqualTo(dltType));
             }
         }

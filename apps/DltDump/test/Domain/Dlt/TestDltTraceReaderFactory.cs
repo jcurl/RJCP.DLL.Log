@@ -70,7 +70,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
             return Task.FromResult(GetTraceReader());
         }
 
@@ -82,7 +82,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
             return Task.FromResult(GetTraceReader());
         }
 
@@ -94,19 +94,19 @@
         /// <exception cref="ArgumentNullException"><paramref name="packet"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet)
         {
-            if (packet == null) throw new ArgumentNullException(nameof(packet));
+            if (packet is null) throw new ArgumentNullException(nameof(packet));
             return Task.FromResult(GetTraceReader());
         }
 
         private ITraceReader<DltTraceLineBase> GetTraceReader()
         {
-            if (OutputStream == null || !OutputStream.SupportsBinary) {
+            if (OutputStream is null || !OutputStream.SupportsBinary) {
                 LineTraceReader<DltTraceLineBase> reader;
                 reader = new LineTraceReader<DltTraceLineBase>(Lines);
                 if (TriggerExceptionOnEof) {
                     TriggerExceptionOnEof = false;
                     reader.GetLineEvent += (s, e) => {
-                        if (e.Line == null)
+                        if (e.Line is null)
                             throw new InvalidOperationException("Test Operation after file reading");
                     };
                 }

@@ -60,8 +60,8 @@
         /// <exception cref="ArgumentException"><paramref name="pduType"/> has already been registered.</exception>
         protected virtual void Register(string pduType, INonVerboseArgDecoder decoder)
         {
-            if (pduType == null) throw new ArgumentNullException(nameof(pduType));
-            if (decoder == null) throw new ArgumentNullException(nameof(decoder));
+            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
+            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
 
             m_Decoders.Add(pduType, decoder);
         }
@@ -77,7 +77,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="pduType"/> is <see langword="null"/>.</exception>
         protected virtual bool Unregister(string pduType)
         {
-            if (pduType == null) throw new ArgumentNullException(nameof(pduType));
+            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
 
             return m_Decoders.Remove(pduType);
         }
@@ -95,7 +95,7 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (pdu.Description != null) {
+            if (pdu.Description is object) {
                 arg = new StringDltArg(pdu.Description);
                 return 0;
             }

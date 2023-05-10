@@ -35,11 +35,11 @@
 
         public Task<ITraceReader<DltTraceLineBase>> DltReaderFactory(Stream stream)
         {
-            if (Factory != null) {
+            if (Factory is object) {
                 return Factory.CreateAsync(stream);
             }
 
-            if (Map != null) {
+            if (Map is object) {
                 switch (FactoryType) {
                 case DltFactoryType.Standard:
                     return new DltTraceReaderFactory(Map).CreateAsync(stream);

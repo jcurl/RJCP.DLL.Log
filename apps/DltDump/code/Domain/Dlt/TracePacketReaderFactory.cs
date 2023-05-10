@@ -36,7 +36,7 @@
         /// <returns>The <see cref="ITraceReader{DltTraceLineBase}"/> object for log file enumeration.</returns>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet)
         {
-            if (packet == null)
+            if (packet is null)
                 throw new ArgumentNullException(nameof(packet));
 
             return Task.FromResult<ITraceReader<DltTraceLineBase>>(new TracePacketReader(packet, m_DecoderFactory));

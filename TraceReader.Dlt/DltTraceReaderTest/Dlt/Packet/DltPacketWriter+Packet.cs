@@ -58,7 +58,7 @@
 
                 int length = 4;
                 byte headerType = 0x38;  // WSID + WTMS + VERS(1)
-                if (ecuId != null) {
+                if (ecuId is object) {
                     headerType |= 0x04;  // WEID
                     WriteId(m_Packet, length, ecuId);
                     length += 4;

@@ -12,7 +12,7 @@
         /// <returns><see langword="true"/> if the constraints are met, <see langword="false"/> otherwise.</returns>
         public bool Check(ITraceLine line)
         {
-            return line == null;
+            return line is null;
         }
     }
 }

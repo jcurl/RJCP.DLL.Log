@@ -40,7 +40,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="line"/> may not be <see langword="null"/>.</exception>
         public virtual void Write(string line)
         {
-            if (line == null) throw new ArgumentNullException(nameof(line));
+            if (line is null) throw new ArgumentNullException(nameof(line));
             SplitLines(line);
         }
 
@@ -71,7 +71,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="line"/> may not be <see langword="null"/>.</exception>
         public virtual void WriteLine(string line)
         {
-            if (line == null) throw new ArgumentNullException(nameof(line));
+            if (line is null) throw new ArgumentNullException(nameof(line));
             SplitLines(line);
             NewLine();
         }

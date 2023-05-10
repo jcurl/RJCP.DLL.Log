@@ -46,7 +46,7 @@
             if (buffer.Length < 4) return null;
 
             IPcapOption option = DecodeOption(block, buffer);
-            if (option != null && option.OptionCode != 0) m_Options.Add(option);
+            if (option is object && option.OptionCode != 0) m_Options.Add(option);
             return option;
         }
 
@@ -78,7 +78,7 @@
             List<IPcapOption> options = new List<IPcapOption>();
             while (buffer.Length >= 4) {
                 IPcapOption option = DecodeOption(block, buffer);
-                if (option == null) return -1;
+                if (option is null) return -1;
                 if (option.OptionCode != 0) options.Add(option);
 
                 int optionLen = RoundInt32(option.Length + 4);

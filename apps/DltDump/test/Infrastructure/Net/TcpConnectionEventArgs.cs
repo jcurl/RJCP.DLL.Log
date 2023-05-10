@@ -7,7 +7,7 @@
     {
         public TcpConnectionEventArgs(TcpClient client)
         {
-            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (client is null) throw new ArgumentNullException(nameof(client));
             ConnectedClient = client;
         }
 

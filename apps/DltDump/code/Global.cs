@@ -27,9 +27,9 @@
             get
             {
                 Global result = s_Instance;
-                if (result == null) {
+                if (result is null) {
                     lock (m_Lock) {
-                        if (s_Instance == null) {
+                        if (s_Instance is null) {
                             s_Instance = new Global() {
                                 CommandFactory = new CommandFactory(),
                                 Terminal = new ConsoleTerminal(),

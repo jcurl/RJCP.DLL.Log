@@ -19,7 +19,7 @@
         private void OnTimerEvent(object sender, TimerEventArgs args)
         {
             EventHandler<TimerEventArgs> handler = TimerEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         public bool Fired { get; private set; }
@@ -28,7 +28,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(OneShotTimer));
-            if (m_Timer != null)
+            if (m_Timer is object)
                 throw new InvalidOperationException("Timer already initialized");
 
             m_Timer = new Timer(TimerExpired, this, m_DueTime, Timeout.Infinite);
@@ -38,7 +38,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(OneShotTimer));
-            if (m_Timer == null) Start();
+            if (m_Timer is null) Start();
 
             m_Timer.Change(m_DueTime, Timeout.Infinite);
         }
@@ -56,7 +56,7 @@
 
         public void Dispose()
         {
-            if (m_Timer != null) {
+            if (m_Timer is object) {
                 lock (m_DisposeLock) {
                     m_Timer.Dispose();
                     m_IsDisposed = true;

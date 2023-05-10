@@ -72,7 +72,7 @@
             // Returning the fallback decoder here will not show an error in the decoder. Returning -1 will cause the
             // main decoder to print an error, set by `lineBuilder.SetErrorMessage()`, and still call the callback.
 
-            if (FrameMap == null)
+            if (FrameMap is null)
                 return Fallback.Decode(buffer, lineBuilder);
 
             try {

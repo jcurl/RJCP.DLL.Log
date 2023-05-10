@@ -171,7 +171,7 @@
 
         private static string GetPacket(ContextPacket packet)
         {
-            if (packet.Packet == null) return "null";
+            if (packet.Packet is null) return "null";
             return packet.Packet[0].ToString();
         }
 

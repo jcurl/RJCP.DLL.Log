@@ -16,7 +16,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="text"/> is <see langword="null"/>.</exception>
         public TextIString(string text)
         {
-            if (text == null) throw new ArgumentNullException(nameof(text));
+            if (text is null) throw new ArgumentNullException(nameof(text));
             m_Text = text.ToUpperInvariant();
         }
 

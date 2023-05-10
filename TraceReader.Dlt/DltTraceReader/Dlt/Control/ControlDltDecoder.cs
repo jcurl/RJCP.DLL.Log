@@ -155,7 +155,7 @@
 
         private static void Register(Dictionary<int, IControlArgDecoder> decoders, int serviceId, IControlArgDecoder decoder)
         {
-            if (decoder == null) throw new ArgumentNullException(nameof(decoder));
+            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
             decoders.Remove(serviceId);
             decoders.Add(serviceId, decoder);
         }
@@ -226,7 +226,7 @@
 
             try {
                 int decoded = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
-                if (decoded == -1 || service == null) {
+                if (decoded == -1 || service is null) {
                     if (service is ControlDecodeError controlError) {
                         lineBuilder.SetErrorMessage(
                             "Control Message {0} Service 0x{1:x} {2}",

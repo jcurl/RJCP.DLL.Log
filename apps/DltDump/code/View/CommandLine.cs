@@ -32,7 +32,7 @@
             }
 
             ICommand command = Global.Instance.CommandFactory.Create(cmdOptions);
-            if (command == null) {
+            if (command is null) {
                 HelpApp.ShowSimpleHelp();
                 return ExitCode.OptionsError;
             }

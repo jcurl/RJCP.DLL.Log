@@ -62,7 +62,7 @@
                 break;
             }
 
-            if (result == null) return new PcapOption(option, length);
+            if (result is null) return new PcapOption(option, length);
             return result;
         }
 
@@ -100,21 +100,21 @@
             case OptionCodes.IdbTxSpeed:
             case OptionCodes.IdbRxSpeed:
                 result = SpeedOption.Create(option, length, buffer, m_LittleEndian);
-                if (result == null) {
+                if (result is null) {
                     Log.Pcap.TraceEvent(TraceEventType.Warning,
                         "Invalid IDB Option {0} 'if_XXspeed' of length {1}", option, length);
                 }
                 break;
             case OptionCodes.IdbTsResolution:
                 result = TimeResolutionOption.Create(option, length, buffer);
-                if (result == null) {
+                if (result is null) {
                     Log.Pcap.TraceEvent(TraceEventType.Warning,
                         "Invalid IDB Option {0} 'if_tsresol' of length {1}", option, length);
                 }
                 break;
             case OptionCodes.IdbFcsLen:
                 result = FcsLengthOption.Create(option, length, buffer);
-                if (result == null) {
+                if (result is null) {
                     Log.Pcap.TraceEvent(TraceEventType.Warning,
                         "Invalid IDB Option {0} 'if_fcslen' of length {1}", option, length);
                 }

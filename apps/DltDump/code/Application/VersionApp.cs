@@ -11,9 +11,9 @@
 
         public static string GetVersion()
         {
-            if (s_Version == null) {
+            if (s_Version is null) {
                 lock (s_Lock) {
-                    if (s_Version == null) {
+                    if (s_Version is null) {
                         string copyright = Version.GetAssemblyCopyright(typeof(Program));
                         if (string.IsNullOrWhiteSpace(copyright)) {
                             s_Version = string.Format(AppResources.VersionDltDump,

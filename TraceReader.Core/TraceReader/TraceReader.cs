@@ -35,8 +35,8 @@
         /// <exception cref="ArgumentException"><paramref name="stream"/> is not readable.</exception>
         public TraceReader(Stream stream, ITraceDecoder<T> decoder)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (decoder == null) throw new ArgumentNullException(nameof(decoder));
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
 
             if (!stream.CanRead) throw new ArgumentException("Stream is not readable", nameof(stream));
 
@@ -57,7 +57,7 @@
         public async Task<T> GetLineAsync()
         {
             do {
-                if (m_LineEnumerator != null) {
+                if (m_LineEnumerator is object) {
                     if (m_LineEnumerator.MoveNext()) {
                         return m_LineEnumerator.Current;
                     }
@@ -77,7 +77,7 @@
                     m_Position += read;
                 }
 
-                if (lines == null) return null;
+                if (lines is null) return null;
                 m_LineEnumerator = lines.GetEnumerator();
             } while (true);
         }

@@ -127,7 +127,7 @@
         /// </exception>
         public ReadLimitStream(Stream stream, int minReadLength, int maxReadLength)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
             if (minReadLength < 1) throw new ArgumentOutOfRangeException(nameof(minReadLength), "Must be 1 or greater");
             if (maxReadLength < minReadLength) throw new ArgumentOutOfRangeException(nameof(maxReadLength), $"Must be {minReadLength} or greater");
 
@@ -161,8 +161,8 @@
         /// <exception cref="ArgumentException"><paramref name="sequenceLength"/> is of zero length.</exception>
         public ReadLimitStream(Stream stream, int[] sequenceLength)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (sequenceLength == null) throw new ArgumentNullException(nameof(sequenceLength));
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            if (sequenceLength is null) throw new ArgumentNullException(nameof(sequenceLength));
             if (sequenceLength.Length == 0) throw new ArgumentException("Sequence length must be non-zero", nameof(sequenceLength));
 
             if (stream is MemoryStream memStream) {
@@ -227,7 +227,7 @@
         private int GetCount(int maxCount)
         {
             int count;
-            if (m_LengthSequence != null) {
+            if (m_LengthSequence is object) {
                 count = m_LengthSequence[m_SequenceNext];
                 m_SequenceNext = (m_SequenceNext + 1) % m_LengthSequence.Length;
                 return count;

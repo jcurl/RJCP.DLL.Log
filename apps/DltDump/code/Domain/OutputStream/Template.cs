@@ -71,7 +71,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="template"/> is <see langword="null"/>.</exception>
         public Template(string template)
         {
-            if (template == null) throw new ArgumentNullException(nameof(template));
+            if (template is null) throw new ArgumentNullException(nameof(template));
             Parse(template);
             AllowConcatenation = !m_Found.Contains("FILE");
             SupportsSplit = m_Found.Contains("CTR") || m_Found.Contains("CDATE") ||
@@ -156,7 +156,7 @@
         /// <exception cref="ArgumentException"><paramref name="variable"/> is empty.</exception>
         public bool ContainsVariable(string variable)
         {
-            if (variable == null) throw new ArgumentNullException(nameof(variable));
+            if (variable is null) throw new ArgumentNullException(nameof(variable));
             if (string.IsNullOrEmpty(variable))
                 throw new ArgumentException(AppResources.DomainTemplateEmptyVar, nameof(variable));
 
@@ -169,7 +169,7 @@
         /// <returns>A <see cref="string"/> that has all variables substituted.</returns>
         public override string ToString()
         {
-            if (m_Template != null) return m_Template;
+            if (m_Template is object) return m_Template;
 
             StringBuilder sb = new StringBuilder();
             foreach (Token token in m_TokenList) {
@@ -181,7 +181,7 @@
                     string envVar = Environment.GetEnvironmentVariable(token.Value);
                     if (Variables.TryGetValue(token.Value, out string var)) {
                         sb.Append(var);
-                    } else if (envVar != null) {
+                    } else if (envVar is object) {
                         sb.Append(envVar);
                     }
                     break;

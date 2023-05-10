@@ -12,7 +12,7 @@
 
         public TcpServer(IPAddress localAddress, int port)
         {
-            if (localAddress == null) throw new ArgumentNullException(nameof(localAddress));
+            if (localAddress is null) throw new ArgumentNullException(nameof(localAddress));
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
             m_Listener = new TcpListener(localAddress, port) {
                 // This allows a new instance to start immediately after it's closed, ignoring the linger state.
@@ -25,7 +25,7 @@
         private void OnClientConnected(object sender, TcpConnectionEventArgs args)
         {
             EventHandler<TcpConnectionEventArgs> handler = ClientConnected;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         private bool m_Started;

@@ -29,9 +29,9 @@
 
         public TestFrame AddArgument(IPdu pdu)
         {
-            if (pdu == null) throw new ArgumentNullException(nameof(pdu));
+            if (pdu is null) throw new ArgumentNullException(nameof(pdu));
 
-            if (pdu.Description != null) {
+            if (pdu.Description is object) {
                 m_Pdus.Add(new TestPdu(pdu.Description));
             } else {
                 m_Pdus.Add(new TestPdu(pdu.PduType, pdu.PduLength));
@@ -41,7 +41,7 @@
 
         public TestFrame AddArgument(string description)
         {
-            if (description == null) throw new ArgumentNullException(nameof(description));
+            if (description is null) throw new ArgumentNullException(nameof(description));
 
             m_Pdus.Add(new TestPdu(description));
             return this;
@@ -49,7 +49,7 @@
 
         public TestFrame AddArgument(string pduType, int pduLength)
         {
-            if (pduType == null) throw new ArgumentNullException(nameof(pduType));
+            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
 
             m_Pdus.Add(new TestPdu(pduType, pduLength));
             return this;
@@ -74,8 +74,8 @@
 
         public bool Equals(IFrame x, IFrame y)
         {
-            if (x == null && y == null) return true;
-            if (x == null || y == null) return false;
+            if (x is null && y is null) return true;
+            if (x is null || y is null) return false;
 
             if (x.EcuId != y.EcuId ||
                 x.ApplicationId != y.ApplicationId ||
@@ -83,9 +83,9 @@
                 x.Id != y.Id ||
                 x.MessageType != y.MessageType) return false;
 
-            if (x.Arguments == null && y.Arguments != null) return false;
-            if (x.Arguments != null && y.Arguments == null) return false;
-            if (x.Arguments != null && y.Arguments != null) {
+            if (x.Arguments is null && y.Arguments is object) return false;
+            if (x.Arguments is object && y.Arguments is null) return false;
+            if (x.Arguments is object && y.Arguments is object) {
                 if (x.Arguments.Count != y.Arguments.Count) return false;
 
                 for (int i = 0; i < x.Arguments.Count; i++) {
@@ -99,13 +99,13 @@
         {
             int hash = 0;
 
-            if (obj.EcuId != null) hash ^= obj.EcuId.GetHashCode();
-            if (obj.ApplicationId != null) hash ^= obj.ApplicationId.GetHashCode();
-            if (obj.ContextId != null) hash ^= obj.ContextId.GetHashCode();
+            if (obj.EcuId is object) hash ^= obj.EcuId.GetHashCode();
+            if (obj.ApplicationId is object) hash ^= obj.ApplicationId.GetHashCode();
+            if (obj.ContextId is object) hash ^= obj.ContextId.GetHashCode();
             hash ^= (int)obj.MessageType << 16;
             hash ^= obj.Id;
 
-            if (obj.Arguments != null) {
+            if (obj.Arguments is object) {
                 foreach (IPdu pdu in obj.Arguments) {
                     hash ^= PduComparer.Comparer.GetHashCode(pdu);
                 }

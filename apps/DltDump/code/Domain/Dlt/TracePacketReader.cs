@@ -50,8 +50,8 @@
         /// </exception>
         public TracePacketReader(IPacket packet, ITraceDecoderFactory<DltTraceLineBase> decoderFactory)
         {
-            if (packet == null) throw new ArgumentNullException(nameof(packet));
-            if (decoderFactory == null) throw new ArgumentNullException(nameof(decoderFactory));
+            if (packet is null) throw new ArgumentNullException(nameof(packet));
+            if (decoderFactory is null) throw new ArgumentNullException(nameof(decoderFactory));
 
             m_Packet = packet;
             m_DecoderFactory = decoderFactory;
@@ -87,7 +87,7 @@
         public async Task<DltTraceLineBase> GetLineAsync()
         {
             do {
-                if (m_LineEnumerator != null) {
+                if (m_LineEnumerator is object) {
                     if (m_LineEnumerator.MoveNext()) {
                         return m_LineEnumerator.Current;
                     }
@@ -111,7 +111,7 @@
                     m_Decoders[read.Channel].Position += read.ReceivedBytes;
                 }
 
-                if (lines == null) return null;
+                if (lines is null) return null;
                 m_LineEnumerator = lines.GetEnumerator();
             } while (true);
         }
@@ -196,7 +196,7 @@
             {
                 if (m_Complete) return false;
 
-                if (m_Lines == null) {
+                if (m_Lines is null) {
                     if (!MoveNextDecoder()) return false;
                 }
 
@@ -209,7 +209,7 @@
 
             private bool MoveNextDecoder()
             {
-                if (m_Decoders.MoveNext() && m_Decoders.Current != null) {
+                if (m_Decoders.MoveNext() && m_Decoders.Current is object) {
                     m_Lines = m_Decoders.Current.Decoder.Flush().GetEnumerator();
                     return true;
                 }

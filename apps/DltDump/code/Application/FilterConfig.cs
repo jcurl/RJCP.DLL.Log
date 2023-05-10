@@ -21,7 +21,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="input"/> is <see langword="null"/>.</exception>
         public FilterConfig(IReadOnlyList<string> input)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input is null) throw new ArgumentNullException(nameof(input));
 
             Input = input;
         }
@@ -98,7 +98,7 @@
 
         private static Constraint AddConstraint(Constraint constraint, IMatchConstraint match)
         {
-            if (constraint == null) {
+            if (constraint is null) {
                 constraint = new Constraint();
                 constraint.Expr(match);
             } else {
@@ -261,42 +261,42 @@
 
             Constraint constraint = new Constraint();
             bool filtered = false;
-            if (m_EcuId != null) {
+            if (m_EcuId is object) {
                 constraint.Expr(m_EcuId);
                 filtered = true;
             }
 
-            if (m_AppId != null) {
+            if (m_AppId is object) {
                 constraint.Expr(m_AppId);
                 filtered = true;
             }
 
-            if (m_CtxId != null) {
+            if (m_CtxId is object) {
                 constraint.Expr(m_CtxId);
                 filtered = true;
             }
 
-            if (m_Session != null) {
+            if (m_Session is object) {
                 constraint.Expr(m_Session);
                 filtered = true;
             }
 
-            if (m_Time != null) {
+            if (m_Time is object) {
                 constraint.Expr(m_Time);
                 filtered = true;
             }
 
-            if (m_Search != null) {
+            if (m_Search is object) {
                 constraint.Expr(m_Search);
                 filtered = true;
             }
 
-            if (m_MessageType != null) {
+            if (m_MessageType is object) {
                 constraint.Expr(m_MessageType);
                 filtered = true;
             }
 
-            if (m_MessageId != null) {
+            if (m_MessageId is object) {
                 constraint.Expr(m_MessageId);
                 filtered = true;
             }

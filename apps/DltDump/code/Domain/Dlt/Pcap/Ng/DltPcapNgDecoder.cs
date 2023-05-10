@@ -32,7 +32,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public DltPcapNgDecoder(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (factory is null) throw new ArgumentNullException(nameof(factory));
             m_BlockReader = new BlockReader(factory);
         }
 
@@ -175,7 +175,7 @@
                     break;
                 case BlockCodes.EnhancedPacketBlock:
                     IEnumerable<DltTraceLineBase> lines = m_BlockReader.DecodeBlock(packet, m_Position);
-                    if (lines == null) return SetFileCorrupted();
+                    if (lines is null) return SetFileCorrupted();
                     m_List.AddRange(lines);
                     break;
                 }

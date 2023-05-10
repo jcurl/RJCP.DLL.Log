@@ -57,7 +57,7 @@
         protected virtual void OnLoadErrorEvent(FibexLoadErrorEventArgs args)
         {
             EventHandler<FibexLoadErrorEventArgs> handler = LoadErrorEvent;
-            if (handler != null) handler(this, args);
+            if (handler is object) handler(this, args);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@
         /// </exception>
         public void LoadFile(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
 
             using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 LoadFile(file);
@@ -97,7 +97,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public void LoadFile(Stream stream)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
             LoadFileInternal(stream);
         }
 
@@ -176,7 +176,7 @@
                                         Nodes = {
                                             new XmlTreeNode("fx:ECU") {
                                                 ProcessElement = (n, e) => {
-                                                    if (ecuId != null) {
+                                                    if (ecuId is object) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.EcusMultipleDefined, e.Reader.GetPosition()));
                                                         return;
                                                     }
@@ -239,7 +239,7 @@
                                                                                 ((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType = string.Empty;
                                                                                 return;
                                                                             }
-                                                                            if (((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType != null) {
+                                                                            if (((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType is object) {
                                                                                 OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.MultipleSignalsInPduDefined, e.Reader.GetPosition()));
                                                                                 return;
                                                                             }
@@ -252,11 +252,11 @@
                                                     }
                                                 },
                                                 ProcessEndElement = (n, e) => {
-                                                    if (e.UserObject == null) return;
+                                                    if (e.UserObject is null) return;
                                                     string key = ((KeyValuePair<string, Pdu>)e.UserObject).Key;
                                                     Pdu value = ((KeyValuePair<string, Pdu>)e.UserObject).Value;
 
-                                                    if (value.Description == null && value.PduType == null) {
+                                                    if (value.Description is null && value.PduType is null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.MissingSignalIdRef, e.Reader.GetPosition()));
                                                     }
                                                     pdus.Add(key, value);
@@ -351,23 +351,23 @@
                                                     }
                                                 },
                                                 ProcessEndElement = (n, e) => {
-                                                    if (e.UserObject == null) return;
+                                                    if (e.UserObject is null) return;
 
                                                     Frame frame = ((KeyValuePair<int, Frame>)e.UserObject).Value;
                                                     if (!frame.IsValid) return;
-                                                    if (frame.ApplicationId == null) {
+                                                    if (frame.ApplicationId is null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.FrameApplicationIdMissing, e.Reader.GetPosition()));
                                                         frame.IsValid = false;
                                                     }
-                                                    if (frame.ContextId == null) {
+                                                    if (frame.ContextId is null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.FrameContextIdMissing, e.Reader.GetPosition()));
                                                         frame.IsValid = false;
                                                     }
-                                                    if (frame.MessageDltType == null) {
+                                                    if (frame.MessageDltType is null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.FrameMessageTypeMissing, e.Reader.GetPosition()));
                                                         frame.IsValid = false;
                                                     }
-                                                    if (frame.MessageDltInfo == null) {
+                                                    if (frame.MessageDltInfo is null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.FrameMessageInfoMissing, e.Reader.GetPosition()));
                                                         frame.IsValid = false;
                                                     }

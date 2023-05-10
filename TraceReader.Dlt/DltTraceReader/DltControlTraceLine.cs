@@ -21,7 +21,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="service"/> is <see langword="null"/>.</exception>
         public DltControlTraceLine(IControlArg service)
         {
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (service is null) throw new ArgumentNullException(nameof(service));
             Service = service;
             Type = service.DefaultType;
             Features = ControlLineFeatures;

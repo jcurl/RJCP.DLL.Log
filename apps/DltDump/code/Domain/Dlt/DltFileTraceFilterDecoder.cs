@@ -36,7 +36,7 @@
         public DltFileTraceFilterDecoder(IOutputStream outputStream, IFrameMap map)
             : base(map)
         {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
+            if (outputStream is null) throw new ArgumentNullException(nameof(outputStream));
             if (!outputStream.SupportsBinary)
                 throw new ArgumentException(AppResources.DomainDecoderInvalidOutputStream, nameof(outputStream));
 

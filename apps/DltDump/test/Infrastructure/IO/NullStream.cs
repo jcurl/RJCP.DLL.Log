@@ -31,7 +31,7 @@
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if (buffer is null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
             if (offset > buffer.Length - count) throw new ArgumentException("Out of bounds");
@@ -78,7 +78,7 @@
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if (buffer is null) throw new ArgumentNullException(nameof(buffer));
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
             if (offset > buffer.Length - count) throw new ArgumentException("Out of bounds");

@@ -122,7 +122,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         /// </remarks>
         internal IConstraintBase Build()
         {
-            if (m_Constraints == null) {
+            if (m_Constraints is null) {
                 if (!m_Options.HasFlag(ConstraintOptions.Compiled)) {
 #if USEBTREE
                     m_Constraints = new ConstraintExprTree();
@@ -155,8 +155,8 @@ namespace RJCP.Diagnostics.Log.Constraints
         /// <value>The <see cref="Constraint"/> object for chaining.</value>
         public Constraint Expr(IMatchConstraint constraint)
         {
-            if (constraint == null) throw new ArgumentNullException(nameof(constraint));
-            if (m_Constraints != null) throw new InvalidOperationException("Constraints expression is read only");
+            if (constraint is null) throw new ArgumentNullException(nameof(constraint));
+            if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
             m_Tokens.Append(constraint);
             return this;
         }
@@ -182,7 +182,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         {
             get
             {
-                if (m_Constraints != null) throw new InvalidOperationException("Constraints expression is read only");
+                if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
                 m_Tokens.Or();
                 return this;
             }
@@ -198,7 +198,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         {
             get
             {
-                if (m_Constraints != null) throw new InvalidOperationException("Constraints expression is read only");
+                if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
                 m_Tokens.Not();
                 return this;
             }

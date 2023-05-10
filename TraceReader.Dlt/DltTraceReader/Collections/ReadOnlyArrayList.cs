@@ -15,7 +15,7 @@
 
         public ReadOnlyArrayList(T[] array)
         {
-            if (array == null) throw new ArgumentNullException(nameof(array));
+            if (array is null) throw new ArgumentNullException(nameof(array));
             m_Array = array;
         }
 

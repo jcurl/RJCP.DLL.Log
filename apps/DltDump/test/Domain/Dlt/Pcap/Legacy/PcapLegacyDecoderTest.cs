@@ -114,7 +114,7 @@
         private TDec Create(bool nullOutput)
         {
             ITraceDecoderFactory<DltTraceLineBase> factory;
-            if (nullOutput || MemOutputStream == null) {
+            if (nullOutput || MemOutputStream is null) {
                 factory = new PcapTraceDecoderFactory(null, null);
                 if (typeof(TDec) == typeof(DltPcapLegacyDecoder)) return new DltPcapLegacyDecoder(factory) as TDec;
                 if (typeof(TDec) == typeof(DltPcapTraceDecoder)) return new DltPcapTraceDecoder() as TDec;

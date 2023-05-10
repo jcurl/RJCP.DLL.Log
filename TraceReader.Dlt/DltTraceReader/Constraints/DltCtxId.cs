@@ -17,7 +17,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null"/>.</exception>
         public DltCtxId(string id)
         {
-            if (id == null)
+            if (id is null)
                 throw new ArgumentNullException(nameof(id));
             m_CtxId = id;
         }

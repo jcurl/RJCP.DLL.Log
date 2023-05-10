@@ -7,7 +7,7 @@
     {
         protected ExpressionTreeBuilder(IEnumerator<Token> tokens)
         {
-            if (tokens == null) throw new ArgumentNullException(nameof(tokens));
+            if (tokens is null) throw new ArgumentNullException(nameof(tokens));
             if (!tokens.MoveNext()) throw new ConstraintException("No constraints defined");
             Expression = BuildExpressionTree(tokens, out bool parsing);
             if (parsing) throw new ConstraintException("Error in expression");
@@ -26,7 +26,7 @@
             while (parsing) {
                 if (tokens.Current.Operation == Operation.Check) {
                     BTree<BNode> expr = BuildExpressionTree(tokens.Current.Constraint);
-                    if (tree == null) {
+                    if (tree is null) {
                         tree = expr;
                     } else {
                         tree = Node(BOperation.And, tree, expr);
@@ -39,7 +39,7 @@
                     } else if (tokens.Current.Operation == Operation.Check) {
                         BTree<BNode> expr = BuildExpressionTree(tokens.Current.Constraint);
                         expr = Node(BOperation.Not, null, expr);
-                        if (tree == null) {
+                        if (tree is null) {
                             tree = expr;
                         } else {
                             tree = Node(BOperation.And, tree, expr);
@@ -49,7 +49,7 @@
                     }
                     parsing = tokens.MoveNext();
                 } else if (tokens.Current.Operation == Operation.Or) {
-                    if (tree == null) throw new ConstraintException("Operator 'Or' without left operand");
+                    if (tree is null) throw new ConstraintException("Operator 'Or' without left operand");
                     if (!tokens.MoveNext()) throw new ConstraintException("Operator 'Or' without right operand");
                     tree = Node(BOperation.Or, tree, BuildExpressionTree(tokens, out parsing));
                 }

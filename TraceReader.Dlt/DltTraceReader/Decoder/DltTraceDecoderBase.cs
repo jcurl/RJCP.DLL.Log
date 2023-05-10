@@ -40,7 +40,7 @@
         /// <returns>A <see cref="INonVerboseDltDecoder"/>.</returns>
         protected static INonVerboseDltDecoder GetNonVerboseDecoder(IFrameMap map)
         {
-            if (map == null) return new NonVerboseByteDecoder();
+            if (map is null) return new NonVerboseByteDecoder();
             return new NonVerboseDltDecoder(map);
         }
 
@@ -83,10 +83,10 @@
         /// </exception>
         protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
         {
-            if (verboseDecoder == null) throw new ArgumentNullException(nameof(verboseDecoder));
-            if (nonVerboseDecoder == null) throw new ArgumentNullException(nameof(nonVerboseDecoder));
-            if (controlDecoder == null) throw new ArgumentNullException(nameof(controlDecoder));
-            if (lineBuilder == null) throw new ArgumentNullException(nameof(lineBuilder));
+            if (verboseDecoder is null) throw new ArgumentNullException(nameof(verboseDecoder));
+            if (nonVerboseDecoder is null) throw new ArgumentNullException(nameof(nonVerboseDecoder));
+            if (controlDecoder is null) throw new ArgumentNullException(nameof(controlDecoder));
+            if (lineBuilder is null) throw new ArgumentNullException(nameof(lineBuilder));
 
             m_VerboseDecoder = verboseDecoder;
             m_NonVerboseDecoder = nonVerboseDecoder;
@@ -579,7 +579,7 @@
 
         private bool ParseNonVerboseFallback(ReadOnlySpan<byte> buffer)
         {
-            if (m_NonVerboseDecoder.Fallback == null) return false;
+            if (m_NonVerboseDecoder.Fallback is null) return false;
 
             int payloadLength = m_NonVerboseDecoder.Fallback.Decode(buffer, m_DltLineBuilder);
             return payloadLength != -1;

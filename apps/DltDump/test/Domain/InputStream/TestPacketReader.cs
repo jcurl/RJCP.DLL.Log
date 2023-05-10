@@ -20,13 +20,13 @@
         private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         public string Scheme { get { return "pkt"; } }
@@ -50,7 +50,7 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            if (InputStream != null)
+            if (InputStream is object)
                 throw new InvalidOperationException("TestPacketReader already opened");
 
             ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
@@ -72,7 +72,7 @@
 
         public void Close()
         {
-            if (InputPacket != null) InputPacket.Dispose();
+            if (InputPacket is object) InputPacket.Dispose();
             InputPacket = null;
         }
 

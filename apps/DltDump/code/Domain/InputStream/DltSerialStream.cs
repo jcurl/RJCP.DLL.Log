@@ -37,7 +37,7 @@
         /// <exception cref="ArgumentOutOfRangeException">handshake</exception>
         public DltSerialStream(string port, int baud, int data, Parity parity, StopBits stopbits, Handshake handshake)
         {
-            if (port == null) throw new ArgumentNullException(nameof(port));
+            if (port is null) throw new ArgumentNullException(nameof(port));
             if (string.IsNullOrWhiteSpace(port))
                 throw new ArgumentException(AppResources.SerialOpenError_InvalidPort, nameof(port));
             if (baud <= 0)
@@ -163,7 +163,7 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltSerialStream));
-            if (InputStream != null) return;
+            if (InputStream is object) return;
 
             SerialPortStream stream = new SerialPortStream() {
                 PortName = m_PortName,
@@ -189,7 +189,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(DltSerialStream));
-            if (InputStream == null)
+            if (InputStream is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 
             return Task.FromResult(true);
@@ -200,7 +200,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputStream != null) InputStream.Close();
+            if (InputStream is object) InputStream.Close();
             InputStream = null;
         }
 

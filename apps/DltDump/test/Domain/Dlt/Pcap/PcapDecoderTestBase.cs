@@ -40,7 +40,7 @@
         /// <returns>A list of liens that are decoded.</returns>
         protected IList<DltTraceLineBase> Decode(ITraceDecoder<DltTraceLineBase> traceDecoder, ReadOnlySpan<byte> data, int chunkSize)
         {
-            if (MemOutputStream != null) MemOutputStream.Clear();
+            if (MemOutputStream is object) MemOutputStream.Clear();
 
             List<DltTraceLineBase> lines;
             if (chunkSize == 0) {
@@ -56,7 +56,7 @@
                 }
             }
 
-            if (MemOutputStream != null) {
+            if (MemOutputStream is object) {
                 Assert.That(lines, Is.Empty);
                 return (from line in MemOutputStream.Lines select line.Line).ToList();
             }
@@ -97,10 +97,10 @@
         /// <returns>A list of liens that are decoded.</returns>
         protected IList<DltTraceLineBase> Flush(ITraceDecoder<DltTraceLineBase> traceDecoder)
         {
-            if (MemOutputStream != null) MemOutputStream.Clear();
+            if (MemOutputStream is object) MemOutputStream.Clear();
 
             List<DltTraceLineBase> lines = new List<DltTraceLineBase>(traceDecoder.Flush());
-            if (MemOutputStream != null) {
+            if (MemOutputStream is object) {
                 Assert.That(lines, Is.Empty);
                 return (from line in MemOutputStream.Lines select line.Line).ToList();
             }

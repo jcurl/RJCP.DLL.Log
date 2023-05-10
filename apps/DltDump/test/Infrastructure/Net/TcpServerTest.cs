@@ -51,7 +51,7 @@
 
                 await listen;
             } finally {
-                if (server != null) server.Dispose();
+                if (server is object) server.Dispose();
             }
         }
 

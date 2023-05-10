@@ -27,7 +27,7 @@
 
         public FilterApp(FilterConfig config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config is null) throw new ArgumentNullException(nameof(config));
 
             m_Config = config;
         }
@@ -35,7 +35,7 @@
         public async Task<ExitCode> Run()
         {
             ICollection<IInputStream> inputs = ParseInputs();
-            if (inputs == null || inputs.Count == 0)
+            if (inputs is null || inputs.Count == 0)
                 return ExitCode.InputError;
 
             Global.Instance.OutputStreamFactory.Force = m_Config.Force;
@@ -45,7 +45,7 @@
             int processed = 0;
             bool partial = false;
             using (IOutputStream output = GetOutputStream()) {
-                if (output == null) return ExitCode.OutputError;
+                if (output is null) return ExitCode.OutputError;
                 Global.Instance.DltReaderFactory.OutputStream = output;
 
                 // Ensure our inputs are not overwritten.
@@ -99,7 +99,7 @@
 
                 // In case of an error, and we return, the list and its contents are just garbage collected. They are
                 // not disposed of as there is nothing to dispose (until it is opened).
-                if (input == null) {
+                if (input is null) {
                     Terminal.WriteLine(AppResources.FilterCheckError_UnknownInput, uri);
                     return null;
                 }
@@ -124,7 +124,7 @@
                 if (!connected) return parsed;
 
                 using (ITraceReader<DltTraceLineBase> reader = await GetReader(input)) {
-                    if (reader == null) return parsed;
+                    if (reader is null) return parsed;
 
                     if (input.IsLiveStream && output is OutputBase outputBase) {
                         // 5 seconds.
@@ -137,11 +137,11 @@
                         DltTraceLineBase line;
                         do {
                             line = await reader.GetLineAsync();
-                            if (line != null) {
+                            if (line is object) {
                                 receivedLine = true;
                                 output.Write(line);
                             }
-                        } while (line != null);
+                        } while (line is object);
                     } catch (OutputStreamException) {
                         // Propagate this exception upstream
                         throw;
@@ -236,7 +236,7 @@
             IOutputStream output = null;
             try {
                 output = Global.Instance.OutputStreamFactory.Create(m_Config.OutputFormat, m_Config.OutputFileName);
-                if (output == null) {
+                if (output is null) {
                     Terminal.WriteLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");
                     return null;
                 }
@@ -249,7 +249,7 @@
                 }
 
                 Constraint filter = m_Config.GetFilter();
-                if (filter == null) return output;
+                if (filter is null) return output;
 
                 if (m_Config.BeforeContext > 0 || m_Config.AfterContext > 0) {
                     return new ContextOutput(filter,
@@ -258,7 +258,7 @@
                     return new FilterOutput(filter, output);
                 }
             } catch (Exception ex) {
-                if (output != null) output.Dispose();
+                if (output is object) output.Dispose();
 
                 Terminal.WriteLine(AppResources.FilterOutputError,
                     m_Config.OutputFileName ?? "(none)",
@@ -269,10 +269,10 @@
 
         private static Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream input)
         {
-            if (input.InputStream != null)
+            if (input.InputStream is object)
                 return Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
 
-            if (input.InputPacket != null)
+            if (input.InputPacket is object)
                 return Global.Instance.DltReaderFactory.CreateAsync(input.InputPacket);
 
             throw new InvalidOperationException("No reader for the input format");

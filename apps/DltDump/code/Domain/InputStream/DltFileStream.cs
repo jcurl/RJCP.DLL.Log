@@ -24,7 +24,7 @@
         /// </exception>
         public DltFileStream(string fileName)
         {
-            if (fileName == null)
+            if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
@@ -127,7 +127,7 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
-            if (InputStream != null) return;
+            if (InputStream is object) return;
 
             try {
                 InputStream = new FileStream(m_FileName, FileMode.Open, FileAccess.Read, FileShare.Read,
@@ -170,7 +170,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(DltFileStream));
-            if (InputStream == null)
+            if (InputStream is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 
             return Task.FromResult(true);
@@ -181,7 +181,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputStream != null) InputStream.Close();
+            if (InputStream is object) InputStream.Close();
             InputStream = null;
         }
 

@@ -43,7 +43,7 @@
             Log.AppTerminal.TraceEvent(TraceEventType.Information, "{0}", message);
             string[] output = Format.Wrap(Global.Instance.Terminal.TerminalWidth - 1, indent, hangingIndent, message);
 
-            if (output != null) {
+            if (output is object) {
                 foreach (string line in output) {
                     Global.Instance.Terminal.StdOut.WriteLine(line);
                 }

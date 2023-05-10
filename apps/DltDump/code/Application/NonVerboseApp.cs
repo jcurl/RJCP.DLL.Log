@@ -17,7 +17,7 @@
         public ExitCode Run(IEnumerable<string> fibexPaths)
         {
             IFrameMap map = FibexService.LoadFrameMap(fibexPaths, m_Options);
-            if (map == null) return ExitCode.FibexError;
+            if (map is null) return ExitCode.FibexError;
             return ExitCode.Success;
         }
     }

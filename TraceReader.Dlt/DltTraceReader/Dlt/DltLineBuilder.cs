@@ -119,7 +119,7 @@
             DltTraceLineBase line;
             if (m_Online) TimeStamp = DateTime.Now;
             if (((int)DltType & DltConstants.MessageType.DltTypeMask) == DltConstants.MessageType.DltTypeControl) {
-                if (ControlPayload == null) throw new InvalidOperationException("Undefined control payload");
+                if (ControlPayload is null) throw new InvalidOperationException("Undefined control payload");
                 line = new DltControlTraceLine(ControlPayload) {
                     Line = m_Line,
                     Position = Position,
@@ -554,7 +554,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder AddArgument(IDltArg argument)
         {
-            if (argument != null)
+            if (argument is object)
                 m_Arguments.Add(argument);
             return this;
         }
@@ -566,7 +566,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments)
         {
-            if (arguments != null) {
+            if (arguments is object) {
                 foreach (IDltArg argument in arguments)
                     AddArgument(argument);
             }
@@ -596,7 +596,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder SetControlPayload(IControlArg service)
         {
-            if (service == null) throw new ArgumentNullException(nameof(service));
+            if (service is null) throw new ArgumentNullException(nameof(service));
             ControlPayload = service;
             return this;
         }
@@ -649,7 +649,7 @@
         /// </returns>
         public bool HasErrorMessage()
         {
-            return m_ErrorMessage != null;
+            return m_ErrorMessage is object;
         }
     }
 }

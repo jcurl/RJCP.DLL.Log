@@ -26,7 +26,7 @@
 
         public DetailedFileInfo(string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 
@@ -93,7 +93,7 @@
 
         public bool Equals(DetailedFileInfo other)
         {
-            if (other == null) return false;
+            if (other is null) return false;
 
             // The InfoType.None should never be set, unless there is a bug in this module.
             if (m_InfoType == InfoType.None || other.m_InfoType == InfoType.None) {
@@ -118,10 +118,10 @@
 
         public override bool Equals(object obj)
         {
-            if (obj == null) return false;
+            if (obj is null) return false;
 
             DetailedFileInfo fileInfo = obj as DetailedFileInfo;
-            if (fileInfo == null) return false;
+            if (fileInfo is null) return false;
             return Equals(fileInfo);
         }
 
@@ -132,7 +132,7 @@
 
         public static bool operator ==(DetailedFileInfo info1, DetailedFileInfo info2)
         {
-            if (((object)info1) == null || ((object)info2) == null)
+            if (((object)info1) is null || ((object)info2) is null)
                 return object.Equals(info1, info2);
 
             return info1.Equals(info2);
@@ -140,7 +140,7 @@
 
         public static bool operator !=(DetailedFileInfo info1, DetailedFileInfo info2)
         {
-            if (((object)info1) == null || ((object)info2) == null)
+            if (((object)info1) is null || ((object)info2) is null)
                 return !object.Equals(info1, info2);
 
             return !info1.Equals(info2);

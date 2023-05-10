@@ -20,13 +20,13 @@
         private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         public string Scheme { get { return "net"; } }
@@ -53,7 +53,7 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            if (InputStream != null)
+            if (InputStream is object)
                 throw new InvalidOperationException("TestNetworkStream already opened");
 
             ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
@@ -75,7 +75,7 @@
 
         public void Close()
         {
-            if (InputStream != null) InputStream.Dispose();
+            if (InputStream is object) InputStream.Dispose();
             InputStream = null;
         }
 

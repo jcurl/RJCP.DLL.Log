@@ -69,11 +69,11 @@
         {
             base.SetUpBranches(ilGen);
 
-            if (SkipBranch != null) {
+            if (SkipBranch is object) {
                 m_SkipBranch = new BranchAlwaysOperation();
                 SkipBranch.Branches.Add(m_SkipBranch);
 
-                if (Target == null) {
+                if (Target is null) {
                     Target = LabelGenFactory.Create(ilGen);
                     m_SkipBranch.Target = Target;
                 }
@@ -86,11 +86,11 @@
         /// <param name="ilGen">The IL Generator object to emit code into.</param>
         public override void Emit(ILGenerator ilGen)
         {
-            if (Target == null) throw new InvalidOperationException("SetUpBranches must be called first");
+            if (Target is null) throw new InvalidOperationException("SetUpBranches must be called first");
 
             switch (BranchTargetSetType) {
             case BranchTargetSetType.Branch:
-                if (SkipBranch == null) {
+                if (SkipBranch is null) {
                     EmitLocalBranch(ilGen);
                 } else {
                     EmitSkipBranch(ilGen);

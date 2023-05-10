@@ -22,7 +22,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="packets"/> is <see langword="null"/>.</exception>
         public SimulatedPacketReceiver(IEnumerable<(int, byte[])> packets)
         {
-            if (packets == null) throw new ArgumentNullException(nameof(packets));
+            if (packets is null) throw new ArgumentNullException(nameof(packets));
             m_PacketEnumerator = packets.GetEnumerator();
         }
 
@@ -43,7 +43,7 @@
         private void OnNewChannel(object sender, PacketNewChannelEventArgs args)
         {
             EventHandler<PacketNewChannelEventArgs> handler = NewChannel;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         /// <summary>

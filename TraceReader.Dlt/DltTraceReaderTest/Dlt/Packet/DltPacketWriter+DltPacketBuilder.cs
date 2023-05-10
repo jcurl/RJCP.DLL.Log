@@ -31,7 +31,7 @@
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId);
-                if (text != null) m_Packet.AddStringArg(text);
+                if (text is object) m_Packet.AddStringArg(text);
                 return this;
             }
 
@@ -47,7 +47,7 @@
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId);
-                if (payload != null) m_Packet.AddPayload(noar, payload);
+                if (payload is object) m_Packet.AddPayload(noar, payload);
                 return this;
             }
 
@@ -62,7 +62,7 @@
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader(msgType, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
-                if (payload != null) m_Packet.AddPayload(0, payload);
+                if (payload is object) m_Packet.AddPayload(0, payload);
                 return this;
             }
 
@@ -75,7 +75,7 @@
             public DltPacketBuilder NonVerbose(TimeSpan time, byte[] payload)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
-                if (payload != null) m_Packet.AddPayload(payload);
+                if (payload is object) m_Packet.AddPayload(payload);
                 return this;
             }
 
@@ -93,7 +93,7 @@
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
                 m_Packet.CreateExtendedHeader((DltType)0, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
-                if (payload != null) m_Packet.AddPayload(payload);
+                if (payload is object) m_Packet.AddPayload(payload);
                 return this;
             }
 

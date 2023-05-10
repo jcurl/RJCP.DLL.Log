@@ -14,7 +14,7 @@
 
         public CancelTask(Action<CancellationToken> action)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (action is null) throw new ArgumentNullException(nameof(action));
 
             CancellationToken token = m_TokenSource.Token;
             m_Task = new Task(() => {

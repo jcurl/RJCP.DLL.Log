@@ -26,7 +26,7 @@
         /// </remarks>
         public VerboseDltDecoder(IVerboseArgDecoder argDecoder)
         {
-            if (argDecoder == null) throw new ArgumentNullException(nameof(argDecoder));
+            if (argDecoder is null) throw new ArgumentNullException(nameof(argDecoder));
             m_ArgDecoder = argDecoder;
         }
 

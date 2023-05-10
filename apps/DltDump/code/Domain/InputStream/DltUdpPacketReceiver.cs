@@ -30,7 +30,7 @@
         /// </exception>
         public DltUdpPacketReceiver(IPAddress endPoint, int port)
         {
-            if (endPoint == null) throw new ArgumentNullException(nameof(endPoint));
+            if (endPoint is null) throw new ArgumentNullException(nameof(endPoint));
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(endPoint, port));
@@ -60,8 +60,8 @@
         /// </exception>
         public DltUdpPacketReceiver(IPAddress bindAddr, int port, IPAddress multicastGroup)
         {
-            if (bindAddr == null) throw new ArgumentNullException(nameof(bindAddr));
-            if (multicastGroup == null) throw new ArgumentNullException(nameof(multicastGroup));
+            if (bindAddr is null) throw new ArgumentNullException(nameof(bindAddr));
+            if (multicastGroup is null) throw new ArgumentNullException(nameof(multicastGroup));
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(bindAddr, port), multicastGroup);
@@ -135,7 +135,7 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltUdpPacketReceiver));
-            if (InputPacket != null) return;
+            if (InputPacket is object) return;
 
             m_Receiver.Open();
             InputPacket = m_Receiver;
@@ -149,7 +149,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(DltUdpPacketReceiver));
-            if (InputPacket == null)
+            if (InputPacket is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 
             return Task.FromResult(true);
@@ -160,7 +160,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputPacket != null) InputPacket.Close();
+            if (InputPacket is object) InputPacket.Close();
             InputPacket = null;
         }
 

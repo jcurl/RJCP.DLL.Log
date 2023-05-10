@@ -24,7 +24,7 @@
         /// </returns>
         public override string ToString()
         {
-            if (m_NonVerboseArg == null) {
+            if (m_NonVerboseArg is null) {
                 StringBuilder builder = new StringBuilder(4 * Data.Length + 20);
                 if (Data.Length > 0) {
                     int offset = builder.Length;

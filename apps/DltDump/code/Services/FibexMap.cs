@@ -129,7 +129,7 @@
         /// </exception>
         public bool LoadFibex(string path)
         {
-            if (path == null) throw new ArgumentNullException(nameof(path));
+            if (path is null) throw new ArgumentNullException(nameof(path));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException("name is empty", nameof(path));
 
             if (File.Exists(path)) {

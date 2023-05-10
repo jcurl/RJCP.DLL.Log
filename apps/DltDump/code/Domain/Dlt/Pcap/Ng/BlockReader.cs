@@ -29,7 +29,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public BlockReader(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (factory is null) throw new ArgumentNullException(nameof(factory));
 
             m_TraceDecoderFactory = factory;
         }
@@ -157,7 +157,7 @@
                     "PCAP Block Section Header Block offset 0x{0:x} found with {1}",
                     position, littleEndian ? "little endian" : "big endian");
                 block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
-                if (block != null) {
+                if (block is object) {
                     m_HasSectionHeader = true;
                     m_LittleEndian = littleEndian;
                 } else {
@@ -170,7 +170,7 @@
                 m_Interfaces.Add(block as InterfaceDescriptionBlock);
                 break;
             }
-            if (block == null)
+            if (block is null)
                 return new PcapBlock(blockId, blockLength);
             return block;
         }
@@ -232,7 +232,7 @@
                 int interfaceId = BitOperations.To32Shift(buffer[8..], m_LittleEndian);
                 if (interfaceId < 0 || interfaceId >= m_Interfaces.Count) break;
                 InterfaceDescriptionBlock intf = m_Interfaces[interfaceId];
-                if (intf == null) break;
+                if (intf is null) break;
 
                 int captured = BitOperations.To32Shift(buffer[20..], m_LittleEndian);
                 if (captured > intf.SnapLength) break;
@@ -259,7 +259,7 @@
         private void ClearInterfaces()
         {
             foreach (InterfaceDescriptionBlock idb in m_Interfaces) {
-                if (idb != null) idb.Dispose();
+                if (idb is object) idb.Dispose();
             }
             m_Interfaces.Clear();
         }

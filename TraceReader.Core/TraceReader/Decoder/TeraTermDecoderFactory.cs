@@ -29,7 +29,7 @@
             }
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException(nameof(Encoding));
                 m_Encoding = value;
             }
@@ -42,7 +42,7 @@
         public ITraceDecoder<LogTraceLine> Create()
         {
             TeraTermDecoder decoder = new TeraTermDecoder();
-            if (m_Encoding != null) decoder.Encoding = m_Encoding;
+            if (m_Encoding is object) decoder.Encoding = m_Encoding;
             return decoder;
         }
     }

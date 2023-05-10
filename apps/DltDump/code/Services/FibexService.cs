@@ -12,7 +12,7 @@
     {
         public static FibexOptions GetOptions(CmdOptions options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (options is null) throw new ArgumentNullException(nameof(options));
 
             FibexOptions fibexOptions = FibexOptions.None;
             if (options.NonVerboseMultiEcu) fibexOptions |= FibexOptions.WithEcuId;

@@ -184,7 +184,7 @@
                 receiver.Close();
                 receiver = null;
             } finally {
-                if (receiver != null) receiver.Dispose();
+                if (receiver is object) receiver.Dispose();
             }
         }
 
@@ -200,7 +200,7 @@
                 receiver.Open();
                 receiver.Close();
             } finally {
-                if (receiver != null) receiver.Dispose();
+                if (receiver is object) receiver.Dispose();
             }
         }
 
@@ -265,7 +265,7 @@
                     sender = new Udp(srcAddr, destAddr);
                     return sender.Send();
                 } catch {
-                    if (sender != null) sender.Dispose();
+                    if (sender is object) sender.Dispose();
                     throw;
                 }
             }
@@ -519,7 +519,7 @@
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
             } finally {
-                if (receiver != null) receiver.Dispose();
+                if (receiver is object) receiver.Dispose();
             }
         }
 
@@ -570,7 +570,7 @@
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
             } finally {
-                if (receiver != null) receiver.Dispose();
+                if (receiver is object) receiver.Dispose();
             }
         }
 

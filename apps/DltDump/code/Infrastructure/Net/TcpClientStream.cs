@@ -32,7 +32,7 @@
         /// </exception>
         public TcpClientStream(string hostname, int port)
         {
-            if (hostname == null) throw new ArgumentNullException(nameof(hostname));
+            if (hostname is null) throw new ArgumentNullException(nameof(hostname));
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentException(AppResources.InfraTcpStreamInvalidHostName, nameof(hostname));
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
@@ -55,7 +55,7 @@
         /// </remarks>
         public bool Connect()
         {
-            if (m_TcpClient != null)
+            if (m_TcpClient is object)
                 throw new InvalidOperationException(AppResources.InfraTcpStreamAlreadyConnected);
 
             object connectLock = new object();
@@ -64,7 +64,7 @@
             OneShotTimer timer = new OneShotTimer(DisconnectTimeout);
             timer.TimerEvent += (s, e) => {
                 lock (connectLock) {
-                    if (m_IsConnected || m_TcpClient == null) return;
+                    if (m_IsConnected || m_TcpClient is null) return;
                     m_TcpClient.Close();
                 }
             };
@@ -110,7 +110,7 @@
         /// </remarks>
         public async Task<bool> ConnectAsync()
         {
-            if (m_TcpClient != null)
+            if (m_TcpClient is object)
                 throw new InvalidOperationException(AppResources.InfraTcpStreamAlreadyConnected);
 
             object connectLock = new object();
@@ -119,7 +119,7 @@
             OneShotTimer timer = new OneShotTimer(DisconnectTimeout);
             timer.TimerEvent += (s, e) => {
                 lock (connectLock) {
-                    if (m_IsConnected || m_TcpClient == null) return;
+                    if (m_IsConnected || m_TcpClient is null) return;
                     m_TcpClient.Dispose();
                 }
             };
@@ -545,11 +545,11 @@
                 lock (m_DisposeLock) {
                     if (!m_IsDisposed) {
                         m_IsDisposed = true;
-                        if (m_Timer != null) m_Timer.Dispose();
+                        if (m_Timer is object) m_Timer.Dispose();
 
-                        if (m_TcpClient != null) {
+                        if (m_TcpClient is object) {
                             m_TcpClient.Close();
-                            if (m_TcpStream != null) m_TcpStream.Dispose();
+                            if (m_TcpStream is object) m_TcpStream.Dispose();
                         }
                     }
                 }

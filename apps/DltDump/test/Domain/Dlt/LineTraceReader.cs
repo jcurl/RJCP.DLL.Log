@@ -31,7 +31,7 @@
         private T OnGetLineEvent(object sender, LineEventArgs<T> args)
         {
             EventHandler<LineEventArgs<T>> handler = GetLineEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
             return args.Line;
         }
 

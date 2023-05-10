@@ -16,7 +16,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="uri"/> is <see langword="null"/>.</exception>
         public IInputStream Create(string uri)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri is null) throw new ArgumentNullException(nameof(uri));
 
             Uri inputUri;
             try {

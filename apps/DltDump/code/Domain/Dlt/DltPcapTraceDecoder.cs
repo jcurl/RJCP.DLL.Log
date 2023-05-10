@@ -65,7 +65,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
-            if (m_PcapDecoder == null) {
+            if (m_PcapDecoder is null) {
                 if (m_IsDisposed)
                     throw new ObjectDisposedException(nameof(DltPcapLegacyDecoder));
 
@@ -119,7 +119,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Flush()
         {
-            if (m_PcapDecoder != null) return m_PcapDecoder.Flush();
+            if (m_PcapDecoder is object) return m_PcapDecoder.Flush();
             return Array.Empty<DltTraceLineBase>();
         }
 
@@ -145,7 +145,7 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing) {
-                if (!m_IsDisposed && m_PcapDecoder != null) {
+                if (!m_IsDisposed && m_PcapDecoder is object) {
                     m_PcapDecoder.Dispose();
                 }
             }

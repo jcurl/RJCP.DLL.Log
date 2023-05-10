@@ -39,7 +39,7 @@
         /// </remarks>
         public UdpPacketReceiver(IPEndPoint endPoint)
         {
-            if (endPoint == null) throw new ArgumentNullException(nameof(endPoint));
+            if (endPoint is null) throw new ArgumentNullException(nameof(endPoint));
 
             if (endPoint.AddressFamily != AddressFamily.InterNetwork)
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(endPoint));
@@ -79,8 +79,8 @@
         /// </exception>
         public UdpPacketReceiver(IPEndPoint bindAddr, IPAddress multicastGroup)
         {
-            if (bindAddr == null) throw new ArgumentNullException(nameof(bindAddr));
-            if (multicastGroup == null) throw new ArgumentNullException(nameof(multicastGroup));
+            if (bindAddr is null) throw new ArgumentNullException(nameof(bindAddr));
+            if (multicastGroup is null) throw new ArgumentNullException(nameof(multicastGroup));
 
             if (bindAddr.AddressFamily != AddressFamily.InterNetwork)
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(bindAddr));
@@ -149,7 +149,7 @@
         protected virtual void OnNewChannel(object sender, PacketNewChannelEventArgs newChannel)
         {
             EventHandler<PacketNewChannelEventArgs> handler = NewChannel;
-            if (handler != null) handler(sender, newChannel);
+            if (handler is object) handler(sender, newChannel);
         }
 
         /// <summary>
@@ -168,13 +168,13 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(UdpPacketReceiver));
 
-            if (m_Socket != null)
+            if (m_Socket is object)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverOpen);
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             try {
-                if (m_MulticastGroup != null) {
+                if (m_MulticastGroup is object) {
                     MulticastOption mcastOption
                         = new MulticastOption(m_MulticastGroup, m_BindAddress.Address);
                     socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, mcastOption);
@@ -210,7 +210,7 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(UdpPacketReceiver));
 
-            if (m_Socket == null)
+            if (m_Socket is null)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverNotOpen);
 
             if (m_Socket.Available > 0)
@@ -261,7 +261,7 @@
         /// </summary>
         public void Close()
         {
-            if (m_IsDisposed || m_Socket == null) return;
+            if (m_IsDisposed || m_Socket is null) return;
 
             m_Socket.Close();
             m_Socket = null;
@@ -291,7 +291,7 @@
             if (disposing) {
                 if (!m_IsDisposed) {
                     m_IsDisposed = true;
-                    if (m_Socket != null) {
+                    if (m_Socket is object) {
                         m_Socket.Close();
                         m_Socket = null;
                     }

@@ -47,7 +47,7 @@
         /// <returns>Returns <see langword="true" /> if the line should be added, <see langword="false" /> otherwise.</returns>
         protected override bool CheckLine(DltTraceLineBase line, ReadOnlySpan<byte> packet)
         {
-            if (m_OutputStream != null) {
+            if (m_OutputStream is object) {
                 m_OutputStream.Write(line, packet);
                 return false;
             }
@@ -68,7 +68,7 @@
             // in the UDP frame itself. So set the time stamp.
             line.TimeStamp = PacketTimeStamp;
 
-            if (m_OutputStream != null) {
+            if (m_OutputStream is object) {
                 m_OutputStream.Write(line);
                 return false;
             }

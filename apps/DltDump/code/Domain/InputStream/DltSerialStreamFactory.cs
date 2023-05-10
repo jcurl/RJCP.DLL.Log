@@ -18,7 +18,7 @@
         /// <exception cref="InputStreamException">Invalid host name.</exception>
         public override IInputStream Create(Uri uri)
         {
-            if (uri == null)
+            if (uri is null)
                 throw new ArgumentNullException(nameof(uri));
 
             if (!uri.Scheme.Equals("ser", StringComparison.InvariantCulture)) {

@@ -170,7 +170,7 @@
         /// <param name="strBuilder">The string builder to append this argument to.</param>
         public void StringAppend(StringBuilder strBuilder)
         {
-            if (strBuilder == null) throw new ArgumentNullException(nameof(strBuilder));
+            if (strBuilder is null) throw new ArgumentNullException(nameof(strBuilder));
 
             strBuilder.Append(Name);
             if (LogLevel != LogLevel.Undefined) {

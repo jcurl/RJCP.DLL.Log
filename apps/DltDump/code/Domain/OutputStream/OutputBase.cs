@@ -42,7 +42,7 @@
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         protected OutputBase(string fileName, long split, bool force)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 
@@ -76,7 +76,7 @@
             get { return m_Encoding; }
             set
             {
-                if (value == null) throw new ArgumentNullException(nameof(Encoding));
+                if (value is null) throw new ArgumentNullException(nameof(Encoding));
 
                 Encoding oldEncoding = m_Encoding;
                 byte[] oldNewLine = m_NewLine;
@@ -294,7 +294,7 @@
             if (m_Writer.IsOpen) return;
 
             SetTimeStamp(timeStamp);
-            if (m_Segments == null) {
+            if (m_Segments is null) {
                 ResetSplit();
 
                 string fileName = Path.GetFullPath(m_Template.ToString());

@@ -42,9 +42,9 @@
         /// </exception>
         public FrameMapDefault(int id, string appId, string ctxId, IFrame frame)
         {
-            if (appId == null) throw new ArgumentNullException(nameof(appId));
-            if (ctxId == null) throw new ArgumentNullException(nameof(ctxId));
-            if (frame == null) throw new ArgumentNullException(nameof(frame));
+            if (appId is null) throw new ArgumentNullException(nameof(appId));
+            if (ctxId is null) throw new ArgumentNullException(nameof(ctxId));
+            if (frame is null) throw new ArgumentNullException(nameof(frame));
 
             m_Frames = new FrameMapSimple(id, frame);
             m_StdHdrFrames.Add((appId, ctxId), new FrameMapSimple(id, frame));
@@ -71,9 +71,9 @@
         /// </exception>
         public bool TryAddFrame(int id, string appId, string ctxId, string ecuId, IFrame frame)
         {
-            if (appId == null) throw new ArgumentNullException(nameof(appId));
-            if (ctxId == null) throw new ArgumentNullException(nameof(ctxId));
-            if (frame == null) throw new ArgumentNullException(nameof(frame));
+            if (appId is null) throw new ArgumentNullException(nameof(appId));
+            if (ctxId is null) throw new ArgumentNullException(nameof(ctxId));
+            if (frame is null) throw new ArgumentNullException(nameof(frame));
 
             if (m_StdHdrFrames.TryGetValue((appId, ctxId), out FrameMapSimple map)) {
                 if (!map.TryAddFrame(id, appId, ctxId, ecuId, frame)) return false;
@@ -141,7 +141,7 @@
         /// </remarks>
         public bool TryGetFrame(int id, string appId, string ctxId, string ecuId, out IFrame frame)
         {
-            if (appId != null && ctxId != null) {
+            if (appId is object && ctxId is object) {
                 if (!m_StdHdrFrames.TryGetValue((appId, ctxId), out FrameMapSimple map)) {
                     frame = null;
                     return false;

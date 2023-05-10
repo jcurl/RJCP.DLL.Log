@@ -33,7 +33,7 @@
             Features = SkippedLineFeatures;
             BytesSkipped = bytes;
 
-            if (reason != null) {
+            if (reason is object) {
                 Arguments = new ReadOnlyArrayList<IDltArg>(new IDltArg[] {
                     new StringDltArg("Skipped:"),
                     new SignedIntDltArg(bytes),

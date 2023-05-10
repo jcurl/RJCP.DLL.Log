@@ -27,7 +27,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public PacketDecoder(int linkType, ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (factory is null) throw new ArgumentNullException(nameof(factory));
 
             switch (linkType) {
             case LinkTypes.LINKTYPE_ETHERNET:
@@ -229,7 +229,7 @@
                         // We have to be careful here, the output of the ScanIpHeader returns the same collection as it did
                         // last time, just the content may now be different. Thus, we must do this check before scanning the
                         // payload, else, we'll discard the last result.
-                        if (payload != null && lines == null)
+                        if (payload is object && lines is null)
                             lines = new List<DltTraceLineBase>(payload);
                         payload = ScanIpHeader(ethBuff[(poffset + 12)..], timeStamp, position + 16 + 12 + poffset);
                         lines?.AddRange(payload);
@@ -249,8 +249,8 @@
         {
             // A small optimisation, that we don't create a list unless we need to, and when we return, we return the
             // list only if it was created. Otherwise the list of packets that we decoded.
-            if (lines != null) return lines;
-            if (packet != null) return packet;
+            if (lines is object) return lines;
+            if (packet is object) return packet;
             return Array.Empty<DltTraceLineBase>();
         }
 

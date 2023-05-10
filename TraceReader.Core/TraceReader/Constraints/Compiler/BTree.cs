@@ -43,12 +43,12 @@
             while (queue.Count > 0) {
                 BTree<T> node = queue.Dequeue();
                 BTree<T> copy = qcopy.Dequeue();
-                if (node.Left != null) {
+                if (node.Left is object) {
                     copy.Left = new BTree<T>(copyAction(node.Left.Value));
                     queue.Enqueue(node.Left);
                     qcopy.Enqueue(copy.Left);
                 }
-                if (node.Right != null) {
+                if (node.Right is object) {
                     copy.Right = new BTree<T>(copyAction(node.Right.Value));
                     queue.Enqueue(node.Right);
                     qcopy.Enqueue(copy.Right);

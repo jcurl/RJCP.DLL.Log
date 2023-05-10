@@ -17,7 +17,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="regEx"/> is <see langword="null"/>.</exception>
         public TextRegEx(string regEx)
         {
-            if (regEx == null) throw new ArgumentNullException(nameof(regEx));
+            if (regEx is null) throw new ArgumentNullException(nameof(regEx));
             m_RegEx = new Regex(regEx, RegexOptions.CultureInvariant | RegexOptions.Compiled);
         }
 
@@ -29,7 +29,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="regEx"/> is <see langword="null"/>.</exception>
         public TextRegEx(string regEx, RegexOptions options)
         {
-            if (regEx == null) throw new ArgumentNullException(nameof(regEx));
+            if (regEx is null) throw new ArgumentNullException(nameof(regEx));
             m_RegEx = new Regex(regEx, options);
         }
 

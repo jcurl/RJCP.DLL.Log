@@ -11,13 +11,13 @@
         private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         public override IInputStream Create(Uri uri)

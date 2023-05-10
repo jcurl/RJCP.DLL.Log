@@ -15,7 +15,7 @@
 
         public FilterCommand(CmdOptions options)
         {
-            if (options == null)
+            if (options is null)
                 throw new ArgumentNullException(nameof(options));
 
             m_Options = options;
@@ -39,7 +39,7 @@
             if (m_Options.Fibex.Count > 0) {
                 FibexOptions fibexOptions = FibexService.GetOptions(m_Options);
                 config.FrameMap = FibexService.LoadFrameMap(m_Options.Fibex, fibexOptions);
-                if (config.FrameMap == null)
+                if (config.FrameMap is null)
                     return ExitCode.FibexError;
             }
             BuildFilter(m_Options, config);

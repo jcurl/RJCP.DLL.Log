@@ -49,7 +49,7 @@
             get { return m_Encoding; }
             set
             {
-                if (value == null)
+                if (value is null)
                     throw new ArgumentNullException(nameof(Encoding));
 
                 Decoder = value.GetDecoder();
@@ -86,7 +86,7 @@
                 try {
                     Decoder.Convert(inputBuffer, outputBuffer[m_Offset..], false, out bu, out cu, out complete);
                 } catch (ArgumentException ex) {
-                    if (ex.ParamName == null || !ex.ParamName.Equals("chars")) throw;
+                    if (ex.ParamName is null || !ex.ParamName.Equals("chars")) throw;
 
                     // Handle the case the user tries to convert a UTF8 sequence (4-bytes) to two UTF16 characters when
                     // there is only a single UTF16 char available at the end. We'll get an exception. So we need to

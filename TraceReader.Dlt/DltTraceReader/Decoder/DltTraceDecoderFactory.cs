@@ -55,7 +55,7 @@
         /// <returns>A new instance of a <see cref="DltTraceDecoder" /> object.</returns>
         public ITraceDecoder<DltTraceLineBase> Create()
         {
-            if (m_Map == null)
+            if (m_Map is null)
                 return new DltTraceDecoder(m_Online);
 
             return new DltTraceDecoder(m_Online, m_Map);

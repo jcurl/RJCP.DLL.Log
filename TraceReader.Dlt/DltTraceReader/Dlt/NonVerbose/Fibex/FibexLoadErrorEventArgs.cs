@@ -84,14 +84,14 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (MessageId == 0 && ApplicationId == null && ContextId == null && EcuId == null) {
-                if (Position == null || !Position.HasLineInfo())
+            if (MessageId == 0 && ApplicationId is null && ContextId is null && EcuId is null) {
+                if (Position is null || !Position.HasLineInfo())
                     return $"{Warning}";
 
                 return $"{Warning} : XML Line {Position.LineNumber} Pos {Position.LinePosition}";
             }
 
-            if (Position == null || !Position.HasLineInfo())
+            if (Position is null || !Position.HasLineInfo())
                 return $"{Warning} : {ApplicationId ?? string.Empty} {ContextId ?? string.Empty} {EcuId ?? string.Empty}";
 
             return $"{Warning} : XML Line {Position.LineNumber} Pos {Position.LinePosition} " +

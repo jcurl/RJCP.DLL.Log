@@ -24,9 +24,9 @@
         /// </remarks>
         public void SetFactory(string scheme, IInputStreamFactory factory)
         {
-            if (scheme == null) throw new ArgumentNullException(nameof(scheme));
+            if (scheme is null) throw new ArgumentNullException(nameof(scheme));
 
-            if (factory == null) {
+            if (factory is null) {
                 m_Factories.Remove(scheme);
                 return;
             }
@@ -52,7 +52,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="uri"/> is <see langword="null"/>.</exception>
         public override IInputStream Create(Uri uri)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri is null) throw new ArgumentNullException(nameof(uri));
 
             if (!m_Factories.TryGetValue(uri.Scheme, out IInputStreamFactory factory)) {
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainInputStreamFactoryUnknown, uri.Scheme);
@@ -60,7 +60,7 @@
             }
 
             IInputStream inputStream = factory.Create(uri);
-            if (inputStream == null) {
+            if (inputStream is null) {
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainInputStreamFactoryUnsupported, uri.Scheme);
                 return null;
             }

@@ -207,7 +207,7 @@
                     input.Open();
                 }, Throws.TypeOf<ObjectDisposedException>());
             } finally {
-                if (input != null) input.Dispose();
+                if (input is object) input.Dispose();
             }
         }
 
@@ -223,7 +223,7 @@
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             } finally {
-                if (input != null) input.Dispose();
+                if (input is object) input.Dispose();
             }
         }
 
@@ -243,7 +243,7 @@
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<ObjectDisposedException>());
             } finally {
-                if (input != null) input.Dispose();
+                if (input is object) input.Dispose();
             }
         }
     }

@@ -22,7 +22,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="decoderFactory"/> is <see langword="null"/>.</exception>
         protected TraceReaderFactory(ITraceDecoderFactory<T> decoderFactory)
         {
-            if (decoderFactory == null)
+            if (decoderFactory is null)
                 throw new ArgumentNullException(nameof(decoderFactory));
             m_DecoderFactory = decoderFactory;
         }
@@ -34,7 +34,7 @@
         /// <returns>The <see cref="ITraceReader{T}"/> object for log file enumeration.</returns>
         public Task<ITraceReader<T>> CreateAsync(Stream stream)
         {
-            if (stream == null)
+            if (stream is null)
                 throw new ArgumentNullException(nameof(stream));
 
             ITraceDecoder<T> decoder = m_DecoderFactory.Create();
@@ -65,7 +65,7 @@
         /// </exception>
         public Task<ITraceReader<T>> CreateAsync(string fileName)
         {
-            if (fileName == null)
+            if (fileName is null)
                 throw new ArgumentNullException(nameof(fileName));
 
             Stream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read,

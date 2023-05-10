@@ -38,7 +38,7 @@
         /// <exception cref="ArgumentException"><paramref name="outputStream"/> doesn't support binary mode.</exception>
         public DltSerialTraceFilterDecoder(IOutputStream outputStream, bool online, IFrameMap map) : base(online, map)
         {
-            if (outputStream == null) throw new ArgumentNullException(nameof(outputStream));
+            if (outputStream is null) throw new ArgumentNullException(nameof(outputStream));
             if (!outputStream.SupportsBinary)
                 throw new ArgumentException(AppResources.DomainDecoderInvalidOutputStream, nameof(outputStream));
 

@@ -105,7 +105,7 @@
         /// </remarks>
         public static string[] Wrap(int width, int indent, int hangingIndent, string message)
         {
-            if (message == null)
+            if (message is null)
                 throw new ArgumentNullException(nameof(message));
             if (width < indent + 10)
                 throw new ArgumentOutOfRangeException(nameof(width), AppResources.InfraFormatWidthException);

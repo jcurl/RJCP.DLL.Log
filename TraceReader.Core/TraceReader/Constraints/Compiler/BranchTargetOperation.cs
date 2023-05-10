@@ -52,13 +52,13 @@
         /// </remarks>
         public virtual void SetUpBranches(ILGenerator ilGen)
         {
-            if (Target != null) throw new InvalidOperationException("SetUpBranches has already been called");
+            if (Target is object) throw new InvalidOperationException("SetUpBranches has already been called");
 
             bool finished;
             do {
                 finished = true;
                 foreach (BranchBaseOperation branch in Branches) {
-                    if (Target == null) {
+                    if (Target is null) {
                         if (branch.IsTargetSet) {
                             Target = branch.Target;
                         } else {
@@ -74,7 +74,7 @@
                         }
                     }
                 }
-                if (Target == null) {
+                if (Target is null) {
                     Target = LabelGenFactory.Create(ilGen);
                     finished = false;
                 }
@@ -87,7 +87,7 @@
         /// <param name="ilGen">The IL Generator object to emit code into.</param>
         public virtual void Emit(ILGenerator ilGen)
         {
-            if (Target == null) throw new InvalidOperationException("SetUpBranches must be called first");
+            if (Target is null) throw new InvalidOperationException("SetUpBranches must be called first");
 
             Log.Constraints.TraceEvent(TraceEventType.Information, "L{0:00}: ", Target.LabelNum);
             ilGen.MarkLabel(Target.Label);

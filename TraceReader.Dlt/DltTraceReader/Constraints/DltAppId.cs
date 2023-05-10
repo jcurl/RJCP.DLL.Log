@@ -19,7 +19,7 @@
         /// </exception>
         public DltAppId(string appId)
         {
-            if (appId == null)
+            if (appId is null)
                 throw new ArgumentNullException(nameof(appId));
             m_AppId = appId;
         }

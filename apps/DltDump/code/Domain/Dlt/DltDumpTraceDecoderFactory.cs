@@ -54,7 +54,7 @@
         /// <exception cref="InvalidOperationException">The input format is unknown.</exception>
         public ITraceDecoder<DltTraceLineBase> Create()
         {
-            if (OutputStream == null || !OutputStream.SupportsBinary) {
+            if (OutputStream is null || !OutputStream.SupportsBinary) {
                 switch (InputFormat) {
                 case InputFormat.File:
                     return new DltFileTraceDecoderFactory(FrameMap).Create();

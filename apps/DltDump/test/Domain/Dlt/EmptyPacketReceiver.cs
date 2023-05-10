@@ -28,7 +28,7 @@
         private void OnNewChannel(object sender, PacketNewChannelEventArgs args)
         {
             EventHandler<PacketNewChannelEventArgs> handler = NewChannel;
-            if (handler != null) handler(sender, args);
+            if (handler is object) handler(sender, args);
         }
 
         /// <summary>

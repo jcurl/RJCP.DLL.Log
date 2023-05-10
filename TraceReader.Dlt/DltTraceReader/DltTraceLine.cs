@@ -31,7 +31,7 @@
         /// </remarks>
         public DltTraceLine(IDltArg[] arguments)
         {
-            if (arguments == null) throw new ArgumentNullException(nameof(arguments));
+            if (arguments is null) throw new ArgumentNullException(nameof(arguments));
             Arguments = new ReadOnlyArrayList<IDltArg>(arguments);
         }
 

@@ -239,7 +239,7 @@
                 DltTraceLineBase line;
                 do {
                     line = await reader.GetLineAsync();
-                } while (line != null);
+                } while (line is object);
             }
         }
 

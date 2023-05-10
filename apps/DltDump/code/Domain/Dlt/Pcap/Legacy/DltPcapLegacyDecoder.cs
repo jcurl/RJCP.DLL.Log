@@ -33,7 +33,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public DltPcapLegacyDecoder(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
+            if (factory is null) throw new ArgumentNullException(nameof(factory));
             m_TraceDecoderFactory = factory;
         }
 
@@ -71,7 +71,7 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(DltPcapLegacyDecoder));
 
-            if (Format == null) {
+            if (Format is null) {
                 if (m_Length + buffer.Length < PcapFormat.HeaderLength) {
                     // We don't know what the PCAP type is, so store it and wait for the next write.
                     buffer.CopyTo(m_Packet.AsSpan(m_Length));
@@ -96,7 +96,7 @@
 
                 m_Decoder = new PacketDecoder(Format.LinkType, m_TraceDecoderFactory);
 
-                if (Format != null && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
+                if (Format is object && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
                     Log.Pcap.TraceEvent(TraceEventType.Information, "PCAP File: {0}", Format.ToString());
                 }
             }
@@ -238,7 +238,7 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing) {
-                if (!m_IsDisposed && m_Decoder != null) {
+                if (!m_IsDisposed && m_Decoder is object) {
                     m_Decoder.Dispose();
                 }
                 m_IsDisposed = true;
