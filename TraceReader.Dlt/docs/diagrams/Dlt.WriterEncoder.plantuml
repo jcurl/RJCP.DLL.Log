@@ -1,0 +1,59 @@
+@startuml DLT.WriterEncoder
+interface ITraceEncoder
+interface ITraceEncoderFactory
+
+ITraceEncoderFactory -r- ITraceEncoder
+
+class DltTraceEncoderFactory<TLine:DltTraceLineBase>
+ITraceEncoderFactory <|.d. DltTraceEncoderFactory
+
+class DltTraceEncoder<TLine:DltTraceLineBase>
+ITraceEncoder <|.d. DltTraceEncoder
+
+DltTraceEncoderFactory -r-> DltTraceEncoder : <<creates>>
+
+interface IVerboseDltEncoder {
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+}
+class VerboseDltEncoder
+IVerboseDltEncoder <|.d. VerboseDltEncoder
+
+interface IVerboseArgEncoder {
+    +Encode(buffer: Span<byte>, arg: IDltArg): int
+}
+class VerboseArgEncoder
+IVerboseArgEncoder <|.d. VerboseArgEncoder
+
+IVerboseDltEncoder *-r- IVerboseArgEncoder
+VerboseDltEncoder *-r- VerboseArgEncoder
+
+class IntArgEncoder
+class BoolArgEncoder
+class FloatArgEncoder
+class RawArgEncoder
+class StringArgEncoder
+IVerboseArgEncoder <|..d. IntArgEncoder
+IVerboseArgEncoder <|..d. BoolArgEncoder
+IVerboseArgEncoder <|..d. FloatArgEncoder
+IVerboseArgEncoder <|..d. RawArgEncoder
+IVerboseArgEncoder <|..d. StringArgEncoder
+
+VerboseArgEncoder *-d- IntArgEncoder
+VerboseArgEncoder *-d- BoolArgEncoder
+VerboseArgEncoder *-d- FloatArgEncoder
+VerboseArgEncoder *-d- RawArgEncoder
+VerboseArgEncoder *-d- StringArgEncoder
+
+
+DltTraceEncoder *-d- IVerboseDltEncoder
+
+IntArgEncoder -d- BinaryIntDltArg : <<encodes>>
+IntArgEncoder -d- HexIntDltArg : <<encodes>>
+IntArgEncoder -d- SignedIntDltArg : <<encodes>>
+IntArgEncoder -d- UnsignedIntDltArg : <<encodes>>
+BoolArgEncoder -d- BoolDltArg : <<encodes>>
+FloatArgEncoder -d- Float32DltArg : <<encodes>>
+FloatArgEncoder -d- Float64DltArg : <<encodes>>
+RawArgEncoder -d- RawDltArg : <<encodes>>
+StringArgEncoder -d- StringDltArg : <<encodes>>
+@enduml

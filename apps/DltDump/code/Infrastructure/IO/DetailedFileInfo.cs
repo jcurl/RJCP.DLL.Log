@@ -120,8 +120,7 @@
         {
             if (obj is null) return false;
 
-            DetailedFileInfo fileInfo = obj as DetailedFileInfo;
-            if (fileInfo is null) return false;
+            if (!(obj is DetailedFileInfo fileInfo)) return false;
             return Equals(fileInfo);
         }
 
