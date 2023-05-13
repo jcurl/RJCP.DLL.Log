@@ -80,8 +80,7 @@ The encoder is responsible for writing the data.
 ![](out/diagrams/Dlt.WriterEncoder/DLT.WriterEncoder.svg)
 
 This can be extended to handle further argument types, e.g. from a Non-Verbose
-message that can't be decoded to a RAW argument. The message information would
-be lost.
+message that can't be decoded to a RAW argument.
 
 ### 2.4. Control Encoders (DLT Trace Encoder)
 

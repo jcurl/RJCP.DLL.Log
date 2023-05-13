@@ -14,16 +14,16 @@
     <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2015-2022, Jason Curl</Copyright>
+    <Copyright>(C) 2015-2023, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.Diagnostics.Log.Dlt</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.Log.git</PackageProjectUrl>
-    <Description>An AutoSAR DLT Decoder.</Description>
+    <Description>An AutoSAR DLT v1 Decoder and Encoder.</Description>
     <Version>0.8.0</Version>
 
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Default</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
@@ -83,6 +83,18 @@
     <Compile Include="DltSkippedTraceLine.cs" />
     <Compile Include="DltTraceLine.cs" />
     <Compile Include="DltTraceReaderFactory.cs" />
+    <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\BoolArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\Float64ArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\Float32ArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\HexIntArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\IArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\NonVerboseArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\RawArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\SignedIntArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\StringArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\UnknownVerboseArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\UnsignedIntArgEncoder.cs" />
     <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />
     <Compile Include="Dlt\Args\BoolDltArg.cs" />
     <Compile Include="Dlt\Args\DltArgBase.cs" />

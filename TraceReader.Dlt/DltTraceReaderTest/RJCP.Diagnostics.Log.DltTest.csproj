@@ -14,9 +14,9 @@
     <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2015-2022, Jason Curl</Copyright>
+    <Copyright>(C) 2015-2023, Jason Curl</Copyright>
     <Company></Company>
-    <Description>Test harness for DLT.</Description>
+    <Description>Test harness for DLT v1 Decoder and Encoder.</Description>
     <Version>1.0.0</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
@@ -71,6 +71,17 @@
     <Compile Include="DltTestData.cs" />
     <Compile Include="DltTime.cs" />
     <Compile Include="DltTraceLineTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\BoolArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\Float64ArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\Float32ArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\HexIntArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\NonVerboseArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\RawArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\SignedIntArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\StringArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\UnknownVerboseArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\UnsignedIntArgEncoderTest.cs" />
     <Compile Include="Dlt\Args\BinaryIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\BoolDltArgTest.cs" />
     <Compile Include="Dlt\Args\CustomArg.cs" />
