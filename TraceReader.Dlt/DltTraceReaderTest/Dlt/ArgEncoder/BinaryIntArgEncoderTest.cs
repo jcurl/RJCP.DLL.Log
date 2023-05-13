@@ -5,8 +5,9 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture]
-    public class BinaryIntArgEncoderTest
+    [TestFixture(typeof(BinaryIntArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class BinaryIntArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(0, true, false, 0x41, 1, TestName = "Encode_LittleEndian_8bitZero")]
         [TestCase(1, true, false, 0x41, 1, TestName = "Encode_LittleEndian_8bitOne")]
@@ -49,7 +50,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + expLen];
             BinaryIntDltArg arg = new BinaryIntDltArg(value, expLen);
-            IArgEncoder encoder = new BinaryIntArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -105,7 +106,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + len - 1];
             BinaryIntDltArg arg = new BinaryIntDltArg(value, len);
-            IArgEncoder encoder = new BinaryIntArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

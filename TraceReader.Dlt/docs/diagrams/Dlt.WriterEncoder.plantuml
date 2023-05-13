@@ -21,21 +21,25 @@ IVerboseDltEncoder <|.d. VerboseDltEncoder
 interface IArgEncoder {
     +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
 }
-class VerboseArgEncoder
-IArgEncoder <|.d. VerboseArgEncoder
+class DltArgEncoder
+IArgEncoder <|.d. DltArgEncoder
 
 IVerboseDltEncoder *-r- IArgEncoder
-VerboseDltEncoder *-r- VerboseArgEncoder
+VerboseDltEncoder *-r- DltArgEncoder
 
-class BinaryIntArgEncoder
-class HexIntArgEncoder
-class SignedIntArgEncoder
-class UnsignedIntArgEncoder
 class BoolArgEncoder
-class Float32ArgEncoder
-class Float64ArgEncoder
-class RawArgEncoder
+together {
+  class BinaryIntArgEncoder
+  class HexIntArgEncoder
+  class SignedIntArgEncoder
+  class UnsignedIntArgEncoder
+}
+together {
+  class Float32ArgEncoder
+  class Float64ArgEncoder
+}
 class StringArgEncoder
+class RawArgEncoder
 class NonVerboseArgEncoder
 class UnknownVerboseArgEncoder
 IArgEncoder <|..d. BinaryIntArgEncoder
@@ -50,31 +54,31 @@ IArgEncoder <|..d. StringArgEncoder
 IArgEncoder <|..d. NonVerboseArgEncoder
 IArgEncoder <|..d. UnknownVerboseArgEncoder
 
-VerboseArgEncoder *-d- BinaryIntArgEncoder
-VerboseArgEncoder *-d- HexIntArgEncoder
-VerboseArgEncoder *-d- SignedIntArgEncoder
-VerboseArgEncoder *-d- UnsignedIntArgEncoder
-VerboseArgEncoder *-d- BoolArgEncoder
-VerboseArgEncoder *-d- Float32ArgEncoder
-VerboseArgEncoder *-d- Float64ArgEncoder
-VerboseArgEncoder *-d- RawArgEncoder
-VerboseArgEncoder *-d- StringArgEncoder
-VerboseArgEncoder *-d- NonVerboseArgEncoder
-VerboseArgEncoder *-d- UnknownVerboseArgEncoder
+DltArgEncoder *-d- BinaryIntArgEncoder
+DltArgEncoder *-d- HexIntArgEncoder
+DltArgEncoder *-d- SignedIntArgEncoder
+DltArgEncoder *-d- UnsignedIntArgEncoder
+DltArgEncoder *-d- BoolArgEncoder
+DltArgEncoder *-d- Float32ArgEncoder
+DltArgEncoder *-d- Float64ArgEncoder
+DltArgEncoder *-d- RawArgEncoder
+DltArgEncoder *-d- StringArgEncoder
+DltArgEncoder *-d- NonVerboseArgEncoder
+DltArgEncoder *-d- UnknownVerboseArgEncoder
 
 DltTraceEncoder *-d- IVerboseDltEncoder
 
-BinaryIntArgEncoder -d- BinaryIntDltArg : <<encodes>>
-HexIntArgEncoder -d- HexIntDltArg : <<encodes>>
-SignedIntArgEncoder -d- SignedIntDltArg : <<encodes>>
-UnsignedIntArgEncoder -d- UnsignedIntDltArg : <<encodes>>
-BoolArgEncoder -d- BoolDltArg : <<encodes>>
-Float32ArgEncoder -d- Float32DltArg : <<encodes>>
-Float64ArgEncoder -d- Float64DltArg : <<encodes>>
-StringArgEncoder -d- StringDltArg : <<encodes>>
-RawArgEncoder -d- RawDltArg : <<encodes>>
-NonVerboseArgEncoder -d- RawDltArg : <<encodes\nverbose>>
-NonVerboseArgEncoder -d- NonVerboseDltArg : <<encodes\nnonverbose>>
-NonVerboseArgEncoder -d- UnknownVerboseDltArg : <<encodes>>
-UnknownVerboseArgEncoder -d- UnknownVerboseDltArg : <<encodes>>
+BinaryIntArgEncoder -d-> BinaryIntDltArg : <<encodes>>
+HexIntArgEncoder -d-> HexIntDltArg : <<encodes>>
+SignedIntArgEncoder -d-> SignedIntDltArg : <<encodes>>
+UnsignedIntArgEncoder -d-> UnsignedIntDltArg : <<encodes>>
+BoolArgEncoder -d-> BoolDltArg : <<encodes>>
+Float32ArgEncoder -d-> Float32DltArg : <<encodes>>
+Float64ArgEncoder -d-> Float64DltArg : <<encodes>>
+StringArgEncoder -d-> StringDltArg : <<encodes>>
+RawArgEncoder -d-> RawDltArg : <<encodes>>
+NonVerboseArgEncoder -d-> RawDltArg : <<encodes\nverbose>>
+NonVerboseArgEncoder -d-> NonVerboseDltArg : <<encodes\nnonverbose>>
+NonVerboseArgEncoder -d-> UnknownVerboseDltArg : <<encodes>>
+UnknownVerboseArgEncoder -d-> UnknownVerboseDltArg : <<encodes>>
 @enduml

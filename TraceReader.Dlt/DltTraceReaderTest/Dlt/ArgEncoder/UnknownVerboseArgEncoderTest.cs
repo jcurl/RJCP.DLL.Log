@@ -4,8 +4,9 @@
     using Args;
     using NUnit.Framework;
 
-    [TestFixture]
-    public class UnknownVerboseArgEncoderTest
+    [TestFixture(typeof(UnknownVerboseArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class UnknownVerboseArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(new byte[] { 0x10, 0x00, 0x00, 0x00, 0x01 }, false, TestName = "Encode_LittleEndian_UnknownVerbose")]
         [TestCase(new byte[] { 0x00, 0x00, 0x00, 0x10, 0x01 }, true, TestName = "Encode_BigEndian_UnknownVerbose")]
@@ -13,7 +14,7 @@
         {
             byte[] buffer = new byte[value.Length];
             UnknownVerboseDltArg arg = new UnknownVerboseDltArg(value, msbf);
-            IArgEncoder encoder = new UnknownVerboseArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, true, msbf, arg), Is.EqualTo(buffer.Length));
 
             Assert.That(buffer, Is.EqualTo(value));

@@ -4,8 +4,9 @@
     using Args;
     using NUnit.Framework;
 
-    [TestFixture]
-    public class BoolArgEncoderTest
+    [TestFixture(typeof(BoolArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class BoolArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(false, true, false, TestName = "Encode_LittleEndian_False")]
         [TestCase(false, true, true, TestName = "Encode_BigEndian_False")]
@@ -20,7 +21,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 1];
             BoolDltArg arg = new BoolDltArg(value);
-            IArgEncoder encoder = new BoolArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -47,7 +48,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0)];
             BoolDltArg arg = new BoolDltArg(value);
-            IArgEncoder encoder = new BoolArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

@@ -5,8 +5,9 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture]
-    public class Float32ArgEncoderTest
+    [TestFixture(typeof(Float32ArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class Float32ArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(0, true, false, 0x83, TestName = "Encode_LittleEndian_FloatZero")]
         [TestCase(float.NaN, true, false, 0x83, TestName = "Encode_LittleEndian_FloatNan")]
@@ -45,7 +46,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 4];
             Float32DltArg arg = new Float32DltArg(value);
-            IArgEncoder encoder = new Float32ArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -69,7 +70,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 3];
             Float32DltArg arg = new Float32DltArg(value);
-            IArgEncoder encoder = new Float32ArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

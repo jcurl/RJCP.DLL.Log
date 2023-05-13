@@ -85,6 +85,7 @@
     <Compile Include="DltTraceReaderFactory.cs" />
     <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\BoolArgEncoder.cs" />
+    <Compile Include="Dlt\ArgEncoder\DltArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\Float64ArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\Float32ArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\HexIntArgEncoder.cs" />

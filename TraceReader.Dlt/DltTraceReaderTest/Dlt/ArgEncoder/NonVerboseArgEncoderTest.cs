@@ -5,8 +5,9 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture]
-    public class NonVerboseArgEncoderTest
+    [TestFixture(typeof(NonVerboseArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class NonVerboseArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(new byte[] { }, true, false, TestName = "Encode_LittleEndian_NVEmpty")]
         [TestCase(new byte[] { 0xFF, 0x01 }, true, false, TestName = "Encode_LittleEndian_NV")]
@@ -21,7 +22,7 @@
         {
             byte[] buffer = new byte[(verbose ? 6 : 0) + value.Length];
             NonVerboseDltArg arg = new NonVerboseDltArg(value);
-            IArgEncoder encoder = new NonVerboseArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -53,7 +54,7 @@
         {
             byte[] buffer = new byte[(verbose ? 6 : 0) + value.Length];
             UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(value);
-            IArgEncoder encoder = new NonVerboseArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -98,7 +99,7 @@
             rnd.NextBytes(data);
 
             NonVerboseDltArg arg = new NonVerboseDltArg(data);
-            IArgEncoder encoder = new NonVerboseArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(data, verbose, msbf, arg), Is.EqualTo(-1));
         }
 
@@ -128,7 +129,7 @@
             rnd.NextBytes(data);
 
             UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(data);
-            IArgEncoder encoder = new NonVerboseArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(data, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

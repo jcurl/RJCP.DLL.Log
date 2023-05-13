@@ -6,8 +6,9 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture]
-    public class StringArgEncoderTest
+    [TestFixture(typeof(StringArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class StringArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase("München", true, false, 8, TestName = "Encode_LittleEndian_Utf8")]
         [TestCase("", true, false, 0, TestName = "Encode_LittleEndian_Utf8Empty")]
@@ -22,7 +23,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 2 + expLen];
             StringDltArg arg = new StringDltArg(value, StringEncodingType.Utf8);
-            IArgEncoder encoder = new StringArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -64,7 +65,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 2 + expLen];
             StringDltArg arg = new StringDltArg(value, StringEncodingType.Ascii);
-            IArgEncoder encoder = new StringArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -109,7 +110,7 @@
             sb.Append('x', 65535 - (verbose ? 4 : 0));
 
             StringDltArg arg = new StringDltArg(sb.ToString(), strType);
-            IArgEncoder encoder = new StringArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

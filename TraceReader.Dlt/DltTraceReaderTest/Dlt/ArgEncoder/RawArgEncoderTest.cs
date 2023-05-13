@@ -5,8 +5,9 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture]
-    public class RawArgEncoderTest
+    [TestFixture(typeof(RawArgEncoder))]
+    [TestFixture(typeof(DltArgEncoder))]
+    public class RawArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         [TestCase(new byte[] { }, true, false, TestName = "Encode_LittleEndian_RawEmpty")]
         [TestCase(new byte[] { 0xFF, 0x01 }, true, false, TestName = "Encode_LittleEndian_Raw")]
@@ -21,7 +22,7 @@
         {
             byte[] buffer = new byte[(verbose ? 4 : 0) + 2 + value.Length];
             RawDltArg arg = new RawDltArg(value);
-            IArgEncoder encoder = new RawArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
 
             if (verbose) {
@@ -63,7 +64,7 @@
             rnd.NextBytes(data);
 
             RawDltArg arg = new RawDltArg(data);
-            IArgEncoder encoder = new RawArgEncoder();
+            IArgEncoder encoder = GetEncoder();
             Assert.That(encoder.Encode(data, verbose, msbf, arg), Is.EqualTo(-1));
         }
     }

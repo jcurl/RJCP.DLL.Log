@@ -71,6 +71,7 @@
     <Compile Include="DltTestData.cs" />
     <Compile Include="DltTime.cs" />
     <Compile Include="DltTraceLineTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\ArgEncoderTestBase.cs" />
     <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\BoolArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\Float64ArgEncoderTest.cs" />
