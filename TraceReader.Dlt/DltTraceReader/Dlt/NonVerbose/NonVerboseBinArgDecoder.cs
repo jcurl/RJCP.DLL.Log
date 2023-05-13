@@ -49,13 +49,13 @@
                 return DltArgError.Get($"S_BIN{m_IntLength * 8} invalid length in PDU", out arg);
 
             if (m_IntLength == 1) {
-                arg = new BinaryIntDltArg(unchecked((sbyte)buffer[0]), m_IntLength);
+                arg = new BinaryIntDltArg(unchecked((sbyte)buffer[0]), 1);
             } else if (m_IntLength == 2) {
-                arg = new BinaryIntDltArg(BitOperations.To16Shift(buffer, !msbf), m_IntLength);
+                arg = new BinaryIntDltArg(BitOperations.To16Shift(buffer, !msbf), 2);
             } else if (m_IntLength == 4) {
-                arg = new BinaryIntDltArg(BitOperations.To32Shift(buffer, !msbf), m_IntLength);
+                arg = new BinaryIntDltArg(BitOperations.To32Shift(buffer, !msbf), 4);
             } else if (m_IntLength == 8) {
-                arg = new BinaryIntDltArg(BitOperations.To64Shift(buffer, !msbf), m_IntLength);
+                arg = new BinaryIntDltArg(BitOperations.To64Shift(buffer, !msbf), 8);
             } else {
                 throw new InvalidOperationException("Unexpected data length");
             }

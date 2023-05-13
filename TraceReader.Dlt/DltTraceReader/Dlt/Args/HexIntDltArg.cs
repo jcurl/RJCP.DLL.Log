@@ -13,16 +13,13 @@
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="bytesLength">The length of the bytes.</param>
-        public HexIntDltArg(long data, int bytesLength) : base(data)
-        {
-            DataBytesLength = bytesLength;
-        }
+        public HexIntDltArg(long data, int bytesLength) : base(data, bytesLength) { }
 
         /// <summary>
-        /// Gets the length of the data bytes.
+        /// Gets the best fit size based on the value.
         /// </summary>
-        /// <value>The length of the data bytes.</value>
-        public int DataBytesLength { get; }
+        /// <returns>The best fit size (in bytes) of the value.</returns>
+        protected override int GetLength() { return GetLengthUnsigned(); }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.

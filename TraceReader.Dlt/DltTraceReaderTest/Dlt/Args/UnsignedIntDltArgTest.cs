@@ -60,5 +60,70 @@
             StringBuilder sb = new StringBuilder();
             Assert.That(unsignedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
+
+        [TestCase((ulong)0, 1)]
+        [TestCase(byte.MaxValue, 1)]
+        [TestCase((ulong)byte.MaxValue - 1, 1)]
+        [TestCase((ulong)byte.MaxValue + 1, 2)]
+        [TestCase(ushort.MaxValue, 2)]
+        [TestCase((ulong)ushort.MaxValue - 1, 2)]
+        [TestCase((ulong)ushort.MaxValue + 1, 4)]
+        [TestCase(uint.MaxValue, 4)]
+        [TestCase(uint.MaxValue - 1, 4)]
+        [TestCase((ulong)uint.MaxValue + 1, 8)]
+        [TestCase(ulong.MaxValue, 8)]
+        [TestCase(ulong.MaxValue - 1, 8)]
+        public void UnsignedIntSizeFixed(ulong value, int minSize)
+        {
+            foreach (int size in new[] { 1, 2, 4, 8 }) {
+                if (size >= minSize) {
+                    UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value, size);
+                    Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
+                    Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(size));
+                }
+            }
+        }
+
+        [TestCase((ulong)0, 1)]
+        [TestCase(byte.MaxValue, 1)]
+        [TestCase((ulong)byte.MaxValue - 1, 1)]
+        [TestCase((ulong)byte.MaxValue + 1, 2)]
+        [TestCase(ushort.MaxValue, 2)]
+        [TestCase((ulong)ushort.MaxValue - 1, 2)]
+        [TestCase((ulong)ushort.MaxValue + 1, 4)]
+        [TestCase(uint.MaxValue, 4)]
+        [TestCase(uint.MaxValue - 1, 4)]
+        [TestCase((ulong)uint.MaxValue + 1, 8)]
+        [TestCase(ulong.MaxValue, 8)]
+        [TestCase(ulong.MaxValue - 1, 8)]
+        public void UnsignedIntSizeFixedLong(ulong value, int minSize)
+        {
+            foreach (int size in new[] { 1, 2, 4, 8 }) {
+                if (size >= minSize) {
+                    UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(unchecked((long)value), size);
+                    Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
+                    Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(size));
+                }
+            }
+        }
+
+        [TestCase((ulong)0, 1)]
+        [TestCase(byte.MaxValue, 1)]
+        [TestCase((ulong)byte.MaxValue - 1, 1)]
+        [TestCase((ulong)byte.MaxValue + 1, 2)]
+        [TestCase(ushort.MaxValue, 2)]
+        [TestCase((ulong)ushort.MaxValue - 1, 2)]
+        [TestCase((ulong)ushort.MaxValue + 1, 4)]
+        [TestCase(uint.MaxValue, 4)]
+        [TestCase(uint.MaxValue - 1, 4)]
+        [TestCase((ulong)uint.MaxValue + 1, 8)]
+        [TestCase(ulong.MaxValue, 8)]
+        [TestCase(ulong.MaxValue - 1, 8)]
+        public void UnsignedIntEstimateSize(ulong value, int expSize)
+        {
+            UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value);
+            Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
+            Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(expSize));
+        }
     }
 }

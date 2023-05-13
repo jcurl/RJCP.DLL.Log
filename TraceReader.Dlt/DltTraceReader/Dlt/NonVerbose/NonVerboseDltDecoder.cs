@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.NonVerbose
 {
     using System;
-    using System.Diagnostics;
     using Args;
     using RJCP.Core;
 

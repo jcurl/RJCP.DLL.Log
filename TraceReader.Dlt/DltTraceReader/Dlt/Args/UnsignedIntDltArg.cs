@@ -29,6 +29,21 @@
         public UnsignedIntDltArg(ulong data) : base(unchecked((long)data)) { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="UnsignedIntDltArg"/> class.
+        /// </summary>
+        /// <param name="data">The value of the data.</param>
+        /// <param name="bytesLength">The size of the data. Use zero for best fit.</param>
+        public UnsignedIntDltArg(long data, int bytesLength) : base(data, bytesLength) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnsignedIntDltArg"/> class.
+        /// </summary>
+        /// <param name="data">The value of the data.</param>
+        /// <param name="bytesLength">The size of the data. Use zero for best fit.</param>
+        [CLSCompliant(false)]
+        public UnsignedIntDltArg(ulong data, int bytesLength) : base(unchecked((long)data), bytesLength) { }
+
+        /// <summary>
         /// Gets the data as a non CLS-Compliant unsigned long.
         /// </summary>
         /// <value>The data as a non CLS-Compliant unsigned long.</value>
@@ -40,6 +55,12 @@
         {
             get { return unchecked((ulong)Data); }
         }
+
+        /// <summary>
+        /// Gets the best fit size based on the value.
+        /// </summary>
+        /// <returns>The best fit size (in bytes) of the value.</returns>
+        protected override int GetLength() { return GetLengthUnsigned(); }
 
         /// <summary>
         /// Returns a <see cref="string"/> that represents this instance.

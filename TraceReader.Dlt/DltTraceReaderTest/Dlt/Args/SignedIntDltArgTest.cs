@@ -29,5 +29,53 @@
             StringBuilder sb = new StringBuilder();
             Assert.That(signedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
+
+        [TestCase(0, 1)]
+        [TestCase(sbyte.MinValue, 1)]
+        [TestCase(sbyte.MaxValue, 1)]
+        [TestCase(sbyte.MinValue - 1, 2)]
+        [TestCase(sbyte.MaxValue + 1, 2)]
+        [TestCase(short.MinValue, 2)]
+        [TestCase(short.MaxValue, 2)]
+        [TestCase(short.MinValue - 1, 4)]
+        [TestCase(short.MaxValue + 1, 4)]
+        [TestCase(int.MinValue, 4)]
+        [TestCase(int.MaxValue, 4)]
+        [TestCase((long)int.MinValue - 1, 8)]
+        [TestCase((long)int.MaxValue + 1, 8)]
+        [TestCase(long.MinValue, 8)]
+        [TestCase(long.MaxValue, 8)]
+        public void SignedIntSizeFixed(long value, int minSize)
+        {
+            foreach (int size in new[] { 1, 2, 4, 8 }) {
+                if (size >= minSize) {
+                    SignedIntDltArg signedInt = new SignedIntDltArg(value, size);
+                    Assert.That(signedInt.Data, Is.EqualTo(value));
+                    Assert.That(signedInt.DataBytesLength, Is.EqualTo(size));
+                }
+            }
+        }
+
+        [TestCase(0, 1)]
+        [TestCase(sbyte.MinValue, 1)]
+        [TestCase(sbyte.MaxValue, 1)]
+        [TestCase(sbyte.MinValue - 1, 2)]
+        [TestCase(sbyte.MaxValue + 1, 2)]
+        [TestCase(short.MinValue, 2)]
+        [TestCase(short.MaxValue, 2)]
+        [TestCase(short.MinValue - 1, 4)]
+        [TestCase(short.MaxValue + 1, 4)]
+        [TestCase(int.MinValue, 4)]
+        [TestCase(int.MaxValue, 4)]
+        [TestCase((long)int.MinValue - 1, 8)]
+        [TestCase((long)int.MaxValue + 1, 8)]
+        [TestCase(long.MinValue, 8)]
+        [TestCase(long.MaxValue, 8)]
+        public void SignedIntEstimateSize(long value, int expSize)
+        {
+            SignedIntDltArg signedInt = new SignedIntDltArg(value);
+            Assert.That(signedInt.Data, Is.EqualTo(value));
+            Assert.That(signedInt.DataBytesLength, Is.EqualTo(expSize));
+        }
     }
 }

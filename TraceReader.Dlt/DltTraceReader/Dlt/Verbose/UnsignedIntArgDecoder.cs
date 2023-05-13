@@ -23,7 +23,7 @@
                 return new BinaryIntDltArg(data, 1);
             default:
                 // IntegerCoding.Decimal is the default use case
-                return new UnsignedIntDltArg(data);
+                return new UnsignedIntDltArg(data, 1);
             }
         }
 
@@ -43,7 +43,7 @@
             default:
                 // .NET uses sign-extension to convert a short to long, thus an explicit conversion to an unsigned type
                 // is required to prevent this. IntegerCoding.Decimal is the default use case
-                return new UnsignedIntDltArg(unchecked((ushort)data));
+                return new UnsignedIntDltArg(unchecked((ushort)data), 2);
             }
         }
 
@@ -63,7 +63,7 @@
             default:
                 // .NET uses sign-extension to convert a int to long, thus an explicit conversion to an unsigned type is
                 // required to prevent this. IntegerCoding.Decimal is the default use case
-                return new UnsignedIntDltArg(unchecked((uint)data));
+                return new UnsignedIntDltArg(unchecked((uint)data), 4);
             }
         }
 
@@ -82,7 +82,7 @@
                 return new BinaryIntDltArg(data, 8);
             default:
                 // IntegerCoding.Decimal is the default use case
-                return new UnsignedIntDltArg(data);
+                return new UnsignedIntDltArg(data, 8);
             }
         }
     }

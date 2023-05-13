@@ -16,16 +16,13 @@
         /// <remarks>
         /// If <paramref name="bytesLength"/> is different than 1, 2, 4, 8, a 64-bit value shall be interpreted.
         /// </remarks>
-        public BinaryIntDltArg(long data, int bytesLength) : base(data)
-        {
-            DataBytesLength = bytesLength;
-        }
+        public BinaryIntDltArg(long data, int bytesLength) : base(data, bytesLength) { }
 
         /// <summary>
-        /// Gets the length of the data bytes.
+        /// Gets the best fit size based on the value.
         /// </summary>
-        /// <value>The length of the data bytes.</value>
-        public int DataBytesLength { get; }
+        /// <returns>The best fit size (in bytes) of the value.</returns>
+        protected override int GetLength() { return GetLengthUnsigned(); }
 
         /// <summary>
         /// Converts to string.

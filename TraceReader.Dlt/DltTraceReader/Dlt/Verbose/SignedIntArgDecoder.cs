@@ -18,7 +18,7 @@
         /// <returns>The argument instance.</returns>
         protected override IDltArg Create8BitArgument(byte data, IntegerEncodingType coding)
         {
-            return new SignedIntDltArg(unchecked((sbyte)data));
+            return new SignedIntDltArg(unchecked((sbyte)data), 1);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <returns>The argument instance.</returns>
         protected override IDltArg Create16BitArgument(short data, IntegerEncodingType coding)
         {
-            return new SignedIntDltArg(data);
+            return new SignedIntDltArg(data, 2);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
         /// <returns>The argument instance.</returns>
         protected override IDltArg Create32BitArgument(int data, IntegerEncodingType coding)
         {
-            return new SignedIntDltArg(data);
+            return new SignedIntDltArg(data, 4);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
         /// <returns>The argument instance.</returns>
         protected override IDltArg Create64BitArgument(long data, IntegerEncodingType coding)
         {
-            return new SignedIntDltArg(data);
+            return new SignedIntDltArg(data, 8);
         }
     }
 }
