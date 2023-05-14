@@ -4,52 +4,47 @@
     using Args;
     using NUnit.Framework;
 
-    [TestFixture(typeof(BoolArgEncoder))]
-    [TestFixture(typeof(DltArgEncoder))]
+    [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     public class BoolArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
-        [TestCase(false, true, false, TestName = "Encode_LittleEndian_False")]
-        [TestCase(false, true, true, TestName = "Encode_BigEndian_False")]
-        [TestCase(true, true, false, TestName = "Encode_LittleEndian_True")]
-        [TestCase(true, true, true, TestName = "Encode_BigEndian_True")]
+        public BoolArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
+            : base(encoderType, endianness, lineType) { }
 
-        [TestCase(false, false, false, TestName = "EncodeNv_LittleEndian_False")]
-        [TestCase(false, false, true, TestName = "EncodeNv_BigEndian_False")]
-        [TestCase(true, false, false, TestName = "EncodeNv_LittleEndian_True")]
-        [TestCase(true, false, true, TestName = "EncodeNv_BigEndian_True")]
-        public void EncodeBool(bool value, bool verbose, bool msbf)
+        [TestCase(false, TestName = "Encode_False")]
+        [TestCase(true, TestName = "Encode_True")]
+        public void EncodeBool(bool value)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0) + 1];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 1];
             BoolDltArg arg = new BoolDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
-            if (verbose) {
-                byte[] typeInfo = msbf ?
+            if (IsVerbose) {
+                byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x00, 0x11 } :
                     new byte[] { 0x11, 0x00, 0x00, 0x00 };
                 Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
             }
 
-            Span<byte> payload = buffer.AsSpan(verbose ? 4 : 0, 1);
+            Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0, 1);
             Assert.That(payload[0], Is.EqualTo(value ? 1 : 0));
         }
 
-        [TestCase(false, true, false, TestName = "InsufficientBuffer_LittleEndian_False")]
-        [TestCase(false, true, true, TestName = "InsufficientBuffer_BigEndian_False")]
-        [TestCase(true, true, false, TestName = "InsufficientBuffer_LittleEndian_True")]
-        [TestCase(true, true, true, TestName = "InsufficientBuffer_BigEndian_True")]
-
-        [TestCase(false, false, false, TestName = "InsufficientBufferNv_LittleEndian_False")]
-        [TestCase(false, false, true, TestName = "InsufficientBufferNv_BigEndian_False")]
-        [TestCase(true, false, false, TestName = "InsufficientBufferNv_LittleEndian_True")]
-        [TestCase(true, false, true, TestName = "InsufficientBufferNv_BigEndian_True")]
-        public void InsufficientBuffer(bool value, bool verbose, bool msbf)
+        [TestCase(false, TestName = "InsufficientBuffer_False")]
+        [TestCase(true, TestName = "InsufficientBuffer_True")]
+        public void InsufficientBuffer(bool value)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0)];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0)];
             BoolDltArg arg = new BoolDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
         }
     }
 }

@@ -5,34 +5,37 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture(typeof(NonVerboseArgEncoder))]
-    [TestFixture(typeof(DltArgEncoder))]
+    [TestFixture(typeof(NonVerboseArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(NonVerboseArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(NonVerboseArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(NonVerboseArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     public class NonVerboseArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
-        [TestCase(new byte[] { }, true, false, TestName = "Encode_LittleEndian_NVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, true, false, TestName = "Encode_LittleEndian_NV")]
-        [TestCase(new byte[] { }, true, true, TestName = "Encode_BigEndian_NVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, true, true, TestName = "Encode_BigEndian_NV")]
+        public NonVerboseArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
+            : base(encoderType, endianness, lineType) { }
 
-        [TestCase(new byte[] { }, false, false, TestName = "EncodeNv_LittleEndian_NVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, false, false, TestName = "EncodeNv_LittleEndian_NV")]
-        [TestCase(new byte[] { }, false, true, TestName = "EncodeNv_BigEndian_NVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, false, true, TestName = "EncodeNv_BigEndian_NV")]
-        public void EncodeNvBytes(byte[] value, bool verbose, bool msbf)
+        [TestCase(new byte[] { }, TestName = "Encode_NVEmpty")]
+        [TestCase(new byte[] { 0xFF, 0x01 }, TestName = "Encode_NV")]
+        public void EncodeNvBytes(byte[] value)
         {
-            byte[] buffer = new byte[(verbose ? 6 : 0) + value.Length];
+            byte[] buffer = new byte[(IsVerbose ? 6 : 0) + value.Length];
             NonVerboseDltArg arg = new NonVerboseDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
-            if (verbose) {
-                byte[] typeInfo = msbf ?
+            if (IsVerbose) {
+                byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x04, 0x00 } :
                     new byte[] { 0x00, 0x04, 0x00, 0x00 };
                 Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
 
                 Span<byte> payload = buffer.AsSpan(4);
-                int len = unchecked((ushort)BitOperations.To16Shift(payload, !msbf));
+                int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
                 Assert.That(len, Is.EqualTo(value.Length));
                 Assert.That(payload[2..].ToArray(), Is.EqualTo(value));
             } else {
@@ -41,30 +44,22 @@
             }
         }
 
-        [TestCase(new byte[] { }, true, false, TestName = "Encode_LittleEndian_UNVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, true, false, TestName = "Encode_LittleEndian_UNV")]
-        [TestCase(new byte[] { }, true, true, TestName = "Encode_BigEndian_UNVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, true, true, TestName = "Encode_BigEndian_UNV")]
-
-        [TestCase(new byte[] { }, false, false, TestName = "EncodeNv_LittleEndian_UNVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, false, false, TestName = "EncodeNv_LittleEndian_UNV")]
-        [TestCase(new byte[] { }, false, true, TestName = "EncodeNv_BigEndian_UNVEmpty")]
-        [TestCase(new byte[] { 0xFF, 0x01 }, false, true, TestName = "EncodeNv_BigEndian_UNV")]
-        public void EncodeUNvBytes(byte[] value, bool verbose, bool msbf)
+        [TestCase(new byte[] { }, TestName = "Encode_UNVEmpty")]
+        [TestCase(new byte[] { 0xFF, 0x01 }, TestName = "Encode_UNV")]
+        public void EncodeUNvBytes(byte[] value)
         {
-            byte[] buffer = new byte[(verbose ? 6 : 0) + value.Length];
+            byte[] buffer = new byte[(IsVerbose ? 6 : 0) + value.Length];
             UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
-            if (verbose) {
-                byte[] typeInfo = msbf ?
+            if (IsVerbose) {
+                byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x04, 0x00 } :
                     new byte[] { 0x00, 0x04, 0x00, 0x00 };
                 Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
 
                 Span<byte> payload = buffer.AsSpan(4);
-                int len = unchecked((ushort)BitOperations.To16Shift(payload, !msbf));
+                int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
                 Assert.That(len, Is.EqualTo(value.Length));
                 Assert.That(payload[2..].ToArray(), Is.EqualTo(value));
             } else {
@@ -73,64 +68,46 @@
             }
         }
 
-        [TestCase(true, false, TestName = "Encode_LittleEndian_NVMaxData")]
-        [TestCase(true, true, TestName = "Encode_BigEndian_NVMaxData")]
-
-        [TestCase(false, false, TestName = "EncodeNv_LittleEndian_NVMaxData")]
-        [TestCase(false, true, TestName = "EncodeNv_BigEndian_NVMaxData")]
-        public void EncodeNvBytesMax(bool verbose, bool msbf)
+        [TestCase(TestName = "Encode_NVMaxData")]
+        public void EncodeNvBytesMax()
         {
-            byte[] data = new byte[65535 - (verbose ? 6 : 0)];
+            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0)];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            EncodeNvBytes(data, verbose, msbf);
+            EncodeNvBytes(data);
         }
 
-        [TestCase(true, false, TestName = "Encode_LittleEndian_NVOverSize")]
-        [TestCase(true, true, TestName = "Encode_BigEndian_NVOverSize")]
-
-        [TestCase(false, false, TestName = "EncodeNv_LittleEndian_NVOverSize")]
-        [TestCase(false, true, TestName = "EncodeNv_BigEndian_NVOverSize")]
-        public void EncodeNvBytesOverSize(bool verbose, bool msbf)
+        [TestCase(TestName = "Encode_NVOverSize")]
+        public void EncodeNvBytesOverSize()
         {
-            byte[] data = new byte[65536 - (verbose ? 6 : 0)];
+            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0)];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
             NonVerboseDltArg arg = new NonVerboseDltArg(data);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(data, verbose, msbf, arg), Is.EqualTo(-1));
+            Assert.That(ArgEncode(data, arg), Is.EqualTo(-1));
         }
 
-        [TestCase(true, false, TestName = "Encode_LittleEndian_UNVMaxData")]
-        [TestCase(true, true, TestName = "Encode_BigEndian_UNVMaxData")]
-
-        [TestCase(false, false, TestName = "EncodeNv_LittleEndian_UNVMaxData")]
-        [TestCase(false, true, TestName = "EncodeNv_BigEndian_UNVMaxData")]
-        public void EncodeUNvBytesMax(bool verbose, bool msbf)
+        [TestCase(TestName = "Encode_UNVMaxData")]
+        public void EncodeUNvBytesMax()
         {
-            byte[] data = new byte[65535 - (verbose ? 6 : 0)];
+            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0)];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            EncodeUNvBytes(data, verbose, msbf);
+            EncodeUNvBytes(data);
         }
 
-        [TestCase(true, false, TestName = "Encode_LittleEndian_UNVOverSize")]
-        [TestCase(true, true, TestName = "Encode_BigEndian_UNVOverSize")]
-
-        [TestCase(false, false, TestName = "EncodeNv_LittleEndian_UNVOverSize")]
-        [TestCase(false, true, TestName = "EncodeNv_BigEndian_UNVOverSize")]
-        public void EncodeUNvBytesOverSize(bool verbose, bool msbf)
+        [TestCase(TestName = "Encode_UNVOverSize")]
+        public void EncodeUNvBytesOverSize()
         {
-            byte[] data = new byte[65536 - (verbose ? 6 : 0)];
+            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0)];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
             UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(data);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(data, verbose, msbf, arg), Is.EqualTo(-1));
+            Assert.That(ArgEncode(data, arg), Is.EqualTo(-1));
         }
     }
 }

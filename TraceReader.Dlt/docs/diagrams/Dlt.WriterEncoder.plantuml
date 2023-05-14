@@ -12,19 +12,21 @@ ITraceEncoder <|.d. DltTraceEncoder
 
 DltTraceEncoderFactory -r-> DltTraceEncoder : <<creates>>
 
-interface IVerboseDltEncoder {
-    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+interface IDltEncoder<TLine:DltTraceLineBase> {
+    +Encode(buffer: Span<byte>, line: TLine): int
 }
-class VerboseDltEncoder
-IVerboseDltEncoder <|.d. VerboseDltEncoder
+class VerboseDltEncoder<DltTraceLine> {
+    +Encode(buffer: Span<byte>, line: DltTraceLine): int
+}
+IDltEncoder <|.d. VerboseDltEncoder : TLine -> DltTraceLine
 
 interface IArgEncoder {
     +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
 }
-class DltArgEncoder
+class DltArgEncoder {
+    +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
+}
 IArgEncoder <|.d. DltArgEncoder
-
-IVerboseDltEncoder *-r- IArgEncoder
 VerboseDltEncoder *-r- DltArgEncoder
 
 class BoolArgEncoder
@@ -66,7 +68,7 @@ DltArgEncoder *-d- StringArgEncoder
 DltArgEncoder *-d- NonVerboseArgEncoder
 DltArgEncoder *-d- UnknownVerboseArgEncoder
 
-DltTraceEncoder *-d- IVerboseDltEncoder
+DltTraceEncoder *-d- IDltEncoder
 
 BinaryIntArgEncoder -d-> BinaryIntDltArg : <<encodes>>
 HexIntArgEncoder -d-> HexIntDltArg : <<encodes>>

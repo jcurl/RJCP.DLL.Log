@@ -83,6 +83,7 @@
     <Compile Include="Dlt\ArgEncoder\StringArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\UnknownVerboseArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\UnsignedIntArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\VerboseDltEncoderTest.cs" />
     <Compile Include="Dlt\Args\BinaryIntDltArgTest.cs" />
     <Compile Include="Dlt\Args\BoolDltArgTest.cs" />
     <Compile Include="Dlt\Args\CustomArg.cs" />

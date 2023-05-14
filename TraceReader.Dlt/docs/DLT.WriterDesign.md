@@ -14,6 +14,10 @@ R20-11 and earlier.
   - [2.2. Format of a DLT v1 Packet](#22-format-of-a-dlt-v1-packet)
   - [2.3. Argument Encoders (DLT Trace Encoder)](#23-argument-encoders-dlt-trace-encoder)
   - [2.4. Control Encoders (DLT Trace Encoder)](#24-control-encoders-dlt-trace-encoder)
+  - [2.5. Chain of Object Construction and Extension](#25-chain-of-object-construction-and-extension)
+    - [2.5.1. Packet Based Behaviour](#251-packet-based-behaviour)
+    - [2.5.2. Extending for a Storage Header](#252-extending-for-a-storage-header)
+    - [2.5.3. Writing Non-Verbose](#253-writing-non-verbose)
 
 ## 1. DLT Trace Writer
 
@@ -85,3 +89,56 @@ message that can't be decoded to a RAW argument.
 ### 2.4. Control Encoders (DLT Trace Encoder)
 
 TBD
+
+### 2.5. Chain of Object Construction and Extension
+
+The `DltTraceWriterFactory` has a `DltTraceEncoderFactory`. The writer factory
+returns an object, such as `DltTraceWriter` which knows how to write a verbose
+message by using the `DltTraceEncoder`. The main purpose of the `ITraceWriter`
+is to write to a `Stream`.
+
+The `DltTraceEncoder` knows how to write a complete line to a buffer as a single
+packet (not a stream). It writes the standard header based on the features in
+the line. An extended header is written as needed, followed by the following
+arguments. For this implementation, the default is to ignore the non-verbose
+flag and write all lines as verbose, although, it would not be difficult to
+provide another, similar, encoder.
+
+The `VerboseDltEncoder` is a high level class that takes a list of `IDltArg`
+objects, and writes them all to the given buffer with verbose type info. If
+needed, it would be trivial to provide an equivalent non-verbose encoder.
+
+The `DltArgEncoder` is intended to take an argument type and write it in either
+verbose, or non-verbose mode, for any type of supported `IDltArg` type.
+
+#### 2.5.1. Packet Based Behaviour
+
+It is desirable that the complete message is constructed using the
+`IDltTraceEncoder` before sending it out on the network. This allows underlying
+streams to know upfront the complete packet size before sending out, potentially
+allowing for fragmentation if needed.
+
+#### 2.5.2. Extending for a Storage Header
+
+A `DltFileTraceWriterFactory` would create a `DltTraceWriter` but use a
+`DltFileTraceEncoder`, which prepends every buffer by 16 bytes containing the
+storage header.
+
+Writing data with a serial header is also trivial.
+
+Having the same `DltTraceWriter` means that the encoder is responsible for
+writing the headers as well. This allows having to write only a single class
+handling output to streams or other formats (e.g. network packets that are not
+stream based), including asynchronous I/O, while the format is delegated to the
+actual encoder to write to the buffer before it is sent out.
+
+#### 2.5.3. Writing Non-Verbose
+
+This version does not support writing non-verbose messages as without
+functionality to write a FIBEX file, reading the file afterwards is undefined.
+
+However, the `DltArgEncoder` already knows how to write payloads without a type
+info, so it would require implementing a `NonVerboseDltEncoder` which tells the
+`DltArgEncoder` to write non-verbose. There should be an appropriate
+`DltNvTraceEncoder` that would write the message identifier in addition before
+writing the data.

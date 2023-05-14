@@ -5,95 +5,62 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture(typeof(SignedIntArgEncoder))]
-    [TestFixture(typeof(DltArgEncoder))]
+    [TestFixture(typeof(SignedIntArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(SignedIntArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(SignedIntArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(SignedIntArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     public class SignedIntArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
-        [TestCase(0, true, false, 0x21, 1, TestName = "Encode_LittleEndian_8bitZero")]
-        [TestCase(1, true, false, 0x21, 1, TestName = "Encode_LittleEndian_8bitOne")]
-        [TestCase(-1, true, false, 0x21, 1, TestName = "Encode_LittleEndian_8bitMinusOne")]
-        [TestCase(sbyte.MinValue, true, false, 0x21, 1, TestName = "Encode_LittleEndian_8bitMin")]
-        [TestCase(sbyte.MaxValue, true, false, 0x21, 1, TestName = "Encode_LittleEndian_8bitMax")]
-        [TestCase(sbyte.MaxValue + 1, true, false, 0x22, 2, TestName = "Encode_LittleEndian_16bit")]
-        [TestCase(short.MaxValue, true, false, 0x22, 2, TestName = "Encode_LittleEndian_16bitMax")]
-        [TestCase(short.MinValue, true, false, 0x22, 2, TestName = "Encode_LittleEndian_16bitMin")]
-        [TestCase(short.MaxValue + 1, true, false, 0x23, 4, TestName = "Encode_LittleEndian_32bit")]
-        [TestCase(int.MaxValue, true, false, 0x23, 4, TestName = "Encode_LittleEndian_32bitMax")]
-        [TestCase(int.MinValue, true, false, 0x23, 4, TestName = "Encode_LittleEndian_32bitMax")]
-        [TestCase((long)int.MaxValue + 1, true, false, 0x24, 8, TestName = "Encode_LittleEndian_64bit")]
-        [TestCase(long.MaxValue, true, false, 0x24, 8, TestName = "Encode_LittleEndian_64bitMax")]
-        [TestCase(long.MinValue, true, false, 0x24, 8, TestName = "Encode_LittleEndian_64bitMin")]
-        [TestCase(0, true, true, 0x21, 1, TestName = "Encode_BigEndian_8bitZero")]
-        [TestCase(1, true, true, 0x21, 1, TestName = "Encode_BigEndian_8bitOne")]
-        [TestCase(-1, true, true, 0x21, 1, TestName = "Encode_BigEndian_8bitMinusOne")]
-        [TestCase(sbyte.MinValue, true, true, 0x21, 1, TestName = "Encode_BigEndian_8bitMin")]
-        [TestCase(sbyte.MaxValue, true, true, 0x21, 1, TestName = "Encode_BigEndian_8bitMax")]
-        [TestCase(sbyte.MaxValue + 1, true, true, 0x22, 2, TestName = "Encode_BigEndian_16bit")]
-        [TestCase(short.MaxValue, true, true, 0x22, 2, TestName = "Encode_BigEndian_16bitMax")]
-        [TestCase(short.MinValue, true, true, 0x22, 2, TestName = "Encode_BigEndian_16bitMin")]
-        [TestCase(short.MaxValue + 1, true, true, 0x23, 4, TestName = "Encode_BigEndian_32bit")]
-        [TestCase(int.MaxValue, true, true, 0x23, 4, TestName = "Encode_BigEndian_32bitMax")]
-        [TestCase(int.MinValue, true, true, 0x23, 4, TestName = "Encode_BigEndian_32bitMax")]
-        [TestCase((long)int.MaxValue + 1, true, true, 0x24, 8, TestName = "Encode_BigEndian_64bit")]
-        [TestCase(long.MaxValue, true, true, 0x24, 8, TestName = "Encode_BigEndian_64bitMax")]
-        [TestCase(long.MinValue, true, true, 0x24, 8, TestName = "Encode_BigEndian_64bitMin")]
+        public SignedIntArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
+            : base(encoderType, endianness, lineType) { }
 
-        [TestCase(0, false, false, 0x21, 1, TestName = "EncodeNv_LittleEndian_8bitZero")]
-        [TestCase(1, false, false, 0x21, 1, TestName = "EncodeNv_LittleEndian_8bitOne")]
-        [TestCase(-1, false, false, 0x21, 1, TestName = "EncodeNv_LittleEndian_8bitMinusOne")]
-        [TestCase(sbyte.MinValue, false, false, 0x21, 1, TestName = "EncodeNv_LittleEndian_8bitMin")]
-        [TestCase(sbyte.MaxValue, false, false, 0x21, 1, TestName = "EncodeNv_LittleEndian_8bitMax")]
-        [TestCase(sbyte.MaxValue + 1, false, false, 0x22, 2, TestName = "EncodeNv_LittleEndian_16bit")]
-        [TestCase(short.MaxValue, false, false, 0x22, 2, TestName = "EncodeNv_LittleEndian_16bitMax")]
-        [TestCase(short.MinValue, false, false, 0x22, 2, TestName = "EncodeNv_LittleEndian_16bitMin")]
-        [TestCase(short.MaxValue + 1, false, false, 0x23, 4, TestName = "EncodeNv_LittleEndian_32bit")]
-        [TestCase(int.MaxValue, false, false, 0x23, 4, TestName = "EncodeNv_LittleEndian_32bitMax")]
-        [TestCase(int.MinValue, false, false, 0x23, 4, TestName = "EncodeNv_LittleEndian_32bitMax")]
-        [TestCase((long)int.MaxValue + 1, false, false, 0x24, 8, TestName = "EncodeNv_LittleEndian_64bit")]
-        [TestCase(long.MaxValue, false, false, 0x24, 8, TestName = "EncodeNv_LittleEndian_64bitMax")]
-        [TestCase(long.MinValue, false, false, 0x24, 8, TestName = "EncodeNv_LittleEndian_64bitMin")]
-        [TestCase(0, false, true, 0x21, 1, TestName = "EncodeNv_BigEndian_8bitZero")]
-        [TestCase(1, false, true, 0x21, 1, TestName = "EncodeNv_BigEndian_8bitOne")]
-        [TestCase(-1, false, true, 0x21, 1, TestName = "EncodeNv_BigEndian_8bitMinusOne")]
-        [TestCase(sbyte.MinValue, false, true, 0x21, 1, TestName = "EncodeNv_BigEndian_8bitMin")]
-        [TestCase(sbyte.MaxValue, false, true, 0x21, 1, TestName = "EncodeNv_BigEndian_8bitMax")]
-        [TestCase(sbyte.MaxValue + 1, false, true, 0x22, 2, TestName = "EncodeNv_BigEndian_16bit")]
-        [TestCase(short.MaxValue, false, true, 0x22, 2, TestName = "EncodeNv_BigEndian_16bitMax")]
-        [TestCase(short.MinValue, false, true, 0x22, 2, TestName = "EncodeNv_BigEndian_16bitMin")]
-        [TestCase(short.MaxValue + 1, false, true, 0x23, 4, TestName = "EncodeNv_BigEndian_32bit")]
-        [TestCase(int.MaxValue, false, true, 0x23, 4, TestName = "EncodeNv_BigEndian_32bitMax")]
-        [TestCase(int.MinValue, false, true, 0x23, 4, TestName = "EncodeNv_BigEndian_32bitMax")]
-        [TestCase((long)int.MaxValue + 1, false, true, 0x24, 8, TestName = "EncodeNv_BigEndian_64bit")]
-        [TestCase(long.MaxValue, false, true, 0x24, 8, TestName = "EncodeNv_BigEndian_64bitMax")]
-        [TestCase(long.MinValue, false, true, 0x24, 8, TestName = "EncodeNv_BigEndian_64bitMin")]
-        public void EncodeSignedInt(long value, bool verbose, bool msbf, byte expTypeInfo, int expLen)
+        [TestCase(0, 0x21, 1, TestName = "Encode_8bitZero")]
+        [TestCase(1, 0x21, 1, TestName = "Encode_8bitOne")]
+        [TestCase(-1, 0x21, 1, TestName = "Encode_8bitMinusOne")]
+        [TestCase(sbyte.MinValue, 0x21, 1, TestName = "Encode_8bitMin")]
+        [TestCase(sbyte.MaxValue, 0x21, 1, TestName = "Encode_8bitMax")]
+        [TestCase(sbyte.MaxValue + 1, 0x22, 2, TestName = "Encode_16bit")]
+        [TestCase(short.MaxValue, 0x22, 2, TestName = "Encode_16bitMax")]
+        [TestCase(short.MinValue, 0x22, 2, TestName = "Encode_16bitMin")]
+        [TestCase(short.MaxValue + 1, 0x23, 4, TestName = "Encode_32bit")]
+        [TestCase(int.MaxValue, 0x23, 4, TestName = "Encode_32bitMax")]
+        [TestCase(int.MinValue, 0x23, 4, TestName = "Encode_32bitMax")]
+        [TestCase((long)int.MaxValue + 1, 0x24, 8, TestName = "Encode_64bit")]
+        [TestCase(long.MaxValue, 0x24, 8, TestName = "Encode_64bitMax")]
+        [TestCase(long.MinValue, 0x24, 8, TestName = "Encode_64bitMin")]
+        public void EncodeSignedInt(long value, byte expTypeInfo, int expLen)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0) + expLen];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + expLen];
             SignedIntDltArg arg = new SignedIntDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
-            if (verbose) {
-                byte[] typeInfo = msbf ?
+            if (IsVerbose) {
+                byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x00, expTypeInfo } :
                     new byte[] { expTypeInfo, 0x00, 0x00, 0x00 };
                 Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
             }
 
             long result;
-            Span<byte> payload = buffer.AsSpan(verbose ? 4 : 0, expLen);
+            Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0, expLen);
             switch (expLen) {
             case 1:
                 result = unchecked((sbyte)payload[0]);
                 break;
             case 2:
-                result = BitOperations.To16Shift(payload[0..2], !msbf);
+                result = BitOperations.To16Shift(payload[0..2], !IsBigEndian);
                 break;
             case 4:
-                result = BitOperations.To32Shift(payload[0..4], !msbf);
+                result = BitOperations.To32Shift(payload[0..4], !IsBigEndian);
                 break;
             case 8:
-                result = BitOperations.To64Shift(payload[0..8], !msbf);
+                result = BitOperations.To64Shift(payload[0..8], !IsBigEndian);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(expLen), "Unsupported length");
@@ -101,33 +68,16 @@
             Assert.That(result, Is.EqualTo(value));
         }
 
-        [TestCase(0, true, false, TestName = "InsufficientBuffer_LittleEndian_8bitZero")]
-        [TestCase(256, true, false, TestName = "InsufficientBuffer_LittleEndian_16bit")]
-        [TestCase(65536, true, false, TestName = "InsufficientBuffer_LittleEndian_32bit")]
-        [TestCase(0x1_00000000, true, false, TestName = "InsufficientBuffer_LittleEndian_64bit")]
-        [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), true, false, TestName = "InsufficientBuffer_LittleEndian_64bitMax")]
-        [TestCase(0, true, true, TestName = "InsufficientBuffer_BigEndian_8bitZero")]
-        [TestCase(256, true, true, TestName = "InsufficientBuffer_BigEndian_16bit")]
-        [TestCase(65536, true, true, TestName = "InsufficientBuffer_BigEndian_32bit")]
-        [TestCase(0x1_00000000, true, true, TestName = "InsufficientBuffer_BigEndian_64bit")]
-        [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), true, true, TestName = "InsufficientBuffer_BigEndian_64bitMax")]
-
-        [TestCase(0, false, false, TestName = "InsufficientBufferNv_LittleEndian_8bitZero")]
-        [TestCase(256, false, false, TestName = "InsufficientBufferNv_LittleEndian_16bit")]
-        [TestCase(65536, false, false, TestName = "InsufficientBufferNv_LittleEndian_32bit")]
-        [TestCase(0x1_00000000, false, false, TestName = "InsufficientBufferNv_LittleEndian_64bit")]
-        [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), false, false, TestName = "InsufficientBufferNv_LittleEndian_64bitMax")]
-        [TestCase(0, false, true, TestName = "InsufficientBufferNv_BigEndian_8bitZero")]
-        [TestCase(256, false, true, TestName = "InsufficientBufferNv_BigEndian_16bit")]
-        [TestCase(65536, false, true, TestName = "InsufficientBufferNv_BigEndian_32bit")]
-        [TestCase(0x1_00000000, false, true, TestName = "InsufficientBufferNv_BigEndian_64bit")]
-        [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), false, true, TestName = "InsufficientBufferNv_BigEndian_64bitMax")]
-        public void InsufficientBuffer(long value, bool verbose, bool msbf)
+        [TestCase(0, TestName = "InsufficientBuffer_8bitZero")]
+        [TestCase(256, TestName = "InsufficientBuffer_16bit")]
+        [TestCase(65536, TestName = "InsufficientBuffer_32bit")]
+        [TestCase(0x1_00000000, TestName = "InsufficientBuffer_64bit")]
+        [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), TestName = "InsufficientBuffer_64bitMax")]
+        public void InsufficientBuffer(long value)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0)];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0)];
             SignedIntDltArg arg = new SignedIntDltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
         }
     }
 }

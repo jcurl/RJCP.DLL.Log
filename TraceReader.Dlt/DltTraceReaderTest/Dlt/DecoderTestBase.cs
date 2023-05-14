@@ -2,9 +2,9 @@
 {
     using System.IO;
     using System.Threading.Tasks;
-    using Dlt.NonVerbose;
-    using Dlt.Packet;
+    using NonVerbose;
     using NUnit.Framework;
+    using Packet;
     using RJCP.CodeQuality.NUnitExtensions;
 
     public abstract class DecoderTestBase

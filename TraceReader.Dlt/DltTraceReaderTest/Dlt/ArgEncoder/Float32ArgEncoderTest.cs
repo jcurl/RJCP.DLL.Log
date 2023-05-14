@@ -5,73 +5,53 @@
     using NUnit.Framework;
     using RJCP.Core;
 
-    [TestFixture(typeof(Float32ArgEncoder))]
-    [TestFixture(typeof(DltArgEncoder))]
+    [TestFixture(typeof(Float32ArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(Float32ArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(Float32ArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(Float32ArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     public class Float32ArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
-        [TestCase(0, true, false, 0x83, TestName = "Encode_LittleEndian_FloatZero")]
-        [TestCase(float.NaN, true, false, 0x83, TestName = "Encode_LittleEndian_FloatNan")]
-        [TestCase(float.PositiveInfinity, true, false, 0x83, TestName = "Encode_LittleEndian_FloatPosInf")]
-        [TestCase(float.NegativeInfinity, true, false, 0x83, TestName = "Encode_LittleEndian_FloatNegInf")]
-        [TestCase(float.Epsilon, true, false, 0x83, TestName = "Encode_LittleEndian_FloatEps")]
-        [TestCase(float.MaxValue, true, false, 0x83, TestName = "Encode_LittleEndian_FloatMax")]
-        [TestCase(float.MinValue, true, false, 0x83, TestName = "Encode_LittleEndian_FloatMin")]
-        [TestCase(3.141592F, true, false, 0x83, TestName = "Encode_LittleEndian_FloatPi")]
-        [TestCase(0, true, true, 0x83, TestName = "Encode_BigEndian_FloatZero")]
-        [TestCase(float.NaN, true, true, 0x83, TestName = "Encode_BigEndian_FloatNan")]
-        [TestCase(float.PositiveInfinity, true, true, 0x83, TestName = "Encode_BigEndian_FloatPosInf")]
-        [TestCase(float.NegativeInfinity, true, true, 0x83, TestName = "Encode_BigEndian_FloatNegInf")]
-        [TestCase(float.Epsilon, true, true, 0x83, TestName = "Encode_BigEndian_FloatEps")]
-        [TestCase(float.MaxValue, true, true, 0x83, TestName = "Encode_BigEndian_FloatMax")]
-        [TestCase(float.MinValue, true, true, 0x83, TestName = "Encode_BigEndian_FloatMin")]
-        [TestCase(3.141592F, true, true, 0x83, TestName = "Encode_BigEndian_FloatPi")]
+        public Float32ArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
+            : base(encoderType, endianness, lineType) { }
 
-        [TestCase(0, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatZero")]
-        [TestCase(float.NaN, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatNan")]
-        [TestCase(float.PositiveInfinity, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatPosInf")]
-        [TestCase(float.NegativeInfinity, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatNegInf")]
-        [TestCase(float.Epsilon, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatEps")]
-        [TestCase(float.MaxValue, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatMax")]
-        [TestCase(float.MinValue, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatMin")]
-        [TestCase(3.141592F, false, false, 0x83, TestName = "EncodeNv_LittleEndian_FloatPi")]
-        [TestCase(0, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatZero")]
-        [TestCase(float.NaN, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatNan")]
-        [TestCase(float.PositiveInfinity, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatPosInf")]
-        [TestCase(float.NegativeInfinity, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatNegInf")]
-        [TestCase(float.Epsilon, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatEps")]
-        [TestCase(float.MaxValue, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatMax")]
-        [TestCase(float.MinValue, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatMin")]
-        [TestCase(3.141592F, false, true, 0x83, TestName = "EncodeNv_BigEndian_FloatPi")]
-        public void EncodeFloat32(float value, bool verbose, bool msbf, byte expTypeInfo)
+        [TestCase(0, 0x83, TestName = "Encode_FloatZero")]
+        [TestCase(float.NaN, 0x83, TestName = "Encode_FloatNan")]
+        [TestCase(float.PositiveInfinity, 0x83, TestName = "Encode_FloatPosInf")]
+        [TestCase(float.NegativeInfinity, 0x83, TestName = "Encode_FloatNegInf")]
+        [TestCase(float.Epsilon, 0x83, TestName = "Encode_FloatEps")]
+        [TestCase(float.MaxValue, 0x83, TestName = "Encode_FloatMax")]
+        [TestCase(float.MinValue, 0x83, TestName = "Encode_FloatMin")]
+        [TestCase(3.141592F, 0x83, TestName = "Encode_FloatPi")]
+        public void EncodeFloat32(float value, byte expTypeInfo)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0) + 4];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 4];
             Float32DltArg arg = new Float32DltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(buffer.Length));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
-            if (verbose) {
-                byte[] typeInfo = msbf ?
+            if (IsVerbose) {
+                byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x00, expTypeInfo } :
                     new byte[] { expTypeInfo, 0x00, 0x00, 0x00 };
                 Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
             }
 
-            Span<byte> payload = buffer.AsSpan(verbose ? 4 : 0, 4);
-            float result = BitOperations.To32FloatShift(payload[0..4], !msbf);
+            Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0, 4);
+            float result = BitOperations.To32FloatShift(payload[0..4], !IsBigEndian);
             Assert.That(result, Is.EqualTo(value));
         }
 
-        [TestCase(3.141592F, true, false, TestName = "InsufficientBuffer_LittleEndian_FloatPi")]
-        [TestCase(3.141592F, true, true, TestName = "InsufficientBuffer_BigEndian_FloatPi")]
-
-        [TestCase(3.141592F, false, false, TestName = "InsufficientBufferNv_LittleEndian_FloatPi")]
-        [TestCase(3.141592F, false, true, TestName = "InsufficientBufferNv_BigEndian_FloatPi")]
-        public void InsufficientBuffer(float value, bool verbose, bool msbf)
+        [TestCase(3.141592F, TestName = "InsufficientBuffer_FloatPi")]
+        public void InsufficientBuffer(float value)
         {
-            byte[] buffer = new byte[(verbose ? 4 : 0) + 3];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 3];
             Float32DltArg arg = new Float32DltArg(value);
-            IArgEncoder encoder = GetEncoder();
-            Assert.That(encoder.Encode(buffer, verbose, msbf, arg), Is.EqualTo(-1));
+            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
         }
     }
 }
