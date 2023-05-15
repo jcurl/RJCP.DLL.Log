@@ -1,42 +1,46 @@
 @startuml DLT.Writer
 interface IDisposable
 
-interface ITraceLine
-
 interface ITraceWriter<TLine:ITraceLine> {
-    WriteLineAsync(line: TLine): Task
+    +WriteLineAsync(line: TLine): Task
 }
-
 IDisposable <|.d. ITraceWriter
 
-interface ITraceWriterFactory<TLine> {
+interface ITraceWriterFactory<TLine:ITraceLine> {
     +CreateAsync(stream: Stream): Task<ITraceWriter<TLine>>
     +CreateAsync(fileName: string): Task<ITraceWriter<TLine>>
 }
 
-ITraceWriterFactory -r- ITraceWriter : <<creates>>
+interface ITraceEncoderFactory<TLine:ITraceLine> {
+    +Create(): ITraceEncoder<TLine>
+}
 
-interface ITraceEncoder
-interface ITraceEncoderFactory
+interface ITraceEncoder<TLine:ITraceLine> {
+    +Encode(buffer: Span<byte>, line: TLine): int
+}
 
-ITraceEncoderFactory -r- ITraceEncoder
 class DltTraceWriterFactory<TLine:DltTraceLineBase> {
     +CreateAsync(stream: Stream): Task<ITraceWriter<DltTraceLineBase>>
     +CreateAsync(fileName: string): Task<ITraceWriter<DltTraceLineBase>>
 }
+ITraceWriterFactory <|.d. DltTraceWriterFactory : TLine -> DltTraceLineBase
+DltTraceWriterFactory -d--> DltTraceWriter : <<creates>>
 
-ITraceWriterFactory <|.d. DltTraceWriterFactory
-class DltTraceEncoderFactory<TLine:DltTraceLineBase>
-
-ITraceEncoderFactory <|.d. DltTraceEncoderFactory
+class DltTraceEncoderFactory<TLine:DltTraceLineBase> {
+    +Create() : ITraceEncoder<DltTraceLineBase>
+}
+ITraceEncoderFactory <|.d. DltTraceEncoderFactory : TLine -> DltTraceLineBase
 DltTraceWriterFactory o-r- DltTraceEncoderFactory
+DltTraceEncoderFactory -d--> DltTraceEncoder : <<creates>>
 
-class DltTraceWriter<TLine:DltTraceLineBase>
-class DltTraceEncoder<TLine:DltTraceLineBase>
+class DltTraceWriter<TLine:DltTraceLineBase> {
+    +WriteLineAsync(line: DltTraceLineBase): Task
+}
+ITraceWriter <|.d. DltTraceWriter : TLine -> DltTraceLineBase
 
+class DltTraceEncoder<TLine:DltTraceLineBase> {
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+}
+ITraceEncoder <|.d. DltTraceEncoder : TLine -> DltTraceLineBase
 DltTraceWriter o-r- DltTraceEncoder
-'DltTraceWriter .u.|> ITraceWriter
-
-DltTraceWriterFactory -d-> DltTraceWriter : <<creates>>
-DltTraceEncoderFactory -d-> DltTraceEncoder : <<creates>>
 @enduml

@@ -74,6 +74,7 @@
     <Compile Include="Dlt\ArgEncoder\ArgEncoderTestBase.cs" />
     <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\BoolArgEncoderTest.cs" />
+    <Compile Include="Dlt\ArgEncoder\EncoderType.cs" />
     <Compile Include="Dlt\ArgEncoder\Float64ArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\Float32ArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\HexIntArgEncoderTest.cs" />
@@ -215,6 +216,8 @@
     <Compile Include="Dlt\Verbose\VerboseArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\VerboseDecoderTestBase.cs" />
     <Compile Include="Dlt\Verbose\VerboseDltDecoderTest.cs" />
+    <Compile Include="Encoder\DltTraceEncoderCommonTest.cs" />
+    <Compile Include="Encoder\DltTraceEncoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
     <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>

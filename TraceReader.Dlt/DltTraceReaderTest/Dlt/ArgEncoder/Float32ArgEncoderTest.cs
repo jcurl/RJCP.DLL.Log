@@ -15,6 +15,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
     public class Float32ArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public Float32ArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -30,18 +32,17 @@
         [TestCase(3.141592F, 0x83, TestName = "Encode_FloatPi")]
         public void EncodeFloat32(float value, byte expTypeInfo)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 4];
-            Float32DltArg arg = new Float32DltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
+            Span<byte> buffer = ArgEncode(new Float32DltArg(value), 4);
+            Assert.That(buffer.Length, Is.EqualTo((IsVerbose ? 4 : 0) + 4));
 
             if (IsVerbose) {
                 byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x00, expTypeInfo } :
                     new byte[] { expTypeInfo, 0x00, 0x00, 0x00 };
-                Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
+                Assert.That(buffer[0..4].ToArray(), Is.EqualTo(typeInfo));
             }
 
-            Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0, 4);
+            Span<byte> payload = buffer.Slice(IsVerbose ? 4 : 0, 4);
             float result = BitOperations.To32FloatShift(payload[0..4], !IsBigEndian);
             Assert.That(result, Is.EqualTo(value));
         }
@@ -49,9 +50,9 @@
         [TestCase(3.141592F, TestName = "InsufficientBuffer_FloatPi")]
         public void InsufficientBuffer(float value)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 3];
-            Float32DltArg arg = new Float32DltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 3];
+            ArgEncode(buffer, new Float32DltArg(value), out int result);
+            Assert.That(result, Is.EqualTo(-1));
         }
     }
 }

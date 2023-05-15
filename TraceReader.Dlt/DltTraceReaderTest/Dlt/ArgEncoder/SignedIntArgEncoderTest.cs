@@ -15,6 +15,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
     public class SignedIntArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public SignedIntArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -36,19 +38,18 @@
         [TestCase(long.MinValue, 0x24, 8, TestName = "Encode_64bitMin")]
         public void EncodeSignedInt(long value, byte expTypeInfo, int expLen)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + expLen];
-            SignedIntDltArg arg = new SignedIntDltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
+            Span<byte> buffer = ArgEncode(new SignedIntDltArg(value), expLen);
+            Assert.That(buffer.Length, Is.EqualTo((IsVerbose ? 4 : 0) + expLen));
 
             if (IsVerbose) {
                 byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x00, expTypeInfo } :
                     new byte[] { expTypeInfo, 0x00, 0x00, 0x00 };
-                Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
+                Assert.That(buffer[0..4].ToArray(), Is.EqualTo(typeInfo));
             }
 
             long result;
-            Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0, expLen);
+            Span<byte> payload = buffer.Slice(IsVerbose ? 4 : 0, expLen);
             switch (expLen) {
             case 1:
                 result = unchecked((sbyte)payload[0]);
@@ -75,9 +76,9 @@
         [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), TestName = "InsufficientBuffer_64bitMax")]
         public void InsufficientBuffer(long value)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0)];
-            SignedIntDltArg arg = new SignedIntDltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen];
+            ArgEncode(buffer, new SignedIntDltArg(value), out int result);
+            Assert.That(result, Is.EqualTo(-1));
         }
     }
 }

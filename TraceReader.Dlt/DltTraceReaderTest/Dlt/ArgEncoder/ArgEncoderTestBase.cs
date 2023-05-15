@@ -2,15 +2,7 @@
 {
     using System;
     using Args;
-
-    /// <summary>
-    /// Choose the style of test case for encoding.
-    /// </summary>
-    public enum EncoderType
-    {
-        Argument,
-        Arguments
-    }
+    using Encoder;
 
     /// <summary>
     /// The endianness of the output when encoding.
@@ -47,6 +39,12 @@
             m_EncoderType = encoderType;
             m_Endianness = endianness;
             m_LineType = lineType;
+
+            switch (m_EncoderType) {
+            case EncoderType.TraceEncoder:
+                HeaderLen = 22;
+                break;
+            }
         }
 
         /// <summary>
@@ -61,6 +59,12 @@
         /// <value>I <see langword="true"/> if lines should be encoded as verbose; otherwise, <see langword="false"/>.</value>
         protected bool IsVerbose { get { return m_LineType == LineType.Verbose; } }
 
+        /// <summary>
+        /// Gets the length of the header, extra space needed at the start of the buffer when encoding.
+        /// </summary>
+        /// <value>The length of the header.</value>
+        protected int HeaderLen { get; }
+
         private static IArgEncoder GetEncoder()
         {
             return Activator.CreateInstance<TArgEncoder>();
@@ -69,29 +73,56 @@
         /// <summary>
         /// Encodes the arguments in to the buffer specified, using the style of the test case.
         /// </summary>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="verbose">Serialise to verbose if <see langword="true"/>, otherwise non-verbose.</param>
         /// <param name="arg">The argument to encode.</param>
-        /// <returns>System.Int32.</returns>
-        protected int ArgEncode(Span<byte> buffer, IDltArg arg)
+        /// <param name="result">The result of the encoding operation (actual length)</param>
+        /// <returns>The result and the buffer where the argument is encoded to.</returns>
+        protected Span<byte> ArgEncode(IDltArg arg, int expLen)
         {
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + expLen];
+            return ArgEncode(buffer, arg, out _);
+        }
+
+        /// <summary>
+        /// Encodes the arguments in to the buffer specified, using the style of the test case.
+        /// </summary>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="arg">The argument to encode.</param>
+        /// <param name="result">The result of the encoding operation (actual length)</param>
+        /// <returns>The result and the buffer where the argument is encoded to.</returns>
+        protected Span<byte> ArgEncode(Span<byte> buffer, IDltArg arg, out int result)
+        {
+            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg }) {
+                EcuId = "ECU1",
+                ApplicationId = "APP1",
+                ContextId = "CTX1",
+                Type = DltType.LOG_INFO,
+                DeviceTimeStamp = new TimeSpan(0),
+                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature +
+                    DltLineFeatures.DevTimeStampFeature + DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature
+            };
+            if (IsBigEndian) line.Features += DltLineFeatures.BigEndianFeature;
+
             switch (m_EncoderType) {
             case EncoderType.Argument:
                 IArgEncoder encoder = GetEncoder();
-                return encoder.Encode(buffer, IsVerbose, IsBigEndian, arg);
+                result = encoder.Encode(buffer, IsVerbose, IsBigEndian, arg);
+                if (result == -1) return Array.Empty<byte>();
+                return buffer[..result];
             case EncoderType.Arguments:
                 if (!IsVerbose) throw new InvalidOperationException("The EncoderType doesn't support non-verbose");
 
-                DltTraceLine line = new DltTraceLine(new IDltArg[] { arg }) {
-                    EcuId = "ECU1",
-                    ApplicationId = "APP1",
-                    ContextId = "CTX1",
-                    Type = DltType.LOG_INFO,
-                    DeviceTimeStamp = new TimeSpan(0),
-                };
-                if (IsBigEndian) line.Features += DltLineFeatures.BigEndianFeature;
                 IDltEncoder<DltTraceLine> dltEncoder = new VerboseDltEncoder(GetEncoder());
-                return dltEncoder.Encode(buffer, line);
+                result = dltEncoder.Encode(buffer, line);
+                if (result == -1) return Array.Empty<byte>();
+                return buffer[..result];
+            case EncoderType.TraceEncoder:
+                if (!IsVerbose) throw new InvalidOperationException("The EncoderType doesn't support non-verbose");
+
+                ITraceEncoderFactory<DltTraceLineBase> encFactory = new DltTraceEncoderFactory();
+                ITraceEncoder<DltTraceLineBase> lineEncoder = encFactory.Create();
+                result = lineEncoder.Encode(buffer, line);
+                if (result == -1) return Array.Empty<byte>();
+                return buffer[22..result];
             default:
                 throw new NotImplementedException();
             }

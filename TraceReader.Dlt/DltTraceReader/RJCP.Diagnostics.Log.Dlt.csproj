@@ -305,6 +305,8 @@
     <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Dlt\ArgEncoder\IDltEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\VerboseDltEncoder.cs" />
+    <Compile Include="Encoder\DltTraceEncoder.cs" />
+    <Compile Include="Encoder\DltTraceEncoderFactory.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\Iso8859_1.cs" />
@@ -314,10 +316,6 @@
   <ItemGroup>
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Encoder\" />
   </ItemGroup>
 
 </Project>

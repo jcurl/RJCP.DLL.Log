@@ -1,21 +1,31 @@
 @startuml DLT.WriterEncoder
-interface ITraceEncoder
-interface ITraceEncoderFactory
+interface IDisposable
 
-ITraceEncoderFactory -r- ITraceEncoder
+interface ITraceEncoder<TLine:ITraceLine> {
+    +Encode(buffer: Span<byte>, line: TLine): int
+}
+IDisposable <|.d. ITraceEncoder
 
-class DltTraceEncoderFactory<TLine:DltTraceLineBase>
-ITraceEncoderFactory <|.d. DltTraceEncoderFactory
+interface ITraceEncoderFactory<TLine:ITraceLine> {
+    +Create(): ITraceEncoder<TLine>
+}
 
-class DltTraceEncoder<TLine:DltTraceLineBase>
-ITraceEncoder <|.d. DltTraceEncoder
+class DltTraceEncoderFactory<TLine:DltTraceLineBase> {
+    +Create() : ITraceEncoder<DltTraceLineBase>
+}
+ITraceEncoderFactory <|.d. DltTraceEncoderFactory : TLine -> DltTraceLineBase
 
+class DltTraceEncoder<TLine:DltTraceLineBase> {
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+}
+ITraceEncoder <|.d. DltTraceEncoder : TLine -> DltTraceLineBase
 DltTraceEncoderFactory -r-> DltTraceEncoder : <<creates>>
 
 interface IDltEncoder<TLine:DltTraceLineBase> {
-    +Encode(buffer: Span<byte>, line: TLine): int
+   +Encode(buffer: Span<byte>, line: TLine): int
 }
-class VerboseDltEncoder<DltTraceLine> {
+
+class VerboseDltEncoder<TLine:DltTraceLine> {
     +Encode(buffer: Span<byte>, line: DltTraceLine): int
 }
 IDltEncoder <|.d. VerboseDltEncoder : TLine -> DltTraceLine
@@ -23,6 +33,7 @@ IDltEncoder <|.d. VerboseDltEncoder : TLine -> DltTraceLine
 interface IArgEncoder {
     +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
 }
+
 class DltArgEncoder {
     +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
 }
@@ -31,14 +42,14 @@ VerboseDltEncoder *-r- DltArgEncoder
 
 class BoolArgEncoder
 together {
-  class BinaryIntArgEncoder
-  class HexIntArgEncoder
-  class SignedIntArgEncoder
-  class UnsignedIntArgEncoder
+    class BinaryIntArgEncoder
+    class HexIntArgEncoder
+    class SignedIntArgEncoder
+    class UnsignedIntArgEncoder
 }
 together {
-  class Float32ArgEncoder
-  class Float64ArgEncoder
+    class Float32ArgEncoder
+    class Float64ArgEncoder
 }
 class StringArgEncoder
 class RawArgEncoder

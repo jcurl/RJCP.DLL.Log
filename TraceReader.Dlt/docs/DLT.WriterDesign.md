@@ -100,16 +100,20 @@ is to write to a `Stream`.
 The `DltTraceEncoder` knows how to write a complete line to a buffer as a single
 packet (not a stream). It writes the standard header based on the features in
 the line. An extended header is written as needed, followed by the following
-arguments. For this implementation, the default is to ignore the non-verbose
-flag and write all lines as verbose, although, it would not be difficult to
-provide another, similar, encoder.
+arguments. For this implementation, the non-verbose flag is ignored lines are
+written as verbose.
 
 The `VerboseDltEncoder` is a high level class that takes a list of `IDltArg`
-objects, and writes them all to the given buffer with verbose type info. If
-needed, it would be trivial to provide an equivalent non-verbose encoder.
+objects, and writes them all to the given buffer with verbose type info.
 
 The `DltArgEncoder` is intended to take an argument type and write it in either
 verbose, or non-verbose mode, for any type of supported `IDltArg` type.
+
+Note: To write non-verbose, the `DltTraceEncoder` would need to write to a
+`NonVerboseDltEncoder`, and it chooses to write verbose or non-verbose to the
+`DltArgEncoder`. An extension to the `StringDltArg` would be needed to
+differentiate between a dynamic string and a static string, and the
+`DltArgEncoder` would need modifications to ignore writing static strings.
 
 #### 2.5.1. Packet Based Behaviour
 

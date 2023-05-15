@@ -10,6 +10,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
     public class UnknownVerboseArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public UnknownVerboseArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -18,17 +20,16 @@
         [TestCase(new byte[] { 0x10, 0x00, 0x00, 0x00, 0x01 }, TestName = "Encode_UnknownVerbose")]
         public void EncodeUnknownVerbose(byte[] value)
         {
-            byte[] buffer = new byte[value.Length];
-            UnknownVerboseDltArg arg = new UnknownVerboseDltArg(value, IsBigEndian);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
+            Span<byte> buffer = ArgEncode(new UnknownVerboseDltArg(value, IsBigEndian), value.Length);
+            Assert.That(buffer.Length, Is.EqualTo(value.Length));
 
-            Assert.That(buffer, Is.EqualTo(value));
+            Assert.That(buffer.ToArray(), Is.EqualTo(value));
         }
 
         [TestCase(TestName = "Encode_UnknownVerboseMax")]
         public void EncodeUnknownVerboseMax()
         {
-            byte[] value = new byte[65535];
+            byte[] value = new byte[65535 - HeaderLen];
             if (IsBigEndian) {
                 value[0] = 0x00;
                 value[1] = 0x00;
@@ -58,9 +59,9 @@
         [TestCase(new byte[] { 0x10, 0x00, 0x00, 0x00, 0x01 }, TestName = "Encode_NonVerboseError")]
         public void EncodeNonVerboseError(byte[] value)
         {
-            byte[] buffer = new byte[value.Length];
-            UnknownVerboseDltArg arg = new UnknownVerboseDltArg(value, IsBigEndian);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(-1));
+            byte[] buffer = new byte[HeaderLen + 4 + value.Length];
+            ArgEncode(buffer, new UnknownVerboseDltArg(value, IsBigEndian), out int result);
+            Assert.That(result, Is.EqualTo(-1));
         }
     }
 }

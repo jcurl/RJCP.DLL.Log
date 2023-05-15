@@ -15,6 +15,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Argument, Endianness.Little, LineType.NonVerbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
     public class NonVerboseArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public NonVerboseArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -24,23 +26,22 @@
         [TestCase(new byte[] { 0xFF, 0x01 }, TestName = "Encode_NV")]
         public void EncodeNvBytes(byte[] value)
         {
-            byte[] buffer = new byte[(IsVerbose ? 6 : 0) + value.Length];
-            NonVerboseDltArg arg = new NonVerboseDltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
+            // Only in Verbose, do we encode as Raw, so an extra 2 bytes is for the length.
+            Span<byte> buffer = ArgEncode(new NonVerboseDltArg(value), value.Length + (IsVerbose ? 2 : 0));
+            Assert.That(buffer.Length, Is.EqualTo((IsVerbose ? 6 : 0) + value.Length));
 
             if (IsVerbose) {
                 byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x04, 0x00 } :
                     new byte[] { 0x00, 0x04, 0x00, 0x00 };
-                Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
+                Assert.That(buffer[0..4].ToArray(), Is.EqualTo(typeInfo));
 
-                Span<byte> payload = buffer.AsSpan(4);
+                Span<byte> payload = buffer[4..];
                 int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
                 Assert.That(len, Is.EqualTo(value.Length));
                 Assert.That(payload[2..].ToArray(), Is.EqualTo(value));
             } else {
-                Span<byte> payload = buffer.AsSpan();
-                Assert.That(payload.ToArray(), Is.EqualTo(value));
+                Assert.That(buffer.ToArray(), Is.EqualTo(value));
             }
         }
 
@@ -48,30 +49,28 @@
         [TestCase(new byte[] { 0xFF, 0x01 }, TestName = "Encode_UNV")]
         public void EncodeUNvBytes(byte[] value)
         {
-            byte[] buffer = new byte[(IsVerbose ? 6 : 0) + value.Length];
-            UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(value);
-            Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
+            Span<byte> buffer = ArgEncode(new UnknownNonVerboseDltArg(value), value.Length + (IsVerbose ? 2 : 0));
+            Assert.That(buffer.Length, Is.EqualTo((IsVerbose ? 6 : 0) + value.Length));
 
             if (IsVerbose) {
                 byte[] typeInfo = IsBigEndian ?
                     new byte[] { 0x00, 0x00, 0x04, 0x00 } :
                     new byte[] { 0x00, 0x04, 0x00, 0x00 };
-                Assert.That(buffer[0..4], Is.EqualTo(typeInfo));
+                Assert.That(buffer[0..4].ToArray(), Is.EqualTo(typeInfo));
 
-                Span<byte> payload = buffer.AsSpan(4);
+                Span<byte> payload = buffer[4..];
                 int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
                 Assert.That(len, Is.EqualTo(value.Length));
                 Assert.That(payload[2..].ToArray(), Is.EqualTo(value));
             } else {
-                Span<byte> payload = buffer.AsSpan();
-                Assert.That(payload.ToArray(), Is.EqualTo(value));
+                Assert.That(buffer.ToArray(), Is.EqualTo(value));
             }
         }
 
         [TestCase(TestName = "Encode_NVMaxData")]
         public void EncodeNvBytesMax()
         {
-            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0)];
+            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0) - HeaderLen];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
@@ -81,18 +80,19 @@
         [TestCase(TestName = "Encode_NVOverSize")]
         public void EncodeNvBytesOverSize()
         {
-            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0)];
+            byte[] buffer = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
+            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            NonVerboseDltArg arg = new NonVerboseDltArg(data);
-            Assert.That(ArgEncode(data, arg), Is.EqualTo(-1));
+            ArgEncode(buffer, new NonVerboseDltArg(data), out int result);
+            Assert.That(result, Is.EqualTo(-1));
         }
 
         [TestCase(TestName = "Encode_UNVMaxData")]
         public void EncodeUNvBytesMax()
         {
-            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0)];
+            byte[] data = new byte[65535 - (IsVerbose ? 6 : 0) - HeaderLen];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
@@ -102,12 +102,13 @@
         [TestCase(TestName = "Encode_UNVOverSize")]
         public void EncodeUNvBytesOverSize()
         {
-            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0)];
+            byte[] buffer = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
+            byte[] data = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            UnknownNonVerboseDltArg arg = new UnknownNonVerboseDltArg(data);
-            Assert.That(ArgEncode(data, arg), Is.EqualTo(-1));
+            ArgEncode(buffer, new UnknownNonVerboseDltArg(data), out int result);
+            Assert.That(result, Is.EqualTo(-1));
         }
     }
 }

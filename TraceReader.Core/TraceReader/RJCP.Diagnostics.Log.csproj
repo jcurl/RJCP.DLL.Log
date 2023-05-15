@@ -97,6 +97,8 @@
     <Compile Include="Decoder\TextDecoder.cs" />
     <Compile Include="Decoder\TextDecoderBase.cs" />
     <Compile Include="Decoder\TextDecoderFactory.cs" />
+    <Compile Include="Encoder\ITraceEncoder.cs" />
+    <Compile Include="Encoder\ITraceEncoderFactory.cs" />
     <Compile Include="ITraceReader.cs" />
     <Compile Include="ITraceReaderFactory.cs" />
     <Compile Include="Log.cs" />
