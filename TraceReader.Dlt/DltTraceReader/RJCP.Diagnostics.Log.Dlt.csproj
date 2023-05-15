@@ -83,6 +83,7 @@
     <Compile Include="DltSkippedTraceLine.cs" />
     <Compile Include="DltTraceLine.cs" />
     <Compile Include="DltTraceReaderFactory.cs" />
+    <Compile Include="DltTraceWriterFactory.cs" />
     <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\BoolArgEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\DltArgEncoder.cs" />
@@ -311,6 +312,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Text\Iso8859_1.cs" />
     <Compile Include="Text\Iso8859_15.cs" />
+    <Compile Include="DltTraceWriter.cs" />
   </ItemGroup>
 
   <ItemGroup>

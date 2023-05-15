@@ -17,6 +17,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Little, LineType.Verbose)]
     public class Float64ArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public Float64ArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -50,6 +52,8 @@
         [TestCase(3.141592, TestName = "InsufficientBuffer_DoublePi")]
         public void InsufficientBuffer(double value)
         {
+            if (IsWriter) Assert.Ignore("Test case is meaningless");
+
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 7];
             ArgEncode(buffer, new Float64DltArg(value), out int result);
             Assert.That(result, Is.EqualTo(-1));

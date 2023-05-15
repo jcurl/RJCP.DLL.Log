@@ -6,7 +6,7 @@
     /// <summary>
     /// Interface for reading a log file.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The line type</typeparam>
     public interface ITraceReader<T> : IDisposable where T : ITraceLine
     {
         /// <summary>

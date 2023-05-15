@@ -101,6 +101,8 @@
     <Compile Include="Encoder\ITraceEncoderFactory.cs" />
     <Compile Include="ITraceReader.cs" />
     <Compile Include="ITraceReaderFactory.cs" />
+    <Compile Include="ITraceWriter.cs" />
+    <Compile Include="ITraceWriterFactory.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="LogTraceLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

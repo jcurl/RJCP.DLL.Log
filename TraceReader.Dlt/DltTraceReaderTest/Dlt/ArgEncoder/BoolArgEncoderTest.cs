@@ -16,6 +16,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Little, LineType.Verbose)]
     public class BoolArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public BoolArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -43,6 +45,8 @@
         [TestCase(true, TestName = "InsufficientBuffer_True")]
         public void InsufficientBuffer(bool value)
         {
+            if (IsWriter) Assert.Ignore("Test case is meaningless");
+
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen];
             ArgEncode(buffer, new BoolDltArg(value), out int result);
             Assert.That(result, Is.EqualTo(-1));

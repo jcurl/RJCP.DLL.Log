@@ -49,11 +49,18 @@
                 CreateLine(factory, writer, dltType, data, isBig);
                 using (Stream stream = writer.Stream()) {
                     if (!string.IsNullOrEmpty(fileName)) {
-                        string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "control", isBig ? "big" : "little");
-                        string outPath = Path.Combine(dir, $"{fileName}.dlt");
-                        if (!Directory.Exists(dir)) {
-                            Directory.CreateDirectory(dir);
+                        string argType = "args";
+                        switch (dltType) {
+                        case DltType.CONTROL_REQUEST:
+                        case DltType.CONTROL_RESPONSE:
+                        case DltType.CONTROL_TIME:
+                            argType = "control";
+                            break;
                         }
+                        string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "read", argType, isBig ? "big" : "little");
+                        string outPath = Path.Combine(dir, $"{fileName}.dlt");
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
                         writer.Write(outPath);
                     }
 

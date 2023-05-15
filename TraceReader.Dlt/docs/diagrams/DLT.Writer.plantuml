@@ -2,7 +2,7 @@
 interface IDisposable
 
 interface ITraceWriter<TLine:ITraceLine> {
-    +WriteLineAsync(line: TLine): Task
+    +WriteLineAsync(line: TLine): Task<bool>
 }
 IDisposable <|.d. ITraceWriter
 
@@ -34,7 +34,7 @@ DltTraceWriterFactory o-r- DltTraceEncoderFactory
 DltTraceEncoderFactory -d--> DltTraceEncoder : <<creates>>
 
 class DltTraceWriter<TLine:DltTraceLineBase> {
-    +WriteLineAsync(line: DltTraceLineBase): Task
+    +WriteLineAsync(line: DltTraceLineBase): Task<bool>
 }
 ITraceWriter <|.d. DltTraceWriter : TLine -> DltTraceLineBase
 

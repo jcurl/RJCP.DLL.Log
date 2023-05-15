@@ -17,6 +17,8 @@
     [TestFixture(typeof(DltArgEncoder), EncoderType.Arguments, Endianness.Little, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(DltArgEncoder), EncoderType.TraceEncoder, Endianness.Little, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Big, LineType.Verbose)]
+    [TestFixture(typeof(DltArgEncoder), EncoderType.TraceWriter, Endianness.Little, LineType.Verbose)]
     public class SignedIntArgEncoderTest<TArgEncoder> : ArgEncoderTestBase<TArgEncoder> where TArgEncoder : IArgEncoder
     {
         public SignedIntArgEncoderTest(EncoderType encoderType, Endianness endianness, LineType lineType)
@@ -76,6 +78,8 @@
         [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), TestName = "InsufficientBuffer_64bitMax")]
         public void InsufficientBuffer(long value)
         {
+            if (IsWriter) Assert.Ignore("Test case is meaningless");
+
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen];
             ArgEncode(buffer, new SignedIntDltArg(value), out int result);
             Assert.That(result, Is.EqualTo(-1));

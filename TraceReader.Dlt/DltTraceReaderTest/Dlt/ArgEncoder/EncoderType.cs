@@ -7,6 +7,7 @@
     {
         Argument,
         Arguments,
-        TraceEncoder
+        TraceEncoder,
+        TraceWriter
     }
 }
