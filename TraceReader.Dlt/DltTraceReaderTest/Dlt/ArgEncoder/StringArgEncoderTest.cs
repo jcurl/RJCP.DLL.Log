@@ -25,7 +25,7 @@
         [TestCase("", 0, TestName = "Encode_Utf8Empty")]
         public void EncodeUtf8(string value, int expLen)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 2 + expLen];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 3 + expLen];
             StringDltArg arg = new StringDltArg(value, StringEncodingType.Utf8);
             Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
@@ -38,7 +38,7 @@
 
             Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0);
             int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
-            string result = Encoding.UTF8.GetString(payload[2..(2 + len)]);
+            string result = Encoding.UTF8.GetString(payload[2..(2 + len - 1)]);
             Assert.That(result, Is.EqualTo(value));
         }
 
@@ -55,7 +55,7 @@
         [TestCase("", 0, TestName = "Encode_ASCIIEmpty")]
         public void EncodeAscii(string value, int expLen)
         {
-            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 2 + expLen];
+            byte[] buffer = new byte[(IsVerbose ? 4 : 0) + 3 + expLen];
             StringDltArg arg = new StringDltArg(value, StringEncodingType.Ascii);
             Assert.That(ArgEncode(buffer, arg), Is.EqualTo(buffer.Length));
 
@@ -68,7 +68,7 @@
 
             Span<byte> payload = buffer.AsSpan(IsVerbose ? 4 : 0);
             int len = unchecked((ushort)BitOperations.To16Shift(payload, !IsBigEndian));
-            string result = Encoding.ASCII.GetString(payload[2..(2 + len)]);
+            string result = Encoding.ASCII.GetString(payload[2..(2 + len - 1)]);
             Assert.That(result, Is.EqualTo(value));
         }
 
@@ -76,7 +76,7 @@
         public void EncodeAsciiMax()
         {
             StringBuilder sb = new StringBuilder(65536);
-            sb.Append('x', 65534 - (IsVerbose ? 4 : 0));
+            sb.Append('x', 65533 - (IsVerbose ? 4 : 0));
 
             EncodeAscii(sb.ToString(), sb.Length);
         }

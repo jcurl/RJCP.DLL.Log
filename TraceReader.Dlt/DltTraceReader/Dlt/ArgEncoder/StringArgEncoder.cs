@@ -42,11 +42,12 @@
             int maxLen = Math.Min(buffer.Length, 65536);
             Span<byte> payload = buffer[len..maxLen];
             encoder.Convert(strArg.Data, payload[2..], true, out _, out int bu, out bool completed);
-            if (!completed) return -1;
-            BitOperations.Copy16Shift(bu, payload[0..], !msbf);
+            if (!completed || bu == payload.Length - 2) return -1;
+            payload[^1] = 0;
+            BitOperations.Copy16Shift(bu + 1, payload[0..], !msbf);
 
             if (verbose) BitOperations.Copy32Shift(typeInfo, buffer, !msbf);
-            return len + 2 + bu;
+            return len + 3 + bu;
         }
     }
 }

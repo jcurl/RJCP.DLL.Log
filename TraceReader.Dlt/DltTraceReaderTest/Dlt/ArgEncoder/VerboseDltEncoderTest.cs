@@ -8,7 +8,7 @@
     public class VerboseDltEncoderTest
     {
         [TestCase(65536)]
-        [TestCase(24)]
+        [TestCase(25)]
         public void WriteMultipleArgs(int len)
         {
             byte[] buffer = new byte[len];
@@ -25,7 +25,7 @@
             };
             line.Features += DltLineFeatures.VerboseFeature;
 
-            Assert.That(encoder.Encode(buffer, line), Is.EqualTo(24));
+            Assert.That(encoder.Encode(buffer, line), Is.EqualTo(25));
         }
 
         [TestCase(0)]
