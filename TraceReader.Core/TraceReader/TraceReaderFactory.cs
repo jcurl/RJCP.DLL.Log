@@ -71,7 +71,8 @@
             Stream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read,
                 FileSystemCaching, FileOptions.Asynchronous | FileOptions.SequentialScan);
 
-            return CreateAsync(fileStream);
+            ITraceDecoder<T> decoder = m_DecoderFactory.Create();
+            return Task.FromResult<ITraceReader<T>>(new TraceReader<T>(fileStream, decoder, true));
         }
     }
 }

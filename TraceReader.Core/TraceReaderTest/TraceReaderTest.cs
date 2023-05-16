@@ -1,6 +1,8 @@
 ﻿namespace RJCP.Diagnostics.Log
 {
     using System;
+    using System.IO;
+    using Decoder;
     using IO;
     using NUnit.Framework;
 
@@ -13,6 +15,62 @@
             Assert.That(async () => {
                 _ = await new EmptyTraceReaderFactory().CreateAsync(new WriteOnlyStream());
             }, Throws.TypeOf<ArgumentException>());
+        }
+
+        [Test]
+        public void NullStream()
+        {
+            Assert.That(() => {
+                _ = new TraceReader<ITraceLine>(null, new TextDecoder());
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void NullDecoder()
+        {
+            using (MemoryStream stream = new MemoryStream()) {
+                Assert.That(() => {
+                    _ = new TraceReader<ITraceLine>(stream, null);
+                }, Throws.TypeOf<ArgumentNullException>());
+            }
+        }
+
+        [Test]
+        public void NullStreamAndDecoder()
+        {
+            Assert.That(() => {
+                _ = new TraceReader<ITraceLine>(null, null);
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void StreamOwnershipDefault()
+        {
+            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+
+            using (stream) {
+                using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder())) {
+                    /* Nothing to do, just wait for it to dispose */
+                }
+
+                // We own the stream, it shouldn't be disposed
+                Assert.That(stream.IsDisposed, Is.False);
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void StreamOwnership(bool owner)
+        {
+            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+
+            using (stream) {
+                using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder(), owner)) {
+                    /* Nothing to do, just wait for it to dispose */
+                }
+
+                Assert.That(stream.IsDisposed, Is.EqualTo(owner));
+            }
         }
     }
 }

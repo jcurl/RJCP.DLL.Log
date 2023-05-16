@@ -30,5 +30,18 @@
                 _ = await new EmptyTraceReaderFactory().CreateAsync("FileNotFound.txt");
             }, Throws.TypeOf<FileNotFoundException>());
         }
+
+        private class MyReaderNull : TraceReaderFactory<ITraceLine>
+        {
+            public MyReaderNull() : base(null) { }
+        }
+
+        [Test]
+        public void CustomEncoderFactoryNull()
+        {
+            Assert.That(() => {
+                _ = new MyReaderNull();
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
     }
 }

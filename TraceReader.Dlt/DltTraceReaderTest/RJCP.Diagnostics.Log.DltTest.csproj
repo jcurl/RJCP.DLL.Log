@@ -222,7 +222,6 @@
     <Compile Include="Encoder\DltTraceEncoderCommonTest.cs" />
     <Compile Include="Encoder\DltTraceEncoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
-    <Compile Include="IO\MemoryStreamDisposed.cs" />
     <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>
 

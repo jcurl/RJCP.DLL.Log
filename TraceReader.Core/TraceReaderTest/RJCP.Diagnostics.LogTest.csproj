@@ -58,7 +58,9 @@
     <Compile Include="Constraints\InvalidConstraint.cs" />
     <Compile Include="Constraints\Position.cs" />
     <Compile Include="Decoder\EmptyTraceDecoder.cs" />
+    <Compile Include="Decoder\TeraTermDecoderFactoryTest.cs" />
     <Compile Include="EmptyTraceReaderFactory.cs" />
+    <Compile Include="IO\MemoryStreamDisposed.cs" />
     <Compile Include="IO\ReadLimitStream.cs" />
     <Compile Include="IO\WriteOnlyStream.cs" />
     <Compile Include="TeraTermTraceReaderTest.cs" />

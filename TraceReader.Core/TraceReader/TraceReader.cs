@@ -15,6 +15,7 @@
     public class TraceReader<T> : ITraceReader<T> where T : class, ITraceLine
     {
         private readonly Stream m_Stream;
+        private readonly bool m_OwnsStream;
         private readonly ITraceDecoder<T> m_Decoder;
         private readonly byte[] m_Buffer = new byte[65536];
         private readonly Memory<byte> m_BufferMem;
@@ -33,16 +34,40 @@
         /// <paramref name="decoder"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException"><paramref name="stream"/> is not readable.</exception>
+        /// <remarks>
+        /// This class will dispose the <paramref name="decoder"/>, but it does now own the <paramref name="stream"/>,
+        /// so this will not be disposed of.
+        /// </remarks>
         public TraceReader(Stream stream, ITraceDecoder<T> decoder)
+            : this(stream, decoder, false) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TraceReader{T}"/> class.
+        /// </summary>
+        /// <param name="stream">The readable stream to decode.</param>
+        /// <param name="decoder">The decoder.</param>
+        /// <param name="ownsStream">Set to <see langword="true"/> if this object should own the stream.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="stream"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="decoder"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException"><paramref name="stream"/> is not readable.</exception>
+        /// <remarks>
+        /// This class will dispose the <paramref name="decoder"/>. When owning the stream, this object will dispose of
+        /// the <paramref name="stream"/>. This is useful for factories that would create its own stream temporarily,
+        /// and then need this class to close it on disposal.
+        /// </remarks>
+        public TraceReader(Stream stream, ITraceDecoder<T> decoder, bool ownsStream)
         {
             if (stream is null) throw new ArgumentNullException(nameof(stream));
             if (decoder is null) throw new ArgumentNullException(nameof(decoder));
-
             if (!stream.CanRead) throw new ArgumentException("Stream is not readable", nameof(stream));
 
             m_Stream = stream;
             m_Decoder = decoder;
             m_BufferMem = m_Buffer.AsMemory();
+            m_OwnsStream = ownsStream;
         }
 
         private IEnumerator<T> m_LineEnumerator;
@@ -102,6 +127,7 @@
         protected virtual void Dispose(bool disposing)
         {
             m_Decoder.Dispose();
+            if (m_OwnsStream) m_Stream.Dispose();
         }
     }
 }
