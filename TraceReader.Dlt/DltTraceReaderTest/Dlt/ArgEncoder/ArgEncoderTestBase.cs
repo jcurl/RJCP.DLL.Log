@@ -8,21 +8,6 @@
     using RJCP.CodeQuality.NUnitExtensions;
 
     /// <summary>
-    /// The endianness of the output when encoding.
-    /// </summary>
-    public enum Endianness
-    {
-        Little,
-        Big
-    }
-
-    public enum LineType
-    {
-        Verbose,
-        NonVerbose
-    }
-
-    /// <summary>
     /// Base class containing common code for testing DLT argument encoders.
     /// </summary>
     /// <typeparam name="TArgEncoder">The type of the argument encoder which is instantiated during the test.</typeparam>

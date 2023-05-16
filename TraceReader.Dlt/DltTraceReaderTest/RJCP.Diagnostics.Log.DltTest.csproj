@@ -77,7 +77,6 @@
     <Compile Include="Dlt\ArgEncoder\ArgEncoderTestBase.cs" />
     <Compile Include="Dlt\ArgEncoder\BinaryIntArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\BoolArgEncoderTest.cs" />
-    <Compile Include="Dlt\ArgEncoder\EncoderType.cs" />
     <Compile Include="Dlt\ArgEncoder\Float64ArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\Float32ArgEncoderTest.cs" />
     <Compile Include="Dlt\ArgEncoder\HexIntArgEncoderTest.cs" />
@@ -174,9 +173,13 @@
     <Compile Include="Dlt\Control\SwInjectionDecoderTest.cs" />
     <Compile Include="Dlt\Control\SyncTimeStampDecoderTest.cs" />
     <Compile Include="Dlt\DecoderTestBase.cs" />
+    <Compile Include="Dlt\DecoderType.cs" />
     <Compile Include="Dlt\DltLineBuilderTest.cs" />
+    <Compile Include="Dlt\EncoderType.cs" />
+    <Compile Include="Dlt\Endianess.cs" />
     <Compile Include="Dlt\IdHashListAccessor.cs" />
     <Compile Include="Dlt\IdHashListTest.cs" />
+    <Compile Include="Dlt\LineType.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\FIbexFileMergeTest.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\FibexFileTest.cs" />
     <Compile Include="Dlt\NonVerbose\Fibex\FibexFileTestBase.cs" />

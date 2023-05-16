@@ -9,19 +9,6 @@
 
     public abstract class DecoderTestBase
     {
-        public enum DecoderType
-        {
-            Line,
-            Packet,
-            Specialized,
-        }
-
-        public enum Endianness
-        {
-            Little = 1,
-            Big = 2
-        }
-
         protected DecoderTestBase(DecoderType decoderType, Endianness endian)
             : this(decoderType, endian, null) { }
 

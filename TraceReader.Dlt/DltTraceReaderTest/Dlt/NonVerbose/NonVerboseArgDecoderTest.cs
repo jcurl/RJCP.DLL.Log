@@ -7,7 +7,7 @@
     using Decoder;
     using NUnit.Framework;
 
-    #region Nee Decoder for S_FLOA16, extending existing decoders
+    #region See Decoder for S_FLOA16, extending existing decoders
     // To create your own handler for your own decoder, you should extend the existing classes and instantiate them.
     // * MyFloat16Arg: New implementation. This is the argument in the ITraceLineDlt message stored.
     // * MyFloat16ArgDecoder: Knows how to convert bytes in a stream into a MyFloat16Arg
