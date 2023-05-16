@@ -6,7 +6,6 @@
 
     public sealed partial class DltPacketWriter
     {
-
         private sealed class Packet
         {
             private bool m_HasSerialMarker;

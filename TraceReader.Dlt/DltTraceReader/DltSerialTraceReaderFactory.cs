@@ -7,7 +7,7 @@
     /// <summary>
     /// A factory for getting a DLT Trace Decoder.
     /// </summary>
-    public class DltSerialTraceReaderFactory : TraceReaderFactory<DltTraceLineBase>
+    public sealed class DltSerialTraceReaderFactory : TraceReaderFactory<DltTraceLineBase>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DltSerialTraceReaderFactory"/> class.

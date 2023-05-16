@@ -4,7 +4,7 @@
     using Dlt;
     using Dlt.Control;
     using Dlt.NonVerbose;
-    using RJCP.Diagnostics.Log.Dlt.Verbose;
+    using Dlt.Verbose;
 
     /// <summary>
     /// Decodes a DLT frame from the definition of a standard header.

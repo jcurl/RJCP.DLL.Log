@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using RJCP.Diagnostics.Log.Dlt.Args;
+    using Dlt.Args;
 
     /// <summary>
     /// Represents a Non-Verbose DLT message

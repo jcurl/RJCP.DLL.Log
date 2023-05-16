@@ -1,0 +1,36 @@
+@startuml DLT.WriterFileFactory
+class DltTraceWriterFactory<TLine:DltTraceLineBase> {
+    +CreateAsync(stream: Stream): Task<ITraceWriter<DltTraceLineBase>>
+    +CreateAsync(fileName: string): Task<ITraceWriter<DltTraceLineBase>>
+}
+
+class DltTraceEncoder<TLine:DltTraceLineBase> {
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+}
+
+class DltFileTraceWriterFactory
+note bottom
+    Gives DltTraceWriterFactory the
+    DltFileTraceEncoderFactory. This
+    is just a very thin class.
+end note
+DltTraceWriterFactory <|-d- DltFileTraceWriterFactory
+
+class DltFileTraceEncoderFactory
+note bottom
+    Just knows only how to create
+    the DltFileTraceEncoder
+end note
+DltFileTraceWriterFactory -r-> DltFileTraceEncoderFactory : <<creates>
+DltTraceWriterFactory o-d- DltFileTraceEncoderFactory
+
+class DltFileTraceEncoder
+note bottom
+    Knows how to encode the storage
+    header, and leaves the rest of
+    the encoding to DltTraceEncoder
+end note
+
+DltFileTraceEncoderFactory -r-> DltFileTraceEncoder : <<creates>>
+DltTraceEncoder <|-d- DltFileTraceEncoder
+@enduml

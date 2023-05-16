@@ -5,9 +5,10 @@
     using System.Threading.Tasks;
     using Dlt;
     using Dlt.Args;
+    using Encoder;
+    using IO;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
-    using RJCP.Diagnostics.Log.Encoder;
 
     [TestFixture]
     public class DltTraceWriterFactoryTest
@@ -28,22 +29,6 @@
                 new SignedIntDltArg(45, 2)
             });
 
-        private static byte[] ReadStream(Stream stream)
-        {
-            byte[] buffer = new byte[65535];
-            Span<byte> readBuff = buffer.AsSpan();
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            int len = 0;
-            while (true) {
-                int read = stream.Read(readBuff);
-                if (read == 0)
-                    return buffer[0..len];
-                len += read;
-            }
-        }
-
         [Test]
         public async Task CreateStream()
         {
@@ -53,7 +38,7 @@
                     Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);
                 }
 
-                byte[] buffer = ReadStream(stream);
+                byte[] buffer = stream.ReadStream();
                 Assert.That(buffer, Is.EqualTo(Expected));
             }
         }
@@ -80,7 +65,7 @@
             }
 
             using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-                byte[] buffer = ReadStream(file);
+                byte[] buffer = file.ReadStream();
                 Assert.That(buffer, Is.EqualTo(Expected));
             }
         }
@@ -109,7 +94,7 @@
                     Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);
                 }
 
-                byte[] buffer = ReadStream(stream);
+                byte[] buffer = stream.ReadStream();
                 Assert.That(buffer, Is.EqualTo(Expected));
             }
         }

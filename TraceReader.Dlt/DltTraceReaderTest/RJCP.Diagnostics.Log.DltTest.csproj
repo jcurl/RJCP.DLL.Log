@@ -68,6 +68,7 @@
     <Compile Include="DltSerialTraceReaderFactoryTest.cs" />
     <Compile Include="DltTraceReaderFactoryTest.cs" />
     <Compile Include="DltFileTraceReaderFactoryTest.cs" />
+    <Compile Include="DltFileTraceWriterFactoryTest.cs" />
     <Compile Include="DltSkippedTraceLineTest.cs" />
     <Compile Include="DltTestData.cs" />
     <Compile Include="DltTime.cs" />
@@ -222,9 +223,11 @@
     <Compile Include="Dlt\Verbose\VerboseArgDecoderTest.cs" />
     <Compile Include="Dlt\Verbose\VerboseDecoderTestBase.cs" />
     <Compile Include="Dlt\Verbose\VerboseDltDecoderTest.cs" />
+    <Compile Include="Encoder\DltFileTraceEncoderTest.cs" />
     <Compile Include="Encoder\DltTraceEncoderCommonTest.cs" />
     <Compile Include="Encoder\DltTraceEncoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
+    <Compile Include="IO\ReadStreamExtensions.cs" />
     <Compile Include="TestSetupFixture.cs" />
   </ItemGroup>
 

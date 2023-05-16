@@ -78,6 +78,7 @@
     <Compile Include="Decoder\DltTraceDecoderFactory.cs" />
     <Compile Include="DltControlTraceLine.cs" />
     <Compile Include="DltFileTraceReaderFactory.cs" />
+    <Compile Include="DltFileTraceWriterFactory.cs" />
     <Compile Include="DltNonVerboseTraceLine.cs" />
     <Compile Include="DltSerialTraceReaderFactory.cs" />
     <Compile Include="DltSkippedTraceLine.cs" />
@@ -306,6 +307,8 @@
     <Compile Include="Dlt\Verbose\VerboseDltDecoder.cs" />
     <Compile Include="Dlt\ArgEncoder\IDltEncoder.cs" />
     <Compile Include="Dlt\ArgEncoder\VerboseDltEncoder.cs" />
+    <Compile Include="Encoder\DltFileTraceEncoder.cs" />
+    <Compile Include="Encoder\DltFileTraceEncoderFactory.cs" />
     <Compile Include="Encoder\DltTraceEncoder.cs" />
     <Compile Include="Encoder\DltTraceEncoderFactory.cs" />
     <Compile Include="Log.cs" />

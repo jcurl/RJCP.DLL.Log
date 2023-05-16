@@ -45,7 +45,8 @@
                 throw new ArgumentNullException(nameof(stream));
 
             ITraceEncoder<DltTraceLineBase> encoder = m_EncoderFactory.Create();
-            return Task.FromResult<ITraceWriter<DltTraceLineBase>>(new DltTraceWriter(stream, encoder));
+            ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream, encoder);
+            return Task.FromResult(writer);
         }
 
         /// <summary>
@@ -64,7 +65,8 @@
                 FileSystemCaching, FileOptions.Asynchronous);
 
             ITraceEncoder<DltTraceLineBase> encoder = m_EncoderFactory.Create();
-            return Task.FromResult<ITraceWriter<DltTraceLineBase>>(new DltTraceWriter(fileStream, encoder, true));
+            ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(fileStream, encoder, true);
+            return Task.FromResult(writer);
         }
     }
 }

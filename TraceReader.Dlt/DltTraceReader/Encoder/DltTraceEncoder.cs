@@ -46,7 +46,7 @@
         /// returned.
         /// </returns>
         /// <remarks>This encoder takes a trace line or a control line and always writes out a verbose line.</remarks>
-        public int Encode(Span<byte> buffer, DltTraceLineBase line)
+        public virtual int Encode(Span<byte> buffer, DltTraceLineBase line)
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
 
@@ -135,7 +135,12 @@
             return 10;
         }
 
-        private static void WriteId(Span<byte> buffer, string id)
+        /// <summary>
+        /// Writes the identifier to the specified location as ASCII.
+        /// </summary>
+        /// <param name="buffer">The buffer to write to.</param>
+        /// <param name="id">The identifier to write.</param>
+        protected static void WriteId(Span<byte> buffer, string id)
         {
             int idLen = id is null ? 0 : id.Length;
             buffer[0] = idLen > 0 ? (byte)(id[0] & 0x7F) : (byte)0;   // Note, can never dereference null here as idLen will be zero.

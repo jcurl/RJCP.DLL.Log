@@ -9,7 +9,7 @@
 
     /// <summary>
     /// A common implementation of <see cref="ITraceWriter{T}"/> that writes to a stream and uses a
-    /// <see cref="ITraceEncoder{TLine}"/> to decode log lines.
+    /// <see cref="ITraceEncoder{TLine}"/> to encode log lines.
     /// </summary>
     public class DltTraceWriter : ITraceWriter<DltTraceLineBase>
     {

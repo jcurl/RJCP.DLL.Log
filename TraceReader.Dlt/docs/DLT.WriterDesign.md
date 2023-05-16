@@ -54,7 +54,7 @@ The following use cases are considered:
 The design for the writer will use factories, which implement interfaces,
 following a similar pattern to [DLT Decoder Design](./DLT.DecoderDesign.md).
 
-![](out/diagrams/DLT.Writer/DLT.Writer.svg)
+![Trace Writer Factory](out/diagrams/DLT.Writer/DLT.Writer.svg)
 
 This will allow a common implementation for writing DLT packets, which can be
 extended to prepend appropriate headers. The encoder would be the same for all
@@ -81,7 +81,7 @@ without needing the original FIBEX conversion file.
 
 The encoder is responsible for writing the data.
 
-![](out/diagrams/Dlt.WriterEncoder/DLT.WriterEncoder.svg)
+![Encoder](out/diagrams/Dlt.WriterEncoder/DLT.WriterEncoder.svg)
 
 This can be extended to handle further argument types, e.g. from a Non-Verbose
 message that can't be decoded to a RAW argument.
@@ -135,6 +135,8 @@ writing the headers as well. This allows having to write only a single class
 handling output to streams or other formats (e.g. network packets that are not
 stream based), including asynchronous I/O, while the format is delegated to the
 actual encoder to write to the buffer before it is sent out.
+
+![Storage Header Factory](out/diagrams/DLT.WriterFileFactory/DLT.WriterFileFactory.svg)
 
 #### 2.5.3. Writing Non-Verbose
 
