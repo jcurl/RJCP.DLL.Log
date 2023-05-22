@@ -14,6 +14,8 @@ R20-11 and earlier.
   - [2.2. Format of a DLT v1 Packet](#22-format-of-a-dlt-v1-packet)
   - [2.3. Argument Encoders (DLT Trace Encoder)](#23-argument-encoders-dlt-trace-encoder)
   - [2.4. Control Encoders (DLT Trace Encoder)](#24-control-encoders-dlt-trace-encoder)
+    - [2.4.1. Control Services](#241-control-services)
+    - [2.4.2. The Control Argument Encoder](#242-the-control-argument-encoder)
   - [2.5. Chain of Object Construction and Extension](#25-chain-of-object-construction-and-extension)
     - [2.5.1. Packet Based Behaviour](#251-packet-based-behaviour)
     - [2.5.2. Extending for a Storage Header](#252-extending-for-a-storage-header)
@@ -88,7 +90,97 @@ message that can't be decoded to a RAW argument.
 
 ### 2.4. Control Encoders (DLT Trace Encoder)
 
-TBD
+The `DltTraceEncoder` is also responsible for encoding `DltControlTraceLine`
+messages.
+
+![Control Encoder](out/diagrams/DLT.WriterControl/DLT.WriterControl.svg)
+
+The design is very similar for encoding `DltTraceLine` and their arguments
+above, with the main difference that control arguments essentially have only one
+argument (and there are many more of them).
+
+#### 2.4.1. Control Services
+
+The following Service Identifiers are defined (`X` is for implemented, `R` is
+not implemented, but can be decoded):
+
+| Service Id            | Name                       | Request | Response | Standard   |
+| --------------------- | -------------------------- | :-----: | :------: | ---------- |
+| `0x01`                | SetLogLevel                |    R    |    R     | PRS 1.4.0  |
+| `0x02`                | SetTraceStatus             |    R    |    R     | PRS 1.4.0  |
+| `0x03`                | GetLogInfo                 |    R    |    R     | PRS 1.4.0  |
+| `0x04`                | GetDefaultLogLevel         |    R    |    R     | PRS 1.4.0  |
+| `0x05`                | StoreConfiguration         |    R    |    R     | PRS 1.4.0  |
+| `0x06`                | ResetToFactoryDefault      |    R    |    R     | PRS 1.4.0  |
+| `0x0A`                | SetMessageFiltering        |    R    |    R     | PRS 1.4.0  |
+| `0x11`                | SetDefaultLogLevel         |    R    |    R     | PRS 1.4.0  |
+| `0x12`                | SetDefaultTraceStatus      |    R    |    R     | PRS 1.4.0  |
+| `0x13`                | GetSoftwareVersion         |    R    |    R     | PRS 1.4.0  |
+| `0x15`                | GetDefaultTraceStatus      |    R    |    R     | PRS 1.4.0  |
+| `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0  |
+| `0x1F`                | GetTraceStatus             |    R    |    R     | PRS 1.4.0  |
+| `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0  |
+| `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0  |
+| `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0  |
+| `0x23`                | BufferOverflowNotification |    R    |    R     | PRS 1.4.0  |
+| `0x24`                | SyncTimeStamp              |    R    |    R     | PRS R19-11 |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection           |    R    |    R     | PRS 1.4.0  |
+
+The following are not listed in the current standard, or marked as deprecated:
+
+| Service Id | Name                         | Request | Response | Standard  |
+| ---------- | ---------------------------- | :-----: | :------: | --------- |
+| `0x07`     | SetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
+| `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
+| `0x09`     | SetVerboseMode¹              |    R    |    R     | SWS 4.2.2 |
+| `0x0B`     | SetTimingPackets             |    R    |    R     | SWS 4.2.2 |
+| `0x0C`     | GetLocalTime¹                |    R    |    R     | SWS 4.2.2 |
+| `0x0D`     | SetUseECUID¹                 |    R    |    R     | SWS 4.2.2 |
+| `0x0E`     | SetUseSessionId¹             |    R    |    R     | SWS 4.2.2 |
+| `0x0F`     | UseTimestamp¹                |    R    |    R     | SWS 4.2.2 |
+| `0x10`     | UseExtendedHeader¹           |    R    |    R     | SWS 4.2.2 |
+| `0x14`     | MessageBufferOverflow¹       |    R    |    R     | SWS 4.2.2 |
+| `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
+| `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
+| `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
+| `0x19`     | GetVerboseModeStatus¹        |    R    |    R     | SWS 4.2.2 |
+| `0x1A`     | GetMessageFilteringStatus¹   |    R    |    R     | SWS 4.2.2 |
+| `0x1B`     | GetUseECUID¹                 |    R    |    R     | SWS 4.2.2 |
+| `0x1C`     | GetUseSessionID¹             |    R    |    R     | SWS 4.2.2 |
+| `0x1D`     | GetUseTimestamp¹             |    R    |    R     | SWS 4.2.2 |
+| `0x1E`     | GetUseExtendedHeader¹        |    R    |    R     | SWS 4.2.2 |
+
+The following are observed implementations that are implemented in Genivi DLT,
+but not documented in the AutoSAR PRS.
+
+* ¹: This is made obsolete in PRS 1.3.0 and later
+* ²: Was renamed in later version of the standard, but the message structure
+  remains the same.
+
+| Service Id | Name               | Request | Response |
+| ---------- | ------------------ | :-----: | :------: |
+| `0xF01`    | Unregister Context |   N/A   |    R     |
+| `0xF02`    | Connection Info    |   N/A   |    R     |
+| `0xF03`    | TimeZone Info      |   N/A   |    R     |
+| `0xF04`    | Marker             |   N/A   |    R     |
+
+#### 2.4.2. The Control Argument Encoder
+
+The `ControlArgEncoder` shall use an array based lookup from mapping the service
+identifier of the control messages to the encoder. This allows for a very fast
+O(1) lookup scheme. The sequence is:
+
+* If the message is an instance of `ControlResponse` look up the service
+  identifier in array of encoders for control responses.
+* If the message is an instance of `ControlRequest`, similarly, lookup up the
+  service identifier for control requests.
+* In specific cases, handle all others. There is only one other known
+  control message: `DltTimeMarker`.
+
+If further messages need to be added, the `ControlArgEncoder` can handle the
+special case that control messages are expected to be in the range of
+0x00..0x7F, or 0xF00..0xFFE. Any value of 0xFFF or larger is a custom message
+and can be looked up from a dictionary.
 
 ### 2.5. Chain of Object Construction and Extension
 

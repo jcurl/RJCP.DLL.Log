@@ -1,0 +1,82 @@
+@startuml DLT.WriterControl
+
+class DltTraceEncoder<TLine:DltTraceLineBase> {
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+}
+
+interface IDltEncoder<TLine:DltTraceLineBase> {
+   +Encode(buffer: Span<byte>, line: TLine): int
+}
+DltTraceEncoder *-d- IDltEncoder
+
+class ControlDltEncoder {
+   +Encode(buffer: Span<byte>, line: DltControlTraceLine): int
+}
+IDltEncoder <|.d. ControlDltEncoder : TLine -> DltControlTraceLine
+
+interface IControlArgEncoder {
+    +Encode(buffer: Span<byte>, msbf: bool, arg: IControlArg): int
+}
+
+class ControlArgEncoder {
+    +Encode(buffer: Span<byte>, msbf: bool, arg: IControlArg): int
+}
+IControlArgEncoder <|.d. ControlArgEncoder : TLine -> DltControlTraceLine
+ControlDltEncoder *-r- ControlArgEncoder
+
+class GetSoftwareVersionRequestEncoder
+class GetSoftwareVersionResponseEncoder
+class SetTraceStatusRequestEncoder
+class SetTraceStatusResponseEncoder
+class GetTraceStatusRequestEncoder
+class GetTraceStatusResponseEncoder
+
+IControlArgEncoder <|..d. GetSoftwareVersionRequestEncoder
+IControlArgEncoder <|..d. GetSoftwareVersionResponseEncoder
+IControlArgEncoder <|..d. SetTraceStatusRequestEncoder
+IControlArgEncoder <|..d. SetTraceStatusResponseEncoder
+IControlArgEncoder <|..d. GetTraceStatusRequestEncoder
+IControlArgEncoder <|..d. GetTraceStatusResponseEncoder
+
+ControlArgEncoder *-d- GetSoftwareVersionRequestEncoder
+ControlArgEncoder *-d- GetSoftwareVersionResponseEncoder
+ControlArgEncoder *-d- SetTraceStatusRequestEncoder
+ControlArgEncoder *-d- SetTraceStatusResponseEncoder
+ControlArgEncoder *-d- GetTraceStatusRequestEncoder
+ControlArgEncoder *-d- GetTraceStatusResponseEncoder
+
+' class DltTraceWriterFactory<TLine:DltTraceLineBase> {
+'     +CreateAsync(stream: Stream): Task<ITraceWriter<DltTraceLineBase>>
+'     +CreateAsync(fileName: string): Task<ITraceWriter<DltTraceLineBase>>
+' }
+
+' class DltTraceEncoder<TLine:DltTraceLineBase> {
+'     +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+' }
+
+' class DltFileTraceWriterFactory
+' note bottom
+'     Gives DltTraceWriterFactory the
+'     DltFileTraceEncoderFactory. This
+'     is just a very thin class.
+' end note
+' DltTraceWriterFactory <|-d- DltFileTraceWriterFactory
+
+' class DltFileTraceEncoderFactory
+' note bottom
+'     Just knows only how to create
+'     the DltFileTraceEncoder
+' end note
+' DltFileTraceWriterFactory -r-> DltFileTraceEncoderFactory : <<creates>
+' DltTraceWriterFactory o-d- DltFileTraceEncoderFactory
+
+' class DltFileTraceEncoder
+' note bottom
+'     Knows how to encode the storage
+'     header, and leaves the rest of
+'     the encoding to DltTraceEncoder
+' end note
+
+' DltFileTraceEncoderFactory -r-> DltFileTraceEncoder : <<creates>>
+' DltTraceEncoder <|-d- DltFileTraceEncoder
+@enduml
