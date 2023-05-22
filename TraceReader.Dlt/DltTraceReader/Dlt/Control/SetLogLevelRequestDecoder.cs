@@ -7,7 +7,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetLogLevelRequest"/>.
     /// </summary>
-    public class SetLogLevelRequestDecoder : ControlArgDecoderBase
+    public sealed class SetLogLevelRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

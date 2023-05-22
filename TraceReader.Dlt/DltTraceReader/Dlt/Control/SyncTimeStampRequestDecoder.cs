@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="SyncTimeStampRequest"/>.
     /// </summary>
-    public class SyncTimeStampRequestDecoder : ControlArgDecoderBase
+    public sealed class SyncTimeStampRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

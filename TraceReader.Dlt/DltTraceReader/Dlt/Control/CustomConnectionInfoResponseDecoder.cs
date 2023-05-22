@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomConnectionInfoResponse"/>.
     /// </summary>
-    public class CustomConnectionInfoResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomConnectionInfoResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

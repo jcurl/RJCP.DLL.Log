@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetUseEcuIdRequest"/>.
     /// </summary>
-    public class SetUseEcuIdRequestDecoder : ControlArgDecoderBase
+    public sealed class SetUseEcuIdRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

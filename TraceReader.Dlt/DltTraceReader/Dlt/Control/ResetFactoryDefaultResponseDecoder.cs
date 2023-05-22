@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for <see cref="ResetFactoryDefaultResponse"/>.
     /// </summary>
-    public class ResetFactoryDefaultResponseDecoder : ControlArgDecoderBase
+    public sealed class ResetFactoryDefaultResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

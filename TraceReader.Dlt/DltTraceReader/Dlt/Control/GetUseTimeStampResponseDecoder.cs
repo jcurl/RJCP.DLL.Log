@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetUseTimeStampResponse"/>.
     /// </summary>
-    public class GetUseTimeStampResponseDecoder : ControlArgDecoderBase
+    public sealed class GetUseTimeStampResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

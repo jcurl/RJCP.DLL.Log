@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for <see cref="GetLocalTimeResponse"/>.
     /// </summary>
-    public class GetLocalTimeResponseDecoder : ControlArgDecoderBase
+    public sealed class GetLocalTimeResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

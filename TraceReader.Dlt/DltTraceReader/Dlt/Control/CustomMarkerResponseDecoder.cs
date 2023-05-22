@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomMarkerResponse"/>.
     /// </summary>
-    public class CustomMarkerResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomMarkerResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

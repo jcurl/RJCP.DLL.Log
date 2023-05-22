@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload for <see cref="GetDefaultLogLevelRequest"/>.
     /// </summary>
-    public class GetDefaultLogLevelRequestDecoder : ControlArgDecoderBase
+    public sealed class GetDefaultLogLevelRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

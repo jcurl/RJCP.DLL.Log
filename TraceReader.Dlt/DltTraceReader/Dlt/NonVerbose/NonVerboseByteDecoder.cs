@@ -7,7 +7,7 @@
     /// <summary>
     /// Decodes non-verbose payloads, not interpreting the contents.
     /// </summary>
-    public class NonVerboseByteDecoder : INonVerboseDltDecoder
+    public sealed class NonVerboseByteDecoder : INonVerboseDltDecoder
     {
         /// <summary>
         /// Gets the message map, which maps identifiers into frames consisting of arguments to construct a

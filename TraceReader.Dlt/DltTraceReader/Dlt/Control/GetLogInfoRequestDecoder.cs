@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="GetLogInfoRequest"/>.
     /// </summary>
-    public class GetLogInfoRequestDecoder : ControlArgDecoderBase
+    public sealed class GetLogInfoRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

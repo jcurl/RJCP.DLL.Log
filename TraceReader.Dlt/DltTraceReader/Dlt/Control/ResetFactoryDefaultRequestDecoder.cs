@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="ResetFactoryDefaultRequest"/>.
     /// </summary>
-    public class ResetFactoryDefaultRequestDecoder : ControlArgDecoderBase
+    public sealed class ResetFactoryDefaultRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

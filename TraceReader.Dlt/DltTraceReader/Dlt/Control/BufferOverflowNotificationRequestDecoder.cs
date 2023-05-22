@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="BufferOverflowNotificationRequest"/>.
     /// </summary>
-    public class BufferOverflowNotificationRequestDecoder : ControlArgDecoderBase
+    public sealed class BufferOverflowNotificationRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

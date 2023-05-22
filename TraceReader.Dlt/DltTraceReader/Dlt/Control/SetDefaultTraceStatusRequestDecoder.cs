@@ -7,7 +7,7 @@
     /// <summary>
     /// Decodes a payload to retrieve a <see cref="SetDefaultTraceStatusRequest"/>.
     /// </summary>
-    public class SetDefaultTraceStatusRequestDecoder : ControlArgDecoderBase
+    public sealed class SetDefaultTraceStatusRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

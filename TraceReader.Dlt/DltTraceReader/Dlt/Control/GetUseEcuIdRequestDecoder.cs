@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetUseEcuIdRequest"/>.
     /// </summary>
-    public class GetUseEcuIdRequestDecoder : ControlArgDecoderBase
+    public sealed class GetUseEcuIdRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

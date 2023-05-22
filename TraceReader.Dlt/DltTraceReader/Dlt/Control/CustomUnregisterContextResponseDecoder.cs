@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomUnregisterContextResponse"/>.
     /// </summary>
-    public class CustomUnregisterContextResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomUnregisterContextResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

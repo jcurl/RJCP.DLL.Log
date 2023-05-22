@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetTraceStatusResponse"/>.
     /// </summary>
-    public class GetTraceStatusResponseDecoder : ControlArgDecoderBase
+    public sealed class GetTraceStatusResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

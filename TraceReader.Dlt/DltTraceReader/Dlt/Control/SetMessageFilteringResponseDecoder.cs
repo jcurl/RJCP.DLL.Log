@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetMessageFilteringResponse"/>.
     /// </summary>
-    public class SetMessageFilteringResponseDecoder : ControlArgDecoderBase
+    public sealed class SetMessageFilteringResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

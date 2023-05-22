@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetVerboseModeStatusRequest"/>.
     /// </summary>
-    public class GetVerboseModeStatusRequestDecoder : ControlArgDecoderBase
+    public sealed class GetVerboseModeStatusRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

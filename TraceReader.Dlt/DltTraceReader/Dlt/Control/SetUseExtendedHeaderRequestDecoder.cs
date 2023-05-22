@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetUseExtendedHeaderRequest"/>.
     /// </summary>
-    public class SetUseExtendedHeaderRequestDecoder : ControlArgDecoderBase
+    public sealed class SetUseExtendedHeaderRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

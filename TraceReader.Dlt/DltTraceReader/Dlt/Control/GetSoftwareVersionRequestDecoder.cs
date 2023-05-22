@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="GetSoftwareVersionRequest"/>.
     /// </summary>
-    public class GetSoftwareVersionRequestDecoder : ControlArgDecoderBase
+    public sealed class GetSoftwareVersionRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

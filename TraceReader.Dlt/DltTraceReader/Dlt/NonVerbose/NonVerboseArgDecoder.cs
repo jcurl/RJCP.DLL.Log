@@ -58,7 +58,7 @@
         /// <para><paramref name="decoder"/> is <see langword="null"/>.</para>
         /// </exception>
         /// <exception cref="ArgumentException"><paramref name="pduType"/> has already been registered.</exception>
-        protected virtual void Register(string pduType, INonVerboseArgDecoder decoder)
+        protected void Register(string pduType, INonVerboseArgDecoder decoder)
         {
             if (pduType is null) throw new ArgumentNullException(nameof(pduType));
             if (decoder is null) throw new ArgumentNullException(nameof(decoder));
@@ -75,7 +75,7 @@
         /// unregistered, <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="pduType"/> is <see langword="null"/>.</exception>
-        protected virtual bool Unregister(string pduType)
+        protected bool Unregister(string pduType)
         {
             if (pduType is null) throw new ArgumentNullException(nameof(pduType));
 

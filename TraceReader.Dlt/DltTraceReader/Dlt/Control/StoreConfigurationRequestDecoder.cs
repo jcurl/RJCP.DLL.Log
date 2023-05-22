@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="StoreConfigurationRequest"/>.
     /// </summary>
-    public class StoreConfigurationRequestDecoder : ControlArgDecoderBase
+    public sealed class StoreConfigurationRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

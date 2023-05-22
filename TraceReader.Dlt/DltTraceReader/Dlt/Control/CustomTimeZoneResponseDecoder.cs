@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomTimeZoneResponse"/>.
     /// </summary>
-    public class CustomTimeZoneResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomTimeZoneResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

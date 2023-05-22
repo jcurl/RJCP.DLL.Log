@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetUseSessionIdResponse"/>.
     /// </summary>
-    public class SetUseSessionIdResponseDecoder : ControlArgDecoderBase
+    public sealed class SetUseSessionIdResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

@@ -11,7 +11,7 @@
     /// The <see cref="VerboseDltDecoder"/> decodes all verbose arguments in a payload, adding it to the line to be
     /// constructed by a <see cref="IDltLineBuilder"/>.
     /// </remarks>
-    public class VerboseDltDecoder : IVerboseDltDecoder
+    public sealed class VerboseDltDecoder : IVerboseDltDecoder
     {
         private readonly IVerboseArgDecoder m_ArgDecoder;
 

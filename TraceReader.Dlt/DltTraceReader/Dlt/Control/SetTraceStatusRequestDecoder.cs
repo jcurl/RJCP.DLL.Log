@@ -7,7 +7,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetTraceStatusRequest"/>.
     /// </summary>
-    public class SetTraceStatusRequestDecoder : ControlArgDecoderBase
+    public sealed class SetTraceStatusRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

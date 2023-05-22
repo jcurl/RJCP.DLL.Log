@@ -8,7 +8,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="GetSoftwareVersionResponse"/>.
     /// </summary>
-    public class GetSoftwareVersionResponseDecoder : ControlArgDecoderBase
+    public sealed class GetSoftwareVersionResponseDecoder : ControlArgDecoderBase
     {
         private readonly char[] m_CharResult = new char[ushort.MaxValue];
         private const int VersionHeaderLength = 5;

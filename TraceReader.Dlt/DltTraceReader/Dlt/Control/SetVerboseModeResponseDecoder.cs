@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetVerboseModeResponse"/>.
     /// </summary>
-    public class SetVerboseModeResponseDecoder : ControlArgDecoderBase
+    public sealed class SetVerboseModeResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetTimingPacketsResponse"/>.
     /// </summary>
-    public class SetTimingPacketsResponseDecoder : ControlArgDecoderBase
+    public sealed class SetTimingPacketsResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

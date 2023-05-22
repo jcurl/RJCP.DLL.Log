@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetLocalTimeRequest"/>.
     /// </summary>
-    public class GetLocalTimeRequestDecoder : ControlArgDecoderBase
+    public sealed class GetLocalTimeRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

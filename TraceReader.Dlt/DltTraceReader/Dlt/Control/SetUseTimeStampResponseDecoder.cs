@@ -6,7 +6,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="SetUseTimeStampResponse"/>.
     /// </summary>
-    public class SetUseTimeStampResponseDecoder : ControlArgDecoderBase
+    public sealed class SetUseTimeStampResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for <see cref="SwInjectionResponse"/>.
     /// </summary>
-    public class SwInjectionResponseDecoder : ControlArgDecoderBase
+    public sealed class SwInjectionResponseDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.

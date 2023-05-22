@@ -6,7 +6,7 @@
     /// <summary>
     /// Decoder for the payload with <see cref="GetMessageFilteringStatusRequest"/>.
     /// </summary>
-    public class GetMessageFilteringStatusRequestDecoder : ControlArgDecoderBase
+    public sealed class GetMessageFilteringStatusRequestDecoder : ControlArgDecoderBase
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
