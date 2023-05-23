@@ -58,5 +58,19 @@
             int result = encoder.Encode(buffer, new UnknownTraceLine());
             Assert.That(result, Is.EqualTo(-1));
         }
+
+        [TestCase(null, new byte[] { 0x00, 0x00, 0x00, 0x00 })]
+        [TestCase("", new byte[] { 0x00, 0x00, 0x00, 0x00 })]
+        [TestCase("A", new byte[] { 0x41, 0x00, 0x00, 0x00 })]
+        [TestCase("AB", new byte[] { 0x41, 0x42, 0x00, 0x00 })]
+        [TestCase("ABC", new byte[] { 0x41, 0x42, 0x43, 0x00 })]
+        [TestCase("ABCD", new byte[] { 0x41, 0x42, 0x43, 0x44 })]
+        [TestCase("Ü", new byte[] { 0x5C, 0x00, 0x00, 0x00 })] // Undefined, will be stripped to lower 7 bits
+        public void WriteId(string id, byte[] expected)
+        {
+            byte[] buffer = new byte[4];
+            DltTraceEncoder.WriteId(buffer, id);
+            Assert.That(buffer, Is.EqualTo(expected));
+        }
     }
 }

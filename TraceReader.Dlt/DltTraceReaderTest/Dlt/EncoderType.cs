@@ -6,7 +6,8 @@
     public enum EncoderType
     {
         /// <summary>
-        /// Test the specific argument encoder in the namespace <c>ArgEncoder</c>.
+        /// Test the specific argument encoder <see cref="ArgEncoder.IArgEncoder"/> in the namespace <c>ArgEncoder</c>
+        /// or <see cref="ControlEncoder.IControlArgEncoder"/> in <c>ControlEncoder</c>.
         /// </summary>
         Argument,
 

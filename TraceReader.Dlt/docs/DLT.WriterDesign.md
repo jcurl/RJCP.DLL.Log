@@ -106,24 +106,24 @@ not implemented, but can be decoded):
 
 | Service Id            | Name                       | Request | Response | Standard   |
 | --------------------- | -------------------------- | :-----: | :------: | ---------- |
-| `0x01`                | SetLogLevel                |    R    |    R     | PRS 1.4.0  |
-| `0x02`                | SetTraceStatus             |    R    |    R     | PRS 1.4.0  |
-| `0x03`                | GetLogInfo                 |    R    |    R     | PRS 1.4.0  |
-| `0x04`                | GetDefaultLogLevel         |    R    |    R     | PRS 1.4.0  |
-| `0x05`                | StoreConfiguration         |    R    |    R     | PRS 1.4.0  |
-| `0x06`                | ResetToFactoryDefault      |    R    |    R     | PRS 1.4.0  |
-| `0x0A`                | SetMessageFiltering        |    R    |    R     | PRS 1.4.0  |
-| `0x11`                | SetDefaultLogLevel         |    R    |    R     | PRS 1.4.0  |
-| `0x12`                | SetDefaultTraceStatus      |    R    |    R     | PRS 1.4.0  |
-| `0x13`                | GetSoftwareVersion         |    R    |    R     | PRS 1.4.0  |
-| `0x15`                | GetDefaultTraceStatus      |    R    |    R     | PRS 1.4.0  |
+| `0x01`                | SetLogLevel                |    X    |    X     | PRS 1.4.0  |
+| `0x02`                | SetTraceStatus             |    X    |    X     | PRS 1.4.0  |
+| `0x03`                | GetLogInfo                 |    X    |    X     | PRS 1.4.0  |
+| `0x04`                | GetDefaultLogLevel         |    X    |    X     | PRS 1.4.0  |
+| `0x05`                | StoreConfiguration         |    X    |    X     | PRS 1.4.0  |
+| `0x06`                | ResetToFactoryDefault      |    X    |    X     | PRS 1.4.0  |
+| `0x0A`                | SetMessageFiltering        |    X    |    X     | PRS 1.4.0  |
+| `0x11`                | SetDefaultLogLevel         |    X    |    X     | PRS 1.4.0  |
+| `0x12`                | SetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0  |
+| `0x13`                | GetSoftwareVersion         |    X    |    X     | PRS 1.4.0  |
+| `0x15`                | GetDefaultTraceStatus      |    X    |    X     | PRS 1.4.0  |
 | `0x17`                | GetLogChannelNames         |         |          | PRS 1.4.0  |
-| `0x1F`                | GetTraceStatus             |    R    |    R     | PRS 1.4.0  |
+| `0x1F`                | GetTraceStatus             |    X    |    X     | PRS 1.4.0  |
 | `0x20`                | SetLogChannelAssignment    |         |          | PRS 1.4.0  |
 | `0x21`                | SetLogChannelThreshold     |         |          | PRS 1.4.0  |
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0  |
-| `0x23`                | BufferOverflowNotification |    R    |    R     | PRS 1.4.0  |
-| `0x24`                | SyncTimeStamp              |    R    |    R     | PRS R19-11 |
+| `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0  |
+| `0x24`                | SyncTimeStamp              |    X    |    X     | PRS R19-11 |
 | `0xFFF`..`0xFFFFFFFF` | CallSWCInjection           |    R    |    R     | PRS 1.4.0  |
 
 The following are not listed in the current standard, or marked as deprecated:
@@ -132,23 +132,23 @@ The following are not listed in the current standard, or marked as deprecated:
 | ---------- | ---------------------------- | :-----: | :------: | --------- |
 | `0x07`     | SetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
-| `0x09`     | SetVerboseMode¹              |    R    |    R     | SWS 4.2.2 |
-| `0x0B`     | SetTimingPackets             |    R    |    R     | SWS 4.2.2 |
-| `0x0C`     | GetLocalTime¹                |    R    |    R     | SWS 4.2.2 |
-| `0x0D`     | SetUseECUID¹                 |    R    |    R     | SWS 4.2.2 |
-| `0x0E`     | SetUseSessionId¹             |    R    |    R     | SWS 4.2.2 |
-| `0x0F`     | UseTimestamp¹                |    R    |    R     | SWS 4.2.2 |
-| `0x10`     | UseExtendedHeader¹           |    R    |    R     | SWS 4.2.2 |
-| `0x14`     | MessageBufferOverflow¹       |    R    |    R     | SWS 4.2.2 |
+| `0x09`     | SetVerboseMode¹              |    R    |    X     | SWS 4.2.2 |
+| `0x0B`     | SetTimingPackets             |    R    |    X     | SWS 4.2.2 |
+| `0x0C`     | GetLocalTime¹                |    R    |    X     | SWS 4.2.2 |
+| `0x0D`     | SetUseECUID¹                 |    R    |    X     | SWS 4.2.2 |
+| `0x0E`     | SetUseSessionId¹             |    R    |    X     | SWS 4.2.2 |
+| `0x0F`     | UseTimestamp¹                |    R    |    X     | SWS 4.2.2 |
+| `0x10`     | UseExtendedHeader¹           |    R    |    X     | SWS 4.2.2 |
+| `0x14`     | MessageBufferOverflow¹       |    X    |    R     | SWS 4.2.2 |
 | `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
 | `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
-| `0x19`     | GetVerboseModeStatus¹        |    R    |    R     | SWS 4.2.2 |
-| `0x1A`     | GetMessageFilteringStatus¹   |    R    |    R     | SWS 4.2.2 |
-| `0x1B`     | GetUseECUID¹                 |    R    |    R     | SWS 4.2.2 |
-| `0x1C`     | GetUseSessionID¹             |    R    |    R     | SWS 4.2.2 |
-| `0x1D`     | GetUseTimestamp¹             |    R    |    R     | SWS 4.2.2 |
-| `0x1E`     | GetUseExtendedHeader¹        |    R    |    R     | SWS 4.2.2 |
+| `0x19`     | GetVerboseModeStatus¹        |    X    |    R     | SWS 4.2.2 |
+| `0x1A`     | GetMessageFilteringStatus¹   |    X    |    R     | SWS 4.2.2 |
+| `0x1B`     | GetUseECUID¹                 |    X    |    R     | SWS 4.2.2 |
+| `0x1C`     | GetUseSessionID¹             |    X    |    R     | SWS 4.2.2 |
+| `0x1D`     | GetUseTimestamp¹             |    X    |    R     | SWS 4.2.2 |
+| `0x1E`     | GetUseExtendedHeader¹        |    X    |    R     | SWS 4.2.2 |
 
 The following are observed implementations that are implemented in Genivi DLT,
 but not documented in the AutoSAR PRS.
@@ -162,7 +162,7 @@ but not documented in the AutoSAR PRS.
 | `0xF01`    | Unregister Context |   N/A   |    R     |
 | `0xF02`    | Connection Info    |   N/A   |    R     |
 | `0xF03`    | TimeZone Info      |   N/A   |    R     |
-| `0xF04`    | Marker             |   N/A   |    R     |
+| `0xF04`    | Marker             |   N/A   |    X     |
 
 #### 2.4.2. The Control Argument Encoder
 

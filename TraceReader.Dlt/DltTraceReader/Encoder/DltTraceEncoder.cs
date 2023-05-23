@@ -140,7 +140,7 @@
         /// </summary>
         /// <param name="buffer">The buffer to write to.</param>
         /// <param name="id">The identifier to write.</param>
-        protected static void WriteId(Span<byte> buffer, string id)
+        public static void WriteId(Span<byte> buffer, string id)
         {
             int idLen = id is null ? 0 : id.Length;
             buffer[0] = idLen > 0 ? (byte)(id[0] & 0x7F) : (byte)0;   // Note, can never dereference null here as idLen will be zero.

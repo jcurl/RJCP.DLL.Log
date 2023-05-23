@@ -27,11 +27,11 @@
                     "'SetDefaultTraceStatusRequest' with insufficient buffer length of {0}", buffer.Length,
                     out service);
 
-            int logLevel = buffer[4];
+            int traceStatus = buffer[4];
             int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);
 
             string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);
-            service = new SetDefaultTraceStatusRequest(logLevel != 0, comIdStr);
+            service = new SetDefaultTraceStatusRequest(traceStatus != 0, comIdStr);
             return 9;
         }
     }

@@ -23,6 +23,12 @@
             'ð', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', '÷', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'þ', 'ÿ',   /* F0-FF */
         };
 
+        /// <summary>
+        /// Converts the specified bytes into characters.
+        /// </summary>
+        /// <param name="bytes">The buffer to convert from.</param>
+        /// <param name="chars">The character buffer to put the result to.</param>
+        /// <returns>The number of bytes converted.</returns>
         public static int Convert(ReadOnlySpan<byte> bytes, char[] chars)
         {
             int cu = bytes.Length < chars.Length ? bytes.Length : chars.Length;
@@ -30,6 +36,29 @@
                 chars[i] = Iso8859_1Map[bytes[i]];
             }
             return cu;
+        }
+
+        /// <summary>
+        /// Converts the specified value into the bytes.
+        /// </summary>
+        /// <param name="value">The value to convert from.</param>
+        /// <param name="bytes">The bytes to convert to.</param>
+        /// <returns>The number of bytes written.</returns>
+        public static int Convert(string value, Span<byte> bytes)
+        {
+            if (value is null || bytes.Length == 0) return 0;
+
+            int bu = 0;
+            foreach (char c in value) {
+                if (c == 0) return bu;
+                if (c >= 1 && c <= 255) {
+                    // ISO-8859-1 and the first 256 bytes of Unicode match exactly.
+                    bytes[bu] = unchecked((byte)c);
+                    bu++;
+                }
+                if (bu == bytes.Length) return bu;
+            }
+            return bu;
         }
     }
 }

@@ -95,7 +95,7 @@
         /// </summary>
         /// <param name="buffer">The buffer.</param>
         /// <param name="arg">The argument to encode.</param>
-        /// <param name="result">The result of the encoding operation (actual length)</param>
+        /// <param name="result">The result of the encoding operation (actual length).</param>
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
         protected Span<byte> ArgEncode(Span<byte> buffer, IDltArg arg, out int result)
         {

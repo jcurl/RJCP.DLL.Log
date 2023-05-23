@@ -21,7 +21,7 @@ interface IControlArgEncoder {
 class ControlArgEncoder {
     +Encode(buffer: Span<byte>, msbf: bool, arg: IControlArg): int
 }
-IControlArgEncoder <|.d. ControlArgEncoder : TLine -> DltControlTraceLine
+IControlArgEncoder <|.d. ControlArgEncoder
 ControlDltEncoder *-r- ControlArgEncoder
 
 class GetSoftwareVersionRequestEncoder
