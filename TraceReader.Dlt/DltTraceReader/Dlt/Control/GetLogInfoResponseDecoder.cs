@@ -35,6 +35,14 @@
             case ControlResponse.StatusError:
                 service = new ControlErrorNotSupported(serviceId, status, "get_log_info");
                 return 5;
+            case GetLogInfoResponse.StatusOverflow:
+                if (buffer.Length < 9) {
+                    // Handle the case the output contains the COM or not for this. Specifications say it should not be
+                    // sent.
+                    service = new GetLogInfoResponse(status);
+                    return 5;
+                }
+                break;
             }
 
             if (buffer.Length < 9)
@@ -44,8 +52,8 @@
 
             switch (status) {
             case ControlResponse.StatusOk:
-            case GetLogInfoResponse.StatusNoMatch:
             case GetLogInfoResponse.StatusOverflow:
+            case GetLogInfoResponse.StatusNoMatch:
                 int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);
                 string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);
                 service = new GetLogInfoResponse(status, comIdStr);

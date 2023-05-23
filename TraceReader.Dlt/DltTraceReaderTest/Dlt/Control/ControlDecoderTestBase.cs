@@ -159,7 +159,7 @@
             // Now test every packet that is smaller and expect that it doesn't raise an exception
             for (int i = 4; i < data.Length - 1; i++) {
                 length = argDecoder.Decode(serviceId, data.AsSpan()[0..i], isBig, out IControlArg testService);
-                Assert.That(length, Is.EqualTo(-1).Or.EqualTo(i));
+                Assert.That(length, Is.EqualTo(-1).Or.LessThanOrEqualTo(i));
                 if (length == -1) {
                     Assert.That(testService, Is.Null.Or.TypeOf<ControlDecodeError>());
                 } else {
