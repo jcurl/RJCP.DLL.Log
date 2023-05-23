@@ -228,5 +228,23 @@
                 _ = new ControlArgEncoderUnsupported(serviceId);
             }, Throws.TypeOf<ArgumentException>());
         }
+
+        private sealed class InvalidControl : IControlArg
+        {
+            public int ServiceId { get { return 0; } }
+
+            public DltType DefaultType { get { return DltType.LOG_INFO; } }
+        }
+
+        [Test]
+        public void EncodeInvalidControlMessage([Values(0, 64)] int len)
+        {
+            // We can't register this control message, and we should get an error trying to decode it.
+            byte[] buffer = new byte[len];
+
+            IControlArgEncoder encoder = new ControlArgEncoder();
+            int result = encoder.Encode(buffer, false, new InvalidControl());
+            Assert.That(result, Is.EqualTo(-1));
+        }
     }
 }

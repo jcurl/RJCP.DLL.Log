@@ -141,6 +141,7 @@
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlEncoderTestBase.cs" />
+    <Compile Include="Dlt\ControlEncoder\DltTimeMarkerEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\EmptyControlArgEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultLogLevelResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultTraceStatusResponseEncoderTest.cs" />

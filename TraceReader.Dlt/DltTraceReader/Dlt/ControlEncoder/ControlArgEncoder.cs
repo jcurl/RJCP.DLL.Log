@@ -168,6 +168,7 @@
             case DltType.CONTROL_RESPONSE:
                 return EncodeResponse(buffer, msbf, (ControlResponse)arg);
             case DltType.CONTROL_TIME:
+                // We don't care about the `IControlArg` (e.g. `DltTimeMarker`).
                 return 0;
             default:
                 return -1;
