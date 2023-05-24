@@ -2,7 +2,9 @@
 {
     using System;
     using Dlt;
+    using Dlt.ArgEncoder;
     using Dlt.Args;
+    using Dlt.ControlEncoder;
     using NUnit.Framework;
 
     [TestFixture]
@@ -12,7 +14,15 @@
         public void NullArgEncoder()
         {
             Assert.That(() => {
-                _ = new DltTraceEncoder(null);
+                _ = new DltTraceEncoder(null, new ControlDltEncoder());
+            }, Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void NullControlEncoder()
+        {
+            Assert.That(() => {
+                _ = new DltTraceEncoder(new VerboseDltEncoder(), null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 

@@ -3,6 +3,7 @@
     using System;
     using ArgEncoder;
     using ControlArgs;
+    using Encoder;
 
     public abstract class ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -18,6 +19,16 @@
         {
             m_EncoderType = encoderType;
             m_Endianness = endianness;
+
+            switch (m_EncoderType) {
+            case EncoderType.TraceEncoder:
+                HeaderLen = 22;
+                break;
+            case EncoderType.TraceWriter:
+                HeaderLen = 22;
+                IsWriter = true;
+                break;
+            }
         }
 
         /// <summary>
@@ -25,6 +36,24 @@
         /// </summary>
         /// <value>Is <see langword="true"/> if Big Endian; otherwise, <see langword="false"/>.</value>
         protected bool IsBigEndian { get { return m_Endianness == Endianness.Big; } }
+
+        /// <summary>
+        /// Gets the length of the header, extra space needed at the start of the buffer when encoding.
+        /// </summary>
+        /// <value>The length of the header.</value>
+        protected int HeaderLen { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is using a writer.
+        /// </summary>
+        /// <value>
+        /// Is <see langword="true"/> if this instance is using a writer; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// A writer cannot check for invalid buffer sizes, as it writes to a stream that is theoretically infinite
+        /// buffer size.
+        /// </remarks>
+        protected bool IsWriter { get; }
 
         private static TControlEncoder GetEncoder()
         {
@@ -38,7 +67,9 @@
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
         protected Span<byte> ControlEncode(IControlArg arg, int expLen)
         {
-            byte[] buffer = new byte[expLen];
+            byte[] buffer = new byte[
+                (IsWriter ? DltFileTraceEncoderTest.StorageHeader.Length : 0) +
+                HeaderLen + expLen];
             return ControlEncode(buffer, arg, out _);
         }
 
@@ -73,6 +104,12 @@
                 result = dltEncoder.Encode(buffer, line);
                 if (result == -1) return Array.Empty<byte>();
                 return buffer[..result];
+            case EncoderType.TraceEncoder:
+                ITraceEncoderFactory<DltTraceLineBase> encFactory = new DltTraceEncoderFactory();
+                ITraceEncoder<DltTraceLineBase> lineEncoder = encFactory.Create();
+                result = lineEncoder.Encode(buffer, line);
+                if (result == -1) return Array.Empty<byte>();
+                return buffer[HeaderLen..result];
             default:
                 throw new NotImplementedException();
             }

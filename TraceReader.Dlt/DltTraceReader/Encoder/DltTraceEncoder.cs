@@ -3,6 +3,7 @@
     using System;
     using Dlt;
     using Dlt.ArgEncoder;
+    using Dlt.ControlEncoder;
     using RJCP.Core;
 
     /// <summary>
@@ -15,6 +16,7 @@
     public class DltTraceEncoder : ITraceEncoder<DltTraceLineBase>
     {
         private readonly IDltEncoder<DltTraceLine> m_DltArgsEncoder;
+        private readonly IDltEncoder<DltControlTraceLine> m_ControlArgsEncoder;
         private int m_Count = -1;
 
         /// <summary>
@@ -23,17 +25,24 @@
         /// <remarks>
         /// Uses the default argument encoder.
         /// </remarks>
-        public DltTraceEncoder() : this(new VerboseDltEncoder()) { }
+        public DltTraceEncoder() : this(new VerboseDltEncoder(), new ControlDltEncoder()) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltTraceEncoder"/> class.
         /// </summary>
         /// <param name="argsEncoder">The encoder that can iterate over the arguments to generate payloads.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="argsEncoder"/> is <see langword="null"/>.</exception>
-        public DltTraceEncoder(IDltEncoder<DltTraceLine> argsEncoder)
+        /// <param name="controlEncoder">The encoder that can encode control service payloads.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="argsEncoder"/> is <see langword="null"/>
+        /// <para>- or -</para>
+        /// <paramref name="controlEncoder"/> is <see langword="null"/>.
+        /// </exception>
+        public DltTraceEncoder(IDltEncoder<DltTraceLine> argsEncoder, IDltEncoder<DltControlTraceLine> controlEncoder)
         {
             if (argsEncoder is null) throw new ArgumentNullException(nameof(argsEncoder));
+            if (controlEncoder is null) throw new ArgumentNullException(nameof(controlEncoder));
             m_DltArgsEncoder = argsEncoder;
+            m_ControlArgsEncoder = controlEncoder;
         }
 
         /// <summary>
@@ -50,31 +59,47 @@
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
 
+            int written;
             switch (line) {
-            case DltTraceLine traceLine:
+            case DltTraceLine traceLine: {
                 int result = WriteStandardHeader(buffer, traceLine);
                 if (result == -1) return -1;
-                int pos = result;
+                written = result;
 
-                result = WriteExtendedHeader(buffer[pos..], traceLine);
+                result = WriteExtendedHeader(buffer[written..], traceLine);
                 if (result == -1) return -1;
-                pos += result;
+                written += result;
 
-                result = m_DltArgsEncoder.Encode(buffer[pos..], traceLine);
+                result = m_DltArgsEncoder.Encode(buffer[written..], traceLine);
                 if (result == -1) return -1;
-                pos += result;
+                written += result;
+                break;
+            }
+            case DltControlTraceLine controlLine: {
+                int result = WriteStandardHeader(buffer, controlLine);
+                if (result == -1) return -1;
+                written = result;
 
-                // Write the length.
-                if (pos > ushort.MaxValue) return -1;
-                BitOperations.Copy16ShiftBigEndian(pos, buffer[2..4]);
-                return pos;
+                result = WriteExtendedHeader(buffer[written..], controlLine);
+                if (result == -1) return -1;
+                written += result;
+
+                result = m_ControlArgsEncoder.Encode(buffer[written..], controlLine);
+                if (result == -1) return -1;
+                written += result;
+                break;
+            }
             default:
-                // TODO: Control lines are not yet supported.
                 return -1;
             }
+
+            // Write the length.
+            if (written > ushort.MaxValue) return -1;
+            BitOperations.Copy16ShiftBigEndian(written, buffer[2..4]);
+            return written;
         }
 
-        private int WriteStandardHeader(Span<byte> buffer, DltTraceLine line)
+        private int WriteStandardHeader(Span<byte> buffer, DltTraceLineBase line)
         {
             int len = 4;
             byte htyp = DltConstants.HeaderType.Version1;
@@ -130,6 +155,18 @@
 
             buffer[0] = (byte)((byte)line.Type | (byte)1);      // Always writing verbose mode.
             buffer[1] = (byte)(line.Arguments.Count);
+            WriteId(buffer[2..6], line.Features.ApplicationId ? line.ApplicationId : null);
+            WriteId(buffer[6..10], line.Features.ContextId ? line.ContextId : null);
+            return 10;
+        }
+
+        private static int WriteExtendedHeader(Span<byte> buffer, DltControlTraceLine line)
+        {
+            if (buffer.Length < 10) return -1;
+            buffer[0] = (byte)line.Type;
+            buffer[1] = 0;
+
+            // Even though a DltControlTraceLine always defines these two features, we check again here for correctness.
             WriteId(buffer[2..6], line.Features.ApplicationId ? line.ApplicationId : null);
             WriteId(buffer[6..10], line.Features.ContextId ? line.ContextId : null);
             return 10;
