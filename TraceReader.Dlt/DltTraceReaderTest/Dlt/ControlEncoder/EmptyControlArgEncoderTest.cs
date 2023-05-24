@@ -28,6 +28,7 @@
             new GetDefaultTraceStatusRequest(),
             new BufferOverflowNotificationRequest(),
             new SyncTimeStampRequest(),
+            new GetLocalTimeRequest(),
             new MessageBufferOverflowRequest(),
             new GetVerboseModeStatusRequest(),
             new GetMessageFilteringStatusRequest(),

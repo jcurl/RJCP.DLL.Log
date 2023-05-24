@@ -132,25 +132,25 @@ The following are not listed in the current standard, or marked as deprecated:
 | ---------- | ---------------------------- | :-----: | :------: | --------- |
 | `0x07`     | SetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x08`     | SetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
-| `0x09`     | SetVerboseMode¹              |    R    |    X     | SWS 4.2.2 |
-| `0x0B`     | SetTimingPackets             |    R    |    X     | SWS 4.2.2 |
-| `0x0C`     | GetLocalTime¹                |    R    |    X     | SWS 4.2.2 |
-| `0x0D`     | SetUseECUID¹                 |    R    |    X     | SWS 4.2.2 |
-| `0x0E`     | SetUseSessionId¹             |    R    |    X     | SWS 4.2.2 |
-| `0x0F`     | UseTimestamp¹                |    R    |    X     | SWS 4.2.2 |
-| `0x10`     | UseExtendedHeader¹           |    R    |    X     | SWS 4.2.2 |
-| `0x14`     | MessageBufferOverflow¹       |    X    |    R     | SWS 4.2.2 |
+| `0x09`     | SetVerboseMode¹              |    X    |    X     | SWS 4.2.2 |
+| `0x0B`     | SetTimingPackets             |    X    |    X     | SWS 4.2.2 |
+| `0x0C`     | GetLocalTime¹                |    X    |    X     | SWS 4.2.2 |
+| `0x0D`     | SetUseECUID¹                 |    X    |    X     | SWS 4.2.2 |
+| `0x0E`     | SetUseSessionId¹             |    X    |    X     | SWS 4.2.2 |
+| `0x0F`     | UseTimestamp¹                |    X    |    X     | SWS 4.2.2 |
+| `0x10`     | UseExtendedHeader¹           |    X    |    X     | SWS 4.2.2 |
+| `0x14`     | MessageBufferOverflow¹       |    X    |    X     | SWS 4.2.2 |
 | `0x16`     | GetComInterfaceStatus¹       |         |          | SWS 4.2.2 |
 | `0x17`     | GetComInterfaceNames²        |         |          | SWS 4.2.2 |
 | `0x18`     | GetComInterfaceMaxBandwidth¹ |         |          | SWS 4.2.2 |
-| `0x19`     | GetVerboseModeStatus¹        |    X    |    R     | SWS 4.2.2 |
-| `0x1A`     | GetMessageFilteringStatus¹   |    X    |    R     | SWS 4.2.2 |
-| `0x1B`     | GetUseECUID¹                 |    X    |    R     | SWS 4.2.2 |
-| `0x1C`     | GetUseSessionID¹             |    X    |    R     | SWS 4.2.2 |
-| `0x1D`     | GetUseTimestamp¹             |    X    |    R     | SWS 4.2.2 |
-| `0x1E`     | GetUseExtendedHeader¹        |    X    |    R     | SWS 4.2.2 |
+| `0x19`     | GetVerboseModeStatus¹        |    X    |    X     | SWS 4.2.2 |
+| `0x1A`     | GetMessageFilteringStatus¹   |    X    |    X     | SWS 4.2.2 |
+| `0x1B`     | GetUseECUID¹                 |    X    |    X     | SWS 4.2.2 |
+| `0x1C`     | GetUseSessionID¹             |    X    |    X     | SWS 4.2.2 |
+| `0x1D`     | GetUseTimestamp¹             |    X    |    X     | SWS 4.2.2 |
+| `0x1E`     | GetUseExtendedHeader¹        |    X    |    X     | SWS 4.2.2 |
 
-The following are observed implementations that are implemented in Genivi DLT,
+The following are observed implementations that are implemented in Covesa DLT,
 but not documented in the AutoSAR PRS.
 
 * ¹: This is made obsolete in PRS 1.3.0 and later
