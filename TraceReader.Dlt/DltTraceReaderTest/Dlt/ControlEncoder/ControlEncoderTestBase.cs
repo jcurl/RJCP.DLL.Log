@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ControlEncoder
 {
     using System;
+    using ArgEncoder;
     using ControlArgs;
 
     public abstract class ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
@@ -50,10 +51,26 @@
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
         protected Span<byte> ControlEncode(Span<byte> buffer, IControlArg arg, out int result)
         {
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder
+                .SetControlPayload(arg)
+                .SetDltType(arg.DefaultType)
+                .SetEcuId("ECU1")
+                .SetApplicationId("APP1")
+                .SetContextId("CTX1")
+                .SetDeviceTimeStamp(0)
+                .SetBigEndian(IsBigEndian);
+            DltControlTraceLine line = (DltControlTraceLine)builder.GetResult();
+
             switch (m_EncoderType) {
             case EncoderType.Argument:
                 IControlArgEncoder encoder = GetEncoder();
                 result = encoder.Encode(buffer, IsBigEndian, arg);
+                if (result == -1) return Array.Empty<byte>();
+                return buffer[..result];
+            case EncoderType.Arguments:
+                IDltEncoder<DltControlTraceLine> dltEncoder = new ControlDltEncoder(GetEncoder());
+                result = dltEncoder.Encode(buffer, line);
                 if (result == -1) return Array.Empty<byte>();
                 return buffer[..result];
             default:

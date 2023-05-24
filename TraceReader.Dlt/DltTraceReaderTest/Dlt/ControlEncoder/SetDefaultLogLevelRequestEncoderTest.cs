@@ -9,6 +9,8 @@
     [TestFixture(typeof(SetDefaultLogLevelRequestEncoder), EncoderType.Argument, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Argument, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Argument, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     public class SetDefaultLogLevelRequestEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {

@@ -195,6 +195,7 @@
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoderBase.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgResponseEncoder.cs" />
+    <Compile Include="Dlt\ControlEncoder\ControlDltEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\EmptyControlArgEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultLogLevelResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultTraceStatusResponseEncoder.cs" />

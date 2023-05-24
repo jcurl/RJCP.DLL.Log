@@ -12,7 +12,7 @@
         Argument,
 
         /// <summary>
-        /// Test the <see cref="ArgEncoder.VerboseDltEncoder"/>.
+        /// Test the <see cref="ArgEncoder.VerboseDltEncoder"/> or <see cref="ControlEncoder.ControlDltEncoder"/>.
         /// </summary>
         Arguments,
 

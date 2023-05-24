@@ -9,6 +9,8 @@
     [TestFixture(typeof(BufferOverflowNotificationResponseEncoder), EncoderType.Argument, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Argument, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Argument, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     public class BufferOverflowNotificationResponseEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {

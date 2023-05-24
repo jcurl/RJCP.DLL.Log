@@ -9,6 +9,10 @@
     [TestFixture]
     public class DltFileTraceEncoderTest
     {
+        public static readonly byte[] StorageHeader = new byte[] {
+            0x44, 0x4C, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x43, 0x55, 0x31
+        };
+
         [Test]
         public void EncodeNoEcuIdNoTimeStamp()
         {

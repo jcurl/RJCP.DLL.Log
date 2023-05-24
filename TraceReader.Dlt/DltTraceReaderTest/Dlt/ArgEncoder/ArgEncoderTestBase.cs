@@ -17,10 +17,6 @@
         private readonly Endianness m_Endianness;
         private readonly LineType m_LineType;
 
-        private static readonly byte[] StorageHeader = new byte[] {
-            0x44, 0x4C, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x43, 0x55, 0x31
-        };
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgEncoderTestBase{TArgEncoder}"/> class.
         /// </summary>
@@ -86,7 +82,9 @@
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
         protected Span<byte> ArgEncode(IDltArg arg, int expLen)
         {
-            byte[] buffer = new byte[(IsWriter ? StorageHeader.Length : 0) + (IsVerbose ? 4 : 0) + HeaderLen + expLen];
+            byte[] buffer = new byte[
+                (IsWriter ? DltFileTraceEncoderTest.StorageHeader.Length : 0) +
+                (IsVerbose ? 4 : 0) + HeaderLen + expLen];
             return ArgEncode(buffer, arg, out _);
         }
 
@@ -99,16 +97,17 @@
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
         protected Span<byte> ArgEncode(Span<byte> buffer, IDltArg arg, out int result)
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { arg }) {
-                EcuId = "ECU1",
-                ApplicationId = "APP1",
-                ContextId = "CTX1",
-                Type = DltType.LOG_INFO,
-                DeviceTimeStamp = new TimeSpan(0),
-                Features = DltLineFeatures.EcuIdFeature + DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature +
-                    DltLineFeatures.DevTimeStampFeature + DltLineFeatures.MessageTypeFeature + DltLineFeatures.VerboseFeature
-            };
-            if (IsBigEndian) line.Features += DltLineFeatures.BigEndianFeature;
+            IDltLineBuilder builder = new DltLineBuilder();
+            builder
+                .SetNumberOfArgs(1)
+                .SetEcuId("ECU1")
+                .SetApplicationId("APP1")
+                .SetContextId("CTX1")
+                .SetDeviceTimeStamp(0)
+                .SetBigEndian(IsBigEndian)
+                .SetIsVerbose(true)
+                .AddArgument(arg);
+            DltTraceLine line = (DltTraceLine)builder.GetResult();
 
             switch (m_EncoderType) {
             case EncoderType.Argument:
@@ -142,7 +141,7 @@
                 using (MemoryStream stream = new MemoryStream())
                 using (ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream))
                 using (FileStream file = new FileStream(fileName, FileMode.Create)) {
-                    stream.Write(StorageHeader);
+                    stream.Write(DltFileTraceEncoderTest.StorageHeader);
                     bool success = writer.WriteLineAsync(line).GetAwaiter().GetResult();
                     if (!success) {
                         result = -1;
@@ -159,7 +158,7 @@
                         rpos += read;
                     }
                     result = rpos;
-                    return buffer[(HeaderLen + StorageHeader.Length)..result];
+                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..result];
                 }
             default:
                 throw new NotImplementedException();
