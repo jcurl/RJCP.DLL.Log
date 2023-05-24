@@ -141,6 +141,8 @@
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlEncoderTestBase.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomConnectionInfoResponseEncoderTest.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomTimeZoneResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\DltTimeMarkerEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\EmptyControlArgEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultLogLevelResponseEncoderTest.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="Dlt\ControlEncoder\GetUseSessionIdResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\GetUseEcuIdResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\GetVerboseModeStatusResponseEncoderTest.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomUnregisterContextResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\MessageBufferOverflowResponseEncoderTest .cs" />
     <Compile Include="Dlt\ControlEncoder\SetDefaultLogLevelRequestEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\SetDefaultTraceStatusRequestEncoderTest.cs" />

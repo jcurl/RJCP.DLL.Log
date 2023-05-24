@@ -196,6 +196,8 @@
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoderBase.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlDltEncoder.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomConnectionInfoResponseEncoder.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomTimeZoneResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\EmptyControlArgEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultLogLevelResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetDefaultTraceStatusResponseEncoder.cs" />
@@ -204,6 +206,7 @@
     <Compile Include="Dlt\ControlEncoder\GetMessageFilteringStatusResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetSoftwareVersionResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetTraceStatusRequestEncoder.cs" />
+    <Compile Include="Dlt\ControlEncoder\CustomUnregisterContextResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetTraceStatusResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetUseExtendedHeaderResponseEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\GetUseTimeStampResponseEncoder.cs" />

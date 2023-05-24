@@ -90,6 +90,9 @@
             m_ResponseEncodersStandard[0x23] = new BufferOverflowNotificationResponseEncoder();
             m_ResponseEncodersStandard[0x24] = new SyncTimeStampResponseEncoder();
 
+            m_ResponseEncodersCustom[0x01] = new CustomUnregisterContextResponseEncoder();
+            m_ResponseEncodersCustom[0x02] = new CustomConnectionInfoResponseEncoder();
+            m_ResponseEncodersCustom[0x03] = new CustomTimeZoneResponseEncoder();
             m_ResponseEncodersCustom[0x04] = EmptyResponseEncoder;  // CustomMarker response
         }
 

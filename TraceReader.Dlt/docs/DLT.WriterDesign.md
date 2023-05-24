@@ -159,9 +159,9 @@ but not documented in the AutoSAR PRS.
 
 | Service Id | Name               | Request | Response |
 | ---------- | ------------------ | :-----: | :------: |
-| `0xF01`    | Unregister Context |   N/A   |    R     |
-| `0xF02`    | Connection Info    |   N/A   |    R     |
-| `0xF03`    | TimeZone Info      |   N/A   |    R     |
+| `0xF01`    | Unregister Context |   N/A   |    X     |
+| `0xF02`    | Connection Info    |   N/A   |    X     |
+| `0xF03`    | TimeZone Info      |   N/A   |    X     |
 | `0xF04`    | Marker             |   N/A   |    X     |
 
 #### 2.4.2. The Control Argument Encoder

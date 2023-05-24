@@ -10,6 +10,16 @@
     public sealed class CustomConnectionInfoResponse : ControlResponse
     {
         /// <summary>
+        /// State is Disconnected.
+        /// </summary>
+        public const int Disconnected = 1;
+
+        /// <summary>
+        /// State is Connected.
+        /// </summary>
+        public const int Connected = 2;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CustomUnregisterContextResponse" /> class.
         /// </summary>
         /// <param name="status">The status code for the response.</param>
@@ -59,10 +69,10 @@
         {
             string connState;
             switch (ConnectionState) {
-            case 1:
+            case Disconnected:
                 connState = "disconnected";
                 break;
-            case 2:
+            case Connected:
                 connState = "connected";
                 break;
             default:
