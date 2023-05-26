@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class SyncTimeStampResponseEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -65,6 +67,8 @@
         [Test]
         public void InsufficientBuffer([Range(3, 14, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             SyncTimeStampResponse response =
                 new SyncTimeStampResponse(ControlResponse.StatusOk, new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc));
 

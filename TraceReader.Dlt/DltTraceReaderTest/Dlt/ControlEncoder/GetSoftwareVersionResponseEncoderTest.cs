@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class GetSoftwareVersionResponseEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -66,6 +68,8 @@
         [Test]
         public void InsufficientBuffer([Values(3, 4, 5, 6, 7, 8, 9, 10, 16, 17)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             GetSoftwareVersionResponse response =
                 new GetSoftwareVersionResponse(ControlResponse.StatusOk, "version1");
 

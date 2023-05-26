@@ -52,7 +52,7 @@
         [TestCase(3.141592, TestName = "InsufficientBuffer_DoublePi")]
         public void InsufficientBuffer(double value)
         {
-            if (IsWriter) Assert.Ignore("Test case is meaningless");
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 7];
             ArgEncode(buffer, new Float64DltArg(value), out int result);

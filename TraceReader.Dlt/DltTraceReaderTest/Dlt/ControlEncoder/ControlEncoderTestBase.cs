@@ -1,9 +1,12 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ControlEncoder
 {
     using System;
+    using System.IO;
     using ArgEncoder;
     using ControlArgs;
     using Encoder;
+    using NUnit.Framework;
+    using RJCP.CodeQuality.NUnitExtensions;
 
     public abstract class ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -110,8 +113,49 @@
                 result = lineEncoder.Encode(buffer, line);
                 if (result == -1) return Array.Empty<byte>();
                 return buffer[HeaderLen..result];
+            case EncoderType.TraceWriter:
+                // Note, in this test case we allocate the buffer when encoding, and only copy the result.
+
+                string dir = Path.Combine(Deploy.WorkDirectory, "dltout", "write", "control", IsBigEndian ? "big" : "little");
+                string fileName = Path.Combine(dir, $"{Deploy.TestName}.dlt");
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                using (MemoryStream stream = new MemoryStream())
+                using (ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream))
+                using (FileStream file = GetFile(fileName)) {
+                    stream.Write(DltFileTraceEncoderTest.StorageHeader);
+                    bool success = writer.WriteLineAsync(line).GetAwaiter().GetResult();
+                    if (!success) {
+                        result = -1;
+                        return Array.Empty<byte>();
+                    }
+                    long end = stream.Position;
+                    stream.Seek(0, SeekOrigin.Begin);
+                    if (file is object) {
+                        stream.CopyTo(file);
+                        stream.Seek(0, SeekOrigin.Begin);
+                    }
+                    int rpos = 0;
+                    while (rpos < end) {
+                        int read = stream.Read(buffer);
+                        Assert.That(read, Is.Not.EqualTo(0));
+                        rpos += read;
+                    }
+                    result = rpos;
+                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..result];
+                }
             default:
                 throw new NotImplementedException();
+            }
+        }
+
+        private static FileStream GetFile(string fileName)
+        {
+            try {
+                return new FileStream(fileName, FileMode.Create);
+            } catch (IOException) {
+                return null;
             }
         }
     }

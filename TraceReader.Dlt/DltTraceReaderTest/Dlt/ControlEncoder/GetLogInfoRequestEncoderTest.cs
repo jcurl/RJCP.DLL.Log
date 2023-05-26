@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class GetLogInfoRequestEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -52,6 +54,8 @@
         [Test]
         public void InsufficientBuffer([Range(3, 16, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             GetLogInfoRequest request =
                 new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 

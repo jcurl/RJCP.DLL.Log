@@ -14,6 +14,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class ControlArgResponseEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {

@@ -73,7 +73,7 @@
         [TestCase(unchecked((long)0xFFFFFFFF_FFFFFFFF), 8, TestName = "InsufficientBuffer_64bitMax")]
         public void InsufficientBuffer(long value, int len)
         {
-            if (IsWriter) Assert.Ignore("Test case is meaningless");
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + len - 1];
             ArgEncode(buffer, new HexIntDltArg(value, len), out int result);

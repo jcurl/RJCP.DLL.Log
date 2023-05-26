@@ -45,7 +45,7 @@
         [TestCase(true, TestName = "InsufficientBuffer_True")]
         public void InsufficientBuffer(bool value)
         {
-            if (IsWriter) Assert.Ignore("Test case is meaningless");
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen];
             ArgEncode(buffer, new BoolDltArg(value), out int result);

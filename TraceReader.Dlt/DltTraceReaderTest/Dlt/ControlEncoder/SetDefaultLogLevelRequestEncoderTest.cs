@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class SetDefaultLogLevelRequestEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -48,6 +50,8 @@
         [Test]
         public void InsufficientBuffer([Range(3, 8, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             SetDefaultLogLevelRequest request =
                 new SetDefaultLogLevelRequest(LogLevel.Info);
 

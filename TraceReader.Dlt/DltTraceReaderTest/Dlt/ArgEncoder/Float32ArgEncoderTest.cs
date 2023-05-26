@@ -52,7 +52,7 @@
         [TestCase(3.141592F, TestName = "InsufficientBuffer_FloatPi")]
         public void InsufficientBuffer(float value)
         {
-            if (IsWriter) Assert.Ignore("Test case is meaningless");
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 3];
             ArgEncode(buffer, new Float32DltArg(value), out int result);

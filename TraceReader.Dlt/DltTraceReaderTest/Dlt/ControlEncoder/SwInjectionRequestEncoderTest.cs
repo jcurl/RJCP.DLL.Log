@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class SwInjectionRequestEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -33,6 +35,8 @@
         [Test]
         public void InsufficientBuffer([Range(3, 11, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             SwInjectionRequest request = new SwInjectionRequest(0x1000, new byte[] { 0x41, 0x42, 0x43, 0x44 });
 
             byte[] buffer = new byte[length];

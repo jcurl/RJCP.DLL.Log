@@ -13,6 +13,8 @@
     [TestFixture(typeof(ControlArgEncoder), EncoderType.Arguments, Endianness.Little)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Big)]
     [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceEncoder, Endianness.Little)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Big)]
+    [TestFixture(typeof(ControlArgEncoder), EncoderType.TraceWriter, Endianness.Little)]
     public class GetLogInfoResponseEncoderTest<TControlEncoder>
         : ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -244,6 +246,8 @@
         [Test]
         public void FullResponseInsufficientBuffer([Range(1, 146, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             GetLogInfoResponse response = GetResponse(GetLogInfoResponse.StatusFullInfo);
 
             byte[] buffer = new byte[length];
@@ -306,6 +310,8 @@
         [Test]
         public void FullResponseZeroLengthDescriptionInsufficientBuffer([Range(1, 64, 1)] int length)
         {
+            if (IsWriter) Assert.Inconclusive("Test case is meaningless");
+
             GetLogInfoResponse response = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo);
             ContextId app1c1 = new ContextId("CTX1", LogLevel.Info, 1, "");
             ContextId app1c2 = new ContextId("CTX2", LogLevel.Debug, 1, "");
