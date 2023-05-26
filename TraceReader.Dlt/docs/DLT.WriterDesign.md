@@ -17,9 +17,10 @@ R20-11 and earlier.
     - [2.4.1. Control Services](#241-control-services)
     - [2.4.2. The Control Argument Encoder](#242-the-control-argument-encoder)
   - [2.5. Chain of Object Construction and Extension](#25-chain-of-object-construction-and-extension)
-    - [2.5.1. Packet Based Behaviour](#251-packet-based-behaviour)
-    - [2.5.2. Extending for a Storage Header](#252-extending-for-a-storage-header)
-    - [2.5.3. Writing Non-Verbose](#253-writing-non-verbose)
+    - [2.5.1. Custom SW Injection](#251-custom-sw-injection)
+    - [2.5.2. Packet Based Behaviour](#252-packet-based-behaviour)
+    - [2.5.3. Extending for a Storage Header](#253-extending-for-a-storage-header)
+    - [2.5.4. Writing Non-Verbose](#254-writing-non-verbose)
 
 ## 1. DLT Trace Writer
 
@@ -124,7 +125,7 @@ not implemented, but can be decoded):
 | `0x22`                | GetLogChannelThreshold     |         |          | PRS 1.4.0  |
 | `0x23`                | BufferOverflowNotification |    X    |    X     | PRS 1.4.0  |
 | `0x24`                | SyncTimeStamp              |    X    |    X     | PRS R19-11 |
-| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection           |    R    |    R     | PRS 1.4.0  |
+| `0xFFF`..`0xFFFFFFFF` | CallSWCInjection           |    X    |    X     | PRS 1.4.0  |
 
 The following are not listed in the current standard, or marked as deprecated:
 
@@ -207,14 +208,28 @@ Note: To write non-verbose, the `DltTraceEncoder` would need to write to a
 differentiate between a dynamic string and a static string, and the
 `DltArgEncoder` would need modifications to ignore writing static strings.
 
-#### 2.5.1. Packet Based Behaviour
+#### 2.5.1. Custom SW Injection
+
+The `SwInjectionRequest` is like any other control message, except it is
+specific to the target that is being interacted with. The default implementation
+is simply to copy a raw byte of payloads. However, this doesn't take into
+account any endianness within the payload itself.
+
+To implement your own custom injection, you should provide your own
+`IControlArg`, `IControlArgEncoder` pair. Create a new `MyControlArgEncoder :
+ControlArgEncoder` and inject your custom encoder. Give `MyControlArgEncoder` to
+an instance of `ControlDltEncoder` which is then injected into the
+`DltTraceEncoder`. If you use a factory, you'll need to create your own factory
+to provide this.
+
+#### 2.5.2. Packet Based Behaviour
 
 It is desirable that the complete message is constructed using the
 `IDltTraceEncoder` before sending it out on the network. This allows underlying
 streams to know upfront the complete packet size before sending out, potentially
 allowing for fragmentation if needed.
 
-#### 2.5.2. Extending for a Storage Header
+#### 2.5.3. Extending for a Storage Header
 
 A `DltFileTraceWriterFactory` would create a `DltTraceWriter` but use a
 `DltFileTraceEncoder`, which prepends every buffer by 16 bytes containing the
@@ -230,7 +245,7 @@ actual encoder to write to the buffer before it is sent out.
 
 ![Storage Header Factory](out/diagrams/DLT.WriterFileFactory/DLT.WriterFileFactory.svg)
 
-#### 2.5.3. Writing Non-Verbose
+#### 2.5.4. Writing Non-Verbose
 
 This version does not support writing non-verbose messages as without
 functionality to write a FIBEX file, reading the file afterwards is undefined.

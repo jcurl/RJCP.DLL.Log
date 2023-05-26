@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ControlEncoder
 {
     using System;
+    using System.Collections.Generic;
     using ControlArgs;
 
     /// <summary>
@@ -16,6 +17,8 @@
         private readonly IControlArgEncoder[] m_ResponseEncodersStandard = new IControlArgEncoder[128];
         private readonly IControlArgEncoder[] m_RequestEncodersCustom = new IControlArgEncoder[128];
         private readonly IControlArgEncoder[] m_ResponseEncodersCustom = new IControlArgEncoder[128];
+        private readonly Dictionary<int, IControlArgEncoder> m_RequestSwInjection = new Dictionary<int, IControlArgEncoder>();
+        private readonly Dictionary<int, IControlArgEncoder> m_ResponseSwInjection = new Dictionary<int, IControlArgEncoder>();
 
         /// <summary>
         /// A default Empty Request encoder, for when there is nothing, other than the service id, to encode.
@@ -26,6 +29,8 @@
         /// The empty response encoder, for when there is nothing, other than the service id and the status, to encode.
         /// </summary>
         protected static readonly IControlArgEncoder EmptyResponseEncoder = new ControlArgResponseEncoder();
+
+        private static readonly IControlArgEncoder DefaultRequestSwInjection = new SwInjectionRequestEncoder();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlArgEncoder"/> class.
@@ -121,19 +126,27 @@
             case DltType.CONTROL_REQUEST:
                 if (serviceId >= 0 && serviceId <= m_RequestEncodersStandard.Length) {
                     m_RequestEncodersStandard[serviceId] = encoder;
+                    return;
                 } else if (serviceId >= 0xF00 && serviceId <= m_RequestEncodersCustom.Length + 0xF00) {
                     m_RequestEncodersCustom[serviceId - 0xF00] = encoder;
+                    return;
+                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                    m_RequestSwInjection[serviceId] = encoder;
+                    return;
                 }
-                // TODO: Custom software injection requests are not supported at this time.
-                return;
+                break;
             case DltType.CONTROL_RESPONSE:
                 if (serviceId >= 0 && serviceId <= m_ResponseEncodersStandard.Length) {
                     m_ResponseEncodersStandard[serviceId] = encoder;
+                    return;
                 } else if (serviceId >= 0xF00 && serviceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                     m_ResponseEncodersCustom[serviceId - 0xF00] = encoder;
+                    return;
+                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                    m_ResponseSwInjection[serviceId] = encoder;
+                    return;
                 }
-                // TODO: Custom software injection responses are not supported at this time.
-                return;
+                break;
             }
 
             throw new ArgumentException($"Unsupported service {type} with service identifier {serviceId}");
@@ -156,16 +169,18 @@
                     m_RequestEncodersStandard[serviceId] = null;
                 } else if (serviceId >= 0xF00 && serviceId <= m_RequestEncodersCustom.Length + 0xF00) {
                     m_RequestEncodersCustom[serviceId - 0xF00] = null;
+                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                    m_RequestSwInjection.Remove(serviceId);
                 }
-                // TODO: Custom software injection requests are not supported at this time.
                 break;
             case DltType.CONTROL_RESPONSE:
                 if (serviceId >= 0 && serviceId <= m_ResponseEncodersStandard.Length) {
                     m_ResponseEncodersStandard[serviceId] = null;
                 } else if (serviceId >= 0xF00 && serviceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                     m_ResponseEncodersCustom[serviceId - 0xF00] = null;
+                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                    m_ResponseSwInjection.Remove(serviceId);
                 }
-                // TODO: Custom software injection responses are not supported at this time.
                 break;
             }
         }
@@ -199,8 +214,10 @@
                 encoder = m_RequestEncodersStandard[arg.ServiceId];
             } else if (arg.ServiceId >= 0xF00 && arg.ServiceId <= m_RequestEncodersCustom.Length + 0xF00) {
                 encoder = m_RequestEncodersCustom[arg.ServiceId - 0xF00];
+            } else if (arg.ServiceId >= 0xFFF || arg.ServiceId < 0) {
+                if (!m_RequestSwInjection.TryGetValue(arg.ServiceId, out encoder))
+                    encoder = DefaultRequestSwInjection;
             }
-            // TODO: Custom software injection requests are not supported at this time.
 
             if (encoder is null) return -1;
             return encoder.Encode(buffer, msbf, arg);
@@ -216,8 +233,10 @@
                 encoder = m_ResponseEncodersStandard[arg.ServiceId];
             } else if (arg.ServiceId >= 0xF00 && arg.ServiceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                 encoder = m_ResponseEncodersCustom[arg.ServiceId - 0xF00];
+            } else if (arg.ServiceId >= 0xFFF || arg.ServiceId < 0) {
+                if (!m_ResponseSwInjection.TryGetValue(arg.ServiceId, out encoder))
+                    encoder = EmptyResponseEncoder;
             }
-            // TODO: Custom software injection responses are not supported at this time.
 
             if (encoder is null) return -1;
             return encoder.Encode(buffer, msbf, arg);

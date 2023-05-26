@@ -226,6 +226,7 @@
     <Compile Include="Dlt\ControlEncoder\SetUseSessionIdRequestEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\SetUseEcuIdRequestEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\SetVerboseModeRequestEncoder.cs" />
+    <Compile Include="Dlt\ControlEncoder\SwInjectionRequestEncoder.cs" />
     <Compile Include="Dlt\ControlEncoder\SyncTimeStampResponseEncoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationResponseDecoder.cs" />

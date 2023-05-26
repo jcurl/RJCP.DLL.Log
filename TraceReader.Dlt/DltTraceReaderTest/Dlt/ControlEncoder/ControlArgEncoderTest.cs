@@ -160,6 +160,36 @@
             Assert.That(result, Is.EqualTo(17));
         }
 
+        [Test]
+        public void UnregisterSwInjRequest([Values(0xFFF, 0x1000, unchecked((int)0xFFFFFFFF))] int serviceId)
+        {
+            byte[] buffer = new byte[1024];
+
+            // The default encoder will still be used after unregistering. Only for SW Injection Requests / Responses
+            IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
+            SwInjectionRequest request = new SwInjectionRequest(serviceId, new byte[] { 0x41, 0x42, 0x43, 0x44 });
+
+            int result = encoder.Encode(buffer, false, request);
+            Assert.That(result, Is.EqualTo(12));
+            Assert.That(BitOperations.To32Shift(buffer.AsSpan(0, 4), true), Is.EqualTo(serviceId));
+            Assert.That(buffer[4..12], Is.EqualTo(new byte[] { 0x04, 0x00, 0x00, 0x00, 0x41, 0x42, 0x43, 0x44 }));
+        }
+
+        [Test]
+        public void UnregisterSwInjResponse([Values(0xFFF, 0x1000, unchecked((int)0xFFFFFFFF))] int serviceId)
+        {
+            byte[] buffer = new byte[1024];
+
+            // The default encoder will still be used after unregistering. Only for SW Injection Requests / Responses
+            IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
+            SwInjectionResponse response = new SwInjectionResponse(serviceId, SwInjectionResponse.StatusPending);
+
+            int result = encoder.Encode(buffer, false, response);
+            Assert.That(result, Is.EqualTo(5));
+            Assert.That(BitOperations.To32Shift(buffer.AsSpan(0, 4), true), Is.EqualTo(serviceId));
+            Assert.That(buffer[4], Is.EqualTo(SwInjectionResponse.StatusPending));
+        }
+
         private sealed class ControlArgEncoderRegisterNew : ControlArgEncoder
         {
             public ControlArgEncoderRegisterNew(int serviceId)
@@ -170,7 +200,7 @@
         }
 
         [Test]
-        public void RegisteredNewResponse([Values(0x40, 0xF40)] int serviceId)
+        public void RegisteredNewResponse([Values(0x40, 0xF40, 0xFFF, 0x1000, unchecked((int)0xFFFFFFFF))] int serviceId)
         {
             byte[] buffer = new byte[1024];
 
@@ -184,7 +214,7 @@
         }
 
         [Test]
-        public void RegisteredNewRequest([Values(0x40, 0xF40)] int serviceId)
+        public void RegisteredNewRequest([Values(0x40, 0xF40, 0xFFF, 0x1000, unchecked((int)0xFFFFFFFF))] int serviceId)
         {
             byte[] buffer = new byte[1024];
 

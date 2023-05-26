@@ -50,11 +50,14 @@
             new SetUseExtendedHeaderResponse(ControlResponse.StatusOk),
             new SetUseExtendedHeaderResponse(ControlResponse.StatusError),
             new CustomMarkerResponse(ControlResponse.StatusOk),
-            new CustomMarkerResponse(ControlResponse.StatusError)
+            new CustomMarkerResponse(ControlResponse.StatusError),
+            new SwInjectionResponse(0xFFF, ControlResponse.StatusOk),
+            new SwInjectionResponse(unchecked((int)0xFFFFFFFF), ControlResponse.StatusOk),
+            new SwInjectionResponse(0x1000, SwInjectionResponse.StatusPending)
         };
 
         [Test]
-        public void EmptyRequest([ValueSource(nameof(EmptyResponses))] ControlResponse response)
+        public void EmptyResponse([ValueSource(nameof(EmptyResponses))] ControlResponse response)
         {
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(response.ServiceId));

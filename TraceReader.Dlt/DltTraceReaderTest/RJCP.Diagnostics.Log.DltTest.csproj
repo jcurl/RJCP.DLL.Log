@@ -140,6 +140,7 @@
     <Compile Include="Dlt\ControlEncoder\BufferOverflowNotificationResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlArgResponseEncoderTest.cs" />
+    <Compile Include="Dlt\ControlEncoder\ControlDltEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\ControlEncoderTestBase.cs" />
     <Compile Include="Dlt\ControlEncoder\CustomConnectionInfoResponseEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\CustomTimeZoneResponseEncoderTest.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="Dlt\ControlEncoder\SetUseEcuIdRequestEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\SetUseExtendedHeaderRequestEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\SetVerboseModeRequestEncoderTest.cs" />
+    <Compile Include="Dlt\ControlEncoder\SwInjectionRequestEncoderTest.cs" />
     <Compile Include="Dlt\ControlEncoder\SyncTimeStampResponseEncoderTest.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationDecoderTest.cs" />
     <Compile Include="Dlt\Control\ControlDecoderTestBase.cs" />
