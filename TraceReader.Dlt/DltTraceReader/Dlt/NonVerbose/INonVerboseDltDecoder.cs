@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.NonVerbose
 {
     using System;
+    using RJCP.Core;
 
     /// <summary>
     /// An interface that knows how to decode the DLT payload for non-verbose messages.
@@ -29,6 +30,6 @@
         /// placed.
         /// </param>
         /// <returns>The length of all the decoded verbose arguments in the buffer.</returns>
-        int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder);
+        Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder);
     }
 }

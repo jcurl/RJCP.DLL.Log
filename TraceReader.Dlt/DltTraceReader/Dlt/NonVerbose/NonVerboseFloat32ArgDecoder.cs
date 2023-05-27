@@ -20,12 +20,16 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (buffer.Length < pdu.PduLength)
-                return DltArgError.Get($"Insufficient payload buffer {pdu.PduLength} for float32 argument", out arg);
-            if (pdu.PduLength < 4)
-                return DltArgError.Get("S_FLOA32 invalid length in PDU", out arg);
+            if (buffer.Length < pdu.PduLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"Insufficient payload buffer {pdu.PduLength} for float32 argument"));
+            }
+            if (pdu.PduLength < 4) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("S_FLOA32 invalid length in PDU"));
+            }
 
             float data = BitOperations.To32FloatShift(buffer, !msbf);
             arg = new Float32DltArg(data);

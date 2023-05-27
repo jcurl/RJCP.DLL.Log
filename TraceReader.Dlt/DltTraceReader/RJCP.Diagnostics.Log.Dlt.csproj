@@ -101,7 +101,6 @@
     <Compile Include="Dlt\Args\BinaryIntDltArg.cs" />
     <Compile Include="Dlt\Args\BoolDltArg.cs" />
     <Compile Include="Dlt\Args\DltArgBase.cs" />
-    <Compile Include="Dlt\Args\DltArgError.cs" />
     <Compile Include="Dlt\Args\DltTypeInfo.cs" />
     <Compile Include="Dlt\Args\Float32DltArg.cs" />
     <Compile Include="Dlt\Args\Float64DltArg.cs" />

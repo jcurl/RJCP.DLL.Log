@@ -556,14 +556,14 @@
                     return false;
                 }
             } else {
-                int payloadLength = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                if (payloadLength == -1 || m_DltLineBuilder.HasErrorMessage()) {
+                Result<int> payloadLengthResult = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (!payloadLengthResult.TryGet(out int payloadLength) || m_DltLineBuilder.HasErrorMessage()) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
                     if (!string.IsNullOrEmpty(error)) {
                         Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded, {1}",
                             m_PosMap.Position, error);
                     }
-                    if (payloadLength != -1) return true;
+                    if (payloadLengthResult.HasValue) return true;
                     return ParseNonVerboseFallback(standardHeader[offset..]);
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
@@ -581,8 +581,8 @@
         {
             if (m_NonVerboseDecoder.Fallback is null) return false;
 
-            int payloadLength = m_NonVerboseDecoder.Fallback.Decode(buffer, m_DltLineBuilder);
-            return payloadLength != -1;
+            Result<int> payloadLengthResult = m_NonVerboseDecoder.Fallback.Decode(buffer, m_DltLineBuilder);
+            return payloadLengthResult.HasValue;
         }
 
         private static DltType GetMessageType(int messageInfo)

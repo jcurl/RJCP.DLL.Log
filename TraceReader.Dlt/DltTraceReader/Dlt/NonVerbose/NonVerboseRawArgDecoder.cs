@@ -20,18 +20,22 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (buffer.Length < 2)
-                return DltArgError.Get("Insufficient payload buffer for raw argument length", out arg);
+            if (buffer.Length < 2) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("Insufficient payload buffer for raw argument length"));
+            }
 
             ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(buffer, !msbf));
             byte[] data;
             if (payloadLength == 0) {
                 data = Array.Empty<byte>();
             } else {
-                if (buffer.Length < 2 + payloadLength)
-                    return DltArgError.Get($"Insufficient payload buffer for raw argument length {payloadLength}", out arg);
+                if (buffer.Length < 2 + payloadLength) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"Insufficient payload buffer for raw argument length {payloadLength}"));
+                }
 
                 data = buffer[2..(2 + payloadLength)].ToArray();
             }

@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// The main decoder interface for decoding DLT non verbose argument payloads.
@@ -19,6 +20,6 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg);
+        Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg);
     }
 }

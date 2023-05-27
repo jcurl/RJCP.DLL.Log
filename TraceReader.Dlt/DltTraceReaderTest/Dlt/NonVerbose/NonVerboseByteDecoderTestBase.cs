@@ -3,6 +3,7 @@
     using System;
     using Dlt.Packet;
     using NUnit.Framework;
+    using RJCP.Core;
 
     public abstract class NonVerboseByteDecoderTestBase : DecoderTestBase
     {
@@ -43,9 +44,9 @@
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
             INonVerboseDltDecoder dltDecoder = new NonVerboseByteDecoder();
-            int length = dltDecoder.Decode(data, lineBuilder);
+            Result<int> length = dltDecoder.Decode(data, lineBuilder);
 
-            Assert.That(length, Is.EqualTo(data.Length));
+            Assert.That(length.Value, Is.EqualTo(data.Length));
             Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
             line = (DltNonVerboseTraceLine)lineBuilder.GetResult();
         }

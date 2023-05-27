@@ -117,13 +117,13 @@
             lineBuilder.SetNumberOfArgs(1);
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
-            int length = CustomDecoder.Decode(data, lineBuilder);
+            Result<int> length = CustomDecoder.Decode(data, lineBuilder);
             if (isValid) {
-                Assert.That(length, Is.EqualTo(data.Length));
+                Assert.That(length.Value, Is.EqualTo(data.Length));
                 Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                 arg = lineBuilder.Arguments[0];
             } else {
-                if (length != -1) {
+                if (length.HasValue) {
                     // Ensure that if there was an error, we revert to the fallback decoder.
                     Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                     Assert.That(lineBuilder.Arguments[0], Is.TypeOf<NonVerboseDltArg>());
@@ -140,12 +140,12 @@
             IFrame frame = Map.GetFrame(messageId, null, null, null);
             IPdu pdu = frame.Arguments[0];
 
-            int length = argDecoder.Decode(data, isBig, pdu, out arg);
+            Result<int> length = argDecoder.Decode(data, isBig, pdu, out arg);
             if (isValid) {
-                Assert.That(length, Is.EqualTo(data.Length));
+                Assert.That(length.Value, Is.EqualTo(data.Length));
             } else {
-                Assert.That(length, Is.EqualTo(-1));
-                Assert.That(arg, Is.Null.Or.TypeOf<DltArgError>());
+                Assert.That(length.HasValue, Is.False);
+                Assert.That(arg, Is.Null);
             }
         }
 

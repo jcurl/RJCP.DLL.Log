@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Decodes a `S_BOOL` argument type.
@@ -19,12 +20,16 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (buffer.Length < pdu.PduLength)
-                return DltArgError.Get($"Insufficient payload buffer {pdu.PduLength} for bool argument", out arg);
-            if (pdu.PduLength < 1)
-                return DltArgError.Get("S_BOOL invalid length in PDU", out arg);
+            if (buffer.Length < pdu.PduLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"Insufficient payload buffer {pdu.PduLength} for bool argument"));
+            }
+            if (pdu.PduLength < 1) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("S_BOOL invalid length in PDU"));
+            }
 
             bool boolArg = false;
             for (int i = 0; i < pdu.PduLength && !boolArg; i++) {

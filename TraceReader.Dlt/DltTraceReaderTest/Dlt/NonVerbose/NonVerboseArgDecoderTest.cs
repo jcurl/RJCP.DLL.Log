@@ -6,6 +6,7 @@
     using Control;
     using Decoder;
     using NUnit.Framework;
+    using RJCP.Core;
 
     #region See Decoder for S_FLOA16, extending existing decoders
     // To create your own handler for your own decoder, you should extend the existing classes and instantiate them.
@@ -35,15 +36,15 @@
 
     public class MyFloat16ArgDecoder : INonVerboseArgDecoder
     {
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
             if (buffer.Length < pdu.PduLength) {
-                arg = new DltArgError("Insufficient payload buffer {0} for float16 argument", pdu.PduLength);
-                return -1;
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"Insufficient payload buffer {pdu.PduLength} for float16 argument"));
             }
             if (pdu.PduLength < 2) {
-                arg = new DltArgError("S_FLOA16 invalid length in PDU");
-                return -1;
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("S_FLOA16 invalid length in PDU"));
             }
 
             arg = new MyFloat16Arg(buffer[0..2].ToArray());

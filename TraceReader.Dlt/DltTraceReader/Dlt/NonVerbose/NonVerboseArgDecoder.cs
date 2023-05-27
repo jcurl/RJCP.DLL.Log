@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Decodes any type of PDU from Non-Verbose.
@@ -93,7 +94,7 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
             if (pdu.Description is object) {
                 arg = new StringDltArg(pdu.Description);

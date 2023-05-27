@@ -65,12 +65,8 @@
         /// placed.
         /// </param>
         /// <returns>The length of all the decoded verbose arguments in the buffer.</returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
-            // Returning the fallback decoder here will not show an error in the decoder. Returning -1 will cause the
-            // main decoder to print an error, set by `lineBuilder.SetErrorMessage()`, and still call the callback.
-
             if (FrameMap is null)
                 return Fallback.Decode(buffer, lineBuilder);
 
@@ -88,7 +84,8 @@
                       lineBuilder.Features.ContextId ? lineBuilder.ContextId : null,
                       lineBuilder.Features.EcuId ? lineBuilder.EcuId : null,
                       out IFrame frame)) {
-                        return -1;
+                        // The lineBuilder.SetErrorMessage is not set, so nothing is traced.
+                        return Result.FromException<int>(new DltDecodeException($"Message {messageId} not mapped"));
                     }
 
                     lineBuilder.SetMessageId(messageId);
@@ -101,38 +98,39 @@
                         lineBuilder.SetEcuId(frame.EcuId);
                     }
 
-                    int payloadLength = DecodePdus(buffer[4..], messageId, frame, lineBuilder);
-                    if (payloadLength == -1) {
+                    Result<int> payloadLengthResult = DecodePdus(buffer[4..], messageId, frame, lineBuilder);
+                    if (!payloadLengthResult.TryGet(out int payloadLength)) {
                         lineBuilder.ResetArguments();
-                        return -1;
+                        return payloadLengthResult;
                     }
                     return payloadLength + 4;
                 }
             } catch (Exception ex) {
                 Log.DltNonVerbose.TraceException(ex, nameof(Decode), "Exception while decoding");
-                return -1;
+                return Result.FromException<int>(ex);
             }
         }
 
-        private int DecodePdus(ReadOnlySpan<byte> buffer, int messageId, IFrame frame, IDltLineBuilder lineBuilder)
+        private Result<int> DecodePdus(ReadOnlySpan<byte> buffer, int messageId, IFrame frame, IDltLineBuilder lineBuilder)
         {
             int payloadLength = 0;
             for (int i = 0; i < frame.Arguments.Count; i++) {
                 IPdu pdu = frame.Arguments[i];
-                int argLength = m_ArgDecoder.Decode(buffer, lineBuilder.BigEndian, pdu, out IDltArg argument);
-                if (argLength < 0) {
-                    if (argument is DltArgError argError) {
-                        lineBuilder.SetErrorMessage(
-                            "Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) arg {4} of {5}, {6}",
+                Result<int> argLengthResult = m_ArgDecoder.Decode(buffer, lineBuilder.BigEndian, pdu, out IDltArg argument);
+                if (!argLengthResult.TryGet(out int argLength)) {
+                    string message;
+                    string intMessage = argLengthResult.Error.Message;
+                    if (!string.IsNullOrEmpty(intMessage)) {
+                        message = string.Format("Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) arg {4} of {5}, {6}",
                             lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId,
-                            messageId, i + 1, frame.Arguments.Count, argError.Message);
+                            messageId, i + 1, frame.Arguments.Count, intMessage);
                     } else {
-                        lineBuilder.SetErrorMessage(
-                            "Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) pdu {4} of {5} decoding error",
+                        message = string.Format("Message ECU={0}, App={1}, Ctx={2}, Id={3} (0x{3:x}) pdu {4} of {5} decoding error",
                             lineBuilder.EcuId, lineBuilder.ApplicationId, lineBuilder.ContextId,
                             messageId, i + 1, frame.Arguments.Count);
                     }
-                    return -1;
+                    lineBuilder.SetErrorMessage(message);
+                    return Result.FromException<int>(new DltDecodeException(message, argLengthResult.Error));
                 }
 
                 lineBuilder.AddArgument(argument);

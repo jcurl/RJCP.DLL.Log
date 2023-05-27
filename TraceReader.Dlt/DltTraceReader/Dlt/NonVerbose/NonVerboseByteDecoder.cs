@@ -31,8 +31,7 @@
         /// placed.
         /// </param>
         /// <returns>The length of all the decoded verbose arguments in the buffer.</returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
             try {
                 NonVerboseDltArg arg;
@@ -49,7 +48,7 @@
                 return buffer.Length;
             } catch (Exception ex) {
                 Log.Dlt.TraceException(ex, nameof(Decode), "Exception while decoding");
-                return -1;
+                return Result.FromException<int>(ex);
             }
         }
     }

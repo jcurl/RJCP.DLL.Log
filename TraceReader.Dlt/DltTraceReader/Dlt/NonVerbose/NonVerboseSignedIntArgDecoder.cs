@@ -15,6 +15,7 @@
         /// Initializes a new instance of the <see cref="NonVerboseSignedIntArgDecoder" /> class.
         /// </summary>
         /// <param name="length">The length of the integer.</param>
+        /// <exception cref="InvalidOperationException">Unexpected data length.</exception>
         public NonVerboseSignedIntArgDecoder(int length)
         {
             switch (length) {
@@ -40,13 +41,17 @@
         /// <param name="pdu">The Packet Data Unit instance representing the argument structure.</param>
         /// <param name="arg">On output, the decoded argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        /// <exception cref="System.InvalidOperationException">Unexpected data length</exception>
-        public int Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
+        /// <exception cref="InvalidOperationException">Unexpected data length.</exception>
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (buffer.Length < pdu.PduLength)
-                return DltArgError.Get($"Insufficient payload buffer {pdu.PduLength} for signed int argument", out arg);
-            if (pdu.PduLength < m_IntLength)
-                return DltArgError.Get($"S_SINT{m_IntLength * 8} invalid length in PDU", out arg);
+            if (buffer.Length < pdu.PduLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"Insufficient payload buffer {pdu.PduLength} for signed int argument"));
+            }
+            if (pdu.PduLength < m_IntLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"S_SINT{m_IntLength * 8} invalid length in PDU"));
+            }
 
             if (m_IntLength == 1) {
                 arg = new SignedIntDltArg(unchecked((sbyte)buffer[0]), 1);
