@@ -91,13 +91,13 @@
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
             IVerboseDltDecoder dltDecoder = new VerboseDltDecoder(new VerboseArgDecoder());
-            int length = dltDecoder.Decode(data, lineBuilder);
+            Result<int> length = dltDecoder.Decode(data, lineBuilder);
             if (isValid) {
-                Assert.That(length, Is.EqualTo(data.Length));
+                Assert.That(length.Value, Is.EqualTo(data.Length));
                 Assert.That(lineBuilder.Arguments, Has.Count.EqualTo(1));
                 arg = lineBuilder.Arguments[0];
             } else {
-                Assert.That(length, Is.EqualTo(-1));
+                Assert.That(length.HasValue, Is.False);
                 arg = null;
             }
         }
@@ -108,12 +108,12 @@
 
             bool isBig = Endian == Endianness.Big;
             int typeInfo = BitOperations.To32Shift(data, !isBig);
-            int length = argDecoder.Decode(typeInfo, data, isBig, out arg);
+            Result<int> length = argDecoder.Decode(typeInfo, data, isBig, out arg);
             if (isValid) {
-                Assert.That(length, Is.EqualTo(data.Length));
+                Assert.That(length.Value, Is.EqualTo(data.Length));
             } else {
-                Assert.That(length, Is.EqualTo(-1));
-                Assert.That(arg, Is.Null.Or.TypeOf<DltArgError>());
+                Assert.That(length.HasValue, Is.False);
+                Assert.That(arg, Is.Null);
             }
         }
     }

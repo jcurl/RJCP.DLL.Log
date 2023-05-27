@@ -25,24 +25,30 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public Result<int> Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             const int DataOffset = DltConstants.TypeInfo.TypeInfoSize + 2;
 
-            if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0)
-                return DltArgError.Get("'String' unsupported type info", out arg);
+            if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("'String' unsupported type info"));
+            }
 
             StringEncodingType coding =
                 (StringEncodingType)((typeInfo & DltConstants.TypeInfo.CodingMask) >> DltConstants.TypeInfo.CodingBitShift);
 
-            if (buffer.Length < DataOffset)
-                return DltArgError.Get("'String' insufficient buffer length {0}", buffer.Length, out arg);
+            if (buffer.Length < DataOffset) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"'String' insufficient buffer length {buffer.Length}"));
+            }
 
             ushort payloadLength = unchecked((ushort)BitOperations.To16Shift(
                 buffer[DltConstants.TypeInfo.TypeInfoSize..DataOffset], !msbf));
 
-            if (buffer.Length < DataOffset + payloadLength)
-                return DltArgError.Get("'String' insufficient buffer length {0}", buffer.Length, out arg);
+            if (buffer.Length < DataOffset + payloadLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"'String' insufficient buffer length {buffer.Length}"));
+            }
 
             int strLength = payloadLength;
             if (strLength > 0 && buffer[DataOffset + payloadLength - 1] == '\0')

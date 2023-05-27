@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Decode a DLT Verbose argument buffer.
@@ -19,6 +20,6 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg);
+        Result<int> Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg);
     }
 }

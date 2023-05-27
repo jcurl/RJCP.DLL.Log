@@ -2,6 +2,7 @@
 {
     using Args;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture]
     public class VerboseArgDecoderTest
@@ -10,9 +11,9 @@
         public void UnknownTypeInfo()
         {
             VerboseArgDecoder decoder = new VerboseArgDecoder();
-            int length = decoder.Decode(-1, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF }, false, out IDltArg args);
-            Assert.That(length, Is.EqualTo(-1));
-            Assert.That(args, Is.Null.Or.TypeOf<DltArgError>());
+            Result<int> length = decoder.Decode(-1, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF }, false, out IDltArg arg);
+            Assert.That(length.HasValue, Is.False);
+            Assert.That(arg, Is.Null);
         }
     }
 }

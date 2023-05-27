@@ -45,43 +45,34 @@
         /// When calling this decode method, the <paramref name="lineBuilder"/> contains the number of arguments that
         /// should be decoded, and the endianness that should be used for decoding the arguments.
         /// </remarks>
-        public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
             try {
                 int payloadLength = 0;
 
                 for (int argCount = 0; argCount < lineBuilder.NumberOfArgs; argCount++) {
                     if (buffer.Length < 4) {
-                        lineBuilder.SetErrorMessage(
-                            "Verbose message with insufficient buffer length decoding arg {0} of {1}",
-                            argCount + 1, lineBuilder.NumberOfArgs);
-                        return -1;
+                        string message = $"Verbose message with insufficient buffer length decoding arg {argCount + 1} of {lineBuilder.NumberOfArgs}";
+                        lineBuilder.SetErrorMessage(message);
+                        return Result.FromException<int>(new DltDecodeException(message));
                     }
 
                     int typeInfo = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
-                    int argLength = m_ArgDecoder.Decode(typeInfo, buffer, lineBuilder.BigEndian, out IDltArg argument);
-                    if (argLength < 0) {
-                        if (argument is DltArgError argError) {
-                            lineBuilder.SetErrorMessage(
-                                "Verbose Message 0x{0:x} arg {1} of {2}, {3}",
-                                typeInfo, argCount + 1, lineBuilder.NumberOfArgs, argError.Message);
-                        } else {
-                            lineBuilder.SetErrorMessage(
-                                "Verbose Message 0x{0:x} arg {1} of {2} decoding error",
-                                typeInfo, argCount + 1, lineBuilder.NumberOfArgs);
-                        }
-                        return -1;
+                    Result<int> argLength = m_ArgDecoder.Decode(typeInfo, buffer, lineBuilder.BigEndian, out IDltArg argument);
+                    if (!argLength.TryGet(out int length)) {
+                        string message = $"Verbose Message 0x{typeInfo:x} arg {argCount + 1} of {lineBuilder.NumberOfArgs}, {argLength.Error.Message}";
+                        lineBuilder.SetErrorMessage(message);
+                        return Result.FromException<int>(new DltDecodeException(message, argLength.Error));
                     }
-
                     lineBuilder.AddArgument(argument);
-                    buffer = buffer[argLength..];
-                    payloadLength += argLength;
+                    buffer = buffer[length..];
+                    payloadLength += length;
                 }
 
                 return payloadLength;
             } catch (Exception ex) {
                 Log.Dlt.TraceException(ex, nameof(Decode), "Verbose decoding exception");
-                return -1;
+                return Result.FromException<int>(ex);
             }
         }
     }

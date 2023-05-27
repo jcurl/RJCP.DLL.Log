@@ -295,6 +295,7 @@
     <Compile Include="Dlt\Control\SyncTimeStampRequestDecoder.cs" />
     <Compile Include="Dlt\Control\SyncTimeStampResponseDecoder.cs" />
     <Compile Include="Dlt\DltConstants.cs" />
+    <Compile Include="Dlt\DltDecodeException.cs" />
     <Compile Include="Dlt\DltLineBuilder.cs" />
     <Compile Include="Dlt\DltLineFeatures.cs" />
     <Compile Include="Dlt\DltTraceLineBase.cs" />

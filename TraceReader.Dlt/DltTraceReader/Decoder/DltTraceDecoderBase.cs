@@ -538,8 +538,8 @@
             }
 
             if (isVerbose) {
-                int payloadLength = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                if (payloadLength == -1) {
+                Result<int> payloadLengthResult = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (!payloadLengthResult.TryGet(out int payloadLength)) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
                     if (string.IsNullOrEmpty(error)) {
                         Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",

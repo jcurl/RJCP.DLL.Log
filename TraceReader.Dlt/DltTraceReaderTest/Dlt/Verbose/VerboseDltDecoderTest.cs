@@ -2,6 +2,7 @@
 {
     using System;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture]
     public class VerboseDltDecoderTest
@@ -14,8 +15,8 @@
             lineBuilder.SetDltType(DltType.LOG_INFO);
 
             IVerboseDltDecoder dltDecoder = new VerboseDltDecoder(new VerboseArgDecoder());
-            int length = dltDecoder.Decode(Array.Empty<byte>(), lineBuilder);
-            Assert.That(length, Is.EqualTo(0));
+            Result<int> length = dltDecoder.Decode(Array.Empty<byte>(), lineBuilder);
+            Assert.That(length.Value, Is.EqualTo(0));
         }
     }
 }

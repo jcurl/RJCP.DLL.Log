@@ -51,46 +51,57 @@
         /// endian.
         /// </param>
         /// <param name="arg">On output, the decoded argument.</param>
-        /// <returns>
-        /// The number of decoded bytes, which represent the encoded argument, or -1 if decoding fails.
-        /// </returns>
+        /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         /// <remarks>This decoder cannot decode fields with the VARI bit or FIXP bit set.</remarks>
-        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public Result<int> Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
-            if ((typeInfo & (DltConstants.TypeInfo.VariableInfo | DltConstants.TypeInfo.FixedPoint)) != 0)
-                return DltArgError.Get("'Integer' unsupported type info", out arg);
+            if ((typeInfo & (DltConstants.TypeInfo.VariableInfo | DltConstants.TypeInfo.FixedPoint)) != 0) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("'Integer' unsupported type info"));
+            }
 
             IntegerEncodingType coding =
                 (IntegerEncodingType)((typeInfo & DltConstants.TypeInfo.CodingMask) >> DltConstants.TypeInfo.CodingBitShift);
             int argLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
             switch (argLength) {
             case DltConstants.TypeInfo.TypeLength128bit:
-                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 16)
-                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 16) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"'Integer' insufficient buffer length {buffer.Length}"));
+                }
                 arg = new UnknownVerboseDltArg(buffer[0..(DltConstants.TypeInfo.TypeInfoSize + 16)], msbf);
                 return DltConstants.TypeInfo.TypeInfoSize + 16;
             case DltConstants.TypeInfo.TypeLength64bit:
-                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 8)
-                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 8) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"'Integer' insufficient buffer length {buffer.Length}"));
+                }
                 arg = Decode64Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 8;
             case DltConstants.TypeInfo.TypeLength32bit:
-                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 4)
-                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 4) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"'Integer' insufficient buffer length {buffer.Length}"));
+                }
                 arg = Decode32Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 4;
             case DltConstants.TypeInfo.TypeLength16bit:
-                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 2)
-                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 2) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"'Integer' insufficient buffer length {buffer.Length}"));
+                }
                 arg = Decode16Bit(buffer[DltConstants.TypeInfo.TypeInfoSize..], msbf, coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 2;
             case DltConstants.TypeInfo.TypeLength8bit:
-                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 1)
-                    return DltArgError.Get("'Integer' insufficient buffer length {0}", buffer.Length, out arg);
+                if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + 1) {
+                    arg = null;
+                    return Result.FromException<int>(new DltDecodeException($"'Integer' insufficient buffer length {buffer.Length}"));
+                }
                 arg = Create8BitArgument(buffer[DltConstants.TypeInfo.TypeInfoSize], coding);
                 return DltConstants.TypeInfo.TypeInfoSize + 1;
             default:
-                return DltArgError.Get("'Integer' unsupported type length 0x{0:x}", argLength, out arg);
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"'Integer' unsupported type length 0x{argLength:x}"));
             }
         }
 

@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Decoder that knows how to decode verbose arguments.
@@ -38,7 +39,7 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
-        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        public Result<int> Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
             switch (typeInfo & TypeInfoMask) {
             case BoolType:
@@ -54,7 +55,8 @@
             case RawType:
                 return m_RawArgDecoder.Decode(typeInfo, buffer, msbf, out arg);
             default:
-                return DltArgError.Get("unknown type info", out arg);
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("unknown type info"));
             }
         }
     }

@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Decode a verbose payload assuming this is a boolean.
@@ -19,13 +20,13 @@
         /// </param>
         /// <param name="arg">On return, contains the DLT argument.</param>
         /// <returns>
-        /// The length of the argument decoded, to allow advancing to the next argument. In case the argument cannot be
-        /// decoded, the argument is <see langword="null"/> and the result is -1.
-        /// </returns>
-        public int Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
+        /// The length of the argument decoded, to allow advancing to the next argument.</returns>
+        public Result<int> Decode(int typeInfo, ReadOnlySpan<byte> buffer, bool msbf, out IDltArg arg)
         {
-            if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0)
-                return DltArgError.Get("'Bool' unsupported type info", out arg);
+            if ((typeInfo & DltConstants.TypeInfo.VariableInfo) != 0) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException("'Bool' unsupported type info"));
+            }
 
             int argLength;
             int typeLength = typeInfo & DltConstants.TypeInfo.TypeLengthMask;
@@ -47,11 +48,14 @@
                 argLength = 16;
                 break;
             default:
-                return DltArgError.Get("'Bool' unsupported type length 0x{0:x}", typeLength, out arg);
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"'Bool' unsupported type length 0x{typeLength:x}"));
             }
 
-            if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + argLength)
-                return DltArgError.Get("'Bool' insufficient buffer length {0}", buffer.Length, out arg);
+            if (buffer.Length < DltConstants.TypeInfo.TypeInfoSize + argLength) {
+                arg = null;
+                return Result.FromException<int>(new DltDecodeException($"'Bool' insufficient buffer length {buffer.Length}"));
+            }
 
             bool boolArg = false;
             for (int i = 0; i < argLength && !boolArg; i++) {
