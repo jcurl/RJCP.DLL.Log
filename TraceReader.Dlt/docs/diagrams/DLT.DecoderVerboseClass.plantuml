@@ -3,7 +3,7 @@ class DltTraceDecoderBase
 DltTraceDecoderBase -r-> IVerboseDltDecoder : <<uses>>
 
 interface IVerboseDltDecoder {
-    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): Result<int>
 }
 note right
     Uses the line builder to know how many
@@ -21,7 +21,7 @@ end note
 IVerboseDltDecoder <|.d. VerboseDltDecoder
 
 interface IVerboseArgDecoder {
-    +Decode(typeInfo: int, buffer: ReadOnlySpan<byte>, \n msbf: bool, [out] IDltArg *arg): int
+    +Decode(typeInfo: int, buffer: ReadOnlySpan<byte>, \n msbf: bool, [out] IDltArg *arg): Result<int>
 }
 
 class BoolArgDecoder

@@ -1,6 +1,6 @@
 @startuml DLT.ControlArgDecoder
 interface IControlDltDecoder {
-    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): Result<int>
 }
 note right
     Defines the general interface on how
@@ -28,7 +28,7 @@ interface IControlArg {
 }
 
 interface IControlArgDecoder {
-    Decode(serviceId: int, buffer: ReadOnlySpan<byte>, [out] service: IControlArg*): int
+    Decode(serviceId: int, buffer: ReadOnlySpan<byte>, [out] service: IControlArg*): Result<int>
 }
 note left
     Each instance knows how to decode a single control

@@ -16,11 +16,11 @@ SwInjectionRequest <|-d- MyCustomSwInjectionRequest
 interface IControlArgDecoder
 
 class SwInjectionRequestDecoder {
-    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, msbf: bool, \n service: IControlArg*): int
+    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, msbf: bool, \n service: IControlArg*): Result<int>
 }
 
 class MyCustomSwInjectionRequestDecoder {
-    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, msbf: bool, \n service: IControlArg*): int
+    #Decode(serviceId: int, length: int, \n buffer: ReadOnlySpan<byte>, msbf: bool, \n service: IControlArg*): Result<int>
 }
 
 IControlArgDecoder <|.d. SwInjectionRequestDecoder

@@ -4,7 +4,7 @@ DltTraceDecoderBase -r-> INonVerboseDltDecoder : <<uses>>
 DltTraceDecoderBase o-d- NonVerboseDltDecoder
 
 interface INonVerboseDltDecoder {
-    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): int
+    +Decode(buffer: ReadOnlySpan<byte>, lineBuilder: IDltLineBuilder): Result<int>
 }
 
 class NonVerboseByteDecoder
