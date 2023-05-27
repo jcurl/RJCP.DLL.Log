@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomConnectionInfoResponse"/>.
     /// </summary>
-    public sealed class CustomConnectionInfoResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomConnectionInfoResponseDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -19,13 +19,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 10)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'CustomConnectionInfoResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 10) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'CustomConnectionInfoResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
             int state = buffer[5];

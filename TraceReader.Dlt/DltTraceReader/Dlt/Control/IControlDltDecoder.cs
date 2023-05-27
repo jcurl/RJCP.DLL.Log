@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.Control
 {
     using System;
+    using RJCP.Core;
 
     /// <summary>
     /// Interface for decoding the payload for a control message.
@@ -16,8 +17,8 @@
         /// </summary>
         /// <param name="buffer">The buffer where the DLT control message encoded payload can be found.</param>
         /// <param name="lineBuilder">The DLT trace line builder.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
+        /// <returns>The number of bytes decoded.</returns>
         /// <remarks>The result of the decoding is written directly to the <paramref name="lineBuilder"/>.</remarks>
-        int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder);
+        Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder);
     }
 }

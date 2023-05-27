@@ -122,7 +122,6 @@
     <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationRequest.cs" />
     <Compile Include="Dlt\ControlArgs\BufferOverflowNotificationResponse.cs" />
     <Compile Include="Dlt\ControlArgs\ContextId.cs" />
-    <Compile Include="Dlt\ControlArgs\ControlDecodeError.cs" />
     <Compile Include="Dlt\ControlArgs\ControlErrorNotSupported.cs" />
     <Compile Include="Dlt\ControlArgs\ControlRequest.cs" />
     <Compile Include="Dlt\ControlArgs\ControlResponse.cs" />
@@ -229,7 +228,6 @@
     <Compile Include="Dlt\ControlEncoder\SyncTimeStampResponseEncoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationRequestDecoder.cs" />
     <Compile Include="Dlt\Control\BufferOverflowNotificationResponseDecoder.cs" />
-    <Compile Include="Dlt\Control\ControlArgDecoderBase.cs" />
     <Compile Include="Dlt\Control\ControlDltDecoder.cs" />
     <Compile Include="Dlt\Control\CustomConnectionInfoResponseDecoder.cs" />
     <Compile Include="Dlt\Control\CustomMarkerResponseDecoder.cs" />

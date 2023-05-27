@@ -2,13 +2,14 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     public sealed class NoDecoder : IControlArgDecoder
     {
-        public int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             service = null;
-            return -1;
+            return Result.FromException<int>(new DltDecodeException());
         }
     }
 }

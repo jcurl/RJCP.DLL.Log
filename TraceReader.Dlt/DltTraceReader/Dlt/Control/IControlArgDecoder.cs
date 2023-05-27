@@ -2,6 +2,7 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Interface for decoders that know how to decode a specific service identifier.
@@ -18,7 +19,7 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service);
+        /// <returns>The number of bytes decoded.</returns>
+        Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service);
     }
 }

@@ -132,9 +132,9 @@
             lineBuilder.SetDltType(dltType);
             lineBuilder.SetBigEndian(Endian == Endianness.Big);
 
-            int length = CustomDecoder.Decode(data, lineBuilder);
+            Result<int> length = CustomDecoder.Decode(data, lineBuilder);
             service = lineBuilder.ControlPayload;
-            Assert.That(length, Is.EqualTo(data.Length));
+            Assert.That(length.Value, Is.EqualTo(data.Length));
         }
 
         private void DecodeSpecialized(DltType dltType, byte[] data, out IControlArg service)
@@ -153,16 +153,16 @@
 
             bool isBig = Endian == Endianness.Big;
             int serviceId = BitOperations.To32Shift(data, !isBig);
-            int length = argDecoder.Decode(serviceId, data, isBig, out service);
-            Assert.That(length, Is.EqualTo(data.Length));
+            Result<int> length = argDecoder.Decode(serviceId, data, isBig, out service);
+            Assert.That(length.Value, Is.EqualTo(data.Length));
 
             // Now test every packet that is smaller and expect that it doesn't raise an exception
             for (int i = 4; i < data.Length - 1; i++) {
                 length = argDecoder.Decode(serviceId, data.AsSpan()[0..i], isBig, out IControlArg testService);
-                Assert.That(length, Is.EqualTo(-1).Or.LessThanOrEqualTo(i));
-                if (length == -1) {
-                    Assert.That(testService, Is.Null.Or.TypeOf<ControlDecodeError>());
+                if (!length.HasValue) {
+                    Assert.That(testService, Is.Null);
                 } else {
+                    Assert.That(length.Value, Is.LessThanOrEqualTo(i));
                     Assert.That(testService, Is.Not.Null);
                 }
                 if (testService is object)

@@ -7,7 +7,7 @@
     /// <summary>
     /// Decodes a payload to retrieve a <see cref="SetDefaultTraceStatusRequest"/>.
     /// </summary>
-    public sealed class SetDefaultTraceStatusRequestDecoder : ControlArgDecoderBase
+    public sealed class SetDefaultTraceStatusRequestDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -19,13 +19,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 9)
-                return DecodeError(serviceId, DltType.CONTROL_REQUEST,
-                    "'SetDefaultTraceStatusRequest' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 9) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'SetDefaultTraceStatusRequest' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int traceStatus = buffer[4];
             int comId = BitOperations.To32ShiftBigEndian(buffer[5..9]);

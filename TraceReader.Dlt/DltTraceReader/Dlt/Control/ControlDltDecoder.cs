@@ -173,9 +173,9 @@
         /// </summary>
         /// <param name="buffer">The buffer where the DLT control message encoded payload can be found.</param>
         /// <param name="lineBuilder">The DLT trace line builder.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
+        /// <returns>The number of bytes decoded.</returns>
         /// <remarks>The result of the decoding is written directly to the <paramref name="lineBuilder"/>.</remarks>
-        public int Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
+        public Result<int> Decode(ReadOnlySpan<byte> buffer, IDltLineBuilder lineBuilder)
         {
             int serviceId;
             IControlArgDecoder decoder;
@@ -183,34 +183,34 @@
             switch (lineBuilder.DltType) {
             case DltType.CONTROL_REQUEST:
                 if (buffer.Length < 4) {
-                    lineBuilder.SetErrorMessage(
-                        "Control message request with insufficient buffer length of {0}", buffer.Length);
-                    return -1;
+                    string message = $"Control message request with insufficient buffer length of {buffer.Length}";
+                    lineBuilder.SetErrorMessage(message);
+                    return Result.FromException<int>(new DltDecodeException(message));
                 }
 
                 serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                 if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
                     if (serviceId >= 0 && serviceId < 0xFFF) {
-                        lineBuilder.SetErrorMessage(
-                            "Control Message request decoder undefined for service 0x{0:x}", serviceId);
-                        return -1;
+                        string message = $"Control Message request decoder undefined for service 0x{serviceId:x}";
+                        lineBuilder.SetErrorMessage(message);
+                        return Result.FromException<int>(new DltDecodeException(message));
                     }
                     decoder = m_SwInjectionRequestDecoder;
                 }
                 break;
             case DltType.CONTROL_RESPONSE:
                 if (buffer.Length < 4) {
-                    lineBuilder.SetErrorMessage(
-                        "Control message response with insufficient buffer length of {0}", buffer.Length);
-                    return -1;
+                    string message = $"Control message response with insufficient buffer length of {buffer.Length}";
+                    lineBuilder.SetErrorMessage(message);
+                    return Result.FromException<int>(new DltDecodeException(message));
                 }
 
                 serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                 if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
                     if (serviceId >= 0 && serviceId < 0xFFF) {
-                        lineBuilder.SetErrorMessage(
-                            "Control Message response decoder undefined for service 0x{0:x}", serviceId);
-                        return -1;
+                        string message = $"Control Message response decoder undefined for service 0x{serviceId:x}";
+                        lineBuilder.SetErrorMessage(message);
+                        return Result.FromException<int>(new DltDecodeException(message));
                     }
                     decoder = m_SwInjectionResponseDecoder;
                 }
@@ -219,24 +219,17 @@
                 lineBuilder.SetControlPayload(new DltTimeMarker());
                 return 0;
             default:
-                lineBuilder.SetErrorMessage(
-                    "Control Message {0} unknown type", lineBuilder.DltType);
-                return -1;
+                string defaultMessage = $"Control Message {lineBuilder.DltType} unknown type";
+                lineBuilder.SetErrorMessage(defaultMessage);
+                return Result.FromException<int>(new DltDecodeException(defaultMessage));
             }
 
             try {
-                int decoded = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
-                if (decoded == -1 || service is null) {
-                    if (service is ControlDecodeError controlError) {
-                        lineBuilder.SetErrorMessage(
-                            "Control Message {0} Service 0x{1:x} {2}",
-                            lineBuilder.DltType, serviceId, controlError.Message);
-                    } else {
-                        lineBuilder.SetErrorMessage(
-                            "Control Message {0} Service 0x{1:x} decoding error",
-                            lineBuilder.DltType, serviceId);
-                    }
-                    return -1;
+                Result<int> decodedResult = decoder.Decode(serviceId, buffer, lineBuilder.BigEndian, out IControlArg service);
+                if (!decodedResult.TryGet(out int decoded)) {
+                    string message = $"Control Message {lineBuilder.DltType} Service 0x{serviceId:x} {decodedResult.Error.Message}";
+                    lineBuilder.SetErrorMessage(message);
+                    return Result.FromException<int>(new DltDecodeException(message, decodedResult.Error));
                 }
 
                 lineBuilder.SetControlPayload(service);
@@ -245,7 +238,7 @@
                 Log.Dlt.TraceException(ex, nameof(Decode),
                     "Control Message {0} Service 0x{1:x} decoding exception",
                     lineBuilder.DltType, serviceId);
-                return -1;
+                return Result.FromException<int>(ex);
             }
         }
     }

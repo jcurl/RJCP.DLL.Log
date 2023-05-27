@@ -2,11 +2,12 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Decoder for <see cref="ResetFactoryDefaultResponse"/>.
     /// </summary>
-    public sealed class ResetFactoryDefaultResponseDecoder : ControlArgDecoderBase
+    public sealed class ResetFactoryDefaultResponseDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -18,13 +19,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 5)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'ResetFactoryDefaultResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 5) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'ResetFactoryDefaultResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
             if (status == ControlResponse.StatusError ||

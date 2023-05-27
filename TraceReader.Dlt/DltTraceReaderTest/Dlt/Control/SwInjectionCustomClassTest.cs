@@ -5,6 +5,7 @@
     using Decoder;
     using NonVerbose;
     using NUnit.Framework;
+    using RJCP.Core;
 
     public class CustomSwInjectionRequest : SwInjectionRequest
     {
@@ -15,7 +16,7 @@
 
     public class CustomSwInjectionRequestDecoder : SwInjectionRequestDecoder
     {
-        protected override int Decode(int serviceId, int length, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        protected override Result<int> Decode(int serviceId, int length, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             service = new CustomSwInjectionRequest(serviceId, buffer.ToArray());
             return buffer.Length;

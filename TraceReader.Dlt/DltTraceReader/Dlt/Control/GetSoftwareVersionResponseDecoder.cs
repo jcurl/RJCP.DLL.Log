@@ -8,7 +8,7 @@
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="GetSoftwareVersionResponse"/>.
     /// </summary>
-    public sealed class GetSoftwareVersionResponseDecoder : ControlArgDecoderBase
+    public sealed class GetSoftwareVersionResponseDecoder : IControlArgDecoder
     {
         private readonly char[] m_CharResult = new char[ushort.MaxValue];
         private const int VersionHeaderLength = 5;
@@ -23,13 +23,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 5)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 5) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetSoftwareVersionResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
             if (status == ControlResponse.StatusError ||
@@ -40,10 +40,10 @@
 
             const int VersionStringOffset = 4 + VersionHeaderLength;
 
-            if (buffer.Length < VersionStringOffset)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < VersionStringOffset) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetSoftwareVersionResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             uint payloadLength = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             if (payloadLength > ushort.MaxValue) {
@@ -51,10 +51,10 @@
                 return -1;
             }
 
-            if (buffer.Length < VersionStringOffset + payloadLength)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetSoftwareVersionResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < VersionStringOffset + payloadLength) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetSoftwareVersionResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int versionLength = (int)payloadLength;
             if (buffer[VersionStringOffset + versionLength - 1] == '\0')

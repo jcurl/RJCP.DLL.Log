@@ -9,7 +9,7 @@
     /// <summary>
     /// Decoder for <see cref="GetLogInfoResponse"/>.
     /// </summary>
-    public sealed class GetLogInfoResponseDecoder : ControlArgDecoderBase
+    public sealed class GetLogInfoResponseDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -21,13 +21,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 5)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetLogInfoResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 5) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetLogInfoResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
             switch (status) {
@@ -45,10 +45,10 @@
                 break;
             }
 
-            if (buffer.Length < 9)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetLogInfoResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 9) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetLogInfoResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             switch (status) {
             case ControlResponse.StatusOk:
@@ -63,20 +63,20 @@
             case GetLogInfoResponse.StatusNoLogWithTrace:
             case GetLogInfoResponse.StatusWithLogWithTrace:
             case GetLogInfoResponse.StatusFullInfo:
-                int payloadLength = DecodeLogInfo(buffer[4..], msbf, status, out GetLogInfoResponse response);
-                if (payloadLength == -1)
-                    return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                        "'GetLogInfoResponse' with insufficient buffer length of {0}", buffer.Length,
-                        out service);
+                Result<int> payloadLengthResult = DecodeLogInfo(buffer[4..], msbf, status, out GetLogInfoResponse response);
+                if (!payloadLengthResult.TryGet(out int payloadLength)) {
+                    service = null;
+                    return payloadLengthResult;
+                }
                 service = response;
                 return 4 + payloadLength;
             default:
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetLogInfoResponse' unknown status 0x{0:x}", status, out service);
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetLogInfoResponse' unknown status 0x{status:x}"));
             }
         }
 
-        private int DecodeLogInfo(ReadOnlySpan<byte> buffer, bool msbf, int status, out GetLogInfoResponse response)
+        private Result<int> DecodeLogInfo(ReadOnlySpan<byte> buffer, bool msbf, int status, out GetLogInfoResponse response)
         {
             response = null;
             List<AppId> appIds = new List<AppId>();
@@ -85,14 +85,16 @@
             int appIdCount = BitOperations.To16Shift(buffer[1..], !msbf);
             int appIdOffset = 3;
             for (int i = 0; i < appIdCount; i++) {
-                if (buffer.Length < appIdOffset + 6) return -1;
+                if (buffer.Length < appIdOffset + 6)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing application"));
                 string appIdName = IdHashList.Instance.ParseId(BitOperations.To32ShiftBigEndian(buffer[appIdOffset..]));
 
                 int ctxIdCount = BitOperations.To16Shift(buffer[(appIdOffset + 4)..], !msbf);
                 int ctxIdOffset = appIdOffset + 6;
                 for (int j = 0; j < ctxIdCount; j++) {
-                    int ctxIdLength = DecodeContextId(buffer[ctxIdOffset..], msbf, status, out ContextId ctxId);
-                    if (ctxIdLength == -1) return -1;
+                    Result<int> ctxIdLengthResult = DecodeContextId(buffer[ctxIdOffset..], msbf, status, out ContextId ctxId);
+                    if (!ctxIdLengthResult.TryGet(out int ctxIdLength))
+                        return ctxIdLengthResult;
                     ctxIdOffset += ctxIdLength;
                     ctxIds.Add(ctxId);
                 }
@@ -102,10 +104,12 @@
                 if (status != GetLogInfoResponse.StatusFullInfo) {
                     appId = new AppId(appIdName);
                 } else {
-                    if (buffer.Length < appIdOffset + 2) return -1;
+                    if (buffer.Length < appIdOffset + 2)
+                        return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing application"));
                     int appIdLen = BitOperations.To16Shift(buffer[appIdOffset..], !msbf);
 
-                    if (buffer.Length < appIdOffset + 2 + appIdLen) return -1;
+                    if (buffer.Length < appIdOffset + 2 + appIdLen)
+                        return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing application"));
                     string description = GetDescription(buffer[(appIdOffset + 2)..(appIdOffset + 2 + appIdLen)]);
                     appIdOffset += 2 + appIdLen;
                     appId = new AppId(appIdName, description);
@@ -118,7 +122,8 @@
                 appIds.Add(appId);
             }
 
-            if (buffer.Length < appIdOffset + 4) return -1;
+            if (buffer.Length < appIdOffset + 4)
+                return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing application"));
             int comId = BitOperations.To32ShiftBigEndian(buffer[appIdOffset..]);
             string comIdStr = comId == 0 ? string.Empty : IdHashList.Instance.ParseId(comId);
 
@@ -128,10 +133,11 @@
             return appIdOffset + 4;
         }
 
-        private int DecodeContextId(ReadOnlySpan<byte> buffer, bool msbf, int status, out ContextId ctxId)
+        private Result<int> DecodeContextId(ReadOnlySpan<byte> buffer, bool msbf, int status, out ContextId ctxId)
         {
             ctxId = null;
-            if (buffer.Length < 4) return -1;
+            if (buffer.Length < 4)
+                return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
             string ctxIdName = IdHashList.Instance.ParseId(BitOperations.To32ShiftBigEndian(buffer));
 
             switch (status) {
@@ -139,28 +145,32 @@
                 ctxId = new ContextId(ctxIdName, LogLevel.Undefined, ContextId.StatusUndefined);
                 return 4;
             case GetLogInfoResponse.StatusWithLogNoTrace:
-                if (buffer.Length < 5) return -1;
+                if (buffer.Length < 5)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
                 ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), ContextId.StatusUndefined);
                 return 5;
             case GetLogInfoResponse.StatusNoLogWithTrace:
-                if (buffer.Length < 5) return -1;
+                if (buffer.Length < 5)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
                 ctxId = new ContextId(ctxIdName, LogLevel.Undefined, unchecked((sbyte)buffer[4]));
                 return 5;
             case GetLogInfoResponse.StatusWithLogWithTrace:
-                if (buffer.Length < 6) return -1;
+                if (buffer.Length < 6)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
                 ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]));
                 return 6;
             case GetLogInfoResponse.StatusFullInfo:
-                if (buffer.Length < 8) return -1;
+                if (buffer.Length < 8)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
                 int ctxIdLen = BitOperations.To16Shift(buffer[6..], !msbf);
 
-                if (buffer.Length < 8 + ctxIdLen) return -1;
+                if (buffer.Length < 8 + ctxIdLen)
+                    return Result.FromException<int>(new DltDecodeException("'GetLogInfoResponse' Insufficient length parsing context"));
                 string description = GetDescription(buffer[8..(8 + ctxIdLen)]);
                 ctxId = new ContextId(ctxIdName, GetLogLevel(buffer[4]), unchecked((sbyte)buffer[5]), description);
                 return 8 + ctxIdLen;
             default:
-                string msg = string.Format("Unrecognized status value {0}", status);
-                throw new InvalidOperationException(msg);
+                return Result.FromException<int>(new DltDecodeException($"Unrecognized status value {status} parsing context"));
             }
         }
 

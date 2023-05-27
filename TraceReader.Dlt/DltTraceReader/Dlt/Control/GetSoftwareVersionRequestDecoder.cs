@@ -2,11 +2,12 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Decodes the contents of the buffer to return a <see cref="GetSoftwareVersionRequest"/>.
     /// </summary>
-    public sealed class GetSoftwareVersionRequestDecoder : ControlArgDecoderBase
+    public sealed class GetSoftwareVersionRequestDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -18,8 +19,8 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             service = new GetSoftwareVersionRequest();
             return 4;

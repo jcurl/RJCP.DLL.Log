@@ -2,11 +2,12 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Decoder for the payload with <see cref="GetUseSessionIdResponse"/>.
     /// </summary>
-    public sealed class GetUseSessionIdResponseDecoder : ControlArgDecoderBase
+    public sealed class GetUseSessionIdResponseDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -18,13 +19,13 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 5)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetUseSessionIdResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 5) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetUseSessionIdResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
             if (status == ControlResponse.StatusError ||
@@ -33,10 +34,10 @@
                 return 5;
             }
 
-            if (buffer.Length < 6)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'GetUseSessionIdResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 6) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'GetUseSessionIdResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             bool enabled = buffer[5] != 0;
             service = new GetUseSessionIdResponse(status, enabled);

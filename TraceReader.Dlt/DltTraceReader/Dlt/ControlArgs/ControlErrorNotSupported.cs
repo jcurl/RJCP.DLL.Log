@@ -8,7 +8,7 @@
         private readonly string m_Name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ControlDecodeError" /> class.
+        /// Initializes a new instance of the <see cref="ControlErrorNotSupported" /> class.
         /// </summary>
         /// <param name="serviceId">The service identifier.</param>
         /// <param name="status">The status of the control response message.</param>

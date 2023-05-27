@@ -7,7 +7,7 @@
     /// <summary>
     /// Decoder for <see cref="CustomTimeZoneResponse"/>.
     /// </summary>
-    public sealed class CustomTimeZoneResponseDecoder : ControlArgDecoderBase
+    public sealed class CustomTimeZoneResponseDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -19,16 +19,15 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
-            if (buffer.Length < 10)
-                return DecodeError(serviceId, DltType.CONTROL_RESPONSE,
-                    "'CustomTimeZoneResponse' with insufficient buffer length of {0}", buffer.Length,
-                    out service);
+            if (buffer.Length < 10) {
+                service = null;
+                return Result.FromException<int>(new DltDecodeException($"'CustomTimeZoneResponse' with insufficient buffer length of {buffer.Length}"));
+            }
 
             int status = buffer[4];
-
             int timeZone = BitOperations.To32Shift(buffer[5..9], !msbf);
             int isDst = buffer[9];
             service = new CustomTimeZoneResponse(status, timeZone, isDst != 0);

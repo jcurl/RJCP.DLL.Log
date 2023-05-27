@@ -516,8 +516,8 @@
 
                 // A control message can only be present when there's an extended header.
                 if (isControl) {
-                    int controlLength = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                    if (controlLength == -1) {
+                    Result<int> controlLengthResult = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                    if (!controlLengthResult.TryGet(out int controlLength)) {
                         string error = m_DltLineBuilder.ResetErrorMessage();
                         if (string.IsNullOrEmpty(error)) {
                             Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",

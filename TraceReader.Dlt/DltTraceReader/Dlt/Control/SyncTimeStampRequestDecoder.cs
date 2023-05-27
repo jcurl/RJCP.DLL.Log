@@ -2,11 +2,12 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Decoder for the payload with <see cref="SyncTimeStampRequest"/>.
     /// </summary>
-    public sealed class SyncTimeStampRequestDecoder : ControlArgDecoderBase
+    public sealed class SyncTimeStampRequestDecoder : IControlArgDecoder
     {
         /// <summary>
         /// Decodes the control message for the specified service identifier.
@@ -18,8 +19,8 @@
         /// endian.
         /// </param>
         /// <param name="service">The control message.</param>
-        /// <returns>The number of bytes decoded, or -1 upon error.</returns>
-        public override int Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
+        /// <returns>The number of bytes decoded.</returns>
+        public Result<int> Decode(int serviceId, ReadOnlySpan<byte> buffer, bool msbf, out IControlArg service)
         {
             service = new SyncTimeStampRequest();
             return 4;
