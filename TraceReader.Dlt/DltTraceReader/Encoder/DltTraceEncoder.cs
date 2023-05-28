@@ -60,37 +60,58 @@
             switch (line) {
             case DltTraceLine traceLine: {
                 Result<int> result = WriteStandardHeader(buffer, traceLine);
-                if (!result.TryGet(out written)) return result;
+                if (!result.TryGet(out written)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
 
                 result = WriteExtendedHeader(buffer[written..], traceLine);
-                if (!result.TryGet(out int length)) return result;
+                if (!result.TryGet(out int length)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
                 written += length;
 
                 result = m_DltArgsEncoder.Encode(buffer[written..], traceLine);
-                if (!result.TryGet(out length)) return result;
+                if (!result.TryGet(out length)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
                 written += length;
                 break;
             }
             case DltControlTraceLine controlLine: {
                 Result<int> result = WriteStandardHeader(buffer, controlLine);
-                if (!result.TryGet(out written)) return result;
+                if (!result.TryGet(out written)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
 
                 result = WriteExtendedHeader(buffer[written..], controlLine);
-                if (!result.TryGet(out int length)) return result;
+                if (!result.TryGet(out int length)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
                 written += length;
 
                 result = m_ControlArgsEncoder.Encode(buffer[written..], controlLine);
-                if (!result.TryGet(out length)) return result;
+                if (!result.TryGet(out length)) {
+                    Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Information, result.Error.Message);
+                    return result;
+                }
                 written += length;
                 break;
             }
             default:
+                Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Warning, "Unknown Line Type");
                 return Result.FromException<int>(new DltEncodeException("Unknown Line Type"));
             }
 
             // Write the length.
-            if (written > ushort.MaxValue)
+            if (written > ushort.MaxValue) {
+                Log.Encoder.TraceEvent(System.Diagnostics.TraceEventType.Warning, "Encoding exceeds maximum length");
                 return Result.FromException<int>(new DltEncodeException("Encoding exceeds maximum length"));
+            }
             BitOperations.Copy16ShiftBigEndian(written, buffer[2..4]);
             return written;
         }
