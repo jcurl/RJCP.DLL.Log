@@ -16,18 +16,20 @@
         /// <param name="verbose">If the argument encoding should include the type information.</param>
         /// <param name="msbf">If <see langword="true" /> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        public int Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        public Result<int> Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
         {
             int len = verbose ? 4 : 0;
             int typeInfo = DltConstants.TypeInfo.TypeUint +
                 ((int)IntegerEncodingType.Binary << DltConstants.TypeInfo.CodingBitShift);
 
-            if (buffer.Length < len) return -1;
-            Span<byte> payload = buffer[len..];
+            if (buffer.Length < len)
+                return Result.FromException<int>(new DltEncodeException("'BinaryIntArgEncoder' insufficient buffer"));
 
+            Span<byte> payload = buffer[len..];
             BinaryIntDltArg intArg = (BinaryIntDltArg)arg;
-            if (payload.Length < intArg.DataBytesLength) return -1;
+            if (payload.Length < intArg.DataBytesLength)
+                return Result.FromException<int>(new DltEncodeException("'BinaryIntArgEncoder' insufficient buffer"));
 
             if (intArg.DataBytesLength == 1) {
                 typeInfo += DltConstants.TypeInfo.TypeLength8bit;
@@ -42,7 +44,7 @@
                 typeInfo += DltConstants.TypeInfo.TypeLength64bit;
                 BitOperations.Copy64Shift(intArg.Data, payload[0..8], !msbf);
             } else {
-                return -1;
+                return Result.FromException<int>(new DltEncodeException($"'BinaryIntArgEncoder' unknown byte length {intArg.DataBytesLength}"));
             }
 
             if (verbose) BitOperations.Copy32Shift(typeInfo, buffer, !msbf);

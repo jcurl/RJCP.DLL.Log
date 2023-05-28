@@ -7,6 +7,7 @@
     using Dlt.ControlArgs;
     using Dlt.ControlEncoder;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture(EncoderTestType.EncoderDefault, true)]
     [TestFixture(EncoderTestType.EncoderDefault, false)]
@@ -75,9 +76,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -106,9 +107,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -134,9 +135,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -160,9 +161,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -194,9 +195,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -223,9 +224,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -257,9 +258,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -286,9 +287,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -321,9 +322,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -351,9 +352,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -387,9 +388,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -418,9 +419,9 @@
                 .SetBigEndian(m_BigEndian)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -454,9 +455,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
 
             // This time, we don't set the count, it should increment.
             expected[1] = 0x80;
@@ -472,14 +473,14 @@
                     new SignedIntDltArg(45, 2)
                 });
             result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
 
             // Increment again
             expected[1] = 0x81;
             result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -508,9 +509,9 @@
                 .SetCount(127)
                 .SetControlPayload(new GetSoftwareVersionRequest());
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -544,9 +545,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
 
             // This time, we don't set the count, it should increment.
             expected[1] = 0x00;
@@ -562,8 +563,8 @@
                     new SignedIntDltArg(45, 2)
                 });
             result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -594,9 +595,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -634,9 +635,9 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[0..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[0..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -654,8 +655,8 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -674,8 +675,8 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -696,8 +697,8 @@
                     new SignedIntDltArg(45, 2)
                 });
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

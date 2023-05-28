@@ -60,8 +60,8 @@
                 new SetLogLevelRequest("APP1", "CTX1", LogLevel.Info);
 
             byte[] buffer = new byte[length];
-            _ = ControlEncode(buffer, request, out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            _ = ControlEncode(buffer, request, out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

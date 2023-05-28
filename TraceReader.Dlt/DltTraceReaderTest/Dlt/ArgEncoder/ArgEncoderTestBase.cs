@@ -6,6 +6,7 @@
     using Encoder;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core;
 
     /// <summary>
     /// Base class containing common code for testing DLT argument encoders.
@@ -95,7 +96,7 @@
         /// <param name="arg">The argument to encode.</param>
         /// <param name="result">The result of the encoding operation (actual length).</param>
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
-        protected Span<byte> ArgEncode(Span<byte> buffer, IDltArg arg, out int result)
+        protected Span<byte> ArgEncode(Span<byte> buffer, IDltArg arg, out Result<int> result)
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder
@@ -113,23 +114,23 @@
             case EncoderType.Argument:
                 IArgEncoder encoder = GetEncoder();
                 result = encoder.Encode(buffer, IsVerbose, IsBigEndian, arg);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[..result.Value];
             case EncoderType.Arguments:
                 if (!IsVerbose) throw new InvalidOperationException("The EncoderType doesn't support non-verbose");
 
                 IDltEncoder<DltTraceLine> dltEncoder = new VerboseDltEncoder(GetEncoder());
                 result = dltEncoder.Encode(buffer, line);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[..result.Value];
             case EncoderType.TraceEncoder:
                 if (!IsVerbose) throw new InvalidOperationException("The EncoderType doesn't support non-verbose");
 
                 ITraceEncoderFactory<DltTraceLineBase> encFactory = new DltTraceEncoderFactory();
                 ITraceEncoder<DltTraceLineBase> lineEncoder = encFactory.Create();
                 result = lineEncoder.Encode(buffer, line);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[HeaderLen..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[HeaderLen..result.Value];
             case EncoderType.TraceWriter:
                 if (!IsVerbose) throw new InvalidOperationException("The EncoderType doesn't support non-verbose");
 
@@ -144,7 +145,7 @@
                     stream.Write(DltFileTraceEncoderTest.StorageHeader);
                     bool success = writer.WriteLineAsync(line).GetAwaiter().GetResult();
                     if (!success) {
-                        result = -1;
+                        result = Result.FromException<int>(new DltEncodeException("Test case WriteLineAsync failed"));
                         return Array.Empty<byte>();
                     }
                     long end = stream.Position;
@@ -158,7 +159,7 @@
                         rpos += read;
                     }
                     result = rpos;
-                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..result];
+                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..rpos];
                 }
             default:
                 throw new NotImplementedException();

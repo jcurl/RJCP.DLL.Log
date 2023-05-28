@@ -91,8 +91,8 @@
             StringBuilder sb = new StringBuilder(65536);
             sb.Append('x', 65535 - (IsVerbose ? 4 : 0));
 
-            ArgEncode(buffer, new StringDltArg(sb.ToString(), strType), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new StringDltArg(sb.ToString(), strType), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

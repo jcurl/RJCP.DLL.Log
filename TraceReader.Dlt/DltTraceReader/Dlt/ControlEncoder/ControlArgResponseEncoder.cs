@@ -18,17 +18,18 @@
         /// <param name="buffer">The buffer to serialise the control argument to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        public int Encode(Span<byte> buffer, bool msbf, IControlArg arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        public Result<int> Encode(Span<byte> buffer, bool msbf, IControlArg arg)
         {
-            if (buffer.Length < 5) return -1;
+            if (buffer.Length < 5)
+                return Result.FromException<int>(new DltEncodeException("ControlArgResponseEncoder Insufficient buffer"));
             BitOperations.Copy32Shift(arg.ServiceId, buffer, !msbf);
 
             ControlResponse response = (ControlResponse)arg;
             buffer[4] = unchecked((byte)response.Status);
 
-            int written = EncodePayload(buffer[5..], msbf, response);
-            if (written == -1) return -1;
+            Result<int> result = EncodePayload(buffer[5..], msbf, response);
+            if (!result.TryGet(out int written)) return result;
             return written + 5;
         }
 
@@ -38,8 +39,8 @@
         /// <param name="buffer">The buffer to write the payload to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        protected virtual int EncodePayload(Span<byte> buffer, bool msbf, ControlResponse arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        protected virtual Result<int> EncodePayload(Span<byte> buffer, bool msbf, ControlResponse arg)
         {
             return 0;
         }

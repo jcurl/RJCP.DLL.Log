@@ -7,6 +7,7 @@
     using Encoder;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core;
 
     public abstract class ControlEncoderTestBase<TControlEncoder> where TControlEncoder : IControlArgEncoder
     {
@@ -83,7 +84,7 @@
         /// <param name="arg">The argument to encode.</param>
         /// <param name="result">The result of the encoding operation (actual length).</param>
         /// <returns>The result and the buffer where the argument is encoded to.</returns>
-        protected Span<byte> ControlEncode(Span<byte> buffer, IControlArg arg, out int result)
+        protected Span<byte> ControlEncode(Span<byte> buffer, IControlArg arg, out Result<int> result)
         {
             IDltLineBuilder builder = new DltLineBuilder();
             builder
@@ -100,19 +101,19 @@
             case EncoderType.Argument:
                 IControlArgEncoder encoder = GetEncoder();
                 result = encoder.Encode(buffer, IsBigEndian, arg);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[..result.Value];
             case EncoderType.Arguments:
                 IDltEncoder<DltControlTraceLine> dltEncoder = new ControlDltEncoder(GetEncoder());
                 result = dltEncoder.Encode(buffer, line);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[..result.Value];
             case EncoderType.TraceEncoder:
                 ITraceEncoderFactory<DltTraceLineBase> encFactory = new DltTraceEncoderFactory();
                 ITraceEncoder<DltTraceLineBase> lineEncoder = encFactory.Create();
                 result = lineEncoder.Encode(buffer, line);
-                if (result == -1) return Array.Empty<byte>();
-                return buffer[HeaderLen..result];
+                if (!result.HasValue) return Array.Empty<byte>();
+                return buffer[HeaderLen..result.Value];
             case EncoderType.TraceWriter:
                 // Note, in this test case we allocate the buffer when encoding, and only copy the result.
 
@@ -127,7 +128,7 @@
                     stream.Write(DltFileTraceEncoderTest.StorageHeader);
                     bool success = writer.WriteLineAsync(line).GetAwaiter().GetResult();
                     if (!success) {
-                        result = -1;
+                        result = Result.FromException<int>(new DltEncodeException("Test case WriteLineAsync failed"));
                         return Array.Empty<byte>();
                     }
                     long end = stream.Position;
@@ -143,7 +144,7 @@
                         rpos += read;
                     }
                     result = rpos;
-                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..result];
+                    return buffer[(HeaderLen + DltFileTraceEncoderTest.StorageHeader.Length)..rpos];
                 }
             default:
                 throw new NotImplementedException();

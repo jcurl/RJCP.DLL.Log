@@ -6,6 +6,7 @@
     using Dlt.Args;
     using Dlt.ControlEncoder;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture]
     public class DltTraceEncoderTest
@@ -53,8 +54,8 @@
                 builder.AddArgument(new BoolDltArg(false));
             }
 
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.HasValue, Is.False);
         }
 
         private class UnknownTraceLine : DltTraceLineBase { }
@@ -65,8 +66,8 @@
             byte[] buffer = new byte[65535];
             ITraceEncoder<DltTraceLineBase> encoder = new DltTraceEncoder();
 
-            int result = encoder.Encode(buffer, new UnknownTraceLine());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, new UnknownTraceLine());
+            Assert.That(result.HasValue, Is.False);
         }
 
         [TestCase(null, new byte[] { 0x00, 0x00, 0x00, 0x00 })]

@@ -35,9 +35,9 @@
 
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -72,9 +72,9 @@
 
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -100,9 +100,9 @@
 
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -133,9 +133,9 @@
             DltTraceLineBase line = builder.GetResult();
             line.EcuId = "ECU1";
 
-            int result = encoder.Encode(buffer, line);
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, line);
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -161,9 +161,9 @@
 
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -190,9 +190,9 @@
 
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, builder.GetResult());
-            Assert.That(result, Is.EqualTo(expected.Length));
-            Assert.That(buffer[..result], Is.EqualTo(expected));
+            Result<int> result = encoder.Encode(buffer, builder.GetResult());
+            Assert.That(result.Value, Is.EqualTo(expected.Length));
+            Assert.That(buffer[..result.Value], Is.EqualTo(expected));
         }
 
         [Test]
@@ -230,7 +230,7 @@
             byte[] buffer = new byte[len];
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            Assert.That(encoder.Encode(buffer, builder.GetResult()), Is.EqualTo(-1));
+            Assert.That(encoder.Encode(buffer, builder.GetResult()).HasValue, Is.False);
         }
     }
 }

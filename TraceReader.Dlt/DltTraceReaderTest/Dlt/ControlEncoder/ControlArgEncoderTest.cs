@@ -28,8 +28,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, false, new UnknownControlRequest(0x40));
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlRequest(0x40));
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -38,8 +38,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, false, new UnknownControlRequest(0xF40));
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlRequest(0xF40));
+            Assert.That(result.HasValue, Is.False);
         }
 
         private sealed class UnknownControlResponse : ControlResponse
@@ -62,8 +62,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, false, new UnknownControlResponse(0x40, ControlResponse.StatusOk));
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlResponse(0x40, ControlResponse.StatusOk));
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -72,8 +72,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, false, new UnknownControlResponse(0xF40, ControlResponse.StatusOk));
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlResponse(0xF40, ControlResponse.StatusOk));
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -83,8 +83,8 @@
 
             // Even though this is not registered with the `ControlArgEncoder`, it should still be encoded.
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, bigEndian, new ControlErrorNotSupported(0x40, ControlResponse.StatusNotSupported, "name"));
-            Assert.That(result, Is.EqualTo(5));
+            Result<int> result = encoder.Encode(buffer, bigEndian, new ControlErrorNotSupported(0x40, ControlResponse.StatusNotSupported, "name"));
+            Assert.That(result.Value, Is.EqualTo(5));
 
             byte[] expected = bigEndian ?
                 new byte[] { 0x00, 0x00, 0x00, 0x40, 0x01 } :
@@ -110,8 +110,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(0x03); // GetLogInfoRequestEncoder
             GetLogInfoRequest request = new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
-            int result = encoder.Encode(buffer, false, request);
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, request);
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -122,8 +122,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(0x13); // GetSoftwareVersionResponseEncoder
             GetSoftwareVersionResponse request = new GetSoftwareVersionResponse(ControlResponse.StatusOk, "Version1");
 
-            int result = encoder.Encode(buffer, false, request);
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, request);
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -135,8 +135,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
             UnknownControlRequest request = new UnknownControlRequest(serviceId);
 
-            int result = encoder.Encode(buffer, false, request);
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, request);
+            Assert.That(result.HasValue, Is.False);
         }
 
         private sealed class ControlArgEncoderUnregUnsupported : ControlArgEncoder
@@ -156,8 +156,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnregUnsupported(0x03);
             GetLogInfoRequest request = new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
-            int result = encoder.Encode(buffer, false, request);
-            Assert.That(result, Is.EqualTo(17));
+            Result<int> result = encoder.Encode(buffer, false, request);
+            Assert.That(result.Value, Is.EqualTo(17));
         }
 
         [Test]
@@ -169,8 +169,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
             SwInjectionRequest request = new SwInjectionRequest(serviceId, new byte[] { 0x41, 0x42, 0x43, 0x44 });
 
-            int result = encoder.Encode(buffer, false, request);
-            Assert.That(result, Is.EqualTo(12));
+            Result<int> result = encoder.Encode(buffer, false, request);
+            Assert.That(result.Value, Is.EqualTo(12));
             Assert.That(BitOperations.To32Shift(buffer.AsSpan(0, 4), true), Is.EqualTo(serviceId));
             Assert.That(buffer[4..12], Is.EqualTo(new byte[] { 0x04, 0x00, 0x00, 0x00, 0x41, 0x42, 0x43, 0x44 }));
         }
@@ -184,8 +184,8 @@
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
             SwInjectionResponse response = new SwInjectionResponse(serviceId, SwInjectionResponse.StatusPending);
 
-            int result = encoder.Encode(buffer, false, response);
-            Assert.That(result, Is.EqualTo(5));
+            Result<int> result = encoder.Encode(buffer, false, response);
+            Assert.That(result.Value, Is.EqualTo(5));
             Assert.That(BitOperations.To32Shift(buffer.AsSpan(0, 4), true), Is.EqualTo(serviceId));
             Assert.That(buffer[4], Is.EqualTo(SwInjectionResponse.StatusPending));
         }
@@ -205,8 +205,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoderRegisterNew(serviceId);
-            int result = encoder.Encode(buffer, false, new UnknownControlResponse(serviceId, ControlResponse.StatusOk));
-            Assert.That(result, Is.EqualTo(5));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlResponse(serviceId, ControlResponse.StatusOk));
+            Assert.That(result.Value, Is.EqualTo(5));
 
             byte[] expected = new byte[5];
             BitOperations.Copy32ShiftLittleEndian(serviceId, expected);
@@ -219,8 +219,8 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoderRegisterNew(serviceId);
-            int result = encoder.Encode(buffer, false, new UnknownControlRequest(serviceId));
-            Assert.That(result, Is.EqualTo(4));
+            Result<int> result = encoder.Encode(buffer, false, new UnknownControlRequest(serviceId));
+            Assert.That(result.Value, Is.EqualTo(4));
 
             byte[] expected = new byte[5];
             BitOperations.Copy32ShiftLittleEndian(serviceId, expected);
@@ -273,8 +273,8 @@
             byte[] buffer = new byte[len];
 
             IControlArgEncoder encoder = new ControlArgEncoder();
-            int result = encoder.Encode(buffer, false, new InvalidControl());
-            Assert.That(result, Is.EqualTo(-1));
+            Result<int> result = encoder.Encode(buffer, false, new InvalidControl());
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

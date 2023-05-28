@@ -2,6 +2,7 @@
 {
     using System;
     using ArgEncoder;
+    using RJCP.Core;
 
     /// <summary>
     /// Encodes the control service in the line to a buffer using DLT v1 format.
@@ -35,7 +36,7 @@
         /// <param name="line">The line to serialize.</param>
         /// <returns>The number of bytes written to the buffer.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
-        public int Encode(Span<byte> buffer, DltControlTraceLine line)
+        public Result<int> Encode(Span<byte> buffer, DltControlTraceLine line)
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
             return m_ControlArgEncoder.Encode(buffer, line.Features.BigEndian, line.Service);

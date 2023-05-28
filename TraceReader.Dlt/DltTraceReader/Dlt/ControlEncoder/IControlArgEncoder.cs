@@ -2,6 +2,7 @@
 {
     using System;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Interface for encoding a control argument.
@@ -14,7 +15,7 @@
         /// <param name="buffer">The buffer to serialise the control argument to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        int Encode(Span<byte> buffer, bool msbf, IControlArg arg);
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        Result<int> Encode(Span<byte> buffer, bool msbf, IControlArg arg);
     }
 }

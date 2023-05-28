@@ -39,8 +39,8 @@
             GetLogInfoResponse response = new GetLogInfoResponse(20);
 
             byte[] buffer = new byte[1024];
-            _ = ControlEncode(buffer, response, out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            _ = ControlEncode(buffer, response, out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
 
         private static GetLogInfoResponse GetResponse(int statusCode)
@@ -251,8 +251,8 @@
             GetLogInfoResponse response = GetResponse(GetLogInfoResponse.StatusFullInfo);
 
             byte[] buffer = new byte[length];
-            _ = ControlEncode(buffer, response, out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            _ = ControlEncode(buffer, response, out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]
@@ -327,8 +327,8 @@
             response.AppIds.Add(app2);
 
             byte[] buffer = new byte[length];
-            _ = ControlEncode(buffer, response, out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            _ = ControlEncode(buffer, response, out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
 
         [Test]

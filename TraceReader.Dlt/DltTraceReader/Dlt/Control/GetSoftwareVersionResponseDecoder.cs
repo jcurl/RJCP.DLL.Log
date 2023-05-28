@@ -48,7 +48,7 @@
             uint payloadLength = unchecked((uint)BitOperations.To32Shift(buffer[5..9], !msbf));
             if (payloadLength > ushort.MaxValue) {
                 service = null;
-                return -1;
+                return Result.FromException<int>(new DltDecodeException($"'GetSoftwareVersionResponse' with insufficient buffer length of {buffer.Length}"));
             }
 
             if (buffer.Length < VersionStringOffset + payloadLength) {

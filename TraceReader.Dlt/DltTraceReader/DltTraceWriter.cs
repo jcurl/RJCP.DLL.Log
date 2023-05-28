@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Dlt;
     using Encoder;
+    using RJCP.Core;
 
     /// <summary>
     /// A common implementation of <see cref="ITraceWriter{T}"/> that writes to a stream and uses a
@@ -66,10 +67,10 @@
         /// <returns>A Task that can be waited upon.</returns>
         public async Task<bool> WriteLineAsync(DltTraceLineBase line)
         {
-            int len = m_Encoder.Encode(m_Buffer, line);
-            if (len <= 0) return false;
+            Result<int> result = m_Encoder.Encode(m_Buffer, line);
+            if (!result.TryGet(out int length)) return false;
 
-            await m_Stream.WriteAsync(m_Buffer.AsMemory(0, len), CancellationToken.None);
+            await m_Stream.WriteAsync(m_Buffer.AsMemory(0, length), CancellationToken.None);
             return true;
         }
 

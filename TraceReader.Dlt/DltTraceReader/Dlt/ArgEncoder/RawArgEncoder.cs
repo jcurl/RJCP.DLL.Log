@@ -16,16 +16,18 @@
         /// <param name="verbose">If the argument encoding should include the type information.</param>
         /// <param name="msbf">If <see langword="true" /> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        public int Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        public Result<int> Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
         {
             const int typeInfo = DltConstants.TypeInfo.TypeRaw;
 
             DltArgBase<byte[]> rawArg = (DltArgBase<byte[]>)arg;
 
             int len = verbose ? 4 : 0;
-            if (buffer.Length < len + 2 + rawArg.Data.Length) return -1;
-            if (len + 2 + rawArg.Data.Length > ushort.MaxValue) return -1;
+            if (buffer.Length < len + 2 + rawArg.Data.Length)
+                return Result.FromException<int>(new DltEncodeException("'RawArgEncoder' insufficient buffer"));
+            if (len + 2 + rawArg.Data.Length > ushort.MaxValue)
+                return Result.FromException<int>(new DltEncodeException("'RawArgEncoder' argument payload buffer too large"));
 
             Span<byte> payload = buffer[len..];
             BitOperations.Copy16Shift(rawArg.Data.Length, payload[0..], !msbf);

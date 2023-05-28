@@ -3,6 +3,7 @@
     using System;
     using ControlArgs;
     using Encoder;
+    using RJCP.Core;
 
     /// <summary>
     /// Encode a <see cref="CustomUnregisterContextResponse"/>.
@@ -15,10 +16,11 @@
         /// <param name="buffer">The buffer to write the payload to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        protected override int EncodePayload(Span<byte> buffer, bool msbf, ControlResponse arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        protected override Result<int> EncodePayload(Span<byte> buffer, bool msbf, ControlResponse arg)
         {
-            if (buffer.Length < 12) return -1;
+            if (buffer.Length < 12)
+                return Result.FromException<int>(new DltEncodeException("'CustomUnregisterContextResponseEncoder' insufficient buffer"));
 
             CustomUnregisterContextResponse controlArg = (CustomUnregisterContextResponse)arg;
             DltTraceEncoder.WriteId(buffer[0..4], controlArg.ApplicationId);

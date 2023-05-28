@@ -3,6 +3,7 @@
     using System;
     using Args;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(BoolArgEncoder), EncoderType.Argument, Endianness.Big, LineType.NonVerbose)]
@@ -48,8 +49,8 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen];
-            ArgEncode(buffer, new BoolDltArg(value), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new BoolDltArg(value), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

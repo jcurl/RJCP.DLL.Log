@@ -87,8 +87,8 @@
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            ArgEncode(buffer, new NonVerboseDltArg(data), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new NonVerboseDltArg(data), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
 
         [TestCase(TestName = "Encode_UNVMaxData")]
@@ -109,8 +109,8 @@
             Random rnd = new Random();
             rnd.NextBytes(data);
 
-            ArgEncode(buffer, new UnknownNonVerboseDltArg(data), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new UnknownNonVerboseDltArg(data), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

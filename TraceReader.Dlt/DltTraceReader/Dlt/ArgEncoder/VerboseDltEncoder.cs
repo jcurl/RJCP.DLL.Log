@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Encodes all arguments in the line given to a buffer using DLT Verbose format.
@@ -33,14 +34,14 @@
         /// <param name="line">The line to serialize.</param>
         /// <returns>The number of bytes written to the buffer.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
-        public int Encode(Span<byte> buffer, DltTraceLine line)
+        public Result<int> Encode(Span<byte> buffer, DltTraceLine line)
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
 
             int written = 0;
             foreach (IDltArg arg in line.Arguments) {
-                int argWrite = m_VerboseArgEncoder.Encode(buffer, true, line.Features.BigEndian, arg);
-                if (argWrite == -1) return -1;
+                Result<int> result = m_VerboseArgEncoder.Encode(buffer, true, line.Features.BigEndian, arg);
+                if (!result.TryGet(out int argWrite)) return result;
                 written += argWrite;
                 buffer = buffer[argWrite..];
             }

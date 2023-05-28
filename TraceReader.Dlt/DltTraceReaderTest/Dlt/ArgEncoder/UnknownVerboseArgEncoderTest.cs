@@ -3,6 +3,7 @@
     using System;
     using Args;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture(typeof(UnknownVerboseArgEncoder), EncoderType.Argument, Endianness.Big, LineType.Verbose)]
     [TestFixture(typeof(UnknownVerboseArgEncoder), EncoderType.Argument, Endianness.Little, LineType.Verbose)]
@@ -62,8 +63,8 @@
         public void EncodeNonVerboseError(byte[] value)
         {
             byte[] buffer = new byte[HeaderLen + 4 + value.Length];
-            ArgEncode(buffer, new UnknownVerboseDltArg(value, IsBigEndian), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new UnknownVerboseDltArg(value, IsBigEndian), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

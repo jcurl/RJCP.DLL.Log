@@ -50,56 +50,52 @@
         /// </summary>
         /// <param name="buffer">The buffer to encode to.</param>
         /// <param name="line">The line to serialize.</param>
-        /// <returns>
-        /// The number of bytes written to the buffer. If the data couldn't be encoded and there is an error, -1 is
-        /// returned.
-        /// </returns>
+        /// <returns>The number of bytes written to the buffer.</returns>
         /// <remarks>This encoder takes a trace line or a control line and always writes out a verbose line.</remarks>
-        public virtual int Encode(Span<byte> buffer, DltTraceLineBase line)
+        public virtual Result<int> Encode(Span<byte> buffer, DltTraceLineBase line)
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
 
             int written;
             switch (line) {
             case DltTraceLine traceLine: {
-                int result = WriteStandardHeader(buffer, traceLine);
-                if (result == -1) return -1;
-                written = result;
+                Result<int> result = WriteStandardHeader(buffer, traceLine);
+                if (!result.TryGet(out written)) return result;
 
                 result = WriteExtendedHeader(buffer[written..], traceLine);
-                if (result == -1) return -1;
-                written += result;
+                if (!result.TryGet(out int length)) return result;
+                written += length;
 
                 result = m_DltArgsEncoder.Encode(buffer[written..], traceLine);
-                if (result == -1) return -1;
-                written += result;
+                if (!result.TryGet(out length)) return result;
+                written += length;
                 break;
             }
             case DltControlTraceLine controlLine: {
-                int result = WriteStandardHeader(buffer, controlLine);
-                if (result == -1) return -1;
-                written = result;
+                Result<int> result = WriteStandardHeader(buffer, controlLine);
+                if (!result.TryGet(out written)) return result;
 
                 result = WriteExtendedHeader(buffer[written..], controlLine);
-                if (result == -1) return -1;
-                written += result;
+                if (!result.TryGet(out int length)) return result;
+                written += length;
 
                 result = m_ControlArgsEncoder.Encode(buffer[written..], controlLine);
-                if (result == -1) return -1;
-                written += result;
+                if (!result.TryGet(out length)) return result;
+                written += length;
                 break;
             }
             default:
-                return -1;
+                return Result.FromException<int>(new DltEncodeException("Unknown Line Type"));
             }
 
             // Write the length.
-            if (written > ushort.MaxValue) return -1;
+            if (written > ushort.MaxValue)
+                return Result.FromException<int>(new DltEncodeException("Encoding exceeds maximum length"));
             BitOperations.Copy16ShiftBigEndian(written, buffer[2..4]);
             return written;
         }
 
-        private int WriteStandardHeader(Span<byte> buffer, DltTraceLineBase line)
+        private Result<int> WriteStandardHeader(Span<byte> buffer, DltTraceLineBase line)
         {
             int len = 4;
             byte htyp = DltConstants.HeaderType.Version1;
@@ -115,7 +111,8 @@
                 len += 4;
                 htyp += DltConstants.HeaderType.WithTimeStamp;
             }
-            if (buffer.Length < len) return -1;
+            if (buffer.Length < len)
+                return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
 
             if (line.Features.BigEndian) {
                 htyp += DltConstants.HeaderType.MostSignificantByte;
@@ -148,10 +145,13 @@
             return pos;
         }
 
-        private static int WriteExtendedHeader(Span<byte> buffer, DltTraceLine line)
+        private static Result<int> WriteExtendedHeader(Span<byte> buffer, DltTraceLine line)
         {
-            if (buffer.Length < 10) return -1;
-            if (line.Arguments.Count > 255) return -1;          // NOAR is 8-bit, so we can only write 255 arguments.
+            if (buffer.Length < 10)
+                return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
+
+            if (line.Arguments.Count > 255)                     // NOAR is 8-bit, so we can only write 255 arguments.
+                return Result.FromException<int>(new DltEncodeException("Too many arguments (limit at 255)"));
 
             buffer[0] = (byte)((byte)line.Type | (byte)1);      // Always writing verbose mode.
             buffer[1] = (byte)(line.Arguments.Count);
@@ -160,9 +160,11 @@
             return 10;
         }
 
-        private static int WriteExtendedHeader(Span<byte> buffer, DltControlTraceLine line)
+        private static Result<int> WriteExtendedHeader(Span<byte> buffer, DltControlTraceLine line)
         {
-            if (buffer.Length < 10) return -1;
+            if (buffer.Length < 10)
+                return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
+
             buffer[0] = (byte)line.Type;
             buffer[1] = 0;
 

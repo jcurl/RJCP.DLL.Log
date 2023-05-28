@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Encoder
 {
     using System;
+    using RJCP.Core;
 
     /// <summary>
     /// Interface for packet based trace encoder
@@ -13,10 +14,7 @@
         /// </summary>
         /// <param name="buffer">The buffer to encode to.</param>
         /// <param name="line">The line to serialize.</param>
-        /// <returns>
-        /// The number of bytes written to the buffer. If the data couldn't be encoded and there is an error, -1 is
-        /// returned.
-        /// </returns>
-        int Encode(Span<byte> buffer, TLine line);
+        /// <returns>The number of bytes written to the buffer.</returns>
+        Result<int> Encode(Span<byte> buffer, TLine line);
     }
 }

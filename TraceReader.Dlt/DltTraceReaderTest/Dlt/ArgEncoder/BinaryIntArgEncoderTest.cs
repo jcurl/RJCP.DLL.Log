@@ -76,8 +76,8 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + len - 1];
-            ArgEncode(buffer, new BinaryIntDltArg(value, len), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new BinaryIntDltArg(value, len), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

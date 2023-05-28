@@ -15,16 +15,17 @@
         /// <param name="buffer">The buffer to write the payload to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
         /// <remarks>
         /// Encodes the raw payload given by the <see cref="SwInjectionRequest"/>. If you need your own custom encoding
         /// for the injection request, your own custom control request argument <see cref="IControlArg"/> could do the
         /// encoding, or you can create your own specific encoder and inject it.
         /// </remarks>
-        protected override int EncodePayload(Span<byte> buffer, bool msbf, IControlArg arg)
+        protected override Result<int> EncodePayload(Span<byte> buffer, bool msbf, IControlArg arg)
         {
             SwInjectionRequest controlArg = (SwInjectionRequest)arg;
-            if (buffer.Length < controlArg.Payload.Length + 4) return -1;
+            if (buffer.Length < controlArg.Payload.Length + 4)
+                return Result.FromException<int>(new DltEncodeException("'SwInjectionRequestEncoder' insufficient buffer"));
 
             BitOperations.Copy32Shift(controlArg.Payload.Length, buffer, !msbf);
             controlArg.Payload.AsSpan().CopyTo(buffer[4..]);

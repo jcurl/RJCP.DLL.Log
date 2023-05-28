@@ -62,8 +62,8 @@
             rnd.NextBytes(data);
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 2 + 65535];
-            ArgEncode(buffer, new RawDltArg(data), out int result);
-            Assert.That(result, Is.EqualTo(-1));
+            ArgEncode(buffer, new RawDltArg(data), out Result<int> result);
+            Assert.That(result.HasValue, Is.False);
         }
     }
 }

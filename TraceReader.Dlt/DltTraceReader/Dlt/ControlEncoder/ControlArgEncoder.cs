@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using ControlArgs;
+    using RJCP.Core;
 
     /// <summary>
     /// Class to encode the contents of a control message.
@@ -191,8 +192,8 @@
         /// <param name="buffer">The buffer to serialise the control argument to.</param>
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
-        /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        public virtual int Encode(Span<byte> buffer, bool msbf, IControlArg arg)
+        /// <returns>The amount of bytes serialised into the buffer.</returns>
+        public virtual Result<int> Encode(Span<byte> buffer, bool msbf, IControlArg arg)
         {
             switch (arg.DefaultType) {
             case DltType.CONTROL_REQUEST:
@@ -203,11 +204,11 @@
                 // We don't care about the `IControlArg` (e.g. `DltTimeMarker`).
                 return 0;
             default:
-                return -1;
+                return Result.FromException<int>(new DltEncodeException($"Unknown request service {arg.DefaultType} with service {arg.ServiceId:x}"));
             }
         }
 
-        private int EncodeRequest(Span<byte> buffer, bool msbf, ControlRequest arg)
+        private Result<int> EncodeRequest(Span<byte> buffer, bool msbf, ControlRequest arg)
         {
             IControlArgEncoder encoder = null;
             if (arg.ServiceId >= 0 && arg.ServiceId <= m_RequestEncodersStandard.Length) {
@@ -219,11 +220,12 @@
                     encoder = DefaultRequestSwInjection;
             }
 
-            if (encoder is null) return -1;
+            if (encoder is null)
+                return Result.FromException<int>(new DltEncodeException($"Unknown request service {arg.DefaultType} with service {arg.ServiceId:x}"));
             return encoder.Encode(buffer, msbf, arg);
         }
 
-        private int EncodeResponse(Span<byte> buffer, bool msbf, ControlResponse arg)
+        private Result<int> EncodeResponse(Span<byte> buffer, bool msbf, ControlResponse arg)
         {
             if (arg is ControlErrorNotSupported)
                 return EmptyResponseEncoder.Encode(buffer, msbf, arg);
@@ -238,7 +240,8 @@
                     encoder = EmptyResponseEncoder;
             }
 
-            if (encoder is null) return -1;
+            if (encoder is null)
+                return Result.FromException<int>(new DltEncodeException($"Unknown response service {arg.DefaultType} with service {arg.ServiceId:x}"));
             return encoder.Encode(buffer, msbf, arg);
         }
     }

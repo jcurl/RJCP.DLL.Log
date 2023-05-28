@@ -2,6 +2,7 @@
 {
     using System;
     using Args;
+    using RJCP.Core;
 
     /// <summary>
     /// Top level class for serializing and encoding an argument to a buffer.
@@ -28,7 +29,7 @@
         /// <param name="msbf">If <see langword="true"/> encode using big endian, else little endian.</param>
         /// <param name="arg">The argument to serialise.</param>
         /// <returns>The amount of bytes serialised into the buffer, -1 in case of an error.</returns>
-        public int Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
+        public Result<int> Encode(Span<byte> buffer, bool verbose, bool msbf, IDltArg arg)
         {
             switch (arg) {
             case BinaryIntDltArg binaryArg:
@@ -56,7 +57,7 @@
             case UnknownNonVerboseDltArg unknownNonVerboseArg:
                 return m_NonVerboseEncoder.Encode(buffer, verbose, msbf, unknownNonVerboseArg);
             default:
-                return -1;
+                return Result.FromException<int>(new DltEncodeException($"Unknown type to encode {arg.GetType()}"));
             }
         }
     }

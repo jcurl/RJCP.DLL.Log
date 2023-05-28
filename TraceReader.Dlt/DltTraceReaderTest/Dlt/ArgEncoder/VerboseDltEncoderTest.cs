@@ -4,6 +4,7 @@
     using Args;
     using Encoder;
     using NUnit.Framework;
+    using RJCP.Core;
 
     [TestFixture(EncoderType.Arguments)]
     [TestFixture(EncoderType.TraceEncoder)]
@@ -17,9 +18,9 @@
         }
 
         private static readonly DltTraceLine TraceLine = new DltTraceLine(new IDltArg[] {
-                new StringDltArg("Temperature:"),
-                new SignedIntDltArg(45, 2)
-            }) {
+            new StringDltArg("Temperature:"),
+            new SignedIntDltArg(45, 2)
+        }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -46,9 +47,9 @@
             byte[] buffer = new byte[len];
             VerboseDltEncoder encoder = new VerboseDltEncoder();
 
-            int result = encoder.Encode(buffer, line);
-            if (result == -1) return Array.Empty<byte>();
-            return buffer.AsSpan(0, result);
+            Result<int> result = encoder.Encode(buffer, line);
+            if (!result.HasValue) return Array.Empty<byte>();
+            return buffer.AsSpan(0, result.Value);
         }
 
         private static Span<byte> EncodeLine(DltTraceLine line, int len)
@@ -56,9 +57,9 @@
             byte[] buffer = new byte[len + 22];
             ITraceEncoderFactory<DltTraceLineBase> factory = new DltTraceEncoderFactory();
             ITraceEncoder<DltTraceLineBase> encoder = factory.Create();
-            int result = encoder.Encode(buffer, line);
-            if (result == -1) return Array.Empty<byte>();
-            return buffer.AsSpan(22, result - 22);
+            Result<int> result = encoder.Encode(buffer, line);
+            if (!result.HasValue) return Array.Empty<byte>();
+            return buffer.AsSpan(22, result.Value - 22);
         }
 
         [TestCase(65536)]

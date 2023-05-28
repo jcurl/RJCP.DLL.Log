@@ -23,10 +23,11 @@
         /// returned.
         /// </returns>
         /// <remarks>This encoder takes a trace line or a control line and always writes out a verbose line.</remarks>
-        public override int Encode(Span<byte> buffer, DltTraceLineBase line)
+        public override Result<int> Encode(Span<byte> buffer, DltTraceLineBase line)
         {
             if (line is null) throw new ArgumentNullException(nameof(line));
-            if (buffer.Length < 20) return -1;
+            if (buffer.Length < 20)
+                return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
 
             buffer[0] = 0x44;
             buffer[1] = 0x4C;
@@ -44,9 +45,9 @@
             }
             WriteId(buffer[12..16], line.EcuId);
 
-            int result = base.Encode(buffer[16..], line);
-            if (result == -1) return -1;
-            return result + 16;
+            Result<int> result = base.Encode(buffer[16..], line);
+            if (!result.TryGet(out int length)) return result;
+            return length + 16;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace RJCP.Diagnostics.Log.Dlt.ArgEncoder
 {
     using System;
+    using RJCP.Core;
 
     /// <summary>
     /// Interface for encoding DLT lines to a buffer.
@@ -14,6 +15,6 @@
         /// <param name="buffer">The buffer to encode to.</param>
         /// <param name="line">The line to serialize.</param>
         /// <returns>The number of bytes written to the buffer.</returns>
-        int Encode(Span<byte> buffer, TLine line);
+        Result<int> Encode(Span<byte> buffer, TLine line);
     }
 }
