@@ -16,7 +16,7 @@ interface ITraceEncoderFactory<TLine:ITraceLine> {
 }
 
 interface ITraceEncoder<TLine:ITraceLine> {
-    +Encode(buffer: Span<byte>, line: TLine): int
+    +Encode(buffer: Span<byte>, line: TLine): Result<int>
 }
 
 class DltTraceWriterFactory<TLine:DltTraceLineBase> {
@@ -39,7 +39,7 @@ class DltTraceWriter<TLine:DltTraceLineBase> {
 ITraceWriter <|.d. DltTraceWriter : TLine -> DltTraceLineBase
 
 class DltTraceEncoder<TLine:DltTraceLineBase> {
-    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): Result<int>
 }
 ITraceEncoder <|.d. DltTraceEncoder : TLine -> DltTraceLineBase
 DltTraceWriter o-r- DltTraceEncoder

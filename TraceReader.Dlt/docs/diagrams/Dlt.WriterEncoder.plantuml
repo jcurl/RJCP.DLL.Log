@@ -2,7 +2,7 @@
 interface IDisposable
 
 interface ITraceEncoder<TLine:ITraceLine> {
-    +Encode(buffer: Span<byte>, line: TLine): int
+    +Encode(buffer: Span<byte>, line: TLine): Result<int>
 }
 IDisposable <|.d. ITraceEncoder
 
@@ -16,26 +16,26 @@ class DltTraceEncoderFactory<TLine:DltTraceLineBase> {
 ITraceEncoderFactory <|.d. DltTraceEncoderFactory : TLine -> DltTraceLineBase
 
 class DltTraceEncoder<TLine:DltTraceLineBase> {
-    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): Result<int>
 }
 ITraceEncoder <|.d. DltTraceEncoder : TLine -> DltTraceLineBase
 DltTraceEncoderFactory -r-> DltTraceEncoder : <<creates>>
 
 interface IDltEncoder<TLine:DltTraceLineBase> {
-   +Encode(buffer: Span<byte>, line: TLine): int
+   +Encode(buffer: Span<byte>, line: TLine): Result<int>
 }
 
 class VerboseDltEncoder<TLine:DltTraceLine> {
-    +Encode(buffer: Span<byte>, line: DltTraceLine): int
+    +Encode(buffer: Span<byte>, line: DltTraceLine): Result<int>
 }
 IDltEncoder <|.d. VerboseDltEncoder : TLine -> DltTraceLine
 
 interface IArgEncoder {
-    +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
+    +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): Result<int>
 }
 
 class DltArgEncoder {
-    +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): int
+    +Encode(buffer: Span<byte>, bool verbose, bool msbf, arg: IDltArg): Result<int>
 }
 IArgEncoder <|.d. DltArgEncoder
 VerboseDltEncoder *-r- DltArgEncoder

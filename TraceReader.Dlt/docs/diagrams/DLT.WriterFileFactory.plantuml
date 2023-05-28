@@ -5,7 +5,7 @@ class DltTraceWriterFactory<TLine:DltTraceLineBase> {
 }
 
 class DltTraceEncoder<TLine:DltTraceLineBase> {
-    +Encode(buffer: Span<byte>, line: DltTraceLineBase): int
+    +Encode(buffer: Span<byte>, line: DltTraceLineBase): Result<int>
 }
 
 class DltFileTraceWriterFactory
