@@ -516,8 +516,8 @@
 
                 // A control message can only be present when there's an extended header.
                 if (isControl) {
-                    Result<int> controlLengthResult = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                    if (!controlLengthResult.TryGet(out int controlLength)) {
+                    Result<int> result = m_ControlDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                    if (!result.TryGet(out int controlLength)) {
                         string error = m_DltLineBuilder.ResetErrorMessage();
                         if (string.IsNullOrEmpty(error)) {
                             Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",
@@ -538,8 +538,8 @@
             }
 
             if (isVerbose) {
-                Result<int> payloadLengthResult = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                if (!payloadLengthResult.TryGet(out int payloadLength)) {
+                Result<int> result = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (!result.TryGet(out int payloadLength)) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
                     if (string.IsNullOrEmpty(error)) {
                         Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",
@@ -556,18 +556,32 @@
                     return false;
                 }
             } else {
-                Result<int> payloadLengthResult = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
-                if (!payloadLengthResult.TryGet(out int payloadLength) || m_DltLineBuilder.HasErrorMessage()) {
+                Result<int> result = m_NonVerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
+                if (!result.TryGet(out int payloadLength) || m_DltLineBuilder.HasErrorMessage()) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
-                    if (!string.IsNullOrEmpty(error)) {
-                        Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} cannot be decoded, {1}",
-                            m_PosMap.Position, error);
+                    if (result.HasValue) {
+                        if (!string.IsNullOrEmpty(error)) {
+                            Log.DltNonVerbose.TraceEvent(TraceEventType.Verbose,
+                                "Non-verbose packet at offset 0x{0:x}, {1}",
+                                m_PosMap.Position, error);
+                        }
+                        return true;
                     }
-                    if (payloadLengthResult.HasValue) return true;
-                    return ParseNonVerboseFallback(standardHeader[offset..]);
+                    bool decoded = ParseNonVerboseFallback(standardHeader[offset..]);
+                    if (decoded) {
+                        Log.DltNonVerbose.TraceEvent(TraceEventType.Verbose,
+                            "Non-verbose packet at offset 0x{0:x}, using fallback, {1}",
+                            m_PosMap.Position, error);
+                        return true;
+                    }
+                    Log.DltNonVerbose.TraceEvent(TraceEventType.Warning,
+                        "Non-verbose packet at offset 0x{0:x}, {1}",
+                        m_PosMap.Position, error);
+                    return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.DltNonVerbose.TraceEvent(TraceEventType.Warning, "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                    Log.DltNonVerbose.TraceEvent(TraceEventType.Information,
+                        "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}, using fallback",
                         m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     m_DltLineBuilder.ResetArguments();
                     return ParseNonVerboseFallback(standardHeader[offset..]);
