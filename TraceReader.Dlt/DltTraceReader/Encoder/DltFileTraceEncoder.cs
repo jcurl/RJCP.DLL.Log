@@ -22,11 +22,33 @@
         /// The number of bytes written to the buffer. If the data couldn't be encoded and there is an error, -1 is
         /// returned.
         /// </returns>
+        /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
         /// <remarks>This encoder takes a trace line or a control line and always writes out a verbose line.</remarks>
         public override Result<int> Encode(Span<byte> buffer, DltTraceLineBase line)
         {
+            Result<int> result = WriteStorageHeader(buffer, line);
+            if (!result.TryGet(out int storageLength)) return result;
+
+            result = base.Encode(buffer[storageLength..], line);
+            if (!result.TryGet(out int length)) return result;
+            return storageLength + length;
+        }
+
+        /// <summary>
+        /// Writes the storage header for DLTv1.
+        /// </summary>
+        /// <param name="buffer">The buffer to write to.</param>
+        /// <param name="line">The line containing the ECU ID and the time stamp.</param>
+        /// <returns>The amount of data written.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
+        /// <remarks>
+        /// Applications can use this to write a DLTv1 header, if they already have a DLTv1 packet with the payload
+        /// already encoded.
+        /// </remarks>
+        public static Result<int> WriteStorageHeader(Span<byte> buffer, DltTraceLineBase line)
+        {
             if (line is null) throw new ArgumentNullException(nameof(line));
-            if (buffer.Length < 20)
+            if (buffer.Length < 16)
                 return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
 
             buffer[0] = 0x44;
@@ -44,10 +66,7 @@
                 BitOperations.Copy64ShiftLittleEndian(0, buffer[4..12]);
             }
             WriteId(buffer[12..16], line.EcuId);
-
-            Result<int> result = base.Encode(buffer[16..], line);
-            if (!result.TryGet(out int length)) return result;
-            return length + 16;
+            return 16;
         }
     }
 }

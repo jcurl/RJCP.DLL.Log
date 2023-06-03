@@ -5,6 +5,7 @@
     using RJCP.Core;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Encoder;
 
     /// <summary>
     /// An output module that can write binary data as it is received.
@@ -12,6 +13,7 @@
     public sealed class DltOutput : OutputBase, IOutputStream
     {
         private readonly object m_WriteLock = new object();
+        private ITraceEncoder<DltTraceLineBase> m_TraceEncoder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltOutput"/> class.
@@ -19,7 +21,10 @@
         /// <param name="fileName">Name of the file.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        public DltOutput(string fileName) : base(fileName) { }
+        public DltOutput(string fileName) : base(fileName)
+        {
+            InitializeTraceEncoder();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltOutput"/> class.
@@ -28,7 +33,10 @@
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        public DltOutput(string fileName, bool force) : base(fileName, 0, force) { }
+        public DltOutput(string fileName, bool force) : base(fileName, 0, force)
+        {
+            InitializeTraceEncoder();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltOutput"/> class.
@@ -38,7 +46,16 @@
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        public DltOutput(string fileName, long split, bool force) : base(fileName, split, force) { }
+        public DltOutput(string fileName, long split, bool force) : base(fileName, split, force)
+        {
+            InitializeTraceEncoder();
+        }
+
+        private void InitializeTraceEncoder()
+        {
+            ITraceEncoderFactory<DltTraceLineBase> factory = new DltFileTraceEncoderFactory();
+            m_TraceEncoder = factory.Create();
+        }
 
         /// <summary>
         /// Indicates if this output stream can write binary data.
@@ -79,7 +96,8 @@
             0x00, 0x00, 0x00, 0x00                             // ECU ID
         };
 
-        private readonly byte[] m_Packet = new byte[65536];
+        // Amount of data that can be written in one packet (storage header + packet)
+        private readonly byte[] m_Packet = new byte[65536 + 16];
 
         /// <summary>
         /// Writes the specified line to the output.
@@ -96,13 +114,11 @@
         /// </remarks>
         public bool Write(DltTraceLineBase line)
         {
-            // We only write trace lines (not control lines).
-            if (!(line is DltTraceLine traceLine)) return false;
-
             lock (m_WriteLock) {
-                BuildStorageHeader(traceLine);
-                int length = BuildPacket(traceLine);
-                Write(line.TimeStamp, m_StorageHeader, m_Packet.AsSpan(0, length));
+                Result<int> result = m_TraceEncoder.Encode(m_Packet, line);
+                if (!result.TryGet(out int length)) return false;
+
+                Write(line.TimeStamp, m_Packet.AsSpan(0, length));
                 return true;
             }
         }
@@ -119,117 +135,33 @@
         /// <remarks>The output knows of the input format through the method <see cref="SetInput"/>.</remarks>
         public bool Write(DltTraceLineBase line, ReadOnlySpan<byte> packet)
         {
+            ReadOnlySpan<byte> payload;
+
+            switch (m_InputFormat) {
+            case InputFormat.File:
+            case InputFormat.Network:
+            case InputFormat.Pcap:
+                payload = packet;
+                break;
+            case InputFormat.Serial:
+                payload = packet[4..];
+                break;
+            default:
+                return false;
+            }
+
             lock (m_WriteLock) {
                 switch (m_InputFormat) {
                 case InputFormat.File:
-                    Write(line.TimeStamp, packet);
+                    Write(line.TimeStamp, payload);
                     return true;
-                case InputFormat.Network:
-                case InputFormat.Pcap:
-                    BuildStorageHeader(line);
-                    Write(line.TimeStamp, m_StorageHeader, packet);
-                    return true;
-                case InputFormat.Serial:
-                    // Remove the `DLS\1` header.
-                    BuildStorageHeader(line);
-                    Write(line.TimeStamp, m_StorageHeader, packet[4..]);
+                default:
+                    Result<int> result = DltFileTraceEncoder.WriteStorageHeader(m_StorageHeader, line);
+                    if (!result.HasValue) return false;
+                    Write(line.TimeStamp, m_StorageHeader, payload);
                     return true;
                 }
             }
-            return false;
-        }
-
-        private void BuildStorageHeader(DltTraceLineBase line)
-        {
-            if (line.Features.TimeStamp) {
-                DateTimeOffset storageTime = line.TimeStamp.ToUniversalTime();
-                long unixSeconds = storageTime.ToUnixTimeSeconds();
-                long uSeconds = (storageTime.Ticks % TimeSpan.TicksPerSecond) / (TimeSpan.TicksPerMillisecond / 1000);
-                BitOperations.Copy32ShiftLittleEndian(unixSeconds, m_StorageHeader, 4);
-                BitOperations.Copy32ShiftLittleEndian(uSeconds, m_StorageHeader, 8);
-            } else {
-                BitOperations.DangerousCopy64Pointer(0, m_StorageHeader, 4);
-            }
-
-            if (line.Features.EcuId) {
-                WriteId(m_StorageHeader, 12, line.EcuId);
-            } else {
-                BitOperations.DangerousCopy32Pointer(0, m_StorageHeader, 12);
-            }
-        }
-
-        private static void WriteId(byte[] buffer, int offset, string id)
-        {
-            int idLen = id.Length;
-
-            buffer[offset] = idLen > 0 ? (byte)(id[0] & 0xFF) : (byte)0;
-            buffer[offset + 1] = idLen > 1 ? (byte)(id[1] & 0xFF) : (byte)0;
-            buffer[offset + 2] = idLen > 2 ? (byte)(id[2] & 0xFF) : (byte)0;
-            buffer[offset + 3] = idLen > 3 ? (byte)(id[3] & 0xFF) : (byte)0;
-        }
-
-        private int BuildPacket(DltTraceLine line)
-        {
-            // Standard Header
-            byte htyp = 0x21;     // USH, LSB and Version 1
-            short length = 4;
-
-            if (line.Features.EcuId) {
-                WriteId(m_Packet, length, line.EcuId);
-                length += 4;
-                htyp |= 0x04;
-            }
-
-            if (line.Features.SessionId) {
-                BitOperations.Copy32ShiftLittleEndian(line.SessionId, m_Packet, length);
-                length += 4;
-                htyp |= 0x08;
-            }
-
-            if (line.Features.DeviceTimeStamp) {
-                int timestampValue = unchecked((int)(line.DeviceTimeStamp.Ticks / (TimeSpan.TicksPerMillisecond / 10)));
-                BitOperations.Copy32ShiftBigEndian(timestampValue, m_Packet, length);
-                length += 4;
-                htyp |= 0x10;
-            }
-
-            m_Packet[0] = htyp;
-            m_Packet[1] = (byte)(line.Count & 0xFF);
-
-            // Extended Header
-            m_Packet[length] = (byte)(0x01 | ((int)line.Type & 0xFF));  // MSIN
-            length++;
-
-            m_Packet[length] = 1; // NOAR
-            length++;
-
-            if (line.Features.ApplicationId) {
-                WriteId(m_Packet, length, line.ApplicationId);
-            } else {
-                BitOperations.DangerousCopy32Pointer(0, m_Packet, length);
-            }
-            length += 4;
-
-            if (line.Features.ContextId) {
-                WriteId(m_Packet, length, line.ContextId);
-            } else {
-                BitOperations.DangerousCopy32Pointer(0, m_Packet, length);
-            }
-            length += 4;
-
-            // Verbose Argument
-            BitOperations.Copy32ShiftLittleEndian(0x8200, m_Packet, length);  // UTF8 String
-            length += 4;
-
-            int maxLen = 65535 - length - 3;
-            int strLen = System.Text.Encoding.UTF8.GetBytes(line.Text.AsSpan(), m_Packet.AsSpan(length + 2, maxLen));
-            BitOperations.Copy16ShiftLittleEndian(strLen + 1, m_Packet, length);
-            m_Packet[length + 2 + strLen] = 0;
-            length += 3;
-            length += (short)strLen;
-
-            BitOperations.Copy16ShiftBigEndian(length, m_Packet, 2);
-            return length;
         }
     }
 }
