@@ -179,6 +179,9 @@
     <None Include="TestResources\Input\EmptyFile.dlt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestResources\Input\SimpleNonVerbose.dlt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

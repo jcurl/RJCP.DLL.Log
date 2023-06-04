@@ -293,6 +293,20 @@
         [Option("nv-noexthdr")]
         public bool NonVerboseNoExtHeader { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether to conver non-verbose messages to verbose when writing.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/><c>true</c> if non-verbose messages should be converted to verbose when writing;
+        /// otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// This option is useful if there is a conversion file, that on the output, this conversion file is no longer
+        /// needed.
+        /// </remarks>
+        [Option("nv-verbose")]
+        public bool NonVerboseWriteVerbose { get; private set; }
+
         public void Check()
         {
             CheckInputFormat();

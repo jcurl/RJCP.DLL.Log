@@ -8,6 +8,8 @@
 
         public long Split { get; set; }
 
+        public bool ConvertNonVerbose { get; set; }
+
         public IOutputStream Create(OutputFormat outFormat, string outFileName)
         {
             return new ConsoleOutput();

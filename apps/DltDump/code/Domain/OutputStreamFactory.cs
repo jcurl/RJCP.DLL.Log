@@ -27,6 +27,18 @@
         public long Split { get; set; }
 
         /// <summary>
+        /// Determines if non-verbose messages should be converted to verbose.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if decoded non-verbose messages should be converted to verbose; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// This flag is only useful for DLT writers.
+        /// </remarks>
+        public bool ConvertNonVerbose { get; set; }
+
+        /// <summary>
         /// Creates the output stream based on the output format.
         /// </summary>
         /// <param name="outFormat">The output format that should be used.</param>
@@ -44,7 +56,9 @@
             case OutputFormat.Text:
                 return new TextOutput(outFileName, Split, Force);
             case OutputFormat.Dlt:
-                return new DltOutput(outFileName, Split, Force);
+                return new DltOutput(outFileName, Split, Force) {
+                    ConvertNonVerbose = ConvertNonVerbose
+                };
             default:
                 Log.App.TraceEvent(TraceEventType.Warning, AppResources.DomainOutputStreamFactoryUnknown, outFormat.ToString());
                 return null;

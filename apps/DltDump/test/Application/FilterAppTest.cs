@@ -11,13 +11,17 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Diagnostics.Log.Dlt.NonVerbose.Fibex;
     using TestResources;
 
     [TestFixture]
     public class FilterAppTest
     {
-        private readonly string EmptyFile =
-            Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
+        private static readonly string InputDir = Path.Combine(Deploy.TestDirectory, "TestResources", "Input");
+        private static readonly string EmptyFile = Path.Combine(InputDir, "EmptyFile.dlt");
+        private static readonly string SimpleNvFile = Path.Combine(InputDir, "SimpleNonVerbose.dlt");
+        private static readonly string FibexDir = Path.Combine(Deploy.TestDirectory, "TestResources", "Fibex", "valid");
+        private static readonly string FibexFile = Path.Combine(FibexDir, "fibex-tcb.xml");
 
         // Most of the functionality of FilterApp is tested through the FilterCommandTest. This is because it takes a
         // CmdOptions as input which requires the CommandLine.Run() method to be called. Anything that can't be tested
@@ -805,6 +809,105 @@
                 // The TraceReader would write this file. As the TestDltTraceReaderFactory instantiates a
                 // BinaryTraceReader and never generates output, this file is never created
                 Assert.That(File.Exists("file.dlt"), Is.False);
+            }
+        }
+
+        [Test]
+        public async Task OutputToDltFileConvertNonVerbose()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad()) {
+                // This is a full integrated test.
+
+                FibexFile map = new FibexFile(FibexOptions.None);
+                map.LoadFile(FibexFile);
+
+                FilterConfig config = new FilterConfig(new[] { SimpleNvFile }) {
+                    OutputFileName = "file.dlt",
+                    ConvertNonVerbose = true,
+                    FrameMap = map
+                };
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+
+                // The FilterApp sets this output. so that the factory knows to create the correct TraceReader
+                // that writes DLT.
+                Assert.That(Global.Instance.DltReaderFactory.OutputStream, Is.TypeOf<DltOutput>());
+
+                // The TraceReader would write this file.
+                Assert.That(File.Exists("file.dlt"), Is.True);
+
+                byte[] encoded;
+                using (MemoryStream mem = new MemoryStream())
+                using (FileStream file = new FileStream("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                    await file.CopyToAsync(mem);
+                    encoded = mem.ToArray();
+                }
+
+                byte[] expected = new byte[] {
+                    0x44, 0x4C, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x54, 0x43, 0x42, 0x00,  // Storage Header. ECU1 => TCB.
+                    0x25, 0x00, 0x00, 0x36, 0x54, 0x43, 0x42, 0x00,                                                  // StdHeader
+                    0x41, 0x01, 0x54, 0x45, 0x53, 0x54, 0x43, 0x4F, 0x4E, 0x31,                                      // ExtHeader, 1 arg
+                    0x00, 0x82, 0x00, 0x00, 0x1E, 0x00, 0x44, 0x4C, 0x54, 0x20, 0x6E, 0x6F, 0x6E, 0x20, 0x76, 0x65,  // Arg 1 (Verbose)
+                    0x72, 0x62, 0x6F, 0x73, 0x65, 0x20, 0x74, 0x65, 0x73, 0x74, 0x20, 0x6D, 0x65, 0x73, 0x73, 0x61,
+                    0x67, 0x65, 0x2E, 0x00,
+                    0x44, 0x4C, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x54, 0x43, 0x42, 0x00,  // Storage Header
+                    0x25, 0x01, 0x00, 0x3C, 0x54, 0x43, 0x42, 0x00,                                                  // StdHeader
+                    0x31, 0x02, 0x41, 0x50, 0x50, 0x31, 0x43, 0x4F, 0x4E, 0x31,                                      // ExtHeader, 2 args
+                    0x00, 0x82, 0x00, 0x00, 0x1E, 0x00, 0x42, 0x75, 0x66, 0x66, 0x65, 0x72, 0x20, 0x6E, 0x65, 0x61,  // Arg 1 (Verbose)
+                    0x72, 0x20, 0x6C, 0x69, 0x6D, 0x69, 0x74, 0x2E, 0x20, 0x46, 0x72, 0x65, 0x65, 0x20, 0x73, 0x69,
+                    0x7A, 0x65, 0x3A, 0x00,
+                    0x42, 0x00, 0x00, 0x00, 0xFF, 0x7F                                                               // Arg 2 (Verbose)
+                };
+                Assert.That(encoded, Is.EqualTo(expected));
+            }
+        }
+
+        [Test]
+        public async Task OutputToDltFileConvertNonVerboseFiltered()
+        {
+            using (ScratchPad pad = Deploy.ScratchPad()) {
+                // This is a full integrated test.
+
+                FibexFile map = new FibexFile(FibexOptions.None);
+                map.LoadFile(FibexFile);
+
+                FilterConfig config = new FilterConfig(new[] { SimpleNvFile }) {
+                    OutputFileName = "file.dlt",
+                    ConvertNonVerbose = true,
+                    FrameMap = map
+                };
+                config.AddAppId("APP1");
+                FilterApp app = new FilterApp(config);
+                ExitCode result = await app.Run();
+
+                Assert.That(result, Is.EqualTo(ExitCode.Success));
+
+                // The FilterApp sets this output. so that the factory knows to create the correct TraceReader
+                // that writes DLT.
+                Assert.That(Global.Instance.DltReaderFactory.OutputStream, Is.TypeOf<FilterOutput>());
+
+                // The TraceReader would write this file.
+                Assert.That(File.Exists("file.dlt"), Is.True);
+
+                byte[] encoded;
+                using (MemoryStream mem = new MemoryStream())
+                using (FileStream file = new FileStream("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                    await file.CopyToAsync(mem);
+                    encoded = mem.ToArray();
+                }
+
+                byte[] expected = new byte[] {
+                    0x44, 0x4C, 0x54, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x54, 0x43, 0x42, 0x00,  // Storage Header. ECU1 => TCB.
+                    0x25, 0x01, 0x00, 0x3C, 0x54, 0x43, 0x42, 0x00,                                                  // StdHeader
+                    0x31, 0x02, 0x41, 0x50, 0x50, 0x31, 0x43, 0x4F, 0x4E, 0x31,                                      // ExtHeader, 2 args
+                    0x00, 0x82, 0x00, 0x00, 0x1E, 0x00, 0x42, 0x75, 0x66, 0x66, 0x65, 0x72, 0x20, 0x6E, 0x65, 0x61,  // Arg 1 (Verbose)
+                    0x72, 0x20, 0x6C, 0x69, 0x6D, 0x69, 0x74, 0x2E, 0x20, 0x46, 0x72, 0x65, 0x65, 0x20, 0x73, 0x69,
+                    0x7A, 0x65, 0x3A, 0x00,
+                    0x42, 0x00, 0x00, 0x00, 0xFF, 0x7F                                                               // Arg 2 (Verbose)
+                };
+                Assert.That(encoded, Is.EqualTo(expected));
             }
         }
 

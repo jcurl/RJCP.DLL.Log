@@ -47,9 +47,11 @@
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
-        private readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
-        private readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
-        private readonly string EmptyPcap = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.pcap");
+        private static readonly string EmptyFile = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.dlt");
+        private static readonly string EmptyFile2 = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile2.dlt");
+        private static readonly string EmptyPcap = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "EmptyFile.pcap");
+        private static readonly string FibexDir = Path.Combine(Deploy.TestDirectory, "TestResources", "Fibex", "valid");
+        private static readonly string FibexFile = Path.Combine(FibexDir, "fibex-tcb.xml");
 
         #region Input File
         [Test]
@@ -1824,6 +1826,25 @@
                 }), Is.EqualTo(ExitCode.OptionsError));
 
                 global.WriteStd();
+            }
+        }
+        #endregion
+
+        #region Input File with NonVerbose
+        [Test]
+        public void ConvertNonVerbose()
+        {
+            using (new TestApplication()) {
+                CmdOptions cmdOptions = null;
+                CommandFactorySetup(opt => cmdOptions = opt);
+
+                Assert.That(CommandLine.Run(new[] {
+                    LongOpt("F", FibexFile), LongOpt("nv-verbose"), ShortOpt('o', "out.dlt"), EmptyFile
+                }), Is.EqualTo(ExitCode.Success));
+                Assert.That(cmdOptions.Arguments, Is.EqualTo(new[] { EmptyFile }));
+                Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
+                Assert.That(cmdOptions.Fibex[0], Is.EqualTo(FibexFile));
+                Assert.That(cmdOptions.NonVerboseWriteVerbose, Is.True);
             }
         }
         #endregion

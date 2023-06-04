@@ -303,6 +303,10 @@
     <value>{1}nv-noexthdr
   If provided, ignore the Application and Context identifiers as decoded when mapping to frames in the Fibex file. Useful to ensure uniqueness of message identifiers if it's known in advance that the captured traces do not have an extended header.</value>
   </data>
+  <data name="Help630_NvVerbose" xml:space="preserve">
+    <value>{1}nv-verbose
+  If provided, write non-verbose files as verbose if there is an appropriate FIBEX file provided. The original message identifier will be replaced with the arguments in the output file. Only applicable for converting to DLT files.</value>
+  </data>
   <data name="Help800_ExitCodes" xml:space="preserve">
     <value>The exit code of the application indicates if the command run with success or there was a problem.</value>
   </data>

@@ -94,6 +94,7 @@
             Write(2, 4, HelpResources.Help610_Fibex);
             Write(2, 4, HelpResources.Help620_NvEcuId);
             Write(2, 4, HelpResources.Help625_NvNoExtHdr);
+            Write(2, 4, HelpResources.Help630_NvVerbose);
             Write();
             Write(HelpResources.Help500_Input);
             Write();

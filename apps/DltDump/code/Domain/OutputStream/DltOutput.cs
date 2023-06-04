@@ -5,6 +5,7 @@
     using RJCP.Core;
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Dlt;
+    using RJCP.Diagnostics.Log.Dlt.Args;
     using RJCP.Diagnostics.Log.Encoder;
 
     /// <summary>
@@ -64,6 +65,15 @@
         /// Is <see langword="true"/> if this object can write binary data; otherwise, <see langword="false"/>.
         /// </value>
         public bool SupportsBinary { get { return true; } }
+
+        /// <summary>
+        /// Determines if non-verbose messages should be converted to verbose.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if decoded non-verbose messages should be converted to verbose; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        public bool ConvertNonVerbose { get; set; }
 
         private InputFormat m_InputFormat = InputFormat.File;
 
@@ -148,6 +158,21 @@
                 break;
             default:
                 return false;
+            }
+
+            if (ConvertNonVerbose && line is DltNonVerboseTraceLine nvLine) {
+                bool convert = true;
+                foreach (IDltArg arg in nvLine.Arguments) {
+                    if (arg is NonVerboseDltArg || arg is UnknownDltArg) {
+                        convert = false;
+                        break;
+                    }
+                }
+
+                // We support all arguments, except those that are unknonwn
+                if (convert) {
+                    if (Write(line)) return true;
+                }
             }
 
             lock (m_WriteLock) {

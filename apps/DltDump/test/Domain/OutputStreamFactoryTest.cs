@@ -15,9 +15,9 @@
             Assert.That(factory.Split, Is.EqualTo(0));
         }
 
-        [TestCase(OutputFormat.Automatic)]
-        [TestCase(OutputFormat.Console)]
-        public void CreateConsoleWithNull(OutputFormat outputFormat)
+        [Test]
+        public void CreateConsoleWithNull(
+            [Values(OutputFormat.Automatic, OutputFormat.Console)] OutputFormat outputFormat)
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, null)) {
@@ -25,9 +25,9 @@
             }
         }
 
-        [TestCase(OutputFormat.Automatic)]
-        [TestCase(OutputFormat.Console)]
-        public void CreateConsoleWithCon(OutputFormat outputFormat)
+        [Test]
+        public void CreateConsoleWithCon(
+            [Values(OutputFormat.Automatic, OutputFormat.Console)] OutputFormat outputFormat)
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, "CON:")) {
@@ -35,9 +35,9 @@
             }
         }
 
-        [TestCase(OutputFormat.Automatic)]
-        [TestCase(OutputFormat.Console)]
-        public void CreateConsoleWithDev(OutputFormat outputFormat)
+        [Test]
+        public void CreateConsoleWithDev(
+            [Values(OutputFormat.Automatic, OutputFormat.Console)] OutputFormat outputFormat)
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, "/dev/stdout")) {
@@ -63,9 +63,9 @@
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
-        [TestCase(OutputFormat.Automatic)]
-        [TestCase(OutputFormat.Text)]
-        public void CreateTextOutputWithFile(OutputFormat outputFormat)
+        [Test]
+        public void CreateTextOutputWithFile(
+            [Values(OutputFormat.Automatic, OutputFormat.Text)] OutputFormat outputFormat)
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, "file.txt")) {
@@ -82,13 +82,27 @@
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
-        [TestCase(OutputFormat.Automatic)]
-        [TestCase(OutputFormat.Dlt)]
-        public void CreateDltOutputWithFile(OutputFormat outputFormat)
+        [Test]
+        public void CreateDltOutputWithFile(
+            [Values(OutputFormat.Automatic, OutputFormat.Dlt)] OutputFormat outputFormat)
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             using (IOutputStream output = factory.Create(outputFormat, "file.dlt")) {
                 Assert.That(output, Is.TypeOf<DltOutput>());
+            }
+        }
+
+        [Test]
+        public void CreateDltOutputWithConvert(
+            [Values(OutputFormat.Automatic, OutputFormat.Dlt)] OutputFormat outputFormat,
+            [Values(false, true)] bool nvConvert)
+        {
+            IOutputStreamFactory factory = new OutputStreamFactory() {
+                ConvertNonVerbose = nvConvert
+            };
+            using (IOutputStream output = factory.Create(outputFormat, "file.dlt")) {
+                Assert.That(output, Is.TypeOf<DltOutput>());
+                Assert.That(((DltOutput)output).ConvertNonVerbose, Is.EqualTo(nvConvert));
             }
         }
     }

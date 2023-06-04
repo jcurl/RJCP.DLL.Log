@@ -65,6 +65,15 @@
         public long Split { get; set; }
 
         /// <summary>
+        /// Determines if non-verbose messages should be converted to verbose.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if decoded non-verbose messages should be converted to verbose; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        public bool ConvertNonVerbose { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the output file.
         /// </summary>
         /// <value>The name of the output file.</value>

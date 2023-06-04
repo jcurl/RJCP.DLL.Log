@@ -29,6 +29,7 @@
                 OutputFileName = m_Options.OutputFileName,
                 Force = m_Options.Force,
                 Split = m_Options.Split,
+                ConvertNonVerbose = m_Options.NonVerboseWriteVerbose,
                 OutputFormat = OutputFormat.Automatic,
                 ConnectRetries = m_Options.ConnectRetries,
                 BeforeContext = m_Options.BeforeContext,

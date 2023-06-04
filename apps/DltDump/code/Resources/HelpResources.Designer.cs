@@ -553,6 +553,16 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {1}nv-verbose
+        ///  If provided, write non-verbose files as verbose if there is an appropriate FIBEX file provided. The original message identifier will be replaced with the arguments in the output file. Only applicable for converting to DLT files..
+        /// </summary>
+        internal static string Help630_NvVerbose {
+            get {
+                return ResourceManager.GetString("Help630_NvVerbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The exit code of the application indicates if the command run with success or there was a problem..
         /// </summary>
         internal static string Help800_ExitCodes {
