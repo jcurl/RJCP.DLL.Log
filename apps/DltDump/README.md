@@ -6,9 +6,10 @@ DltDump is a tool that reads DLT Version 1 formatted files.
   - [1.1. License](#11-license)
   - [1.2. Help](#12-help)
   - [1.3. Version Information](#13-version-information)
-  - [1.4. Reading](#14-reading)
-  - [1.5. Writing](#15-writing)
-  - [1.6. Filtering](#16-filtering)
+  - [1.4. Using Later .NET Core Versions](#14-using-later-net-core-versions)
+  - [1.5. Reading](#15-reading)
+  - [1.6. Writing](#16-writing)
+  - [1.7. Filtering](#17-filtering)
 - [2. Common Use Cases](#2-common-use-cases)
   - [2.1. Recording Data from a TCP Stream](#21-recording-data-from-a-tcp-stream)
   - [2.2. Recording data sent via UDP](#22-recording-data-sent-via-udp)
@@ -20,6 +21,7 @@ DltDump is a tool that reads DLT Version 1 formatted files.
     - [2.7.1. Ignoring the Extended Header (Application and Context Identifier)](#271-ignoring-the-extended-header-application-and-context-identifier)
     - [2.7.2. Loading Multiple Fibex files with Various ECU identifiers](#272-loading-multiple-fibex-files-with-various-ecu-identifiers)
     - [2.7.3. Check all Fibex Files for Correctness](#273-check-all-fibex-files-for-correctness)
+    - [2.7.4. Writing to Verbose Mode](#274-writing-to-verbose-mode)
   - [2.8. Search for a String](#28-search-for-a-string)
   - [2.9. Search for a Regular Expression](#29-search-for-a-regular-expression)
   - [2.10. Filter for a Range of Dates](#210-filter-for-a-range-of-dates)
@@ -43,6 +45,7 @@ DltDump is a tool that reads DLT Version 1 formatted files.
     - [3.4.5. Summary of Message Id Mapping](#345-summary-of-message-id-mapping)
     - [3.4.6. Check the FIBEX Files for Correctness Without a DLT File](#346-check-the-fibex-files-for-correctness-without-a-dlt-file)
     - [3.4.7. Filter for a Specific Message Identifier](#347-filter-for-a-specific-message-identifier)
+    - [3.4.8. Convert from Non-Verbose to Verbose](#348-convert-from-non-verbose-to-verbose)
   - [3.5. Output Files](#35-output-files)
   - [3.6. Output Formats](#36-output-formats)
   - [3.7. Filters](#37-filters)
@@ -87,9 +90,33 @@ To print the version:
 
 ```sh
 dltdump --version
+DltDump Version: 1.0.0-alpha.v7.20230605T062448+gfc5aab8, (C) 2022-2023, Jason Curl
+  Runtime: 3.1.32
+  TraceReader: 0.8.0-alpha.20230528T114734+gf9ead1e
+  TraceReader.Dlt: 0.8.0-alpha.v7.20230605T062448+gfc5aab8
 ```
 
-### 1.4. Reading
+### 1.4. Using Later .NET Core Versions
+
+The software is compiled with a specific version of .NET Core, which you can
+obtain using the `--version` command. If you don't have this version installed,
+or wish to get performance benefits from a later version:
+
+On Windows:
+```sh
+dltdump --roll-forward LatestMajor /version
+DltDump Version: 1.0.0-alpha.v7.20230605T062448+gfc5aab8, (C) 2022-2023, Jason Curl
+  Runtime: 7.0.3
+  TraceReader: 0.8.0-alpha.20230528T114734+gf9ead1e
+  TraceReader.Dlt: 0.8.0-alpha.v7.20230605T062448+gfc5aab8
+```
+
+On Linux:
+```
+dotnet exec --roll-forward ./dltdump.dll --version
+```
+
+### 1.5. Reading
 
 DltDump can read from:
 
@@ -102,14 +129,14 @@ DltDump can read from:
 * a TCP server; or
 * a Serial port.
 
-### 1.5. Writing
+### 1.6. Writing
 
 DltDump can write the output to disk in the formats:
 
 * Text format; or
 * DLT format
 
-### 1.6. Filtering
+### 1.7. Filtering
 
 When reading the DLT file, the input can be filtered for specific properties,
 searching for:
@@ -251,6 +278,16 @@ the tool will load the Fibex files, output any problems and exit.
 
 ```sh
 dltdump --fibex myecu1.xml --fibex myecu2.xml --nv-multiecu
+```
+
+#### 2.7.4. Writing to Verbose Mode
+
+If you want to share the DLT output with someone else so they don't need the
+FIBEX file, convert the non-verbose messages to verbose with the `--nv-verbose`
+command.|
+
+```sh
+dltdump --fibex myecu1.xml --nv-multiecu --nv-verbose -o out.dlt input.dlt
 ```
 
 ### 2.8. Search for a String
@@ -672,6 +709,22 @@ dltdump --fibex myfibex.xml --messageids=60,61,62 input.dlt
 
 Now the messages will also be shown decoded using the non-verbose decoder.
 
+#### 3.4.8. Convert from Non-Verbose to Verbose
+
+In some cases, you may wish to export a DLT file that is not dependent on the
+original verbose message. The `--nv-verbose` command will read and interpret the
+DLT non-verbose messages, and then write the message as verbose. You should
+ensure you are using the correct FIBEX file:
+
+```sh
+dltdump --fibex myfibex.xml --nv-multiecu --nv-verbose -o out.dlt input.dlt
+```
+
+On the output, the verbose messages contain the same arguments as the original
+non-verbose message with the following exceptions:
+
+* There is no message identifier any more associated with the verbose message.
+  This information is lost. The DLT standard does not account for this use case.
 
 ### 3.5. Output Files
 
