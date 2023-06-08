@@ -1839,7 +1839,7 @@
                 CommandFactorySetup(opt => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
-                    LongOpt("F", FibexFile), LongOpt("nv-verbose"), ShortOpt('o', "out.dlt"), EmptyFile
+                    ShortOpt('F', FibexFile), LongOpt("nv-verbose"), ShortOpt('o', "out.dlt"), EmptyFile
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments, Is.EqualTo(new[] { EmptyFile }));
                 Assert.That(cmdOptions.Fibex, Has.Count.EqualTo(1));
