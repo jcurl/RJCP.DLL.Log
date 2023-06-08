@@ -31,7 +31,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <RevisionControl>git</RevisionControl>
-    <RevisionControlLabel>release/v$(Version)</RevisionControlLabel>
+    <RevisionControlLabel>release/dlt/v$(Version)</RevisionControlLabel>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <RevisionControlStrict>true</RevisionControlStrict>
+    <RevisionControlStrict>false</RevisionControlStrict>
   </PropertyGroup>
 
   <ItemGroup>
