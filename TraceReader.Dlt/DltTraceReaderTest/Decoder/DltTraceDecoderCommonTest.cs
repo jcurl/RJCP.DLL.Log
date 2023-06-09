@@ -169,6 +169,31 @@
         }
 
         [TestCaseSource(nameof(ReadChunks))]
+        public async Task WriteDltPacketVersion7(int maxBytes)
+        {
+            DltFactory factory = GetFactory();
+            using (DltPacketWriter writer = new DltPacketWriter() {
+                EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
+            }) {
+                _ = factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Version(7).Append();
+                if (maxBytes == 0) await factory.WriteAsync(writer, nameof(WriteDltPacketVersion2));
+
+                using (Stream stream = writer.Stream())
+                using (Stream readStream = new ReadLimitStream(stream, maxBytes))
+                using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(readStream)) {
+                    DltTraceLineBase line = await reader.GetLineAsync();
+
+                    // The DLT packet is unknown, so it is skipped, looking for a valid packet, of which none can be
+                    // found. See the white paper `DLT.Format.Problems.md` which describes the problems and why
+                    // decoding this packet is almost hopeless and that decoding packets after this one is
+                    // implementation defined.
+
+                    factory.IsLine2(line, 0, 127);
+                }
+            }
+        }
+
+        [TestCaseSource(nameof(ReadChunks))]
         public async Task WriteDltInvalidDataAtEnd(int maxBytes)
         {
             DltFactory factory = GetFactory();
