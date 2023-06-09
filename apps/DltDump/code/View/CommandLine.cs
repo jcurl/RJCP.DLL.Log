@@ -40,7 +40,7 @@
             ExitCode result = command.Run();
             if (cmdOptions.Log) {
                 Log.App.TraceEvent(TraceEventType.Information, "Result: {0} ({1})", result, (int)result);
-                string path = CrashReporter.CreateDump(Diagnostics.Dump.CoreType.None);
+                string path = CrashReporter.CreateDump(Diagnostics.Crash.CoreType.None);
                 Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
             }
 
