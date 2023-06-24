@@ -19,9 +19,10 @@
     <PackageId>RJCP.Diagnostics.Log</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/jcurl/RJCP.DLL.Log.git</PackageProjectUrl>
     <Description>Parse external log streams.</Description>
-    <Version>0.8.0</Version>
+    <Version>0.8.1</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
