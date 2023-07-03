@@ -5,7 +5,7 @@
     using Dlt.ControlArgs;
     using NUnit.Framework;
 
-    [TestFixture(Category = "TraceReader.Constraints")]
+    [TestFixture]
     public class DltConstraintExtensionsTest
     {
         [TestCase("ECUX", true)]
