@@ -62,7 +62,6 @@
     <Compile Include="EmptyTraceReaderFactory.cs" />
     <Compile Include="IO\MemoryStreamDisposed.cs" />
     <Compile Include="IO\ReadLimitStream.cs" />
-    <Compile Include="IO\WriteOnlyStream.cs" />
     <Compile Include="TeraTermTraceReaderTest.cs" />
     <Compile Include="TextTraceReaderTest.cs" />
     <Compile Include="TraceReaderFactoryTest.cs" />

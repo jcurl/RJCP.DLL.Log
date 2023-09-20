@@ -5,6 +5,7 @@
     using Decoder;
     using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
 
     [TestFixture]
     public class TraceReaderTest
