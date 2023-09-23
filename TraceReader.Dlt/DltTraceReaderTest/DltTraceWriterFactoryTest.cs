@@ -6,8 +6,8 @@
     using Dlt;
     using Dlt.Args;
     using Encoder;
-    using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
     using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture]

@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Dlt;
     using Dlt.Args;
-    using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
 
     [TestFixture]
     public class DltFileTraceWriterFactoryTest
