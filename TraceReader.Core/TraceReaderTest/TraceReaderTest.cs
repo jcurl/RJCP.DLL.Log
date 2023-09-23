@@ -47,7 +47,7 @@
         [Test]
         public void StreamOwnershipDefault()
         {
-            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+            SimpleStream stream = new SimpleStream();
 
             using (stream) {
                 using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder())) {
@@ -63,7 +63,7 @@
         [TestCase(false)]
         public void StreamOwnership(bool owner)
         {
-            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+            SimpleStream stream = new SimpleStream();
 
             using (stream) {
                 using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder(), owner)) {

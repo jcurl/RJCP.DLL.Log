@@ -60,7 +60,6 @@
     <Compile Include="Decoder\EmptyTraceDecoder.cs" />
     <Compile Include="Decoder\TeraTermDecoderFactoryTest.cs" />
     <Compile Include="EmptyTraceReaderFactory.cs" />
-    <Compile Include="IO\MemoryStreamDisposed.cs" />
     <Compile Include="IO\ReadLimitStream.cs" />
     <Compile Include="TeraTermTraceReaderTest.cs" />
     <Compile Include="TextTraceReaderTest.cs" />

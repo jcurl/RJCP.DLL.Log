@@ -5,6 +5,7 @@
     using Encoder;
     using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
 
     [TestFixture]
     public class DltTraceWriterTest
@@ -69,7 +70,7 @@
         [Test]
         public void StreamOwnershipDefault()
         {
-            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+            SimpleStream stream = new SimpleStream();
 
             using (stream) {
                 using (DltTraceWriter writer = new DltTraceWriter(stream)) {
@@ -85,7 +86,7 @@
         [TestCase(false)]
         public void StreamOwnership(bool owner)
         {
-            MemoryStreamDisposed stream = new MemoryStreamDisposed();
+            SimpleStream stream = new SimpleStream();
 
             using (stream) {
                 using (DltTraceWriter writer = new DltTraceWriter(stream, new DltTraceEncoder(), owner)) {
