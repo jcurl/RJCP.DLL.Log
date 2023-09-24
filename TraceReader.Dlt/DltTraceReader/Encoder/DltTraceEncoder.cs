@@ -174,7 +174,7 @@
             if (line.Arguments.Count > 255)                     // NOAR is 8-bit, so we can only write 255 arguments.
                 return Result.FromException<int>(new DltEncodeException("Too many arguments (limit at 255)"));
 
-            buffer[0] = (byte)((byte)line.Type | (byte)1);      // Always writing verbose mode.
+            buffer[0] = (byte)((byte)line.Type | 1);      // Always writing verbose mode.
             buffer[1] = (byte)(line.Arguments.Count);
             WriteId(buffer[2..6], line.Features.ApplicationId ? line.ApplicationId : null);
             WriteId(buffer[6..10], line.Features.ContextId ? line.ContextId : null);

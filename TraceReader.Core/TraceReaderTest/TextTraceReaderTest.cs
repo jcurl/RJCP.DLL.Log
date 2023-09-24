@@ -5,8 +5,8 @@ namespace RJCP.Diagnostics.Log
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
-    using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
     using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture]

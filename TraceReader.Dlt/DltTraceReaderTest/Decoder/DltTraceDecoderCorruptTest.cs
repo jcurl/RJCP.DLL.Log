@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Dlt;
     using Dlt.Packet;
-    using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
 
     [TestFixture(DltFactoryType.File)]
     [TestFixture(DltFactoryType.Serial)]

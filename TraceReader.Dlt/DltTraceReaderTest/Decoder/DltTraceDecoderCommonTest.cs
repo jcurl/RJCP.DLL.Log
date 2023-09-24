@@ -7,8 +7,8 @@
     using Dlt;
     using Dlt.NonVerbose;
     using Dlt.Packet;
-    using IO;
     using NUnit.Framework;
+    using RJCP.CodeQuality.IO;
     using RJCP.Diagnostics.Log.Dlt.Args;
 
     [TestFixture(DltFactoryType.Standard)]

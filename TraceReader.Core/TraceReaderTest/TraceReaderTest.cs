@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using Decoder;
-    using IO;
     using NUnit.Framework;
     using RJCP.CodeQuality.IO;
 

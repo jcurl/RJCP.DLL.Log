@@ -92,7 +92,7 @@
             public DltPacketBuilder NonVerboseExt(TimeSpan time, byte[] payload)
             {
                 m_Packet.CreateStandardHeader(time, m_DltPacketWriter.EcuId, m_DltPacketWriter.SessionId, m_Count);
-                m_Packet.CreateExtendedHeader((DltType)0, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
+                m_Packet.CreateExtendedHeader(0, m_DltPacketWriter.AppId, m_DltPacketWriter.CtxId, false);
                 if (payload is object) m_Packet.AddPayload(payload);
                 return this;
             }

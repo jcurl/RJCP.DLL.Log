@@ -90,7 +90,7 @@
 
             int bu = Iso8859_1Accessor.Convert(new string(chars), buffer);
             Assert.That(bu, Is.EqualTo(1), $"Character {(int)chars[0]} wasn't converted, result: {bu}");
-            Assert.That(buffer[0], Is.EqualTo(i), $"Character {(int)chars[0]} wasn't converted {(int)i}, result: {buffer[0]}");
+            Assert.That(buffer[0], Is.EqualTo(i), $"Character {(int)chars[0]} wasn't converted {i}, result: {buffer[0]}");
         }
 
         [Test]
