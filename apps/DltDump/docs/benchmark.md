@@ -34,14 +34,14 @@ This is the current performance bench mark for the `ContextOutput` class.
 ```text
 Results = netcore31
 
-BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19043.1586 (21H1/May2021Update)
+BenchmarkDotNet=v0.13.1 OS=Windows 10.0.19045
 Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical core(s)
-  [HOST] : .NET Core 3.1.23 (CoreCLR 4.700.22.11601, CoreFX 4.700.22.12208), X64 RyuJIT
+  [HOST] : .NET Core 3.1.32 (CoreCLR 4.700.22.55902, CoreFX 4.700.22.56512), X64 RyuJIT
 ```
 
 | Project 'dltdump' Type | Method     | mean (netcore31) | stderr |
 |:-----------------------|:-----------|-----------------:|-------:|
-| ContextBenchmark       | RunContext | 414.75           | 1.01   |
+| ContextBenchmark       | RunContext | 395.52           | 0.19   |
 
 ## Appendix: Comparison between Classes and Struct
 
