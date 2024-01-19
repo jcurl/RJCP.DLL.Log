@@ -120,6 +120,7 @@
     <Compile Include="Domain\TestInputStreamFactory.cs" />
     <Compile Include="Domain\TestOutputStreamFactory.cs" />
     <Compile Include="GlobalLogger.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\ArrayUtils.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotAfterDateTest.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotBeforeDateTest.cs" />

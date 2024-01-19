@@ -17,7 +17,7 @@
         public TextIString(string text)
         {
             if (text is null) throw new ArgumentNullException(nameof(text));
-            m_Text = text.ToUpperInvariant();
+            m_Text = text;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// <returns><see langword="true"/> if the constraints are met, <see langword="false"/> otherwise.</returns>
         public bool Check(ITraceLine line)
         {
-            return line.Text.ToUpperInvariant().Contains(m_Text);
+            return line.Text.Contains(m_Text, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

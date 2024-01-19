@@ -96,12 +96,14 @@
             WriteLine(line);
         }
 
+        private static readonly char[] NewLines = new[] { '\r', '\n' };
+
         private void SplitLines(string line)
         {
             int offset = 0;
             int length = line.Length;
             while (offset < length) {
-                int charPos = line.IndexOfAny(new[] { '\r', '\n' }, offset);
+                int charPos = line.IndexOfAny(NewLines, offset);
                 if (charPos == -1) {
                     AddLine(line, offset, length - offset);
                     m_LineState = LineState.None;

@@ -72,9 +72,9 @@
             using (ITraceReader<LogTraceLine> reader = await new TeraTermTraceReaderFactory().CreateAsync(path)) {
                 LogTraceLine[] expected = {
                     new LogTraceLine("This is Line 1", 0, 0)
-                        { TimeStamp = new DateTime(1970, 1, 1, 0, 0, 0) },
+                        { TimeStamp = DateTime.UnixEpoch },
                     new LogTraceLine("And now for Line 2.", 1, 0)
-                        { TimeStamp = new DateTime(1970, 1, 1, 0, 0, 0) },
+                        { TimeStamp = DateTime.UnixEpoch },
                 };
 
                 await TextStreamCheck(reader, expected);

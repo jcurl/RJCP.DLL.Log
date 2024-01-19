@@ -27,7 +27,7 @@
         /// <returns><see langword="true"/> if the constraints are met, <see langword="false"/> otherwise.</returns>
         public bool Check(ITraceLine line)
         {
-            return line.Text.Contains(m_Text);
+            return line.Text.Contains(m_Text, StringComparison.Ordinal);
         }
     }
 }

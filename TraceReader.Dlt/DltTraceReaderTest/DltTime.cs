@@ -5,7 +5,7 @@
 
     public static class DltTime
     {
-        public static readonly DateTime Default = new DateTime(1970, 1, 1, 0, 0, 0);
+        public static readonly DateTime Default = DateTime.UnixEpoch;
 
         public static TimeSpan DeviceTime(double seconds)
         {
@@ -26,7 +26,7 @@
         public static string LocalTime(DateTime time)
         {
             // The default time, if no time stamp is available, is 1/1/1970 local time. Else it's decoded as UTC time.
-            if (time.Equals(new DateTime(1970, 1, 1))) {
+            if (time.Equals(DateTime.UnixEpoch)) {
                 return time.ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture);
             }
             return time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss.ffffff", CultureInfo.InvariantCulture);

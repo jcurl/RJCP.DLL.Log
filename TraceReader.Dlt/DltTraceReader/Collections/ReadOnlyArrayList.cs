@@ -86,9 +86,9 @@
                 m_Element = -1;
             }
 
-            public T Current { get { return m_Array[m_Element]; } }
+            public readonly T Current {  get { return m_Array[m_Element]; } }
 
-            object IEnumerator.Current { get { return m_Array[m_Element]; } }
+            readonly object IEnumerator.Current { get { return m_Array[m_Element]; } }
 
             public bool MoveNext()
             {
@@ -101,7 +101,7 @@
                 m_Element = -1;
             }
 
-            public void Dispose()
+            public readonly void Dispose()
             {
                 /* Nothing to dispose */
             }

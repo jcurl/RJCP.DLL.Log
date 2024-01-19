@@ -14,7 +14,7 @@
         /// Quite well described here:
         /// http://blogs.msdn.com/b/openspecification/archive/2010/04/01/about-the-access-mask-structure.aspx.
         /// </remarks>
-        public struct ACCESS_MASK : IFormattable
+        public readonly struct ACCESS_MASK : IFormattable
         {
             /// <summary>
             /// Bits 28-31.

@@ -265,6 +265,7 @@
     <Compile Include="Encoder\DltTraceEncoderCommonTest.cs" />
     <Compile Include="Encoder\DltTraceEncoderTest.cs" />
     <Compile Include="GlobalLogger.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="TestSetupFixture.cs" />
     <Compile Include="Text\Iso8859_1Accessor.cs" />
     <Compile Include="Text\Iso8859_1Test.cs" />

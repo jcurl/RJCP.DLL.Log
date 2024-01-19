@@ -152,8 +152,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected =
-                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddNanoSeconds(100000);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
                     DateTime converted = legacy.Format.GetTimeStamp(0, 100);
                     Assert.That(converted, Is.EqualTo(expected));
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
@@ -189,8 +188,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected =
-                        new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddNanoSeconds(100);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100);
                     DateTime converted = legacy.Format.GetTimeStamp(0, 100);
                     Assert.That(converted, Is.EqualTo(expected));
                     Assert.That(converted.Kind, Is.EqualTo(DateTimeKind.Utc));
@@ -625,7 +623,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -711,7 +709,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -818,7 +816,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 
@@ -889,7 +887,7 @@
                     Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
-                    DateTime expected = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddNanoSeconds(100000);
+                    DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
                     Assert.That(legacy.Format.GetTimeStamp(0, 100), Is.EqualTo(expected));
                 }
 

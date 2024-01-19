@@ -181,7 +181,7 @@
             switch (factory.FactoryType) {
             case DltFactoryType.Standard:
             case DltFactoryType.Serial:
-                return new DateTime(1970, 1, 1);
+                return DateTime.UnixEpoch;
             case DltFactoryType.File:
                 return storageTime;
             default:
