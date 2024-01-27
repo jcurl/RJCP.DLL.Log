@@ -4,7 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using Domain;
     using Domain.Dlt;
-    using Infrastructure.Terminal;
+    using RJCP.Core.Terminal;
 
     /// <summary>
     /// Provide a context for the global <see cref="Global"/> state.
@@ -34,28 +34,14 @@
         }
 
         /// <summary>
-        /// Gets the virtualised standard output.
+        /// Gets the virtual terminal.
         /// </summary>
-        /// <value>The virtualised standard out.</value>
-        public VirtualStdOut StdOut
+        /// <value>The virtual terminal.</value>
+        public VirtualTerminal Terminal
         {
             get
             {
-                if (!(Global.Instance.Terminal is VirtualTerminal term)) return null;
-                return (VirtualStdOut)term.StdOut;
-            }
-        }
-
-        /// <summary>
-        /// Gets the virtualised standard error.
-        /// </summary>
-        /// <value>The virtualised standard error.</value>
-        public VirtualStdErr StdErr
-        {
-            get
-            {
-                if (!(Global.Instance.Terminal is VirtualTerminal term)) return null;
-                return (VirtualStdErr)term.StdErr;
+                return (VirtualTerminal)Global.Instance.Terminal;
             }
         }
 
@@ -64,11 +50,11 @@
         /// </summary>
         public void WriteStd()
         {
-            foreach (string line in StdOut.Lines) {
+            foreach (string line in Terminal.StdOutLines) {
                 Console.WriteLine(line);
             }
 
-            foreach (string line in StdErr.Lines) {
+            foreach (string line in Terminal.StdErrLines) {
                 Console.WriteLine(line);
             }
         }

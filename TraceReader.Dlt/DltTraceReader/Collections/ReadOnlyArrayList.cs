@@ -86,7 +86,7 @@
                 m_Element = -1;
             }
 
-            public readonly T Current {  get { return m_Array[m_Element]; } }
+            public readonly T Current { get { return m_Array[m_Element]; } }
 
             readonly object IEnumerator.Current { get { return m_Array[m_Element]; } }
 

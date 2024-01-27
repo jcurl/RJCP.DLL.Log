@@ -6,7 +6,6 @@
     using Resources;
     using RJCP.Core.CommandLine;
     using RJCP.Diagnostics;
-    using Services;
 
     public static class CommandLine
     {
@@ -25,8 +24,8 @@
             try {
                 _ = Options.Parse(cmdOptions, arguments);
             } catch (OptionException ex) {
-                Terminal.WriteLine(AppResources.OptionsError);
-                Terminal.WriteLine(ex.Message);
+                Global.Instance.Terminal.StdOut.WrapLine(AppResources.OptionsError);
+                Global.Instance.Terminal.StdOut.WriteLine(ex.Message);
 
                 return ExitCode.OptionsError;
             }
@@ -41,7 +40,7 @@
             if (cmdOptions.Log) {
                 Log.App.TraceEvent(TraceEventType.Information, "Result: {0} ({1})", result, (int)result);
                 string path = CrashReporter.CreateDump(Diagnostics.Crash.CoreType.None);
-                Terminal.WriteLine(AppResources.ErrorDumpBeingGenerated, path);
+                Global.Instance.Terminal.StdOut.WrapLine(AppResources.ErrorDumpBeingGenerated, path);
             }
 
             return result;

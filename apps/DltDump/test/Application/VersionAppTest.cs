@@ -1,7 +1,6 @@
 ﻿namespace RJCP.App.DltDump.Application
 {
     using System;
-    using Infrastructure.Terminal;
     using NUnit.Framework;
 
     [TestFixture]
@@ -23,12 +22,12 @@
         public void GetSimpleVersion()
         {
             using (TestApplication global = new TestApplication()) {
-                ((VirtualTerminal)Global.Instance.Terminal).TerminalWidth = 132;
+                global.Terminal.Width = 132;
                 VersionApp.ShowSimpleVersion();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(1));
-                Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
+                Assert.That(global.Terminal.StdOutLines, Has.Count.EqualTo(1));
+                Assert.That(global.Terminal.StdOutLines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }
 
@@ -36,12 +35,12 @@
         public void GetVersion()
         {
             using (TestApplication global = new TestApplication()) {
-                ((VirtualTerminal)Global.Instance.Terminal).TerminalWidth = 132;
+                global.Terminal.Width = 132;
                 VersionApp.ShowVersion();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines, Has.Count.EqualTo(4));
-                Assert.That(global.StdOut.Lines[0], Is.EqualTo(VersionApp.GetVersion()));
+                Assert.That(global.Terminal.StdOutLines, Has.Count.EqualTo(4));
+                Assert.That(global.Terminal.StdOutLines[0], Is.EqualTo(VersionApp.GetVersion()));
             }
         }
     }

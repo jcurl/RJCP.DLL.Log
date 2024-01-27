@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
     using Resources;
-    using RJCP.App.DltDump.View;
     using RJCP.Core.Collections;
     using RJCP.Diagnostics.Log.Dlt.NonVerbose.Fibex;
+    using View;
 
     public static class FibexService
     {
@@ -32,7 +32,7 @@
                     return null;
                 }
             } catch (Exception ex) {
-                Terminal.WriteLine(AppResources.FibexApp_ErrorLoadingFibex, ex.Message);
+                Global.Instance.Terminal.StdOut.WrapLine(AppResources.FibexApp_ErrorLoadingFibex, ex.Message);
                 DumpFibexEventLog(map);
                 return null;
             }
@@ -43,7 +43,7 @@
         {
             foreach (IEvent<FibexLogEntry> fibexEvent in map.EventLog) {
                 string fileName = Path.GetFileName(fibexEvent.Identifier.FileName);
-                Terminal.WriteLine("{0}: [{1}] {2}", fibexEvent.TimeStamp, fileName, fibexEvent.Identifier.Message);
+                Global.Instance.Terminal.StdOut.WrapLine("{0}: [{1}] {2}", fibexEvent.TimeStamp, fileName, fibexEvent.Identifier.Message);
             }
         }
     }

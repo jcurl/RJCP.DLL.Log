@@ -5,7 +5,6 @@
     using Application;
     using Resources;
     using RJCP.Diagnostics;
-    using Services;
     using View;
 
     public static class Program
@@ -20,7 +19,7 @@
             try {
                 result = CommandLine.Run(args);
             } catch (Exception ex) {
-                Terminal.WriteLine(AppResources.ErrorAppUnhandledException);
+                Global.Instance.Terminal.StdErr.WrapLine(AppResources.ErrorAppUnhandledException);
                 Log.App.TraceException(ex, nameof(Program), "Unhandled exception");
 
                 // We don't need the path. This will print to the log at level 'warn'.

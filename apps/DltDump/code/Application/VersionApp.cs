@@ -2,7 +2,6 @@
 {
     using Infrastructure;
     using Resources;
-    using Services;
 
     public static class VersionApp
     {
@@ -31,14 +30,17 @@
         public static void ShowVersion()
         {
             ShowSimpleVersion();
-            Terminal.WriteDirect(AppResources.VersionNetRuntime, System.Environment.Version);
-            Terminal.WriteDirect(AppResources.VersionTraceReader, Version.GetAssemblyVersion(typeof(Diagnostics.Log.TraceLine)));
-            Terminal.WriteDirect(AppResources.VersionTraceReaderDlt, Version.GetAssemblyVersion(typeof(Diagnostics.Log.DltFileTraceReaderFactory)));
+            Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionNetRuntime,
+                System.Environment.Version);
+            Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionTraceReader,
+                Version.GetAssemblyVersion(typeof(Diagnostics.Log.TraceLine)));
+            Global.Instance.Terminal.StdOut.WriteLine(AppResources.VersionTraceReaderDlt,
+                Version.GetAssemblyVersion(typeof(Diagnostics.Log.DltFileTraceReaderFactory)));
         }
 
         public static void ShowSimpleVersion()
         {
-            Terminal.WriteLine(GetVersion());
+            Global.Instance.Terminal.StdOut.WrapLine(GetVersion());
         }
     }
 }

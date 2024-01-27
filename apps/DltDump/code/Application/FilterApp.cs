@@ -12,7 +12,6 @@
     using RJCP.Diagnostics.Log;
     using RJCP.Diagnostics.Log.Constraints;
     using RJCP.Diagnostics.Log.Dlt;
-    using Services;
 
     public class FilterApp
     {
@@ -68,7 +67,7 @@
                             break;
                         }
                     } catch (OutputStreamException ex) {
-                        Terminal.WriteLine(ex.Message);
+                        Global.Instance.Terminal.StdOut.WrapLine(ex.Message);
                     } finally {
                         input.Dispose();
                     }
@@ -84,7 +83,7 @@
         {
             int count = m_Config.Input.Count;
             if (count == 0) {
-                Terminal.WriteLine(AppResources.FilterCheckError_NoStreams);
+                Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterCheckError_NoStreams);
                 return null;
             }
 
@@ -94,18 +93,18 @@
                 try {
                     input = Global.Instance.InputStreamFactory.Create(uri);
                 } catch (InputStreamException ex) {
-                    Terminal.WriteLine(AppResources.FilterCheckError_Invalid, uri, ex.Message);
+                    Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterCheckError_Invalid, uri, ex.Message);
                     return null;
                 }
 
                 // In case of an error, and we return, the list and its contents are just garbage collected. They are
                 // not disposed of as there is nothing to dispose (until it is opened).
                 if (input is null) {
-                    Terminal.WriteLine(AppResources.FilterCheckError_UnknownInput, uri);
+                    Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterCheckError_UnknownInput, uri);
                     return null;
                 }
                 if (input.IsLiveStream && count > 1) {
-                    Terminal.WriteLine(AppResources.FilterCheckError_LiveStreams);
+                    Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterCheckError_LiveStreams);
                     return null;
                 }
                 inputs.Add(input);
@@ -152,7 +151,7 @@
                         Log.App.TraceEvent(TraceEventType.Warning,
                             "Error while processing file (Exception {0}), see previous exceptions. {1}",
                             ex.GetType().Name, ex.Message);
-                        Terminal.WriteLine(ex.Message);
+                        Global.Instance.Terminal.StdOut.WrapLine(ex.Message);
                         return receivedLine ? InputResult.DecodeFailure : InputResult.NotConnected;
                     } finally {
                         input.Close();
@@ -208,14 +207,14 @@
                     bool connected = false;
                     while (!connected && (retries < 0 || connectAttempt <= retries)) {
                         if (connectAttempt > 0) {
-                            Terminal.WriteLine(AppResources.FilterOpenError_Retry, input.Connection, connectAttempt);
+                            Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterOpenError_Retry, input.Connection, connectAttempt);
                         }
                         connected = await input.ConnectAsync();
                         connectAttempt++;
                     }
 
                     if (!connected) {
-                        Terminal.WriteLine(AppResources.FilterOpenError_ConnectError, input.Connection);
+                        Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterOpenError_ConnectError, input.Connection);
                         input.Close();
                         return false;
                     }
@@ -224,7 +223,7 @@
                 return true;
             } catch (InputStreamException ex) {
                 input.Close();
-                Terminal.WriteLine(ex.Message);
+                Global.Instance.Terminal.StdOut.WrapLine(ex.Message);
                 return false;
             } catch {
                 input.Close();
@@ -238,7 +237,7 @@
             try {
                 output = Global.Instance.OutputStreamFactory.Create(m_Config.OutputFormat, m_Config.OutputFileName);
                 if (output is null) {
-                    Terminal.WriteLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");
+                    Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterOutputError_UnknownOutput, m_Config.OutputFileName ?? "(none)");
                     return null;
                 }
 
@@ -261,7 +260,7 @@
             } catch (Exception ex) {
                 if (output is object) output.Dispose();
 
-                Terminal.WriteLine(AppResources.FilterOutputError,
+                Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterOutputError,
                     m_Config.OutputFileName ?? "(none)",
                     ex.Message);
                 throw;

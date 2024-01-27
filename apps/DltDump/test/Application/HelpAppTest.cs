@@ -12,7 +12,7 @@
                 HelpApp.ShowSimpleHelp();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines, Has.Count.GreaterThanOrEqualTo(10));
+                Assert.That(global.Terminal.StdOutLines, Has.Count.GreaterThanOrEqualTo(10));
             }
         }
 
@@ -23,7 +23,7 @@
                 HelpApp.ShowHelp();
 
                 global.WriteStd();
-                Assert.That(global.StdOut.Lines, Has.Count.GreaterThanOrEqualTo(102));
+                Assert.That(global.Terminal.StdOutLines, Has.Count.GreaterThanOrEqualTo(102));
             }
         }
     }

@@ -16,11 +16,11 @@
     <RootNamespace>RJCP.App.DltDump</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2022-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2022-2024, Jason Curl</Copyright>
     <Company></Company>
 
     <Description>A command line tool to read a DLT file.</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
 
@@ -153,12 +153,6 @@
     <Compile Include="Infrastructure\Net\TcpClientStream.cs" />
     <Compile Include="Infrastructure\Net\UdpPacketReceiver.cs" />
     <Compile Include="Infrastructure\Tasks\CancelTask.cs" />
-    <Compile Include="Infrastructure\Terminal\ConsoleTerminal.cs" />
-    <Compile Include="Infrastructure\Terminal\ITerminal.cs" />
-    <Compile Include="Infrastructure\Terminal\ITerminalOut.cs" />
-    <Compile Include="Infrastructure\Terminal\StdErr.cs" />
-    <Compile Include="Infrastructure\Terminal\StdOut.cs" />
-    <Compile Include="Infrastructure\Text\Format.cs" />
     <Compile Include="Infrastructure\Uri\UriExtensions.cs" />
     <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Log.cs" />
@@ -188,7 +182,6 @@
     <Compile Include="Services\FibexLogEntry.cs" />
     <Compile Include="Services\FibexMap.cs" />
     <Compile Include="Services\FibexService.cs" />
-    <Compile Include="Services\Terminal.cs" />
     <Compile Include="View\CmdOptions.cs" />
     <Compile Include="View\CommandFactory.cs" />
     <Compile Include="View\CommandLine.cs" />

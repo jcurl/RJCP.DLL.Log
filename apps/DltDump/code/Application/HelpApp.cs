@@ -2,7 +2,6 @@
 {
     using Resources;
     using RJCP.Core.CommandLine;
-    using Services;
 
     public static class HelpApp
     {
@@ -130,7 +129,8 @@
 
         private static void Write(int indent, int hangingIndent, string message)
         {
-            Terminal.WriteLine(indent, hangingIndent, message, ShortOptionSymbol, LongOptionSymbol, AssignmentSymbol);
+            Global.Instance.Terminal.StdOut.WrapLine(indent, hangingIndent - indent,
+                message, ShortOptionSymbol, LongOptionSymbol, AssignmentSymbol);
         }
     }
 }

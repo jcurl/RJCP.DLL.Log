@@ -1,8 +1,10 @@
 ﻿namespace RJCP.App.DltDump
 {
+    using System.Diagnostics;
     using Domain;
     using Domain.Dlt;
-    using Infrastructure.Terminal;
+    using RJCP.Core.Terminal;
+    using RJCP.Core.Terminal.Log;
     using View;
 
     /// <summary>
@@ -30,9 +32,12 @@
                 if (result is null) {
                     lock (m_Lock) {
                         if (s_Instance is null) {
+                            ConsoleTerminal terminal = new ConsoleTerminal();
+                            terminal.ConsoleWriteEvent += Terminal_ConsoleWriteEvent;
+
                             s_Instance = new Global() {
                                 CommandFactory = new CommandFactory(),
-                                Terminal = new ConsoleTerminal(),
+                                Terminal = terminal,
                                 InputStreamFactory = new InputStreamFactory(),
                                 OutputStreamFactory = new OutputStreamFactory(),
                                 DltReaderFactory = new DltDumpTraceReaderFactory()
@@ -43,6 +48,11 @@
                 }
                 return result;
             }
+        }
+
+        private static void Terminal_ConsoleWriteEvent(object sender, TerminalWriteEventArgs e)
+        {
+            Log.AppTerminal.TraceEvent(TraceEventType.Information, "{0}", e.Line);
         }
 
         /// <summary>
