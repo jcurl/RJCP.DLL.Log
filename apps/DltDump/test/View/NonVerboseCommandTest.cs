@@ -5,6 +5,7 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core.CommandLine;
     using static Infrastructure.OptionsGen;
 
     [TestFixture]
@@ -17,16 +18,16 @@
         // Even though NonVerboseCommand.Run() is called, it won't open or read the files as the dependencies are mocked
         // via TestApplication.
 
-        private static void CommandFactorySetup(Action<CmdOptions> action)
+        private static void CommandFactorySetup(Action<Options, CmdOptions> action)
         {
             var factoryMock = new Mock<ICommandFactory>();
-            factoryMock.Setup(m => m.Create(It.IsAny<CmdOptions>()))
-                .Returns((CmdOptions opt) => {
+            factoryMock.Setup(m => m.Create(It.IsAny<Options>(), It.IsAny<CmdOptions>()))
+                .Returns((Options cmdLine, CmdOptions opt) => {
                     var f = new CommandFactory();
-                    ICommand command = f.Create(opt);
+                    ICommand command = f.Create(cmdLine, opt);
 
                     Assert.That(command, Is.TypeOf<NonVerboseCommand>());
-                    action(opt);
+                    action(cmdLine, opt);
                     return command;
                 });
 
@@ -52,7 +53,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFile)
@@ -68,7 +69,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFile), LongOpt("fibex", FibexFile2), LongOpt("nv-multiecu")
@@ -85,7 +86,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-multiecu")
@@ -102,7 +103,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-multiecu"), LongOpt("nv-noexthdr")
@@ -119,7 +120,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", $"{FibexFile},{FibexFile2}"), LongOpt("nv-noexthdr")
@@ -136,7 +137,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexFileInv)
@@ -152,7 +153,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", "foobar.xml")
@@ -168,7 +169,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("fibex", FibexDir), LongOpt("nv-multiecu")

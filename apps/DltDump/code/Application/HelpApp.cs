@@ -5,30 +5,18 @@
 
     public static class HelpApp
     {
-        static HelpApp()
+        private static Options s_CmdLine;
+
+        private static string LongOptionSymbol { get { return s_CmdLine.LongOptionPrefix; } }
+
+        private static string ShortOptionSymbol { get { return s_CmdLine.ShortOptionPrefix; } }
+
+        private static string AssignmentSymbol { get { return s_CmdLine.AssignmentSymbol; } }
+
+        public static void ShowSimpleHelp(Options cmdLine)
         {
-            switch (Options.DefaultOptionsStyle) {
-            case OptionsStyle.Windows:
-                ShortOptionSymbol = "/";
-                LongOptionSymbol = "/";
-                AssignmentSymbol = ":";
-                break;
-            default:
-                ShortOptionSymbol = "-";
-                LongOptionSymbol = "--";
-                AssignmentSymbol = "=";
-                break;
-            }
-        }
+            s_CmdLine = cmdLine;
 
-        private static string LongOptionSymbol { get; }
-
-        private static string ShortOptionSymbol { get; }
-
-        private static string AssignmentSymbol { get; }
-
-        public static void ShowSimpleHelp()
-        {
             Write(HelpResources.Help200_UsageInfo);
             Write();
             Write(2, 4, HelpResources.Help210_SimpleUsageScheme);
@@ -39,9 +27,10 @@
             Write(2, 4, HelpResources.Help315_VersionOption);
         }
 
-        public static void ShowHelp()
+        public static void ShowHelp(Options cmdLine)
         {
             VersionApp.ShowSimpleVersion();
+            s_CmdLine = cmdLine;
 
             Write();
             Write(HelpResources.Help100_Description);

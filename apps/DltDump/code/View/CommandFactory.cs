@@ -1,5 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
+    using RJCP.Core.CommandLine;
+
     public class CommandFactory : ICommandFactory
     {
         /// <summary>
@@ -7,7 +9,7 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns>A <see cref="ICommand" /> instance from the options.</returns>
-        public ICommand Create(CmdOptions options)
+        public ICommand Create(Options cmdLine, CmdOptions options)
         {
 #if DEBUG
             if (options.CrashTest) {
@@ -16,9 +18,9 @@
 #endif
 
             if (options.Help) {
-                return new HelpCommand(HelpCommand.Mode.ShowHelp);
+                return new HelpCommand(cmdLine, HelpCommand.Mode.ShowHelp);
             } else if (options.Version) {
-                return new HelpCommand(HelpCommand.Mode.ShowVersion);
+                return new HelpCommand(cmdLine, HelpCommand.Mode.ShowVersion);
             }
 
             if (options.Arguments.Count > 0) {

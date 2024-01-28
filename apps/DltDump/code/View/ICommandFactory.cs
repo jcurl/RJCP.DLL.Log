@@ -1,5 +1,7 @@
 ﻿namespace RJCP.App.DltDump.View
 {
+    using RJCP.Core.CommandLine;
+
     /// <summary>
     /// Interface for defining an application command factory.
     /// </summary>
@@ -10,6 +12,6 @@
         /// </summary>
         /// <param name="options">The options.</param>
         /// <returns><see cref="ICommand"/> instance.</returns>
-        ICommand Create(CmdOptions options);
+        ICommand Create(Options cmdLine, CmdOptions options);
     }
 }

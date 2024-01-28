@@ -3,6 +3,7 @@
     using System;
     using Moq;
     using NUnit.Framework;
+    using RJCP.Core.CommandLine;
     using static Infrastructure.OptionsGen;
 
     /// <summary>
@@ -18,7 +19,7 @@
             Assert.That(CommandLine.Run(Array.Empty<string>()), Is.EqualTo(ExitCode.OptionsError));
         }
 
-        private static void CommandFactorySetup(ExitCode result, Action<CmdOptions> action)
+        private static void CommandFactorySetup(ExitCode result, Action<Options, CmdOptions> action)
         {
             // The command does nothing other than return the exit code requested.
             var commandMock = new Mock<ICommand>();
@@ -26,8 +27,8 @@
                 .Returns(result);
 
             var factoryMock = new Mock<ICommandFactory>();
-            factoryMock.Setup(m => m.Create(It.IsAny<CmdOptions>()))
-                .Callback(action)
+            factoryMock.Setup(m => m.Create(It.IsAny<Options>(), It.IsAny<CmdOptions>()))
+                .Callback((Options cmdLine, CmdOptions opt) => { action(cmdLine, opt); })
                 .Returns(commandMock.Object);
 
             // The CommandLine.Run() will use this factory.
@@ -39,7 +40,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 // Ensures that CommandLine.Run calls the factory given the options. It only returns the error code,
                 // because it is not allowed to call the command factory.
@@ -56,7 +57,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(result, opt => cmdOptions = opt);
+                CommandFactorySetup(result, (cmdLine, opt) => cmdOptions = opt);
 
                 // Ensures that CommandLine.Run calls the factory given the options.
                 Assert.That(CommandLine.Run(Array.Empty<string>()), Is.EqualTo(result));
@@ -71,7 +72,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("help")
@@ -86,7 +87,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('?')
@@ -101,7 +102,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("version")
@@ -116,7 +117,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("version"), ShortOpt('?')
@@ -131,7 +132,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(ExitCode.Success, opt => cmdOptions = opt);
+                CommandFactorySetup(ExitCode.Success, (cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("log")

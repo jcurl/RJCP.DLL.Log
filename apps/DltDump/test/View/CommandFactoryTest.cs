@@ -5,6 +5,7 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core.CommandLine;
     using static Infrastructure.OptionsGen;
 
     [TestFixture]
@@ -22,10 +23,10 @@
             // see that the correct Command object is returned. We won't ever execute that command here, that's for a
             // different test case.
             var factoryMock = new Mock<ICommandFactory>();
-            factoryMock.Setup(m => m.Create(It.IsAny<CmdOptions>()))
-                .Returns((CmdOptions opt) => {
+            factoryMock.Setup(m => m.Create(It.IsAny<Options>(), It.IsAny<CmdOptions>()))
+                .Returns((Options cmdLine, CmdOptions opt) => {
                     var f = new CommandFactory();
-                    ICommand command = f.Create(opt);
+                    ICommand command = f.Create(cmdLine, opt);
                     action(command);
                     return commandMock.Object;
                 });

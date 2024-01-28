@@ -9,6 +9,7 @@
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.Core.CommandLine;
     using TestResources;
     using static Infrastructure.OptionsGen;
 
@@ -22,16 +23,16 @@
         // Even though FilterApp.Run() is called, it won't open or read the files as the dependencies are mocked via
         // TestApplication.
 
-        private static void CommandFactorySetup(Action<CmdOptions> action)
+        private static void CommandFactorySetup(Action<Options, CmdOptions> action)
         {
             var factoryMock = new Mock<ICommandFactory>();
-            factoryMock.Setup(m => m.Create(It.IsAny<CmdOptions>()))
-                .Returns((CmdOptions opt) => {
+            factoryMock.Setup(m => m.Create(It.IsAny<Options>(), It.IsAny<CmdOptions>()))
+                .Returns((Options cmdLine, CmdOptions opt) => {
                     var f = new CommandFactory();
-                    ICommand command = f.Create(opt);
+                    ICommand command = f.Create(cmdLine, opt);
 
                     Assert.That(command, Is.TypeOf<FilterCommand>());
-                    action(opt);
+                    action(cmdLine, opt);
                     return command;
                 });
 
@@ -60,7 +61,7 @@
             string file = Path.Combine(Deploy.TestDirectory, "TestResources", "Input", "NonExistent.dlt");
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     file
@@ -82,7 +83,7 @@
                 scratch.DeployItem(Path.Combine("TestResources", "Input", "EmptyFile.dlt"));
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt"
@@ -98,7 +99,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     EmptyFile
@@ -118,7 +119,7 @@
                 scratch.DeployItem(Path.Combine("TestResources", "Input", "EmptyFile2.dlt"));
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     "EmptyFile.dlt", "EmptyFile2.dlt"
@@ -134,7 +135,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     EmptyFile, EmptyFile2
@@ -151,7 +152,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     new Uri(EmptyFile).AbsoluteUri
@@ -172,7 +173,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("pkt", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     "pkt://127.0.0.1"
@@ -189,7 +190,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("position"), EmptyFile
@@ -207,7 +208,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     EmptyFile
@@ -236,7 +237,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", option), EmptyFile
@@ -265,7 +266,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", option), EmptyPcap
@@ -284,7 +285,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("format", "foo"), EmptyFile
@@ -311,7 +312,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("retries", count.ToString()), "net://127.0.0.1"
@@ -340,7 +341,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 // Tests that a retries of -1 results in infinite retries, even after successful connects.
                 Assert.That(CommandLine.Run(new[] {
@@ -364,7 +365,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, "net://127.0.0.1"
@@ -385,7 +386,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, LongOpt("string"), "foo", "net://127.0.0.1"
@@ -406,7 +407,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, "net://127.0.0.1"
@@ -427,7 +428,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, LongOpt("regex"), "^foo$", "net://127.0.0.1"
@@ -450,7 +451,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, LongOpt("regex"), regex, "net://127.0.0.1"
@@ -472,7 +473,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s'), search, ShortOpt('i'), "net://127.0.0.1"
@@ -493,7 +494,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('r'), search, LongOpt("ignorecase"), "net://127.0.0.1"
@@ -515,7 +516,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), ecuId, LongOpt("ignorecase"), "net://127.0.0.1"
@@ -535,7 +536,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), "AAAA,BBBB", "net://127.0.0.1"
@@ -555,7 +556,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), "AAAA,ECU1", "net://127.0.0.1"
@@ -575,7 +576,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ecuid"), "AAAA,ECU1,AAAA", "net://127.0.0.1"
@@ -597,7 +598,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), appId, LongOpt("ignorecase"), "net://127.0.0.1"
@@ -617,7 +618,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), "AAAA,BBBB", "net://127.0.0.1"
@@ -637,7 +638,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), "AAAA,APP1", "net://127.0.0.1"
@@ -657,7 +658,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("appid"), "AAAA,APP1,AAAA", "net://127.0.0.1"
@@ -679,7 +680,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), ctxId, LongOpt("ignorecase"), "net://127.0.0.1"
@@ -699,7 +700,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), "AAAA,BBBB", "net://127.0.0.1"
@@ -719,7 +720,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), "AAAA,CTX1", "net://127.0.0.1"
@@ -739,7 +740,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("ctxid"), "AAAA,CTX1,AAAA", "net://127.0.0.1"
@@ -760,7 +761,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), session, "net://127.0.0.1"
@@ -780,7 +781,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid", "-1"), "net://127.0.0.1"
@@ -800,7 +801,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid", "127,127,128"), "net://127.0.0.1"
@@ -820,7 +821,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("verbose"), "net://127.0.0.1"
@@ -840,7 +841,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("verbose"), "net://127.0.0.1"
@@ -860,7 +861,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("nonverbose"), "net://127.0.0.1"
@@ -880,7 +881,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("nonverbose"), "net://127.0.0.1"
@@ -900,7 +901,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("control"), "net://127.0.0.1"
@@ -920,7 +921,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("control"), "net://127.0.0.1"
@@ -940,7 +941,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), "abc", "net://127.0.0.1"
@@ -957,7 +958,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("sessionid"), "6000000000", "net://127.0.0.1"
@@ -974,7 +975,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("none"), "net://127.0.0.1"
@@ -1019,7 +1020,7 @@
         {
             using (TestApplication global = new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("type", dltFilterType), EmptyFile
@@ -1039,7 +1040,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("type", "info"), "net://127.0.0.1"
@@ -1058,7 +1059,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("type", "warn"), "net://127.0.0.1"
@@ -1077,7 +1078,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("type", "info,warn,warn,error"), "net://127.0.0.1"
@@ -1100,7 +1101,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("type", dltType), "net://127.0.0.1"
@@ -1119,7 +1120,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notBefore = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
                 string notBeforeOpt;
@@ -1148,7 +1149,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notBefore = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
                 string notBeforeOpt;
@@ -1177,7 +1178,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notAfter = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
                 string notAfterOpt;
@@ -1206,7 +1207,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notAfter = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
                 string notAfterOpt;
@@ -1235,7 +1236,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notBefore = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
                 DateTime notAfter = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
@@ -1268,7 +1269,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt(opt, "xxxx"), "net://127.0.0.1"
@@ -1285,7 +1286,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 DateTime notBefore = TestLines.Verbose.TimeStamp + TimeSpan.FromSeconds(2);
                 DateTime notAfter = TestLines.Verbose.TimeStamp - TimeSpan.FromSeconds(2);
@@ -1308,7 +1309,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid"), messageId, "net://127.0.0.1"
@@ -1328,7 +1329,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid"), "42", LongOpt("messageid"), "43", "net://127.0.0.1"
@@ -1348,7 +1349,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
@@ -1368,7 +1369,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid", "42,42"), "net://127.0.0.1"
@@ -1388,7 +1389,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
@@ -1408,7 +1409,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid", "42,43"), "net://127.0.0.1"
@@ -1433,7 +1434,7 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("messageid", messageId), "net://127.0.0.1"
@@ -1450,7 +1451,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), LongOpt("before-context", "1"), EmptyFile
@@ -1468,7 +1469,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), ShortOpt('B', "1"), EmptyFile
@@ -1486,7 +1487,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('B', "1"), EmptyFile
@@ -1500,7 +1501,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('B', "-1"), EmptyFile
@@ -1514,7 +1515,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('B', "xx"), EmptyFile
@@ -1528,7 +1529,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), LongOpt("after-context", "1"), EmptyFile
@@ -1546,7 +1547,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('s', "string"), ShortOpt('A', "1"), EmptyFile
@@ -1564,7 +1565,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('A', "1"), EmptyFile
@@ -1578,7 +1579,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('A', "-1"), EmptyFile
@@ -1592,7 +1593,7 @@
             using (new TestApplication()) {
                 // It checks that the file actually exists
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('A', "xx"), EmptyFile
@@ -1607,7 +1608,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     LongOpt("output", ""), EmptyFile
@@ -1624,7 +1625,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "CON:"), EmptyFile
@@ -1641,7 +1642,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "/dev/stdout"), EmptyFile
@@ -1658,7 +1659,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), EmptyFile
@@ -1675,7 +1676,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.dlt"), EmptyFile
@@ -1692,7 +1693,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("force"), EmptyFile
@@ -1712,7 +1713,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", "102400"), EmptyFile
@@ -1750,7 +1751,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", split), EmptyFile
@@ -1772,7 +1773,7 @@
         {
             using (TestApplication global = new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", "-102400"), EmptyFile
@@ -1787,7 +1788,7 @@
         {
             using (TestApplication global = new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", "10E"), EmptyFile
@@ -1804,7 +1805,7 @@
         {
             using (TestApplication global = new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", value), EmptyFile
@@ -1819,7 +1820,7 @@
         {
             using (TestApplication global = new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('o', "output.txt"), LongOpt("split", "99999999999999999999999999999999999999999"), EmptyFile
@@ -1836,7 +1837,7 @@
         {
             using (new TestApplication()) {
                 CmdOptions cmdOptions = null;
-                CommandFactorySetup(opt => cmdOptions = opt);
+                CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
                 Assert.That(CommandLine.Run(new[] {
                     ShortOpt('F', FibexFile), LongOpt("nv-verbose"), ShortOpt('o', "out.dlt"), EmptyFile

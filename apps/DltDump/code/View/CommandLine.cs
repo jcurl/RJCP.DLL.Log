@@ -12,17 +12,18 @@
         public static ExitCode Run(string[] arguments)
         {
             if (Log.App.ShouldTrace(TraceEventType.Information)) {
-                StringBuilder cmdLine = new StringBuilder();
+                StringBuilder args = new StringBuilder();
                 foreach (string arg in arguments) {
-                    cmdLine.AppendFormat("Arg: '{0}'; ", arg);
+                    args.AppendFormat("Arg: '{0}'; ", arg);
                 }
-                Log.App.TraceEvent(TraceEventType.Information, cmdLine.ToString());
+                Log.App.TraceEvent(TraceEventType.Information, args.ToString());
             }
 
             CmdOptions cmdOptions = new CmdOptions();
 
+            Options cmdLine;
             try {
-                _ = Options.Parse(cmdOptions, arguments);
+                cmdLine = Options.Parse(cmdOptions, arguments);
             } catch (OptionException ex) {
                 Global.Instance.Terminal.StdOut.WrapLine(AppResources.OptionsError);
                 Global.Instance.Terminal.StdOut.WriteLine(ex.Message);
@@ -30,9 +31,9 @@
                 return ExitCode.OptionsError;
             }
 
-            ICommand command = Global.Instance.CommandFactory.Create(cmdOptions);
+            ICommand command = Global.Instance.CommandFactory.Create(cmdLine, cmdOptions);
             if (command is null) {
-                HelpApp.ShowSimpleHelp();
+                HelpApp.ShowSimpleHelp(cmdLine);
                 return ExitCode.OptionsError;
             }
 
