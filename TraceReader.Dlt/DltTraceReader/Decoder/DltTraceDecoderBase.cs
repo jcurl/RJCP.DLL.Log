@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using Dlt;
     using Dlt.Control;
     using Dlt.NonVerbose;
@@ -157,6 +158,22 @@
             IEnumerable<DltTraceLineBase> lines = DecodeStream(cache, 0, true);
             m_Cache.Unlock();
             return lines;
+        }
+
+        /// <summary>
+        /// Gets the trace level based on previous errors.
+        /// </summary>
+        /// <param name="baseLevel">The base level for the first event that is logged.</param>
+        /// <returns>The trace level that should be used.</returns>
+        /// <remarks>
+        /// Often after one single error, we will get a lot of follow up errors. To reduce the log levels to help make
+        /// it easier to debug input streams, log the level in case no known previous errors have occurred, or log it as
+        /// verbose (which should normally not be enabled).
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private TraceEventType TraceLevel(TraceEventType baseLevel)
+        {
+            return m_DltLineBuilder.SkippedBytes == 0 ? baseLevel : TraceEventType.Verbose;
         }
 
         private IEnumerable<DltTraceLineBase> DecodeStream(ReadOnlySpan<byte> buffer, long position, bool flush)
@@ -423,7 +440,7 @@
             int version = headerType & DltConstants.HeaderType.VersionIdentifierMask;
             if (version != DltConstants.HeaderType.Version1) {
                 length = 0;
-                Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet offset 0x{0:x} with version {1} found, expected {2}",
+                Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Packet offset 0x{0:x} with version {1} found, expected {2}",
                     m_PosMap.Position, version >> DltConstants.HeaderType.VersionBitShift,
                     DltConstants.HeaderType.Version1 >> DltConstants.HeaderType.VersionBitShift);
                 return false;
@@ -437,7 +454,7 @@
 
             length = unchecked((ushort)BitOperations.To16ShiftBigEndian(standardHeader[2..4]));
             if (length < minLength) {
-                Log.Dlt.TraceEvent(TraceEventType.Warning,
+                Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning),
                     "Packet offset 0x{0:x} found with length {1}, expected minimum {2}",
                     m_PosMap.Position, length, minLength);
                 return false;
@@ -496,7 +513,7 @@
                 if (isVerbose || isControl) {
                     DltType messageType = GetMessageType(messageInfo);
                     if (messageType == DltType.UNKNOWN) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Packet at offset 0x{0:x} has invalid message info {1:x2}",
+                        Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Packet at offset 0x{0:x} has invalid message info {1:x2}",
                             m_PosMap.Position, messageInfo);
                         return false;
                     }
@@ -520,16 +537,16 @@
                     if (!result.TryGet(out int controlLength)) {
                         string error = m_DltLineBuilder.ResetErrorMessage();
                         if (string.IsNullOrEmpty(error)) {
-                            Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded",
+                            Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Control packet at offset 0x{0:x} cannot be decoded",
                                 m_PosMap.Position);
                         } else {
-                            Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} cannot be decoded, {1}",
+                            Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Control packet at offset 0x{0:x} cannot be decoded, {1}",
                                 m_PosMap.Position, error);
                         }
                         return false;
                     }
                     if (m_ExpectedLength < offset + controlLength || m_ExpectedLength > offset + controlLength + 32) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Control packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                        Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Control packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
                             m_PosMap.Position, m_ExpectedLength - offset, controlLength);
                         return false;
                     }
@@ -542,16 +559,16 @@
                 if (!result.TryGet(out int payloadLength)) {
                     string error = m_DltLineBuilder.ResetErrorMessage();
                     if (string.IsNullOrEmpty(error)) {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded",
+                        Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Verbose packet at offset 0x{0:x} cannot be decoded",
                             m_PosMap.Position);
                     } else {
-                        Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} cannot be decoded, {1}",
+                        Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Verbose packet at offset 0x{0:x} cannot be decoded, {1}",
                             m_PosMap.Position, error);
                     }
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.Dlt.TraceEvent(TraceEventType.Warning, "Verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
+                    Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}",
                         m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     return false;
                 }
@@ -574,13 +591,13 @@
                             m_PosMap.Position, error);
                         return true;
                     }
-                    Log.DltNonVerbose.TraceEvent(TraceEventType.Warning,
+                    Log.DltNonVerbose.TraceEvent(TraceLevel(TraceEventType.Warning),
                         "Non-verbose packet at offset 0x{0:x}, {1}",
                         m_PosMap.Position, error);
                     return false;
                 }
                 if (m_ExpectedLength != offset + payloadLength) {
-                    Log.DltNonVerbose.TraceEvent(TraceEventType.Information,
+                    Log.DltNonVerbose.TraceEvent(TraceLevel(TraceEventType.Information),
                         "Non-verbose packet at offset 0x{0:x} expected payload length {1}, decoded {2}, using fallback",
                         m_PosMap.Position, m_ExpectedLength - offset, payloadLength);
                     m_DltLineBuilder.ResetArguments();
@@ -640,6 +657,7 @@
                 DltTraceLineBase line = m_DltLineBuilder.GetSkippedResult();
                 if (CheckSkippedLine(line))
                     m_Lines.Add(line);
+                Log.Dlt.TraceEvent(TraceEventType.Information, $"{line.Text} (offset {line.Position})");
             }
         }
 
