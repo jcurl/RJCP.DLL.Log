@@ -555,6 +555,22 @@
             }
 
             if (isVerbose) {
+                // Observed as a common error in DLT logs. The provider of DLT logs specifies a NOAR that is non-zero,
+                // but we see that the length of the packet doesn't allow for arguments. The Covesa DLT viewer would
+                // treat this as a valid packet and ignore the NOAR. WireShark can decode the packet, but shows a
+                // decoding error. If we don't do this, we might end up losing more data than expected (trying to sync
+                // with the next packet could lose many more as it tries to find the next header based on heuristics).
+                if (offset == standardHeader.Length) {
+                    if (m_DltLineBuilder.NumberOfArgs > 0) {
+                        Log.Dlt.TraceEvent(TraceLevel(TraceEventType.Warning), "Verbose packet at offset 0x{0:x} cannot be decoded. NOAR > 0 and no arguments available.",
+                            m_PosMap.Position);
+                    }
+
+                    // Indicate, despite the error, that we were able to decode the packet. Else it would skip a single
+                    // byte and start trying to decode using heuristics which is unrelaiable.
+                    return true;
+                }
+
                 Result<int> result = m_VerboseDecoder.Decode(standardHeader[offset..], m_DltLineBuilder);
                 if (!result.TryGet(out int payloadLength)) {
                     string error = m_DltLineBuilder.ResetErrorMessage();

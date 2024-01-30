@@ -167,8 +167,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes))
                 using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
-                    Assert.That(line.Line, Is.EqualTo(0));
-                    m_Factory.IsSkippedLine(line, DltTestData.Time1, l1);
+                    m_Factory.IsNoArgEmptyLine(line, DltTestData.Time1, 0, 127);
 
                     line = await reader.GetLineAsync();
                     m_Factory.IsLine5(line, 1, 128);

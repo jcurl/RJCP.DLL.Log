@@ -176,6 +176,35 @@
             Assert.That(dltLine.Features.ContextId, Is.True);
         }
 
+        public static void IsNoArgEmptyLine(this DltFactory factory, DltTraceLineBase line, DateTime time, int lineNum, int count)
+        {
+            Assert.That(line, Is.TypeOf<DltTraceLine>());
+
+            DateTime expectedTime = factory.ExpectedTimeStamp(time);
+            DltTraceLine dltLine = (DltTraceLine)line;
+            Assert.That(dltLine.Line, Is.EqualTo(lineNum));
+            Assert.That(dltLine.TimeStamp, Is.EqualTo(expectedTime));
+            Assert.That(dltLine.Count, Is.EqualTo(count));
+            Assert.That(dltLine.EcuId, Is.EqualTo("ECU1"));
+            Assert.That(dltLine.SessionId, Is.EqualTo(50));
+            Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(DltTime.DeviceTime(1.232)));
+            Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_VERBOSE));
+            Assert.That(dltLine.ApplicationId, Is.EqualTo("APP1"));
+            Assert.That(dltLine.ContextId, Is.EqualTo("CTX1"));
+            Assert.That(dltLine.Arguments, Has.Count.EqualTo(0));  // NOAR is non-zero, but we have zero arguments anyway.
+            Assert.That(dltLine.Text, Is.Empty);
+            Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(expectedTime)} 1.2320 {count} ECU1 APP1 CTX1 50 log verbose verbose 0 "));
+            Assert.That(dltLine.Features.TimeStamp, Is.EqualTo(factory.FactoryType == DltFactoryType.File));
+            Assert.That(dltLine.Features.EcuId, Is.True);
+            Assert.That(dltLine.Features.SessionId, Is.True);
+            Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
+            Assert.That(dltLine.Features.BigEndian, Is.False);
+            Assert.That(dltLine.Features.IsVerbose, Is.True);
+            Assert.That(dltLine.Features.MessageType, Is.True);
+            Assert.That(dltLine.Features.ApplicationId, Is.True);
+            Assert.That(dltLine.Features.ContextId, Is.True);
+        }
+
         private static DateTime ExpectedTimeStamp(this DltFactory factory, DateTime storageTime)
         {
             switch (factory.FactoryType) {
