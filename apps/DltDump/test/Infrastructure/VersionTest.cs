@@ -26,7 +26,7 @@
             // Note, we're testing `Version.GetAssemblyVersion`, not the actual DltDump program version.
             string copyright = Version.GetAssemblyCopyright(typeof(VersionTest));
 
-            Assert.That(copyright, Is.EqualTo("(C) 2022-2023, Jason Curl"));
+            Assert.That(copyright, Is.EqualTo("(C) 2022-2024, Jason Curl"));
         }
     }
 }

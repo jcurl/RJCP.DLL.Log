@@ -14,7 +14,7 @@
     <RootNamespace>RJCP.App.DltDump</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2022-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2022-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>Test harness for DltDump.</Description>
     <Version>1.0.0</Version>
