@@ -18,7 +18,7 @@
         private readonly OutputWriter m_Writer = new OutputWriter();
         private readonly Template m_Template;
         private readonly HashSet<FileSystemNodeInfo> m_OutputFiles = new HashSet<FileSystemNodeInfo>();
-        private readonly HashSet<FileSystemNodeInfo> m_ProtectedFiles = new HashSet<FileSystemNodeInfo>();
+        private readonly InputFiles m_InputFiles;
         private List<string> m_Segments;
         private readonly long m_Split;
         private long m_NextSplit;
@@ -30,7 +30,16 @@
         /// <param name="fileName">Name of the file to write to (may be a template).</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        protected OutputBase(string fileName) : this(fileName, 0, false) { }
+        protected OutputBase(string fileName) : this(fileName, null, 0, false) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OutputBase"/> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file to write to (may be a template).</param>
+        /// <param name="inputs">A collection of input files that should be protected from overwriting.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        protected OutputBase(string fileName, InputFiles inputs) : this(fileName, inputs, 0, false) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputBase"/> class.
@@ -40,11 +49,23 @@
         /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
-        protected OutputBase(string fileName, long split, bool force)
+        protected OutputBase(string fileName, long split, bool force) : this(fileName, null, split, force) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OutputBase"/> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file to write to (may be a template).</param>
+        /// <param name="inputs">A collection of input files that should be protected from overwriting.</param>
+        /// <param name="split">The number of bytes to write before splitting.</param>
+        /// <param name="force">Force overwrite the file if <see langword="true"/>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        protected OutputBase(string fileName, InputFiles inputs, long split, bool force)
         {
             if (fileName is null) throw new ArgumentNullException(nameof(fileName));
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
+            m_InputFiles = inputs;
 
             m_Template = new Template(fileName);
             Force = force;
@@ -102,41 +123,6 @@
         /// </remarks>
         public int AutoFlushPeriod { get; set; }
 
-        /// <summary>
-        /// Adds a file name that should be protected from writing.
-        /// </summary>
-        /// <param name="fileName">Name of the file that should be protected.</param>
-        /// <remarks>
-        /// Any files set here will prevent from being overwritten, even if forced. This could be, for example, the file
-        /// is an input file.
-        /// </remarks>
-        public void AddProtectedFile(string fileName)
-        {
-            fileName = Path.GetFullPath(fileName);
-            if (!File.Exists(fileName)) return;
-
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
-            m_ProtectedFiles.Add(file);
-        }
-
-        private void CheckIsProtectedFile(string fileName)
-        {
-            if (IsProtectedFile(fileName)) {
-                // We don't overwrite protected files.
-                string message = string.Format(AppResources.DomainOutputNoOverwriteInput, m_Template.ToString());
-                throw new OutputStreamException(message);
-            }
-        }
-
-        private bool IsProtectedFile(string fileName)
-        {
-            fileName = Path.GetFullPath(fileName);
-            if (!File.Exists(fileName)) return false;
-
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
-            return m_ProtectedFiles.Contains(file);
-        }
-
         private void AddOutputFile(string fileName)
         {
             fileName = Path.GetFullPath(fileName);
@@ -148,20 +134,25 @@
 
         private void CheckIsOutputFile(string fileName)
         {
-            if (IsOutputFile(fileName)) {
+            fileName = Path.GetFullPath(fileName);
+            if (!File.Exists(fileName)) return;
+
+            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
+            if (m_OutputFiles.Contains(file)) {
                 // We don't overwrite files that we've just created.
                 string message = string.Format(AppResources.DomainOutputNoOverwrite, m_Template.ToString());
                 throw new OutputStreamException(message);
             }
         }
 
-        private bool IsOutputFile(string fileName)
+        private void CheckIsProtectedFile(string fileName)
         {
-            fileName = Path.GetFullPath(fileName);
-            if (!File.Exists(fileName)) return false;
-
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
-            return m_OutputFiles.Contains(file);
+            if (m_InputFiles is null) return;
+            if (m_InputFiles.IsProtectedFile(fileName)) {
+                // We don't overwrite protected files.
+                string message = string.Format(AppResources.DomainOutputNoOverwriteInput, fileName);
+                throw new OutputStreamException(message);
+            }
         }
 
         /// <summary>

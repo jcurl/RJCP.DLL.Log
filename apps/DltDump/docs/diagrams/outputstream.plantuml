@@ -1,6 +1,6 @@
 @startuml Domain.OutputStreamFactory
 
-interface IDisposable
+'interface IDisposable
 
 enum OutputFormat {
     Automatic
@@ -12,16 +12,29 @@ enum OutputFormat {
 interface IOutputStreamFactory {
     Split: int
     Force: bool
+    ConvertNonVerbose: bool
+    InputFiles: InputFiles
     Create(fileType: OutputFormat, string outputFile): IOutputStream
 }
 
-OutputStreamFactory -r-> DltOutput : <<instantiates>>
-OutputStreamFactory -r-> TextOutput : <<instantiates>>
-OutputStreamFactory -r-> ConsoleOutput : <<instantiates>>
+OutputStreamFactory -d-> DltOutput : <<instantiates>>
+OutputStreamFactory -d-> TextOutput : <<instantiates>>
+OutputStreamFactory -d-> ConsoleOutput : <<instantiates>>
 
 IOutputStreamFactory -u- OutputFormat
 
-class OutputStreamFactory
+class InputFiles {
+    AddProtectedFile(fileName: string)
+    IsProtectedFile(fileName: string): bool
+}
+class OutputStreamFactory {
+    Split: int
+    Force: bool
+    ConvertNonVerbose: bool
+    InputFiles: InputFiles
+    Create(fileType: OutputFormat, string outputFile): IOutputStream
+}
+OutputStreamFactory *-l- InputFiles
 IOutputStreamFactory <|.d. OutputStreamFactory
 
 interface IOutputStream {
@@ -32,26 +45,51 @@ interface IOutputStream {
     Flush()
 }
 
-IOutputStream .r.|> IDisposable
+'IOutputStream .r.|> IDisposable
 
-class ConsoleOutput
-IOutputStream <|.d. ConsoleOutput
+class ConsoleOutput {
+    ConsoleOutput()
+    ConsoleOutput(showPosition: bool)
+}
+IOutputStream <|.d.. ConsoleOutput
 
-class TextOutput
-IOutputStream <|.d. TextOutput
+class TextOutput {
+    TextOutput(fileName: string)
+    TextOutput(fileName: string, force: bool)
+    TextOutput(fileName: string, split: long, force: bool)
+    TextOutput(fileName: string, inputs: InputFiles, split: long, force: bool)
+}
+IOutputStream <|.d.. TextOutput
 
-class DltOutput
-IOutputStream <|.d. DltOutput
+class DltOutput {
+    DltOutput(fileName: string)
+    DltOutput(fileName: string, force: bool)
+    DltOutput(fileName: string, split: long, force: bool)
+    DltOutput(fileName: string, inputs: InputFiles, split: long, force: bool)
+    ..
+    ConvertNonVerbose: bool
+}
+IOutputStream <|.d.. DltOutput
 
-class OutputBase {
-    Force: bool
-    Split: int
-    SetInput(fileName: string)
-    Write(timeStamp: DateTime, line: string)
-    Write(timeStamp: DateTime, buffer: ReadOnlySpan<byte>)
-    Write(timeStamp: DateTime, header: ReadOnlySpan<byte>, buffer: ReadOnlySpan<byte>)
-    Flush()
-    Dispose()
+abstract class OutputBase {
+    #OutputBase(fileName: string)
+    #OutputBase(fileName: string, force: bool)
+    #OutputBase(fileName: string, split: long, force: bool)
+    #OutputBase(fileName: string, inputs: InputFiles, split: long, force: bool)
+    ..
+    -m_InputFiles: InputFiles
+    +Force: bool
+    +Split: int
+    +Encoding: Encoding
+    +AutoFlushPeriod: int
+    ..
+    #SetInput(fileName: string)
+    #Write(timeStamp: DateTime, line: string)
+    #Write(timeStamp: DateTime, buffer: ReadOnlySpan<byte>)
+    #Write(timeStamp: DateTime, header: ReadOnlySpan<byte>, buffer: ReadOnlySpan<byte>)
+    +Flush()
+    +Dispose()
+    #Dispose(disposing: bool)
 }
 
 class OutputWriter {
@@ -63,14 +101,15 @@ class OutputWriter {
     Close()
     Dispose()
 }
-OutputWriter .u.|> IDisposable
-OutputBase .u.|> IDisposable
+'OutputWriter .u.|> IDisposable
+'OutputBase .u.|> IDisposable
+OutputBase o-u- InputFiles
 
 TextOutput -d-|> OutputBase
 DltOutput -d-|> OutputBase
 
 OutputBase *-d- OutputWriter
 OutputWriter *-r- FileStream
-FileStream .u.|> IDisposable
+'FileStream .u.|> IDisposable
 
 @enduml

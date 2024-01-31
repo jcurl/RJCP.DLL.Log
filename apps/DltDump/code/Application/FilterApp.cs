@@ -33,27 +33,20 @@
 
         public async Task<ExitCode> Run()
         {
-            ICollection<IInputStream> inputs = ParseInputs();
-            if (inputs is null || inputs.Count == 0)
-                return ExitCode.InputError;
-
             Global.Instance.OutputStreamFactory.Force = m_Config.Force;
             Global.Instance.OutputStreamFactory.Split = m_Config.Split;
             Global.Instance.OutputStreamFactory.ConvertNonVerbose = m_Config.ConvertNonVerbose;
             Global.Instance.DltReaderFactory.FrameMap = m_Config.FrameMap;
+
+            ICollection<IInputStream> inputs = ParseInputs();
+            if (inputs is null || inputs.Count == 0)
+                return ExitCode.InputError;
 
             int processed = 0;
             bool partial = false;
             using (IOutputStream output = GetOutputStream()) {
                 if (output is null) return ExitCode.OutputError;
                 Global.Instance.DltReaderFactory.OutputStream = output;
-
-                // Ensure our inputs are not overwritten.
-                if (output is OutputBase outputBase) {
-                    foreach (string uri in m_Config.Input) {
-                        outputBase.AddProtectedFile(uri);
-                    }
-                }
 
                 foreach (IInputStream input in inputs) {
                     try {
@@ -74,6 +67,7 @@
                 }
             }
 
+            Global.Instance.OutputStreamFactory.InputFiles.Clear();
             if (processed == 0 && !partial) return ExitCode.NoFilesProcessed;
             if (processed != m_Config.Input.Count || partial) return ExitCode.PartialFilesProcessed;
             return ExitCode.Success;
@@ -108,6 +102,14 @@
                     return null;
                 }
                 inputs.Add(input);
+
+                // A mock object might not have set this property, in which case ignore.
+                if (Global.Instance.OutputStreamFactory.InputFiles is object) {
+                    // Ensure our inputs are not overwritten.
+                    if (input.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase)) {
+                        Global.Instance.OutputStreamFactory.InputFiles.AddProtectedFile(input.Connection);
+                    }
+                }
             }
             return inputs;
         }

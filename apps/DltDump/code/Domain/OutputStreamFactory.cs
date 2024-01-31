@@ -39,6 +39,16 @@
         public bool ConvertNonVerbose { get; set; }
 
         /// <summary>
+        /// A list of input files that the output stream will read from.
+        /// </summary>
+        /// <value>The list of input files that the output stream will read from.</value>
+        /// <remarks>
+        /// This is useful to give the output stream the list of input files, so that it can ensure it won't ever
+        /// overwrite the input files.
+        /// </remarks>
+        public InputFiles InputFiles { get; } = new InputFiles();
+
+        /// <summary>
         /// Creates the output stream based on the output format.
         /// </summary>
         /// <param name="outFormat">The output format that should be used.</param>
@@ -54,9 +64,9 @@
             case OutputFormat.Console:
                 return new ConsoleOutput();
             case OutputFormat.Text:
-                return new TextOutput(outFileName, Split, Force);
+                return new TextOutput(outFileName, InputFiles, Split, Force);
             case OutputFormat.Dlt:
-                return new DltOutput(outFileName, Split, Force) {
+                return new DltOutput(outFileName, InputFiles, Split, Force) {
                     ConvertNonVerbose = ConvertNonVerbose
                 };
             default:

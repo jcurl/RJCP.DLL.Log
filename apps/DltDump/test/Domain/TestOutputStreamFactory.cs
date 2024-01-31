@@ -10,6 +10,8 @@
 
         public bool ConvertNonVerbose { get; set; }
 
+        public InputFiles InputFiles { get; } = new InputFiles();
+
         public IOutputStream Create(OutputFormat outFormat, string outFileName)
         {
             return new ConsoleOutput();

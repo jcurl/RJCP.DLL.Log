@@ -115,6 +115,7 @@
     <Compile Include="Domain\Dlt\TracePacketReaderFactory.cs" />
     <Compile Include="Domain\IInputStream.cs" />
     <Compile Include="Domain\IInputStreamFactory.cs" />
+    <Compile Include="Domain\InputFiles.cs" />
     <Compile Include="Domain\InputStreamFactory.cs" />
     <Compile Include="Domain\InputStream\DltFileStream.cs" />
     <Compile Include="Domain\InputStream\DltFileStreamFactory.cs" />

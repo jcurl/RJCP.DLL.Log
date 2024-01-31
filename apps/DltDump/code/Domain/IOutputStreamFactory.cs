@@ -33,6 +33,16 @@
         bool ConvertNonVerbose { get; set; }
 
         /// <summary>
+        /// A list of input files that the output stream will read from.
+        /// </summary>
+        /// <value>The list of input files that the output stream will read from.</value>
+        /// <remarks>
+        /// This is useful to give the output stream the list of input files, so that it can ensure it won't ever
+        /// overwrite the input files.
+        /// </remarks>
+        InputFiles InputFiles { get; }
+
+        /// <summary>
         /// Creates the output stream based on the output format.
         /// </summary>
         /// <param name="outFormat">The output format that should be used.</param>

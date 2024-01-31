@@ -159,7 +159,7 @@
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
-                int l1 = m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
+                m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.232), DltType.LOG_VERBOSE, 1,
                     Array.Empty<byte>()).Append();
                 m_Factory.Verbose(writer, DltTestData.Time5, DltTime.DeviceTime(1.3), DltType.LOG_INFO, "Message 2")
                     .Append();

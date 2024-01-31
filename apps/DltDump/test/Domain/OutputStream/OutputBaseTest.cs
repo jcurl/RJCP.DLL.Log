@@ -736,11 +736,15 @@
         {
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
-            using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", 1, true)) {
-                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
-                output.AddProtectedFile("input.txt");
+            // The `IOutputStreamFactory` would define this and give it to the `IOutputStream` object.
+            InputFiles inputs = new InputFiles();
 
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", inputs, 1, true)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                // Must be added any time before any write is done.
+                inputs.AddProtectedFile("input.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 Assert.That(() => {
                     output.Write(TestLines.Verbose);
@@ -755,11 +759,15 @@
         {
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
-            using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", 1, true)) {
-                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
-                output.AddProtectedFile("INPUT.txt");
+            // The `IOutputStreamFactory` would define this and give it to the `IOutputStream` object.
+            InputFiles inputs = new InputFiles();
 
+            using (ScratchPad pad = Deploy.ScratchPad())
+            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", inputs, 1, true)) {
+                using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
+
+                // Must be added any time before any write is done.
+                inputs.AddProtectedFile("INPUT.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 Assert.That(() => {
                     output.Write(TestLines.Verbose);

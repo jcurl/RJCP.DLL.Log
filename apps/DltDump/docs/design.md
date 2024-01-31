@@ -53,7 +53,8 @@ implementation in an incremental manner).
       - [2.4.3.6. Splitting Output Files](#2436-splitting-output-files)
       - [2.4.3.7. Detailed Logic for Splitting and Concatenating Files](#2437-detailed-logic-for-splitting-and-concatenating-files)
       - [2.4.3.8. IOutputStream Object Lifetime](#2438-ioutputstream-object-lifetime)
-      - [2.4.3.9. On Flush](#2439-on-flush)
+      - [2.4.3.9. Preventing Overwrite of Input Files](#2439-preventing-overwrite-of-input-files)
+      - [2.4.3.10. On Flush](#24310-on-flush)
     - [2.4.4. The Filter and the Context](#244-the-filter-and-the-context)
       - [2.4.4.1. Output Chaining](#2441-output-chaining)
       - [2.4.4.2. Context Implementation](#2442-context-implementation)
@@ -1059,7 +1060,19 @@ The `IOutputStream` is then used directly by the `FilterApp` or used by the
 decoder. But the `FilterApp` always calls when a new file is processed, between
 instantiations of the decoder.
 
-##### 2.4.3.9. On Flush
+##### 2.4.3.9. Preventing Overwrite of Input Files
+
+The class `InputFiles` maintains a list of all input files that the `FilterApp`
+shall prepare prior. The `OutputStreamFactory` owns this object. It uses the
+`RJCP.Path` assembly to know the precise information of the file.
+
+When the `OutputBase` wants to create a new file, it queries if this file is in
+the list maintained by `InputFiles`. If it is true, then this file cannot be
+overwritten (even if forced). The `RJCP.Path` library uses the Operating System
+to query the file, so that soft links and hard links are also recognised
+(preventing overwrite of input files).
+
+##### 2.4.3.10. On Flush
 
 When the input stream has reached end of file, or the decoder is closed, the
 `DltDecoder` has the method `Flush()` called. This should result in the

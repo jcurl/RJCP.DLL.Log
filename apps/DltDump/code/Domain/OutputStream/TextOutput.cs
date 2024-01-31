@@ -39,6 +39,17 @@
         public TextOutput(string fileName, long split, bool force) : base(fileName, split, force) { }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TextOutput" /> class.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="inputs">A collection of input files that should be protected from overwriting.</param>
+        /// <param name="split">The number of bytes to write before splitting.</param>
+        /// <param name="force">Force overwrite the file if <see langword="true" />.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
+        public TextOutput(string fileName, InputFiles inputs, long split, bool force) : base(fileName, inputs, split, force) { }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the output should contain the position.
         /// </summary>
         /// <value>
