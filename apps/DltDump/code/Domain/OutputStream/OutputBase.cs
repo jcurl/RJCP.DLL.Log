@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using Infrastructure.IO;
     using Resources;
+    using FileSystemNodeInfo = RJCP.IO.FileSystemNodeInfo;
 
     /// <summary>
     /// The <see cref="OutputBase"/> manages writing binary files
@@ -17,8 +17,8 @@
     {
         private readonly OutputWriter m_Writer = new OutputWriter();
         private readonly Template m_Template;
-        private readonly HashSet<DetailedFileInfo> m_OutputFiles = new HashSet<DetailedFileInfo>();
-        private readonly HashSet<DetailedFileInfo> m_ProtectedFiles = new HashSet<DetailedFileInfo>();
+        private readonly HashSet<FileSystemNodeInfo> m_OutputFiles = new HashSet<FileSystemNodeInfo>();
+        private readonly HashSet<FileSystemNodeInfo> m_ProtectedFiles = new HashSet<FileSystemNodeInfo>();
         private List<string> m_Segments;
         private readonly long m_Split;
         private long m_NextSplit;
@@ -115,7 +115,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return;
 
-            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
             m_ProtectedFiles.Add(file);
         }
 
@@ -133,7 +133,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return false;
 
-            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
             return m_ProtectedFiles.Contains(file);
         }
 
@@ -142,7 +142,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return;
 
-            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
             m_OutputFiles.Add(file);
         }
 
@@ -160,7 +160,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return false;
 
-            DetailedFileInfo file = new DetailedFileInfo(fileName);
+            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
             return m_OutputFiles.Contains(file);
         }
 

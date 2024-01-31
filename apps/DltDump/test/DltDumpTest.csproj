@@ -125,7 +125,6 @@
     <Compile Include="Infrastructure\Constraints\DltNotAfterDateTest.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotBeforeDateTest.cs" />
     <Compile Include="Infrastructure\DateTimeExtensions.cs" />
-    <Compile Include="Infrastructure\IO\DetailedFileInfoTest.cs" />
     <Compile Include="Infrastructure\IO\NullStream.cs" />
     <Compile Include="Infrastructure\Net\TcpClientStreamTest.cs" />
     <Compile Include="Infrastructure\Net\TcpConnectionEventArgs.cs" />

@@ -61,6 +61,7 @@
     <ProjectReference Include="..\..\..\..\crashreporter\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
     <ProjectReference Include="..\..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
     <ProjectReference Include="..\..\..\..\serialportstream\code\SerialPortStream.csproj" />
+    <ProjectReference Include="..\..\..\..\path\code\RJCP.IO.Path.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -144,7 +145,6 @@
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotAfterDate.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotBeforeDate.cs" />
-    <Compile Include="Infrastructure\IO\DetailedFileInfo.cs" />
     <Compile Include="Infrastructure\IO\IPacket.cs" />
     <Compile Include="Infrastructure\IO\OneShotTimer.cs" />
     <Compile Include="Infrastructure\IO\PacketNewChannelEventArgs.cs" />
