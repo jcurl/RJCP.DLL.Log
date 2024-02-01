@@ -3,10 +3,11 @@
     using System;
     using System.IO;
     using System.Threading;
-    using Infrastructure.IO;
     using Moq;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
+    using RJCP.CodeQuality.IO;
+    using NUnit.Framework.Constraints;
 
     [TestFixture]
     public class OutputWriterTest
@@ -583,7 +584,7 @@
         [Test]
         public void WriteBufferWithException()
         {
-            var streamMock = new Mock<NullStream>() {
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
             streamMock
@@ -602,7 +603,7 @@
         [Test]
         public void WriteBufferWithException2()
         {
-            var streamMock = new Mock<NullStream>() {
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
@@ -629,11 +630,11 @@
         }
 
         // We can't use Moq4 with ReadOnlySpan<> as a parameter, so must implement our own mock.
-        private class NullStreamSpan : NullStream
+        private class NullStreamSpan : SimpleStream
         {
             private int m_Count;
 
-            public NullStreamSpan(int count)
+            public NullStreamSpan(int count) : base(StreamMode.ReadWrite)
             {
                 m_Count = count;
             }
@@ -679,7 +680,7 @@
         [Test]
         public void FlushWithException()
         {
-            var streamMock = new Mock<NullStream>() {
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
             streamMock.Setup(stream => stream.Flush()).Throws<PlatformNotSupportedException>();
@@ -700,7 +701,7 @@
         [Test]
         public void AutoFlush()
         {
-            var streamMock = new Mock<NullStream>() {
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
@@ -725,7 +726,7 @@
         [Test]
         public void AutoFlushTwice()
         {
-            var streamMock = new Mock<NullStream>() {
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
