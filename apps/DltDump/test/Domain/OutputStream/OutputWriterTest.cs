@@ -701,24 +701,29 @@
         [Test]
         public void AutoFlush()
         {
+            using ManualResetEventSlim ev = new ManualResetEventSlim();
             var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
             int flushCount = 0;
-            streamMock.Setup(stream => stream.Flush()).Callback(() => { flushCount++; });
+            streamMock.Setup(stream => stream.Flush()).Callback(() => {
+                flushCount++;
+                if (flushCount == 2) ev.Set();
+            });
 
             using (OutputWriter writer = new OutputWriter()) {
                 writer.Open(streamMock.Object);
-                writer.AutoFlush(100);
-                Thread.Sleep(500);
-                Assert.That(flushCount, Is.GreaterThanOrEqualTo(2));
-                Console.WriteLine("Flushes = {0}", flushCount);
+                writer.AutoFlush(50);
+                Assert.That(ev.Wait(500), Is.True);
 
                 // Check that the task has stopped calling flush after close.
                 writer.Close();
                 int currentFlush = flushCount;
-                Thread.Sleep(500);
+
+                // Make sure the thread is closed. We can't wait for something, as we don't have the internal state such
+                // as the Task that does the flushing.
+                Thread.Sleep(200);
                 Assert.That(flushCount, Is.EqualTo(currentFlush));
             }
         }
@@ -726,12 +731,16 @@
         [Test]
         public void AutoFlushTwice()
         {
+            using ManualResetEventSlim ev = new ManualResetEventSlim();
             var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
             int flushCount = 0;
-            streamMock.Setup(stream => stream.Flush()).Callback(() => { flushCount++; });
+            streamMock.Setup(stream => stream.Flush()).Callback(() => {
+                flushCount++;
+                ev.Set();
+            });
 
             using (OutputWriter writer = new OutputWriter()) {
                 writer.Open(streamMock.Object);
@@ -739,10 +748,9 @@
                 // Only start autoflush with 5s
                 writer.AutoFlush(5000);
                 writer.AutoFlush(10);
-                Thread.Sleep(500);
 
                 // Because we sleep only 500ms, no flush has occurred yet.
-                Assert.That(flushCount, Is.EqualTo(0));
+                Assert.That(ev.Wait(500), Is.False);
                 Console.WriteLine("Flushes = {0}", flushCount);
             }
         }
@@ -760,14 +768,18 @@
         [Test]
         public void AutoFlushWithException()
         {
-            var streamMock = new Mock<NullStream>() {
+            using ManualResetEventSlim ev = new ManualResetEventSlim();
+            var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
 
-            int flushCount = 2;
+            int flushCount = 1;
             streamMock.Setup(stream => stream.Flush())
                 .Callback(() => {
-                    if (flushCount == 0) throw new PlatformNotSupportedException();
+                    if (flushCount == 0) {
+                        ev.Set();
+                        throw new PlatformNotSupportedException();
+                    }
                     --flushCount;
                 })
                 .CallBase();
@@ -775,7 +787,10 @@
             using (OutputWriter writer = new OutputWriter()) {
                 writer.Open(streamMock.Object);
                 writer.AutoFlush(50);
-                Thread.Sleep(500);
+                ev.Wait(500);
+
+                // Wait 50ms so that the background task can complete, in case it crashes the program.
+                Thread.Sleep(50);
 
                 // An exception occurs after to flush counts. Else it would go negative.
                 Assert.That(flushCount, Is.EqualTo(0));

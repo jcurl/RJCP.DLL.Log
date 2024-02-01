@@ -710,7 +710,7 @@
             Assert.That(line1.Features.TimeStamp, Is.True);
             builder.Reset();
 
-            Thread.Sleep(100);
+            Thread.Sleep(10);
             builder.SetDltType(DltType.LOG_INFO);
             builder.SetStorageHeaderEcuId("FCU1");
             DltTraceLine line2 = (DltTraceLine)builder.GetResult();
