@@ -1,7 +1,6 @@
 ﻿namespace RJCP.Diagnostics.Log.Constraints
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// Class ConstraintException for optionally when a constraint detects a configuration problem.
@@ -10,7 +9,6 @@
     /// The exception indicates when errors occur during <see cref="IMatchConstraint.Check(ITraceLine)"/> when there is
     /// a logic error in the constraint definition.
     /// </remarks>
-    [Serializable]
     public class ConstraintException : Exception
     {
         /// <summary>
@@ -33,16 +31,5 @@
         /// Visual Basic) if no inner exception is specified.
         /// </param>
         public ConstraintException(string message, Exception innerException) : base(message, innerException) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConstraintException"/> class.
-        /// </summary>
-        /// <param name="info">
-        /// The <see cref="SerializationInfo"/> that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        /// The <see cref="StreamingContext"/> that contains contextual information about the source or destination.
-        /// </param>
-        protected ConstraintException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

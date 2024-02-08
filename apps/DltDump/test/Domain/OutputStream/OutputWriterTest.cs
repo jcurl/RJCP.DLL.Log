@@ -5,9 +5,8 @@
     using System.Threading;
     using Moq;
     using NUnit.Framework;
-    using RJCP.CodeQuality.NUnitExtensions;
     using RJCP.CodeQuality.IO;
-    using NUnit.Framework.Constraints;
+    using RJCP.CodeQuality.NUnitExtensions;
 
     [TestFixture]
     public class OutputWriterTest
