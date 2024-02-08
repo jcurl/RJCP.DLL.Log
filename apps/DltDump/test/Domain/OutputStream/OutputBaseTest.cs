@@ -790,22 +790,23 @@
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.Write(TestLines.Verbose);
-                Assert.That(PollFileExists("File.txt", 500), Is.True);
-
-                FileInfo fileInfo = new FileInfo("File.txt");
-                Assert.That(fileInfo.Length,
+                Assert.That(PollFileExists("File.txt", 500),
                     Is.EqualTo(10 + TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
         }
 
-        private static bool PollFileExists(string fileName, int timeout)
+        private static long PollFileExists(string fileName, int timeout)
         {
             int end = unchecked(Environment.TickCount + timeout);
             do {
                 Thread.Sleep(50);
-                if (File.Exists(fileName)) return true;
-            } while (unchecked(end - Environment.TickCount) < timeout);
-            return false;
+                FileInfo fileInfo = new FileInfo(fileName);
+                if (fileInfo.Exists) {
+                    long length = fileInfo.Length;
+                    if (length > 0) return length;
+                }
+            } while (unchecked(end - Environment.TickCount) > 0);
+            return -1;
         }
     }
 }
