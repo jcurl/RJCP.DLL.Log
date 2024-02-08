@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net60</TargetFrameworks>
     <OutputType>Library</OutputType>
     <Configurations>Debug;Release</Configurations>
     <NeutralLanguage>en-US</NeutralLanguage>
@@ -14,7 +12,7 @@
     <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2011-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2011-2024, Jason Curl</Copyright>
     <Company></Company>
     <PackageId>RJCP.Diagnostics.Log</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -35,12 +33,12 @@
     <RevisionControlLabel>release/v$(Version)</RevisionControlLabel>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <RevisionControlStrict>true</RevisionControlStrict>
@@ -120,5 +118,4 @@
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="\" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
-
 </Project>

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net60</TargetFrameworks>
     <OutputType>Library</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
@@ -14,7 +12,7 @@
     <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2011-2023, Jason Curl</Copyright>
+    <Copyright>(C) 2011-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>Test harness for RJCP.Diagnostics.Log.</Description>
     <Version>1.0.0</Version>
@@ -26,20 +24,15 @@
     <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
@@ -74,5 +67,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
 </Project>

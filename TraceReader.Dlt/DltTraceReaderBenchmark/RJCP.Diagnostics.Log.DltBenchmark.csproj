@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net60</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
+    <RollForward>Major</RollForward>
 
     <AssemblyName>RJCP.Diagnostics.Log.DltBenchmark</AssemblyName>
     <AssemblyTitle>RJCP.Diagnostics.Log.DltBenchmark</AssemblyTitle>
@@ -14,7 +13,7 @@
     <RootNamespace>RJCP.Diagnostics.Log</RootNamespace>
 
     <Authors>Jason Curl</Authors>
-    <Copyright>(C) 2015-2022, Jason Curl</Copyright>
+    <Copyright>(C) 2015-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>Benchmark harness for RJCP.Diagnostics.Log.Dlt.</Description>
     <Version>1.0.0</Version>
@@ -28,12 +27,12 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
@@ -50,5 +49,4 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
-
 </Project>
