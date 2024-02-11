@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Runtime.Versioning;
     using System.Text;
     using System.Threading;
     using Domain.Dlt;
@@ -755,6 +756,7 @@
 
         [Test]
         [Platform(Include = "Win32")]
+        [SupportedOSPlatform("windows")]
         public void ProtectedFilesCaseInsensitive()
         {
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";

@@ -3,6 +3,7 @@
     using System;
     using System.Net;
     using System.Net.Sockets;
+    using System.Runtime.Versioning;
     using System.Threading;
     using System.Threading.Tasks;
     using Infrastructure.IO;
@@ -578,6 +579,7 @@
         [Explicit("Integration Test")]
         [Category("Integration")]
         [Platform("Win", Reason = "Exception isn't raised on Linux")]
+        [SupportedOSPlatform("windows")]
         [Timeout(5000)]
         public void OpenInvalidAddress()
         {

@@ -139,7 +139,6 @@
     <Compile Include="Domain\OutputStream\Template.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="Global.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Infrastructure\Constraints\BlockAll.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotAfterDate.cs" />
     <Compile Include="Infrastructure\Constraints\DltNotBeforeDate.cs" />
@@ -154,18 +153,6 @@
     <Compile Include="Infrastructure\Uri\UriExtensions.cs" />
     <Compile Include="Infrastructure\Version.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Native\Win32\Kernel32+ACCESS_MASK.cs" />
-    <Compile Include="Native\Win32\Kernel32+BY_HANDLE_FILE_INFORMATION.cs" />
-    <Compile Include="Native\Win32\Kernel32+CreateFileFlags.cs" />
-    <Compile Include="Native\Win32\Kernel32+CreationDisposition.cs" />
-    <Compile Include="Native\Win32\Kernel32+FileShare.cs" />
-    <Compile Include="Native\Win32\Kernel32+FILETIME.cs" />
-    <Compile Include="Native\Win32\Kernel32+FILE_ID_BOTH_DIR_INFO.cs" />
-    <Compile Include="Native\Win32\Kernel32+FILE_ID_INFO.cs" />
-    <Compile Include="Native\Win32\Kernel32+FILE_INFO_BY_HANDLE_CLASS.cs" />
-    <Compile Include="Native\Win32\Kernel32+LargeInteger.cs" />
-    <Compile Include="Native\Win32\Kernel32+SECURITY_IMPERSONATION_LEVEL.cs" />
-    <Compile Include="Native\Win32\Kernel32.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
       <DesignTime>True</DesignTime>
