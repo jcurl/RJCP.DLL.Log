@@ -212,41 +212,27 @@
             if (m_Socket is null)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverNotOpen);
 
-            if (m_Socket.Available > 0)
-                return ReadInternal(buffer);
-
-            return await Task.Run(() => ReadInternal(buffer));
+            return await ReadInternalAsync(buffer);
         }
 
-        private PacketReadResult ReadInternal(Memory<byte> buffer)
+        private async Task<PacketReadResult> ReadInternalAsync(Memory<byte> buffer)
         {
             EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
 
             try {
-#if NET6_0_OR_GREATER
-                // This is the quickest fix, but ReceiveFromAsync would be better.
-                int read = m_Socket.ReceiveFrom(buffer.Span, SocketFlags.None, ref remote);
-#else
-                // .NET 5 and earlier doesn't have a ReceiveFrom() that works with a Memory<byte>. So we need to convert
-                // the buffer to an array in place.
-                byte[] localBuff;
-                if (!MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> segment))
-                    return new PacketReadResult(0, 0);
-                localBuff = segment.Array;
-                int read = m_Socket.ReceiveFrom(localBuff, 0, localBuff.Length, SocketFlags.None, ref remote);
-#endif
+                var result = await m_Socket.ReceiveFromAsync(buffer, SocketFlags.None, remote);
                 lock (m_ChannelLock) {
                     // As we don't expect to have many different sources, a list with a loop is likely faster.
-                    IPEndPoint remoteIp = (IPEndPoint)remote;
+                    IPEndPoint remoteIp = (IPEndPoint)result.RemoteEndPoint;
                     for (int i = 0; i < m_Channels.Count; i++) {
                         if (m_Channels[i].Address.Equals(remoteIp.Address) && m_Channels[i].Port == remoteIp.Port) {
-                            return new PacketReadResult(read, i);
+                            return new PacketReadResult(result.ReceivedBytes, i);
                         }
                     }
 
                     m_Channels.Add(remoteIp);
                     OnNewChannel(this, new PacketNewChannelEventArgs(m_Channels.Count - 1));
-                    return new PacketReadResult(read, m_Channels.Count - 1);
+                    return new PacketReadResult(result.ReceivedBytes, m_Channels.Count - 1);
                 }
             } catch (SocketException ex) {
                 if (m_IsDisposed && ex.SocketErrorCode == SocketError.Interrupted)
