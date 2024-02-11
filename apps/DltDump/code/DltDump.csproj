@@ -6,7 +6,6 @@
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <RollForward>Major</RollForward>
 
     <AssemblyName>dltdump</AssemblyName>
