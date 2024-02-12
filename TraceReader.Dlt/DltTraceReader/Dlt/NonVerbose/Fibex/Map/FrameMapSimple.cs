@@ -26,7 +26,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="frame"/> is <see langword="null"/>.</exception>
         internal FrameMapSimple(int id, IFrame frame)
         {
-            if (frame is null) throw new ArgumentNullException(nameof(frame));
+            ArgumentNullException.ThrowIfNull(frame);
 
             m_Frames.Add(id, frame);
         }
@@ -46,7 +46,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="frame"/> is <see langword="null"/>.</exception>
         public bool TryAddFrame(int id, string appId, string ctxId, string ecuId, IFrame frame)
         {
-            if (frame is null) throw new ArgumentNullException(nameof(frame));
+            ArgumentNullException.ThrowIfNull(frame);
 
             return m_Frames.TryAdd(id, frame);
         }

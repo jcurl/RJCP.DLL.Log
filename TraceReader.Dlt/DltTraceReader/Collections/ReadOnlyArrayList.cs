@@ -15,7 +15,7 @@
 
         public ReadOnlyArrayList(T[] array)
         {
-            if (array is null) throw new ArgumentNullException(nameof(array));
+            ArgumentNullException.ThrowIfNull(array);
             m_Array = array;
         }
 

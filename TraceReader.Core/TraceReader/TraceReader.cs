@@ -60,8 +60,8 @@
         /// </remarks>
         public TraceReader(Stream stream, ITraceDecoder<T> decoder, bool ownsStream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
-            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
+            ArgumentNullException.ThrowIfNull(stream);
+            ArgumentNullException.ThrowIfNull(decoder);
             if (!stream.CanRead) throw new ArgumentException("Stream is not readable", nameof(stream));
 
             m_Stream = stream;

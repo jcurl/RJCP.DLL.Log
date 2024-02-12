@@ -29,7 +29,7 @@
 
         public TestFrame AddArgument(IPdu pdu)
         {
-            if (pdu is null) throw new ArgumentNullException(nameof(pdu));
+            ArgumentNullException.ThrowIfNull(pdu);
 
             if (pdu.Description is object) {
                 m_Pdus.Add(new TestPdu(pdu.Description));
@@ -41,7 +41,7 @@
 
         public TestFrame AddArgument(string description)
         {
-            if (description is null) throw new ArgumentNullException(nameof(description));
+            ArgumentNullException.ThrowIfNull(description);
 
             m_Pdus.Add(new TestPdu(description));
             return this;
@@ -49,7 +49,7 @@
 
         public TestFrame AddArgument(string pduType, int pduLength)
         {
-            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
+            ArgumentNullException.ThrowIfNull(pduType);
 
             m_Pdus.Add(new TestPdu(pduType, pduLength));
             return this;

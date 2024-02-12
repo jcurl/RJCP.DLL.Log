@@ -19,8 +19,7 @@
         /// </exception>
         public DltAppId(string appId)
         {
-            if (appId is null)
-                throw new ArgumentNullException(nameof(appId));
+            ArgumentNullException.ThrowIfNull(appId);
             m_AppId = appId;
         }
 

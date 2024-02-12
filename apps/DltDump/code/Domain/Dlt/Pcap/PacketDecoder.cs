@@ -27,7 +27,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public PacketDecoder(int linkType, ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory is null) throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             switch (linkType) {
             case LinkTypes.LINKTYPE_ETHERNET:

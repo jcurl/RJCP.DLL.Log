@@ -26,7 +26,7 @@
 
         public FilterApp(FilterConfig config)
         {
-            if (config is null) throw new ArgumentNullException(nameof(config));
+            ArgumentNullException.ThrowIfNull(config);
 
             m_Config = config;
         }

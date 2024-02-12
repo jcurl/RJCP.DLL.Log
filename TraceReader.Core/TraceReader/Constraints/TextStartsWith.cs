@@ -16,7 +16,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="text"/> is <see langword="null"/>.</exception>
         public TextStartsWith(string text)
         {
-            if (text is null) throw new ArgumentNullException(nameof(text));
+            ArgumentNullException.ThrowIfNull(text);
             m_Text = text;
         }
 

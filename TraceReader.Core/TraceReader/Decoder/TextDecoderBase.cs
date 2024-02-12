@@ -49,8 +49,7 @@
             get { return m_Encoding; }
             set
             {
-                if (value is null)
-                    throw new ArgumentNullException(nameof(Encoding));
+                ArgumentNullException.ThrowIfNull(value);
 
                 Decoder = value.GetDecoder();
                 m_Encoding = value;

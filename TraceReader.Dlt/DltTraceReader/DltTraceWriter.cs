@@ -50,8 +50,8 @@
         /// </remarks>
         public DltTraceWriter(Stream stream, ITraceEncoder<DltTraceLineBase> encoder, bool ownsStream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
-            if (encoder is null) throw new ArgumentNullException(nameof(encoder));
+            ArgumentNullException.ThrowIfNull(stream);
+            ArgumentNullException.ThrowIfNull(encoder);
 
             if (!stream.CanWrite) throw new ArgumentException("Stream is not writable", nameof(stream));
 

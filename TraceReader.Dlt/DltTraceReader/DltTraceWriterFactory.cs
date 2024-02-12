@@ -27,8 +27,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="encoderFactory"/> is <see langword="null"/>.</exception>
         protected DltTraceWriterFactory(ITraceEncoderFactory<DltTraceLineBase> encoderFactory)
         {
-            if (encoderFactory is null)
-                throw new ArgumentNullException(nameof(encoderFactory));
+            ArgumentNullException.ThrowIfNull(encoderFactory);
             m_EncoderFactory = encoderFactory;
         }
 
@@ -41,8 +40,7 @@
         /// <remarks>The <paramref name="stream"/> is not disposed of when the returned encoder is disposed.</remarks>
         public Task<ITraceWriter<DltTraceLineBase>> CreateAsync(Stream stream)
         {
-            if (stream is null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             ITraceEncoder<DltTraceLineBase> encoder = m_EncoderFactory.Create();
             ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream, encoder);
@@ -58,8 +56,7 @@
         /// <remarks>When the returned encoder is disposed of, so will the underlying stream be disposed.</remarks>
         public Task<ITraceWriter<DltTraceLineBase>> CreateAsync(string fileName)
         {
-            if (fileName is null)
-                throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
 
             Stream fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read,
                 FileSystemCaching, FileOptions.Asynchronous);

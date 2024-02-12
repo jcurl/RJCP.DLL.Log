@@ -62,7 +62,7 @@
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         protected OutputBase(string fileName, InputFiles inputs, long split, bool force)
         {
-            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
             m_InputFiles = inputs;
@@ -97,7 +97,7 @@
             get { return m_Encoding; }
             set
             {
-                if (value is null) throw new ArgumentNullException(nameof(Encoding));
+                ArgumentNullException.ThrowIfNull(value);
 
                 Encoding oldEncoding = m_Encoding;
                 byte[] oldNewLine = m_NewLine;

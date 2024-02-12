@@ -24,8 +24,7 @@
         /// </exception>
         public DltFileStream(string fileName)
         {
-            if (fileName is null)
-                throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
             if (string.IsNullOrEmpty(fileName))
                 throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
 

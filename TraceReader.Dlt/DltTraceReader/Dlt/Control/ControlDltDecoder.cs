@@ -155,7 +155,7 @@
 
         private static void Register(Dictionary<int, IControlArgDecoder> decoders, int serviceId, IControlArgDecoder decoder)
         {
-            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
+            ArgumentNullException.ThrowIfNull(decoder);
             decoders.Remove(serviceId);
             decoders.Add(serviceId, decoder);
         }

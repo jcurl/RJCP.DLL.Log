@@ -47,7 +47,7 @@
         /// </remarks>
         public static Result<int> WriteStorageHeader(Span<byte> buffer, DltTraceLineBase line)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
             if (buffer.Length < 16)
                 return Result.FromException<int>(new DltEncodeException("Insufficient buffer encoding line"));
 

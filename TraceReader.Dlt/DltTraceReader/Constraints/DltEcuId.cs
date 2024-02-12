@@ -17,8 +17,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null"/>.</exception>
         public DltEcuId(string id)
         {
-            if (id is null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
             m_EcuId = id;
         }
 

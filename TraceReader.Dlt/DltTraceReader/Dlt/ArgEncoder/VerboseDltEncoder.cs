@@ -23,7 +23,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="lineEncoder"/> is <see langword="null"/>.</exception>
         public VerboseDltEncoder(IArgEncoder lineEncoder)
         {
-            if (lineEncoder is null) throw new ArgumentNullException(nameof(lineEncoder));
+            ArgumentNullException.ThrowIfNull(lineEncoder);
             m_VerboseArgEncoder = lineEncoder;
         }
 
@@ -36,7 +36,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
         public Result<int> Encode(Span<byte> buffer, DltTraceLine line)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
 
             int written = 0;
             foreach (IDltArg arg in line.Arguments) {

@@ -596,7 +596,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder SetControlPayload(IControlArg service)
         {
-            if (service is null) throw new ArgumentNullException(nameof(service));
+            ArgumentNullException.ThrowIfNull(service);
             ControlPayload = service;
             return this;
         }

@@ -19,8 +19,7 @@
         /// </exception>
         public TypeOf(Type type)
         {
-            if (type is null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
             if (!typeof(ITraceLine).IsAssignableFrom(type))
                 throw new ArgumentException("Type must be derived from ITraceLine", nameof(type));
             m_Type = type;

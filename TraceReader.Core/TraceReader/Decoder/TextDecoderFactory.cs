@@ -29,8 +29,7 @@
             }
             set
             {
-                if (value is null)
-                    throw new ArgumentNullException(nameof(Encoding));
+                ArgumentNullException.ThrowIfNull(value);
                 m_Encoding = value;
             }
         }

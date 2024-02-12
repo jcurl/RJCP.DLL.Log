@@ -23,8 +23,8 @@
         /// </exception>
         public FilterOutput(Constraint filter, IOutputStream output)
         {
-            if (filter is null) throw new ArgumentNullException(nameof(filter));
-            if (output is null) throw new ArgumentNullException(nameof(output));
+            ArgumentNullException.ThrowIfNull(filter);
+            ArgumentNullException.ThrowIfNull(output);
 
             m_Filter = filter;
             m_Output = output;

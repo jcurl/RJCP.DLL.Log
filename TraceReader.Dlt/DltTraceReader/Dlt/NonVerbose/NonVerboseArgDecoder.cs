@@ -61,8 +61,8 @@
         /// <exception cref="ArgumentException"><paramref name="pduType"/> has already been registered.</exception>
         protected void Register(string pduType, INonVerboseArgDecoder decoder)
         {
-            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
-            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
+            ArgumentNullException.ThrowIfNull(pduType);
+            ArgumentNullException.ThrowIfNull(decoder);
 
             m_Decoders.Add(pduType, decoder);
         }
@@ -78,7 +78,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="pduType"/> is <see langword="null"/>.</exception>
         protected bool Unregister(string pduType)
         {
-            if (pduType is null) throw new ArgumentNullException(nameof(pduType));
+            ArgumentNullException.ThrowIfNull(pduType);
 
             return m_Decoders.Remove(pduType);
         }

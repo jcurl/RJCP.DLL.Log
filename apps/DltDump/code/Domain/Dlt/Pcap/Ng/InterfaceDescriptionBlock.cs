@@ -112,8 +112,8 @@
 
         private InterfaceDescriptionBlock(int length, PcapOptions options, PacketDecoder decoder)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
-            if (decoder is null) throw new ArgumentNullException(nameof(decoder));
+            ArgumentNullException.ThrowIfNull(options);
+            ArgumentNullException.ThrowIfNull(decoder);
 
             Length = length;
             Options = options;

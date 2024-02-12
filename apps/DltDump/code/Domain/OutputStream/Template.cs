@@ -71,7 +71,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="template"/> is <see langword="null"/>.</exception>
         public Template(string template)
         {
-            if (template is null) throw new ArgumentNullException(nameof(template));
+            ArgumentNullException.ThrowIfNull(template);
             Parse(template);
             AllowConcatenation = !m_Found.Contains("FILE");
             SupportsSplit = m_Found.Contains("CTR") || m_Found.Contains("CDATE") ||
@@ -156,7 +156,7 @@
         /// <exception cref="ArgumentException"><paramref name="variable"/> is empty.</exception>
         public bool ContainsVariable(string variable)
         {
-            if (variable is null) throw new ArgumentNullException(nameof(variable));
+            ArgumentNullException.ThrowIfNull(variable);
             if (string.IsNullOrEmpty(variable))
                 throw new ArgumentException(AppResources.DomainTemplateEmptyVar, nameof(variable));
 

@@ -115,7 +115,7 @@
 
         private SectionHeaderBlock(int length, PcapOptions options)
         {
-            if (options is null) throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             Length = length;
             Options = options;

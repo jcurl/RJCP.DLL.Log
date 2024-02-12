@@ -24,7 +24,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public Connection(int srcAddr, int dstAddr, ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory is null) throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             SourceAddress = srcAddr;
             DestinationAddress = dstAddr;

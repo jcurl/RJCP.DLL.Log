@@ -155,7 +155,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         /// <value>The <see cref="Constraint"/> object for chaining.</value>
         public Constraint Expr(IMatchConstraint constraint)
         {
-            if (constraint is null) throw new ArgumentNullException(nameof(constraint));
+            ArgumentNullException.ThrowIfNull(constraint);
             if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
             m_Tokens.Append(constraint);
             return this;

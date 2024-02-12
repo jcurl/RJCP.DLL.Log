@@ -84,10 +84,10 @@
         /// </exception>
         protected DltTraceDecoderBase(IVerboseDltDecoder verboseDecoder, INonVerboseDltDecoder nonVerboseDecoder, IControlDltDecoder controlDecoder, IDltLineBuilder lineBuilder)
         {
-            if (verboseDecoder is null) throw new ArgumentNullException(nameof(verboseDecoder));
-            if (nonVerboseDecoder is null) throw new ArgumentNullException(nameof(nonVerboseDecoder));
-            if (controlDecoder is null) throw new ArgumentNullException(nameof(controlDecoder));
-            if (lineBuilder is null) throw new ArgumentNullException(nameof(lineBuilder));
+            ArgumentNullException.ThrowIfNull(verboseDecoder);
+            ArgumentNullException.ThrowIfNull(nonVerboseDecoder);
+            ArgumentNullException.ThrowIfNull(controlDecoder);
+            ArgumentNullException.ThrowIfNull(lineBuilder);
 
             m_VerboseDecoder = verboseDecoder;
             m_NonVerboseDecoder = nonVerboseDecoder;

@@ -22,7 +22,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="packets"/> is <see langword="null"/>.</exception>
         public SimulatedPacketReceiver(IEnumerable<(int, byte[])> packets)
         {
-            if (packets is null) throw new ArgumentNullException(nameof(packets));
+            ArgumentNullException.ThrowIfNull(packets);
             m_PacketEnumerator = packets.GetEnumerator();
         }
 

@@ -50,8 +50,8 @@
         /// </exception>
         public TracePacketReader(IPacket packet, ITraceDecoderFactory<DltTraceLineBase> decoderFactory)
         {
-            if (packet is null) throw new ArgumentNullException(nameof(packet));
-            if (decoderFactory is null) throw new ArgumentNullException(nameof(decoderFactory));
+            ArgumentNullException.ThrowIfNull(packet);
+            ArgumentNullException.ThrowIfNull(decoderFactory);
 
             m_Packet = packet;
             m_DecoderFactory = decoderFactory;

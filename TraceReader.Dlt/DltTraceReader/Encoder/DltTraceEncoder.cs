@@ -39,8 +39,8 @@
         /// </exception>
         public DltTraceEncoder(IDltEncoder<DltTraceLine> argsEncoder, IDltEncoder<DltControlTraceLine> controlEncoder)
         {
-            if (argsEncoder is null) throw new ArgumentNullException(nameof(argsEncoder));
-            if (controlEncoder is null) throw new ArgumentNullException(nameof(controlEncoder));
+            ArgumentNullException.ThrowIfNull(argsEncoder);
+            ArgumentNullException.ThrowIfNull(controlEncoder);
             m_DltArgsEncoder = argsEncoder;
             m_ControlArgsEncoder = controlEncoder;
         }
@@ -54,7 +54,7 @@
         /// <remarks>This encoder takes a trace line or a control line and always writes out a verbose line.</remarks>
         public virtual Result<int> Encode(Span<byte> buffer, DltTraceLineBase line)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
 
             int written;
             switch (line) {

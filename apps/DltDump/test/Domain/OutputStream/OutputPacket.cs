@@ -7,13 +7,13 @@
     {
         public OutputPacket(DltTraceLineBase line)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
             Line = line;
         }
 
         public OutputPacket(DltTraceLineBase line, ReadOnlySpan<byte> packet)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
             Line = line;
             Packet = packet.ToArray();
         }

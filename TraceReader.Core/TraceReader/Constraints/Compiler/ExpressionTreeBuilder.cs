@@ -7,7 +7,7 @@
     {
         protected ExpressionTreeBuilder(IEnumerator<Token> tokens)
         {
-            if (tokens is null) throw new ArgumentNullException(nameof(tokens));
+            ArgumentNullException.ThrowIfNull(tokens);
             if (!tokens.MoveNext()) throw new ConstraintException("No constraints defined");
             Expression = BuildExpressionTree(tokens, out bool parsing);
             if (parsing) throw new ConstraintException("Error in expression");

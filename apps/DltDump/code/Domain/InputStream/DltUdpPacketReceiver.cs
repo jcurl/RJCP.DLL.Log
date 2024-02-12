@@ -30,7 +30,7 @@
         /// </exception>
         public DltUdpPacketReceiver(IPAddress endPoint, int port)
         {
-            if (endPoint is null) throw new ArgumentNullException(nameof(endPoint));
+            ArgumentNullException.ThrowIfNull(endPoint);
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(endPoint, port));
@@ -60,8 +60,8 @@
         /// </exception>
         public DltUdpPacketReceiver(IPAddress bindAddr, int port, IPAddress multicastGroup)
         {
-            if (bindAddr is null) throw new ArgumentNullException(nameof(bindAddr));
-            if (multicastGroup is null) throw new ArgumentNullException(nameof(multicastGroup));
+            ArgumentNullException.ThrowIfNull(bindAddr);
+            ArgumentNullException.ThrowIfNull(multicastGroup);
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(bindAddr, port), multicastGroup);

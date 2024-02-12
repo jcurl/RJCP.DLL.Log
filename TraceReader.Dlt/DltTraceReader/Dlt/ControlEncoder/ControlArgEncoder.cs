@@ -122,7 +122,7 @@
         /// </remarks>
         protected void Register(int serviceId, DltType type, IControlArgEncoder encoder)
         {
-            if (encoder is null) throw new ArgumentNullException(nameof(encoder));
+            ArgumentNullException.ThrowIfNull(encoder);
             switch (type) {
             case DltType.CONTROL_REQUEST:
                 if (serviceId >= 0 && serviceId <= m_RequestEncodersStandard.Length) {

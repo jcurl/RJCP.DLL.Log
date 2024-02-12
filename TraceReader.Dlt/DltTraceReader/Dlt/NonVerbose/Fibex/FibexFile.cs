@@ -83,7 +83,7 @@
         /// </exception>
         public void LoadFile(string fileName)
         {
-            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
 
             using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 LoadFile(file);
@@ -97,7 +97,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public void LoadFile(Stream stream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             LoadFileInternal(stream);
         }
 

@@ -70,7 +70,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(Stream stream)
         {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             return Task.FromResult(GetTraceReader());
         }
 
@@ -82,7 +82,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="fileName"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(string fileName)
         {
-            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
             return Task.FromResult(GetTraceReader());
         }
 
@@ -94,7 +94,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="packet"/> is <see langword="null"/>.</exception>
         public Task<ITraceReader<DltTraceLineBase>> CreateAsync(IPacket packet)
         {
-            if (packet is null) throw new ArgumentNullException(nameof(packet));
+            ArgumentNullException.ThrowIfNull(packet);
             return Task.FromResult(GetTraceReader());
         }
 

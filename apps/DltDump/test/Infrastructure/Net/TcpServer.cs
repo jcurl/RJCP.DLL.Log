@@ -12,7 +12,7 @@
 
         public TcpServer(IPAddress localAddress, int port)
         {
-            if (localAddress is null) throw new ArgumentNullException(nameof(localAddress));
+            ArgumentNullException.ThrowIfNull(localAddress);
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
             m_Listener = new TcpListener(localAddress, port) {
                 // This allows a new instance to start immediately after it's closed, ignoring the linger state.

@@ -33,7 +33,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="factory"/> is <see langword="null"/>.</exception>
         public DltPcapLegacyDecoder(ITraceDecoderFactory<DltTraceLineBase> factory)
         {
-            if (factory is null) throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
             m_TraceDecoderFactory = factory;
         }
 

@@ -79,7 +79,7 @@
         /// <param name="strBuilder">The string builder to append this argument to.</param>
         public void StringAppend(StringBuilder strBuilder)
         {
-            if (strBuilder is null) throw new ArgumentNullException(nameof(strBuilder));
+            ArgumentNullException.ThrowIfNull(strBuilder);
 
             if (!string.IsNullOrEmpty(Name)) {
                 strBuilder.Append(Name).Append(" (");

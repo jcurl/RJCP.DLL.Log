@@ -18,7 +18,7 @@
         /// </exception>
         public override IInputStream Create(Uri uri)
         {
-            if (uri is null) throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             string fileName = uri.LocalPath;
             return new DltFileStream(fileName);

@@ -38,7 +38,7 @@
         /// </remarks>
         public UdpPacketReceiver(IPEndPoint endPoint)
         {
-            if (endPoint is null) throw new ArgumentNullException(nameof(endPoint));
+            ArgumentNullException.ThrowIfNull(endPoint);
 
             if (endPoint.AddressFamily != AddressFamily.InterNetwork)
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(endPoint));
@@ -78,8 +78,8 @@
         /// </exception>
         public UdpPacketReceiver(IPEndPoint bindAddr, IPAddress multicastGroup)
         {
-            if (bindAddr is null) throw new ArgumentNullException(nameof(bindAddr));
-            if (multicastGroup is null) throw new ArgumentNullException(nameof(multicastGroup));
+            ArgumentNullException.ThrowIfNull(bindAddr);
+            ArgumentNullException.ThrowIfNull(multicastGroup);
 
             if (bindAddr.AddressFamily != AddressFamily.InterNetwork)
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(bindAddr));

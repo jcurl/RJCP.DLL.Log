@@ -28,7 +28,7 @@
         /// </exception>
         public DltTcpStream(string hostname, int port)
         {
-            if (hostname is null) throw new ArgumentNullException(nameof(hostname));
+            ArgumentNullException.ThrowIfNull(hostname);
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentException(AppResources.InfraTcpStreamInvalidHostName, nameof(hostname));
             if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));

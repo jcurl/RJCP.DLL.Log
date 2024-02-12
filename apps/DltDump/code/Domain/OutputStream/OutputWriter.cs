@@ -50,7 +50,7 @@
         public void Open(string fileName, FileMode mode)
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
-            if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+            ArgumentNullException.ThrowIfNull(fileName);
             if (m_FileStream is object) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
 
             try {
@@ -80,7 +80,7 @@
         public void Open(Stream stream)
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             if (m_FileStream is object) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
             if (!stream.CanWrite) throw new InvalidOperationException(AppResources.DomainOutputWriterCantWrite);
 
@@ -114,7 +114,7 @@
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
 
             Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
-            if (buffer is null) throw new ArgumentNullException(nameof(buffer));
+            ArgumentNullException.ThrowIfNull(buffer);
             if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), AppResources.InfraArgOutOfRangeNegative);
             if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), AppResources.InfraArgOutOfRangeNegative);
             if (offset > buffer.Length - count) throw new ArgumentException(AppResources.InfraArgOutOfRangeIndex);

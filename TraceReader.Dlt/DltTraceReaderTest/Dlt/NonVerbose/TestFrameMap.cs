@@ -14,7 +14,7 @@
 
         public TestFrameMap Add(int messageId, string ecuId, string appId, string ctxId, DltType msgType, IPdu pdu)
         {
-            if (pdu is null) throw new ArgumentNullException(nameof(pdu));
+            ArgumentNullException.ThrowIfNull(pdu);
 
             TestFrame frame = new TestFrame(messageId).AddArgument(pdu);
             frame.EcuId = ecuId;

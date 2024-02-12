@@ -15,8 +15,7 @@
 
         public FilterCommand(CmdOptions options)
         {
-            if (options is null)
-                throw new ArgumentNullException(nameof(options));
+            ArgumentNullException.ThrowIfNull(options);
 
             m_Options = options;
         }

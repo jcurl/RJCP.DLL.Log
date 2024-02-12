@@ -25,7 +25,7 @@
         /// </exception>
         public ControlDltEncoder(IControlArgEncoder controlArgEncoder)
         {
-            if (controlArgEncoder is null) throw new ArgumentNullException(nameof(controlArgEncoder));
+            ArgumentNullException.ThrowIfNull(controlArgEncoder);
             m_ControlArgEncoder = controlArgEncoder;
         }
 
@@ -38,7 +38,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="line"/> is <see langword="null"/>.</exception>
         public Result<int> Encode(Span<byte> buffer, DltControlTraceLine line)
         {
-            if (line is null) throw new ArgumentNullException(nameof(line));
+            ArgumentNullException.ThrowIfNull(line);
             return m_ControlArgEncoder.Encode(buffer, line.Features.BigEndian, line.Service);
         }
     }

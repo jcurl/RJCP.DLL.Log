@@ -21,7 +21,7 @@
         /// <exception cref="ArgumentNullException">The <paramref name="input"/> is <see langword="null"/>.</exception>
         public FilterConfig(IReadOnlyList<string> input)
         {
-            if (input is null) throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             Input = input;
         }
