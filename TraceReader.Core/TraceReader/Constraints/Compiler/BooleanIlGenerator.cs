@@ -19,7 +19,7 @@
         private int m_ConstraintIndex;
         private EvaluateDelegate m_EvaluationDelegate;
 
-        private readonly LinkedList<IOperation> m_Operations = new LinkedList<IOperation>();
+        private readonly LinkedList<IOperation> m_Operations = new();
 
         public BooleanIlGenerator(int elements)
         {
@@ -58,7 +58,7 @@
         /// <returns>The branch operation that can be given to a target.</returns>
         public BranchOperation EmitBranchFalse()
         {
-            BranchOperation op = new BranchOperation(false);
+            BranchOperation op = new(false);
             m_Operations.AddLast(op);
             return op;
         }
@@ -69,7 +69,7 @@
         /// <returns>The branch operation that can be given to a target.</returns>
         public BranchOperation EmitBranchTrue()
         {
-            BranchOperation op = new BranchOperation(true);
+            BranchOperation op = new(true);
             m_Operations.AddLast(op);
             return op;
         }
@@ -116,13 +116,13 @@
 
         private void OptimizeBranches()
         {
-            Dictionary<BranchBaseOperation, BranchTargetOperation> branches = new Dictionary<BranchBaseOperation, BranchTargetOperation>();
+            Dictionary<BranchBaseOperation, BranchTargetOperation> branches = new();
 
             // Map a branch to the branch target. When we merge a BranchTargetSetBoolOperation(XXX, branches) with the
             // next BranchOperation(XXX), because the operations are the same, we move all the branches from the target
             // we're removing to the target for the next BranchOperation.
             LinkedListNode<IOperation> opNode = m_Operations.First;
-            while (opNode is object) {
+            while (opNode is not null) {
                 if (opNode.Value is BranchTargetOperation opBranchTarget) {
                     foreach (BranchBaseOperation opBranch in opBranchTarget.Branches) {
                         branches.Add(opBranch, opBranchTarget);
@@ -134,12 +134,12 @@
             // Optimizes two operations one after the other, if the result is known from the previous op, then a branch
             // if true/false, then we don't need to generate these instructions.
             opNode = m_Operations.First;
-            while (opNode is object) {
+            while (opNode is not null) {
                 if (opNode.Value is BranchTargetSetBoolOperation opBranchSetTarget) {
                     // b1 = BranchOperation(XX) check(x) BranchTargetSetBoolOperation(XX, b1) <-- opBranchSetTarget b2 =
                     // BranchOperation(YY) <-- opBranch check(y) BranchTargetSetBoolOperation(YY, b1)
                     LinkedListNode<IOperation> opNext = opNode.Next;
-                    if (opNext is object) {
+                    if (opNext is not null) {
                         if (opNext.Value is BranchOperation opBranch) {
                             if (opBranchSetTarget.Value == opBranch.Operation) {
                                 // The set operation is the same as the next branch, so the IL generated just pushes the
@@ -162,7 +162,7 @@
                                 // operation on the stack and pops it without branching always, thus being a
                                 // no-operation. So redirect the branch pointing to opBranchSetTarget to after the next
                                 // branch operation
-                                BranchTargetOperation branchTarget = new BranchTargetOperation();
+                                BranchTargetOperation branchTarget = new();
                                 m_Operations.AddAfter(opNext, branchTarget);
                                 foreach (BranchBaseOperation branch in opBranchSetTarget.Branches) {
                                     branchTarget.Branches.Add(branch);
@@ -187,8 +187,8 @@
             InvertOperation opInv = null;
 
             LinkedListNode<IOperation> opNode = m_Operations.First;
-            while (opNode is object) {
-                if (opNode.Value is BranchOperation opBranch && opInv is object) {
+            while (opNode is not null) {
+                if (opNode.Value is BranchOperation opBranch && opInv is not null) {
                     // We can invert the reason for the branch InvertOperation() <-- opInv b2 = BranchOperation(YY) <--
                     // opBranch
                     opBranch.Operation = !opBranch.Operation;
@@ -212,9 +212,9 @@
             LinkedListNode<IOperation> opNode = m_Operations.First;
             LinkedListNode<IOperation> opInvNode = null;
             InvertOperation opInvFirst = null;
-            while (opNode is object) {
+            while (opNode is not null) {
                 if (opNode.Value is InvertOperation opInv) {
-                    if (opInvFirst is object) {
+                    if (opInvFirst is not null) {
                         // Everything between here and "opInvFirst" can be inverted and the two inversion operations can
                         // be removed once done
                         //
@@ -222,7 +222,7 @@
                         // BranchTargetSetBoolOperation(yy); | BranchTargetSetBoolOperation(!yy); InvertOperation(); |
                         LinkedListNode<IOperation> start = opInvNode.Next;
                         BranchTargetSetBoolOperation opBranchTarget = start.Value as BranchTargetSetBoolOperation;
-                        while (opBranchTarget is object) {
+                        while (opBranchTarget is not null) {
                             opBranchTarget.Value = !opBranchTarget.Value;
                             start = start.Next;
                             opBranchTarget = start.Value as BranchTargetSetBoolOperation;
@@ -239,7 +239,7 @@
                         opInvNode = opNode;
                     }
                 } else {
-                    if (!(opNode.Value is BranchTargetSetBoolOperation)) {
+                    if (opNode.Value is not BranchTargetSetBoolOperation) {
                         opInvFirst = null;
                     }
                 }
@@ -254,7 +254,7 @@
             LinkedListNode<IOperation> opNode = m_Operations.First;
             LinkedListNode<IOperation> opBranchTargetNodeFirst = null;
             int elements = 0;
-            while (opNode is object) {
+            while (opNode is not null) {
                 if (opNode.Value is BranchTargetSetBoolOperation) {
                     elements++;
                     if (opBranchTargetNodeFirst is null) {
@@ -262,20 +262,20 @@
                         opNode = opNode.Next;
                         continue;
                     }
-                } else if (opBranchTargetNodeFirst is object) {
+                } else if (opBranchTargetNodeFirst is not null) {
                     if (elements > 1) {
                         // Rework the branches to jump to the end. We only optimize if there are more than one
                         // BranchTargetSetBoolOperation.
-                        BranchTargetOperation target = new BranchTargetOperation();
+                        BranchTargetOperation target = new();
                         LinkedListNode<IOperation> opBranchTargetNode = opBranchTargetNodeFirst;
                         BranchTargetSetBoolOperation opTarget;
                         do {
                             opTarget = opBranchTargetNode.Value as BranchTargetSetBoolOperation;
-                            if (opTarget is object) {
+                            if (opTarget is not null) {
                                 opTarget.SkipBranch = target;
                                 opBranchTargetNode = opBranchTargetNode.Next;
                             }
-                        } while (opTarget is object);
+                        } while (opTarget is not null);
                         m_Operations.AddBefore(opNode, target);
                     }
                     elements = 0;
@@ -289,7 +289,7 @@
             // Find the ret instructions (which are either "ret" or BranchTargetSetBoolOperation) and change those
             // branches to be a "ret" instruction. Branches also occur within the BranchTargetSetBoolOperation.
             LinkedListNode<IOperation> opNode = m_Operations.First;
-            while (opNode is object) {
+            while (opNode is not null) {
                 if (opNode.Value is ReturnOperation) {
                     // If the previous instruction is a branch target, then find out where the branches are and replace
                     // them with a "ret"

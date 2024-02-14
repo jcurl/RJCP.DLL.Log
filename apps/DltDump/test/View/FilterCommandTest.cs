@@ -167,9 +167,9 @@
         [Test]
         public void PacketInput()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestPacketReaderFactory testFactory = new TestPacketReaderFactory();
+                TestPacketReaderFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("pkt", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -303,7 +303,7 @@
             using (new TestApplication()) {
                 int actualConnects = 0;
 
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 testFactory.ConnectEvent += (s, e) => {
                     actualConnects++;
                     e.Succeed = false;
@@ -329,7 +329,7 @@
             using (new TestApplication()) {
                 int actualCreate = 0;
 
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 testFactory.OpenEvent += (s, e) => {
                     e.Succeed = actualCreate < 20;
                     actualCreate++;
@@ -359,9 +359,9 @@
         [TestCase("xxx", 0)]
         public void SearchString(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -380,9 +380,9 @@
         [TestCase("xxx", 0)]
         public void SearchMultiString(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -401,9 +401,9 @@
         [TestCase(@"\S+\s+$", 0)]
         public void SearchRegEx(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -422,9 +422,9 @@
         [TestCase(@"\S+\s+$", 0)]
         public void SearchMultiRegEx(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -445,9 +445,9 @@
         [TestCase("Message", @"\S+\s+$", 1)]
         public void SearchRegExString(string search, string regex, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -467,9 +467,9 @@
         [TestCase("xxx", 0)]
         public void SearchStringIgnoreCase(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -488,9 +488,9 @@
         [TestCase(@"\S+\s+$", 0)]
         public void SearchRegExIgnoreCase(string search, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -510,9 +510,9 @@
         [TestCase("xxx", 0)]
         public void SearchEcuId(string ecuId, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -530,9 +530,9 @@
         [Test]
         public void SearchEcuIdMultiNoMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -550,9 +550,9 @@
         [Test]
         public void SearchEcuIdMultiMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -570,9 +570,9 @@
         [Test]
         public void SearchEcuIdDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -592,9 +592,9 @@
         [TestCase("xxx", 0)]
         public void SearchAppId(string appId, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -612,9 +612,9 @@
         [Test]
         public void SearchAppIdMultiNoMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -632,9 +632,9 @@
         [Test]
         public void SearchAppIdMultiMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -652,9 +652,9 @@
         [Test]
         public void SearchAppIdDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -674,9 +674,9 @@
         [TestCase("xxx", 0)]
         public void SearchCtxId(string ctxId, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -694,9 +694,9 @@
         [Test]
         public void SearchCtxIdMultiNoMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -714,9 +714,9 @@
         [Test]
         public void SearchCtxIdMultiMatch()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -734,9 +734,9 @@
         [Test]
         public void SearchCtsIdDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -755,9 +755,9 @@
         [TestCase("128", 0)]
         public void SearchSessionId(string session, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -775,9 +775,9 @@
         [Test]
         public void SearchNegativeSessionId()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -795,9 +795,9 @@
         [Test]
         public void SearchSessionIdDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -815,9 +815,9 @@
         [Test]
         public void SearchVerbose()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -835,9 +835,9 @@
         [Test]
         public void SearchVerboseNotPresent()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -855,9 +855,9 @@
         [Test]
         public void SearchNoneVerbose()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -875,9 +875,9 @@
         [Test]
         public void SearchNonVerboseNotPresent()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -895,9 +895,9 @@
         [Test]
         public void SearchControl()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Control);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -915,9 +915,9 @@
         [Test]
         public void SearchControlNotPresent()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NoExtHdr);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -937,7 +937,7 @@
         {
             using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -954,7 +954,7 @@
         {
             using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -969,9 +969,9 @@
         [Test]
         public void FilterNone()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1018,7 +1018,7 @@
         [TestCase("48", DltType.LOG_WARN)]
         public void SearchDltType(string dltFilterType, DltType result)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
@@ -1034,9 +1034,9 @@
         [Test]
         public void SearchDltTypeInfo()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1053,9 +1053,9 @@
         [Test]
         public void SearchDltTypeWarn()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1072,9 +1072,9 @@
         [Test]
         public void DltTypeDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1095,9 +1095,9 @@
         [TestCase("-")]
         public void DltTypeInvalid(string dltType)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1114,9 +1114,9 @@
         [TestCase(false)]
         public void SearchNotBeforeUtc(bool utc)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1143,9 +1143,9 @@
         [TestCase(false)]
         public void SearchNotBeforeNoMatchUtc(bool utc)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1172,9 +1172,9 @@
         [TestCase(false)]
         public void SearchNotAfterUtc(bool utc)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1201,9 +1201,9 @@
         [TestCase(false)]
         public void SearchNotAfterNoMatchUtc(bool utc)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1230,9 +1230,9 @@
         [TestCase(false)]
         public void SearchDateTimeRange(bool utc)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1265,7 +1265,7 @@
         {
             using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1282,7 +1282,7 @@
         {
             using (new TestApplication()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1303,9 +1303,9 @@
         [TestCase("43", 0)]
         public void SearchMessageId(string messageId, int count)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NonVerbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1323,9 +1323,9 @@
         [Test]
         public void SearchMessageIds()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NonVerbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1343,9 +1343,9 @@
         [Test]
         public void SearchMessageIdsList()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NonVerbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1363,9 +1363,9 @@
         [Test]
         public void SearchMessageIdsListDuplicate()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.NonVerbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1383,9 +1383,9 @@
         [Test]
         public void SearchMessageIdVerboseLine()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1403,9 +1403,9 @@
         [Test]
         public void SearchMessageIdControlLine()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Control);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1428,9 +1428,9 @@
         [TestCase("<empty>")]
         public void MessageIdInvalid(string messageId)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Control);
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 CmdOptions cmdOptions = null;
@@ -1771,7 +1771,7 @@
         [Test]
         public void SplitNegativeInteger()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
@@ -1786,7 +1786,7 @@
         [Test]
         public void SplitUnknownModifier()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
@@ -1803,7 +1803,7 @@
         [TestCase("65535")]
         public void SplitTooSmall(string value)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 
@@ -1818,7 +1818,7 @@
         [Test]
         public void SplitOverflow()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 CmdOptions cmdOptions = null;
                 CommandFactorySetup((cmdLine, opt) => cmdOptions = opt);
 

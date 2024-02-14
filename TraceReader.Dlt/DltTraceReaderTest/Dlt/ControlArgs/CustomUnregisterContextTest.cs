@@ -11,7 +11,7 @@
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1) eth0")]
         public void CustomUnregisterContextRes(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "APP1", "CTX1", "eth0");
+            CustomUnregisterContextResponse arg = new(status, "APP1", "CTX1", "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -26,7 +26,7 @@
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1)")]
         public void CustomUnregisterContextRes_NoComId(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "APP1", "CTX1", "");
+            CustomUnregisterContextResponse arg = new(status, "APP1", "CTX1", "");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -41,7 +41,7 @@
         [TestCase(100, "[unregister_context status=100] APP1 (CTX1)")]
         public void CustomUnregisterContextRes_NullComId(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "APP1", "CTX1", null);
+            CustomUnregisterContextResponse arg = new(status, "APP1", "CTX1", null);
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -56,7 +56,7 @@
         [TestCase(100, "[unregister_context status=100]  (CTX1) eth0")]
         public void CustomUnregisterContextRes_NoAppId(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "", "CTX1", "eth0");
+            CustomUnregisterContextResponse arg = new(status, "", "CTX1", "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -71,7 +71,7 @@
         [TestCase(100, "[unregister_context status=100] eth0")]
         public void CustomUnregisterContextRes_NoAppIdCtxId(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "", "", "eth0");
+            CustomUnregisterContextResponse arg = new(status, "", "", "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -86,7 +86,7 @@
         [TestCase(100, "[unregister_context status=100] APP1 () eth0")]
         public void CustomUnregisterContextRes_NoCtxId(int status, string result)
         {
-            CustomUnregisterContextResponse arg = new CustomUnregisterContextResponse(status, "APP1", "", "eth0");
+            CustomUnregisterContextResponse arg = new(status, "APP1", "", "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

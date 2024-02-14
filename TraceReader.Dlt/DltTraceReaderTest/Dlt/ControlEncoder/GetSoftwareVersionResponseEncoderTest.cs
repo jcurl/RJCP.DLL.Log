@@ -25,7 +25,7 @@
         public void EncodeSuccess()
         {
             GetSoftwareVersionResponse response =
-                new GetSoftwareVersionResponse(ControlResponse.StatusOk, "version1");
+                new(ControlResponse.StatusOk, "version1");
 
             byte[] expected = IsBigEndian ?
                 new byte[] { 0x00, 0x00, 0x00, 0x09, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6F, 0x6E, 0x31, 0x00 } :
@@ -41,7 +41,7 @@
         public void EncodeEmpty([Values("", null)] string empty)
         {
             GetSoftwareVersionResponse response =
-                new GetSoftwareVersionResponse(ControlResponse.StatusOk, empty);
+                new(ControlResponse.StatusOk, empty);
 
             byte[] expected = IsBigEndian ?
                 new byte[] { 0x00, 0x00, 0x00, 0x01, 0x00 } :
@@ -58,7 +58,7 @@
         public void EncodeError(int statusCode)
         {
             GetSoftwareVersionResponse response =
-                new GetSoftwareVersionResponse(statusCode, string.Empty);
+                new(statusCode, string.Empty);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x13));
@@ -71,7 +71,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetSoftwareVersionResponse response =
-                new GetSoftwareVersionResponse(ControlResponse.StatusOk, "version1");
+                new(ControlResponse.StatusOk, "version1");
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

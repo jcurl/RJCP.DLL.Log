@@ -31,7 +31,7 @@
 
     internal class ConstraintTokens : IEnumerable<Token>
     {
-        private readonly List<Token> m_Constraints = new List<Token>();
+        private readonly List<Token> m_Constraints = new();
 
         public void Append(IMatchConstraint constraint)
         {

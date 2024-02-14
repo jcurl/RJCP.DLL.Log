@@ -9,17 +9,17 @@
     /// </summary>
     public class DltArgEncoder : IArgEncoder
     {
-        private readonly BinaryIntArgEncoder m_BinaryEncoder = new BinaryIntArgEncoder();
-        private readonly HexIntArgEncoder m_HexEncoder = new HexIntArgEncoder();
-        private readonly SignedIntArgEncoder m_SignedIntEncoder = new SignedIntArgEncoder();
-        private readonly UnsignedIntArgEncoder m_UnsignedIntEncoder = new UnsignedIntArgEncoder();
-        private readonly BoolArgEncoder m_BoolEncoder = new BoolArgEncoder();
-        private readonly Float32ArgEncoder m_Float32Encoder = new Float32ArgEncoder();
-        private readonly Float64ArgEncoder m_Float64Encoder = new Float64ArgEncoder();
-        private readonly StringArgEncoder m_StringEncoder = new StringArgEncoder();
-        private readonly RawArgEncoder m_RawEncoder = new RawArgEncoder();
-        private readonly NonVerboseArgEncoder m_NonVerboseEncoder = new NonVerboseArgEncoder();
-        private readonly UnknownVerboseArgEncoder m_UnknownVerboseEncoder = new UnknownVerboseArgEncoder();
+        private readonly BinaryIntArgEncoder m_BinaryEncoder = new();
+        private readonly HexIntArgEncoder m_HexEncoder = new();
+        private readonly SignedIntArgEncoder m_SignedIntEncoder = new();
+        private readonly UnsignedIntArgEncoder m_UnsignedIntEncoder = new();
+        private readonly BoolArgEncoder m_BoolEncoder = new();
+        private readonly Float32ArgEncoder m_Float32Encoder = new();
+        private readonly Float64ArgEncoder m_Float64Encoder = new();
+        private readonly StringArgEncoder m_StringEncoder = new();
+        private readonly RawArgEncoder m_RawEncoder = new();
+        private readonly NonVerboseArgEncoder m_NonVerboseEncoder = new();
+        private readonly UnknownVerboseArgEncoder m_UnknownVerboseEncoder = new();
 
         /// <summary>
         /// Encodes the DLT argument to the specified buffer.

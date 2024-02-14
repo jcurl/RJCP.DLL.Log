@@ -40,8 +40,8 @@
         /// <returns>A new instance of a <see cref="TeraTermDecoder"/> object.</returns>
         public ITraceDecoder<LogTraceLine> Create()
         {
-            TeraTermDecoder decoder = new TeraTermDecoder();
-            if (m_Encoding is object) decoder.Encoding = m_Encoding;
+            TeraTermDecoder decoder = new();
+            if (m_Encoding is not null) decoder.Encoding = m_Encoding;
             return decoder;
         }
     }

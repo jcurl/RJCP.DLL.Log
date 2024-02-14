@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class NonVerboseArgEncoder : IArgEncoder
     {
-        private static readonly RawArgEncoder RawEncoder = new RawArgEncoder();
+        private static readonly RawArgEncoder RawEncoder = new();
 
         /// <summary>
         /// Encodes the DLT argument to the specified buffer.

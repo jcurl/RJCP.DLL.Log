@@ -11,7 +11,7 @@
 
         private static PrivateType GetLineCacheType()
         {
-            PrivateType parent = new PrivateType(AssemblyName, TypeName);
+            PrivateType parent = new(AssemblyName, TypeName);
             return parent.GetNestedType("LineCache");
         }
 

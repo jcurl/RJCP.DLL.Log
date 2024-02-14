@@ -78,7 +78,7 @@
 
         private string BuildArgumentText()
         {
-            StringBuilder strBuilder = new StringBuilder();
+            StringBuilder strBuilder = new();
             if (Arguments.Count == 0) return string.Empty;
 
             Arguments[0].Append(strBuilder);

@@ -25,7 +25,7 @@
         {
             if (Data.Length == 0) return string.Empty;
 
-            StringBuilder strBuilder = new StringBuilder(Data.Length * 3);
+            StringBuilder strBuilder = new(Data.Length * 3);
             HexConvert.ConvertToHex(strBuilder, Data);
             return strBuilder.ToString();
         }

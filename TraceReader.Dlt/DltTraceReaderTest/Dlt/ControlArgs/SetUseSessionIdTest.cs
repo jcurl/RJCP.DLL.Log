@@ -9,7 +9,7 @@
         [TestCase(false, "[use_session_id] off")]
         public void SetUseSessionIdReq(bool enabled, string result)
         {
-            SetUseSessionIdRequest arg = new SetUseSessionIdRequest(enabled);
+            SetUseSessionIdRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0E));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[use_session_id status=100]")]
         public void SetUseSessionIdResp(int status, string result)
         {
-            SetUseSessionIdResponse arg = new SetUseSessionIdResponse(status);
+            SetUseSessionIdResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0E));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

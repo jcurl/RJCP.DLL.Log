@@ -9,7 +9,7 @@
         [Test]
         public void DefaultSkippedTraceLine()
         {
-            DltSkippedTraceLine line = new DltSkippedTraceLine(10, "none");
+            DltSkippedTraceLine line = new(10, "none");
             Assert.That(line.Arguments, Has.Count.EqualTo(4));
             Assert.That(line.ApplicationId, Is.EqualTo("SKIP"));
             Assert.That(line.ContextId, Is.EqualTo("SKIP"));

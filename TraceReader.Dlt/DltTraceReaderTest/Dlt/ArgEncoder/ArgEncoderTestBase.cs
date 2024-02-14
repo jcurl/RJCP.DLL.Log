@@ -139,9 +139,9 @@
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                using (MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new())
                 using (ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream))
-                using (FileStream file = new FileStream(fileName, FileMode.Create)) {
+                using (FileStream file = new(fileName, FileMode.Create)) {
                     stream.Write(DltFileTraceEncoderTest.StorageHeader);
                     bool success = writer.WriteLineAsync(line).GetAwaiter().GetResult();
                     if (!success) {

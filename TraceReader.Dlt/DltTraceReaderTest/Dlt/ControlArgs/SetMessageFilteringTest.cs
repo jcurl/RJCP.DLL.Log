@@ -9,7 +9,7 @@
         [TestCase(false, "[set_message_filtering] off")]
         public void SetMessageFilteringReq(bool enabled, string result)
         {
-            SetMessageFilteringRequest arg = new SetMessageFilteringRequest(enabled);
+            SetMessageFilteringRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0A));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[set_message_filtering status=100]")]
         public void SetMessageFilteringResp(int status, string result)
         {
-            SetMessageFilteringResponse arg = new SetMessageFilteringResponse(status);
+            SetMessageFilteringResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0A));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

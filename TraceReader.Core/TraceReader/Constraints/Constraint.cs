@@ -68,7 +68,7 @@ namespace RJCP.Diagnostics.Log.Constraints
     /// </remarks>
     public class Constraint : IMatchConstraint
     {
-        private readonly ConstraintTokens m_Tokens = new ConstraintTokens();
+        private readonly ConstraintTokens m_Tokens = new();
         private readonly ConstraintOptions m_Options = ConstraintOptions.Compiled;
 
         // This is the algorithm to use to parse the tokens and evaluate the response.

@@ -10,7 +10,7 @@
         /// <summary>
         /// An empty context packet, that has no line and no data.
         /// </summary>
-        public static readonly ContextPacket Empty = new ContextPacket(null);
+        public static readonly ContextPacket Empty = new(null);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContextPacket"/> struct.

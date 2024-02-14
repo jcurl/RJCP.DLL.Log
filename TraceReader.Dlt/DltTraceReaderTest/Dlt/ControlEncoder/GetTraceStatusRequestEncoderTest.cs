@@ -25,7 +25,7 @@
         public void Encode()
         {
             GetTraceStatusRequest request =
-                new GetTraceStatusRequest("APP1", "CTX1");
+                new("APP1", "CTX1");
 
             Span<byte> buffer = ControlEncode(request, 12);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1F));
@@ -37,7 +37,7 @@
         public void EncodeEmpty()
         {
             GetTraceStatusRequest request =
-                new GetTraceStatusRequest("", "");
+                new("", "");
 
             Span<byte> buffer = ControlEncode(request, 12);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1F));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetTraceStatusRequest request =
-                new GetTraceStatusRequest("APP1", "CTX1");
+                new("APP1", "CTX1");
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

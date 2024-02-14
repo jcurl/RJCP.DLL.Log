@@ -53,9 +53,9 @@
         /// <returns>The best fit size (in bytes) of the signed value.</returns>
         protected int GetLengthSigned()
         {
-            if (Data >= sbyte.MinValue && Data <= sbyte.MaxValue) return 1;
-            if (Data >= short.MinValue && Data <= short.MaxValue) return 2;
-            if (Data >= int.MinValue && Data <= int.MaxValue) return 4;
+            if (Data is >= sbyte.MinValue and <= sbyte.MaxValue) return 1;
+            if (Data is >= short.MinValue and <= short.MaxValue) return 2;
+            if (Data is >= int.MinValue and <= int.MaxValue) return 4;
             return 8;
         }
 

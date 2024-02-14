@@ -5,7 +5,7 @@
 
     public static class VersionApp
     {
-        private static readonly object s_Lock = new object();
+        private static readonly object s_Lock = new();
         private static string s_Version;
 
         public static string GetVersion()

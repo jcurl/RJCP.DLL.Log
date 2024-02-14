@@ -36,8 +36,8 @@
         [Test]
         public async Task NoFiles()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
-            FilterApp app = new FilterApp(config);
+            FilterConfig config = new(Array.Empty<string>());
+            FilterApp app = new(config);
             ExitCode result = await app.Run();
             Assert.That(result, Is.EqualTo(ExitCode.InputError));
         }
@@ -52,8 +52,8 @@
         public async Task OpenNoError()
         {
             using (new TestApplication()) {
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -75,14 +75,14 @@
             // InputStreamFactory that sees a file.
 
             using (new TestApplication()) {
-                TestDltFileStreamFactory fileFactory = new TestDltFileStreamFactory {
+                TestDltFileStreamFactory fileFactory = new() {
                     OpenError = openError
                 };
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("file", fileFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
@@ -96,14 +96,14 @@
             // so that a core dump can be captured. This exception is not documented by .NET.
 
             using (new TestApplication()) {
-                TestDltFileStreamFactory fileFactory = new TestDltFileStreamFactory {
+                TestDltFileStreamFactory fileFactory = new() {
                     OpenError = FileOpenError.InvalidOperationException
                 };
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("file", fileFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 Assert.That(async () => {
                     await app.Run();
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -113,10 +113,10 @@
         [Test]
         public async Task OpenUnknownUri()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { "unknown://" });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { "unknown://" });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -129,14 +129,14 @@
         [Test]
         public async Task OpenConnectError()
         {
-            using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+            using (TestApplication global = new()) {
+                TestNetworkStreamFactory testFactory = new();
                 testFactory.ConnectEvent += (s, e) => { e.Succeed = false; };
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { "net://127.0.0.1" });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -167,8 +167,8 @@
             int expectedConnects;
             int actualConnects = 0;
 
-            using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+            using (TestApplication global = new()) {
+                TestNetworkStreamFactory testFactory = new();
                 switch (mode) {
                 case ConnectTestMode.ConnectFail:
                     // Connection will never succeed.
@@ -222,10 +222,10 @@
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                FilterConfig config = new(new[] { "net://127.0.0.1" }) {
                     ConnectRetries = RetryOption
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -241,12 +241,12 @@
         [Test]
         public async Task OpenRetriesFile()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 // The number of retries should be ignored for streams that aren't live.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ConnectRetries = -1
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -259,13 +259,13 @@
         [Test]
         public async Task OpenMultipleMix1()
         {
-            using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+            using (TestApplication global = new()) {
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile, "net://127.0.0.1" });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile, "net://127.0.0.1" });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -278,13 +278,13 @@
         [Test]
         public async Task OpenMultipleMix2()
         {
-            using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+            using (TestApplication global = new()) {
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1", EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { "net://127.0.0.1", EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -297,10 +297,10 @@
         [Test]
         public async Task OpenMultipleFile()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile, EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile, EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 // The user will be told also on the command line.
@@ -313,11 +313,11 @@
         [Test]
         public async Task ShowSingleLine()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -333,13 +333,13 @@
         [Test]
         public async Task ShowSingleLinePosition()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -359,15 +359,15 @@
         [TestCase(InputFormat.File, false)]
         public async Task OnlineModeForNetwork(InputFormat inputFormat, bool onlineMode)
         {
-            using (TestApplication global = new TestApplication()) {
-                TestNetworkStreamFactory testFactory = new TestNetworkStreamFactory();
+            using (TestApplication global = new()) {
+                TestNetworkStreamFactory testFactory = new();
                 ((TestInputStreamFactory)Global.Instance.InputStreamFactory).SetFactory("net", testFactory);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                FilterConfig config = new(new[] { "net://127.0.0.1" }) {
                     InputFormat = inputFormat
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -383,12 +383,12 @@
         [TestCase(InputFormat.File)]
         public async Task OfflineModeForNetwork(InputFormat inputFormat)
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     InputFormat = inputFormat
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -402,7 +402,7 @@
         [Test]
         public async Task BeforeContext()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
@@ -411,13 +411,13 @@
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     InputFormat = InputFormat.Automatic,
                     BeforeContext = 1,
                 };
                 config.AddAppId("APP2");
 
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -431,19 +431,19 @@
         [Test]
         public async Task BeforeContextNone()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     InputFormat = InputFormat.Automatic,
                     BeforeContext = 2,
                 };
                 config.AddAppId("APP2");
 
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -457,7 +457,7 @@
         [Test]
         public async Task AfterContext()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
@@ -466,13 +466,13 @@
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     InputFormat = InputFormat.Automatic,
                     AfterContext = 2,
                 };
                 config.AddAppId("APP2");
 
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -486,20 +486,20 @@
         [Test]
         public async Task AfterContextNone()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     InputFormat = InputFormat.Automatic,
                     AfterContext = 2,
                 };
                 config.AddAppId("APP2");
 
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -513,15 +513,15 @@
         [Test]
         public async Task OutputToConsole()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "/dev/stdout"
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -539,22 +539,22 @@
         public async Task OutputToTextFile()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "file.txt"
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
 
                 Assert.That(File.Exists("file.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("file.txt");
+                FileInfo fileInfo = new("file.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(10 + TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -565,20 +565,20 @@
         public async Task OutputToTextFileExists(bool force)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
                 pad.DeployEmptyFile("file.txt");
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     Force = force,
                     OutputFileName = "file.txt"
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
-                FileInfo fileInfo = new FileInfo("file.txt");
+                FileInfo fileInfo = new("file.txt");
                 if (!force) {
                     Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
                     Assert.That(fileInfo.Length, Is.EqualTo(0));
@@ -596,17 +596,17 @@
         public async Task OutputToTextFileInUse()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
                 using (Stream file =
                        new FileStream("file.txt", FileMode.Create, FileAccess.ReadWrite, FileShare.None)) {
-                    FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                    FilterConfig config = new(new[] { EmptyFile }) {
                         ShowPosition = true,
                         OutputFileName = "file.txt"
                     };
-                    FilterApp app = new FilterApp(config);
+                    FilterApp app = new(config);
                     ExitCode result = await app.Run();
 
                     Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
@@ -614,7 +614,7 @@
 
                 Assert.That(File.Exists("file.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("file.txt");
+                FileInfo fileInfo = new("file.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(0));
             }
         }
@@ -628,11 +628,11 @@
                     return null;
                 });
 
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = factoryMock.Object;
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
@@ -650,11 +650,11 @@
                     throw new NotSupportedException();
                 });
 
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = factoryMock.Object;
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 Assert.That(async () => {
                     _ = await app.Run();
                 }, Throws.TypeOf<NotSupportedException>());
@@ -668,17 +668,17 @@
         public async Task OutputSplitNone()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "file.txt",
                     Split = 1
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -690,17 +690,17 @@
         public async Task OutputSplitCtr()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "file_%CTR%.txt",
                     Split = 1
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -713,17 +713,17 @@
         public async Task OutputSplitDateTime()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "file_%CDATETIME%.txt",
                     Split = 1
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 string line1 = TestLines.Verbose.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
@@ -738,23 +738,23 @@
         public async Task OutputProtectedFiles()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 pad.DeployEmptyFile("input.txt");
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
-                FilterConfig config = new FilterConfig(new[] { "input.txt" }) {
+                FilterConfig config = new(new[] { "input.txt" }) {
                     OutputFileName = "%FILE%.txt",
                     Force = true
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
 
-                FileInfo info = new FileInfo("input.txt");
+                FileInfo info = new("input.txt");
                 Assert.That(info.Length, Is.EqualTo(0));
             }
         }
@@ -763,25 +763,25 @@
         public async Task OutputProtectedFilesPartial()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 pad.DeployEmptyFile("input_002.txt");
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose2);
 
                 // Try to overwrite `input_002.txt`
-                FilterConfig config = new FilterConfig(new[] { "input_002.txt" }) {
+                FilterConfig config = new(new[] { "input_002.txt" }) {
                     OutputFileName = "input_%CTR%.txt",
                     Force = true,
                     Split = 1
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 global.WriteStd();
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
 
-                FileInfo info = new FileInfo("input_002.txt");
+                FileInfo info = new("input_002.txt");
                 Assert.That(info.Length, Is.EqualTo(0));
             }
         }
@@ -790,14 +790,14 @@
         public async Task OutputToDltFile()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile }) {
+                FilterConfig config = new(new[] { EmptyFile }) {
                     ShowPosition = true,
                     OutputFileName = "file.dlt"
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -818,15 +818,15 @@
             using (ScratchPad pad = Deploy.ScratchPad()) {
                 // This is a full integrated test.
 
-                FibexFile map = new FibexFile(FibexOptions.None);
+                FibexFile map = new(FibexOptions.None);
                 map.LoadFile(FibexFile);
 
-                FilterConfig config = new FilterConfig(new[] { SimpleNvFile }) {
+                FilterConfig config = new(new[] { SimpleNvFile }) {
                     OutputFileName = "file.dlt",
                     ConvertNonVerbose = true,
                     FrameMap = map
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -839,8 +839,8 @@
                 Assert.That(File.Exists("file.dlt"), Is.True);
 
                 byte[] encoded;
-                using (MemoryStream mem = new MemoryStream())
-                using (FileStream file = new FileStream("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (MemoryStream mem = new())
+                using (FileStream file = new("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     await file.CopyToAsync(mem);
                     encoded = mem.ToArray();
                 }
@@ -870,16 +870,16 @@
             using (ScratchPad pad = Deploy.ScratchPad()) {
                 // This is a full integrated test.
 
-                FibexFile map = new FibexFile(FibexOptions.None);
+                FibexFile map = new(FibexOptions.None);
                 map.LoadFile(FibexFile);
 
-                FilterConfig config = new FilterConfig(new[] { SimpleNvFile }) {
+                FilterConfig config = new(new[] { SimpleNvFile }) {
                     OutputFileName = "file.dlt",
                     ConvertNonVerbose = true,
                     FrameMap = map
                 };
                 config.AddAppId("APP1");
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
@@ -892,8 +892,8 @@
                 Assert.That(File.Exists("file.dlt"), Is.True);
 
                 byte[] encoded;
-                using (MemoryStream mem = new MemoryStream())
-                using (FileStream file = new FileStream("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
+                using (MemoryStream mem = new())
+                using (FileStream file = new("file.dlt", FileMode.Open, FileAccess.Read, FileShare.Read)) {
                     await file.CopyToAsync(mem);
                     encoded = mem.ToArray();
                 }
@@ -914,12 +914,12 @@
         [Test]
         public async Task ExceptionWhileDecoding()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).TriggerExceptionOnEof = true;
                 ((TestDltTraceReaderFactory)Global.Instance.DltReaderFactory).Lines.Add(TestLines.Verbose);
 
-                FilterConfig config = new FilterConfig(new[] { EmptyFile });
-                FilterApp app = new FilterApp(config);
+                FilterConfig config = new(new[] { EmptyFile });
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
 
                 Assert.That(result, Is.EqualTo(ExitCode.PartialFilesProcessed));
@@ -945,13 +945,13 @@
             // flushing is periodically called.
 
             using (Deploy.ScratchPad())
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Global.Instance.OutputStreamFactory = new OutputStreamFactory();   // TextOutput allows flushing
 
-                FilterConfig config = new FilterConfig(new[] { "net://127.0.0.1" }) {
+                FilterConfig config = new(new[] { "net://127.0.0.1" }) {
                     OutputFileName = "file.txt"
                 };
-                FilterApp app = new FilterApp(config);
+                FilterApp app = new(config);
                 ExitCode result = await app.Run();
                 Assert.That(result, Is.EqualTo(ExitCode.Success));
             }

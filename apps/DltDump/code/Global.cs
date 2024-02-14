@@ -13,7 +13,7 @@
     public class Global
     {
         private static Global s_Instance;
-        private static readonly object m_Lock = new object();
+        private static readonly object m_Lock = new();
 
         /// <summary>
         /// Gets the singleton instance for this application.
@@ -32,7 +32,7 @@
                 if (result is null) {
                     lock (m_Lock) {
                         if (s_Instance is null) {
-                            ConsoleTerminal terminal = new ConsoleTerminal();
+                            ConsoleTerminal terminal = new();
                             terminal.ConsoleWriteEvent += Terminal_ConsoleWriteEvent;
 
                             s_Instance = new Global() {

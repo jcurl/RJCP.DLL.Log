@@ -28,7 +28,7 @@
         public async Task FactoryDefault()
         {
             ITraceReaderFactory<DltTraceLineBase> factory = new DltSerialTraceReaderFactory();
-            using (MemoryStream stream = new MemoryStream(SerVerbose))
+            using (MemoryStream stream = new(SerVerbose))
             using (ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 Assert.That(line, Is.Not.Null);
@@ -50,7 +50,7 @@
             IFrameMap map = new TestFrameMap().Add(1, new TestPdu("S_UINT32", 4));
 
             ITraceReaderFactory<DltTraceLineBase> factory = new DltSerialTraceReaderFactory(map);
-            using (MemoryStream stream = new MemoryStream(SerNonVerbose))
+            using (MemoryStream stream = new(SerNonVerbose))
             using (ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 Assert.That(line, Is.Not.Null);
@@ -69,7 +69,7 @@
         public async Task FactoryNonVerboseNullMap()
         {
             ITraceReaderFactory<DltTraceLineBase> factory = new DltSerialTraceReaderFactory(null);
-            using (MemoryStream stream = new MemoryStream(SerNonVerbose))
+            using (MemoryStream stream = new(SerNonVerbose))
             using (ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 Assert.That(line, Is.Not.Null);
@@ -88,7 +88,7 @@
         public async Task FactoryVerboseOnline()
         {
             ITraceReaderFactory<DltTraceLineBase> factory = new DltSerialTraceReaderFactory(true);
-            using (MemoryStream stream = new MemoryStream(SerVerbose))
+            using (MemoryStream stream = new(SerVerbose))
             using (ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 Assert.That(line, Is.Not.Null);
@@ -111,7 +111,7 @@
             IFrameMap map = new TestFrameMap().Add(1, new TestPdu("S_UINT32", 4));
 
             ITraceReaderFactory<DltTraceLineBase> factory = new DltSerialTraceReaderFactory(true, map);
-            using (MemoryStream stream = new MemoryStream(SerNonVerbose))
+            using (MemoryStream stream = new(SerNonVerbose))
             using (ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 Assert.That(line, Is.Not.Null);

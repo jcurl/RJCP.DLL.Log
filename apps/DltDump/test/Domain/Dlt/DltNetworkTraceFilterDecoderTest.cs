@@ -19,8 +19,8 @@
         [TestCase(true)]
         public void WriteOutput(bool online)
         {
-            MemoryOutput memOutput = new MemoryOutput();
-            DltNetworkTraceFilterDecoder decoder = new DltNetworkTraceFilterDecoder(memOutput, online);
+            MemoryOutput memOutput = new();
+            DltNetworkTraceFilterDecoder decoder = new(memOutput, online);
 
             decoder.Decode(Data.AsSpan(), 0);
             decoder.Flush();
@@ -40,8 +40,8 @@
         [TestCase(true)]
         public void WriteLineOutput(bool online)
         {
-            MemoryOutput memOutput = new MemoryOutput();
-            DltNetworkTraceFilterDecoder decoder = new DltNetworkTraceFilterDecoder(memOutput, online);
+            MemoryOutput memOutput = new();
+            DltNetworkTraceFilterDecoder decoder = new(memOutput, online);
 
             decoder.Decode(SkipData.AsSpan(), 0);
             decoder.Flush();
@@ -70,7 +70,7 @@
         [Test]
         public void TextOutput()
         {
-            MemoryOutput memOutput = new MemoryOutput(false);
+            MemoryOutput memOutput = new(false);
             Assert.That(() => {
                 _ = new DltNetworkTraceFilterDecoder(memOutput, false);
             }, Throws.TypeOf<ArgumentException>());

@@ -93,7 +93,7 @@
 
         private void FrameMap_LoadErrorEvent(object sender, FibexLoadErrorEventArgs e)
         {
-            EventEntry<FibexLogEntry> entry = new EventEntry<FibexLogEntry>(
+            EventEntry<FibexLogEntry> entry = new(
                 new FibexLogEntry(m_ProcessedFile, e.Warning, e.ToString())
             );
             EventLog.Add(entry);

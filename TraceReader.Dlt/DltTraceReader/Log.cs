@@ -4,8 +4,8 @@
 
     internal static class Log
     {
-        public static readonly LogSource Dlt = new LogSource("RJCP.Diagnostics.Log.Dlt");
-        public static readonly LogSource Encoder = new LogSource("RJCP.Diagnostics.Log.Encoder");
-        public static readonly LogSource DltNonVerbose = new LogSource("RJCP.Diagnostics.Log.Dlt.NonVerbose");
+        public static readonly LogSource Dlt = new("RJCP.Diagnostics.Log.Dlt");
+        public static readonly LogSource Encoder = new("RJCP.Diagnostics.Log.Encoder");
+        public static readonly LogSource DltNonVerbose = new("RJCP.Diagnostics.Log.Dlt.NonVerbose");
     }
 }

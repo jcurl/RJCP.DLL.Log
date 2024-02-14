@@ -12,8 +12,8 @@
         [Timeout(5000)]
         public async Task CancelStartedTask()
         {
-            ManualResetEvent started = new ManualResetEvent(false);
-            CancelTask task = new CancelTask((t) => {
+            ManualResetEvent started = new(false);
+            CancelTask task = new((t) => {
                 Console.WriteLine("Starting...");
                 started.Set();
                 bool first = true;
@@ -38,7 +38,7 @@
         [Timeout(2000)]
         public async Task CancelNotStartedTask()
         {
-            CancelTask task = new CancelTask((t) => {
+            CancelTask task = new((t) => {
                 bool first = true;
                 while (true) {
                     if (first) {
@@ -57,7 +57,7 @@
         [Timeout(2000)]
         public async Task CancelNotStartedTaskRun()
         {
-            CancelTask task = new CancelTask((t) => {
+            CancelTask task = new((t) => {
                 bool first = true;
                 while (true) {
                     if (first) {
@@ -84,8 +84,8 @@
         [Test]
         public async Task RunTwice()
         {
-            ManualResetEvent started = new ManualResetEvent(false);
-            CancelTask task = new CancelTask((t) => {
+            ManualResetEvent started = new(false);
+            CancelTask task = new((t) => {
                 Console.WriteLine("Starting...");
                 started.Set();
                 bool first = true;

@@ -16,7 +16,7 @@
     {
         private const int TimeOut = 15000;  // No more than 15 seconds should pass, else we assume that packets were lost.
 
-        private readonly List<IpFragment> m_Fragments = new List<IpFragment>();
+        private readonly List<IpFragment> m_Fragments = new();
         private bool m_HasLastFragment;
         private DateTime m_LastTime;
 
@@ -98,7 +98,7 @@
         {
             if (IsExpired(timeStamp)) return IpFragmentResult.InvalidTimeOut;
 
-            IpFragment fragment = new IpFragment(fragOffset, checksum, buffer, position);
+            IpFragment fragment = new(fragOffset, checksum, buffer, position);
             if (m_Fragments.Count == 0) {
                 Length += buffer.Length;
                 m_Fragments.Add(fragment);

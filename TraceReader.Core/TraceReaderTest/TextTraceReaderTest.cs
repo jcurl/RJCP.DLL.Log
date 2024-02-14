@@ -55,9 +55,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 6),
-                    new TraceLine("Lin3", 2, 12)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 6),
+                    new("Lin3", 2, 12)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -70,9 +70,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 7),
-                    new TraceLine("Lin3", 2, 14)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 7),
+                    new("Lin3", 2, 14)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -85,9 +85,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 6),
-                    new TraceLine("Lin3", 2, 12)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 6),
+                    new("Lin3", 2, 12)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -100,9 +100,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 6),
-                    new TraceLine("Lin3", 2, 12)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 6),
+                    new("Lin3", 2, 12)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -115,9 +115,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 6),
-                    new TraceLine("Lin3", 2, 13)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 6),
+                    new("Lin3", 2, 13)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -130,7 +130,7 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0)
+                    new("Line1", 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -143,8 +143,8 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(readBuffer, maxBytes)) {
                 ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 7)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 7)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -165,9 +165,9 @@ namespace RJCP.Diagnostics.Log
                 };
                 ITraceReader<TraceLine> reader = await factory.CreateAsync(stream);
                 TraceLine[] expectedLines = {
-                    new TraceLine("Line1", 0, 0),
-                    new TraceLine("Line2", 1, 7),
-                    new TraceLine("Lin€3", 2, 14)
+                    new("Line1", 0, 0),
+                    new("Line2", 1, 7),
+                    new("Lin€3", 2, 14)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -181,7 +181,7 @@ namespace RJCP.Diagnostics.Log
         {
             byte[] largeBuffer = new byte[BufferLength + 2];
 
-            string firstLine = new string('a', BufferLength);
+            string firstLine = new('a', BufferLength);
             for (int i = 0; i < BufferLength; i++) {
                 largeBuffer[i] = (byte)'a';
             }
@@ -193,8 +193,8 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("bb", 1, BufferLength)
+                    new(firstLine, 0, 0),
+                    new("bb", 1, BufferLength)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -207,7 +207,7 @@ namespace RJCP.Diagnostics.Log
         public async Task SingleLineBufferLength(int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength - 1; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -219,7 +219,7 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0)
+                    new(firstLine, 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -232,7 +232,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthNewLine(char newLine, int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength - 1; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -243,7 +243,7 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0)
+                    new(firstLine, 0, 0)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -256,7 +256,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthNewLineOverflow(char newLine, int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength + 2];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength - 1; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -271,8 +271,8 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("bb", 1, BufferLength)
+                    new(firstLine, 0, 0),
+                    new("bb", 1, BufferLength)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -285,7 +285,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthNewLineOverflowWindows(int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength + 2];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength - 2; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -301,8 +301,8 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("bb", 1, BufferLength)
+                    new(firstLine, 0, 0),
+                    new("bb", 1, BufferLength)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -315,7 +315,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthNewLineOverflowWindowsSplit(int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength + 2];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength - 1; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -331,8 +331,8 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("bb", 1, BufferLength)
+                    new(firstLine, 0, 0),
+                    new("bb", 1, BufferLength)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -345,7 +345,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthOverflowNewLine(char newLine, int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength + 5];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -360,9 +360,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("", 1, BufferLength),
-                    new TraceLine("bbbb", 2, BufferLength + 1)
+                    new(firstLine, 0, 0),
+                    new("", 1, BufferLength),
+                    new("bbbb", 2, BufferLength + 1)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -375,7 +375,7 @@ namespace RJCP.Diagnostics.Log
         public async Task BufferLengthOverflowWindowsNewLine(int maxBytes)
         {
             byte[] largeBuffer = new byte[BufferLength + 6];
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < BufferLength; i++) {
                 largeBuffer[i] = (byte)'a';
                 sb.Append('a');
@@ -391,9 +391,9 @@ namespace RJCP.Diagnostics.Log
             using (Stream stream = GetStream(largeBuffer, maxBytes))
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine[] expectedLines = {
-                    new TraceLine(firstLine, 0, 0),
-                    new TraceLine("", 1, BufferLength),
-                    new TraceLine("bbbb", 2, BufferLength + 2)
+                    new(firstLine, 0, 0),
+                    new("", 1, BufferLength),
+                    new("bbbb", 2, BufferLength + 2)
                 };
                 await TextStreamCheck(reader, expectedLines);
             }
@@ -414,7 +414,7 @@ namespace RJCP.Diagnostics.Log
             for (int i = 0; i < BufferLength - 1; i++) {
                 largeBuffer[i] = (byte)'a';
             }
-            string firstLine = new string('a', BufferLength - 1);
+            string firstLine = new('a', BufferLength - 1);
 
             // Decodes to \uDB40\uDC84
             largeBuffer[BufferLength - 1] = 0xF3;

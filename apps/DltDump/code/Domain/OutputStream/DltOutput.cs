@@ -13,7 +13,7 @@
     /// </summary>
     public sealed class DltOutput : OutputBase, IOutputStream
     {
-        private readonly object m_WriteLock = new object();
+        private readonly object m_WriteLock = new();
         private ITraceEncoder<DltTraceLineBase> m_TraceEncoder;
 
         /// <summary>
@@ -177,7 +177,7 @@
             if (ConvertNonVerbose && line is DltNonVerboseTraceLine nvLine) {
                 bool convert = true;
                 foreach (IDltArg arg in nvLine.Arguments) {
-                    if (arg is NonVerboseDltArg || arg is UnknownDltArg) {
+                    if (arg is NonVerboseDltArg or UnknownDltArg) {
                         convert = false;
                         break;
                     }

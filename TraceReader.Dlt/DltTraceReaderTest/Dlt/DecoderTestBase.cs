@@ -29,7 +29,7 @@
         {
             factory ??= new DltFactory(DltFactoryType.File, Map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 bool isBig = Endian == Endianness.Big;

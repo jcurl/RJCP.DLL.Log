@@ -51,7 +51,7 @@
         public void FilterSupportsBinary(bool binary)
         {
             Constraint filter = new Constraint().DltAppId("APP1");
-            MemoryOutput output = new MemoryOutput(binary);
+            MemoryOutput output = new(binary);
             using (IOutputStream filterOutput = new ContextOutput(filter, 1, 1, output)) {
                 Assert.That(filterOutput.SupportsBinary, Is.EqualTo(binary));
             }
@@ -61,7 +61,7 @@
         public void FilterLineContextBefore()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 1, 0, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
@@ -82,7 +82,7 @@
         public void FilterLineContextAfter()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 0, 1, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
@@ -103,7 +103,7 @@
         public void FilterLineContext()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 1, 1, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2), Is.True);
@@ -130,7 +130,7 @@
         public void FilterPacketContextBefore()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 1, 0, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet1), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);
@@ -151,7 +151,7 @@
         public void FilterPacketContextAfter()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 0, 1, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet1), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);
@@ -172,7 +172,7 @@
         public void FilterPacketContext()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new ContextOutput(filter, 1, 1, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet1), Is.False);
                 Assert.That(filterOutput.Write(TestLines.Verbose2, packet2), Is.True);

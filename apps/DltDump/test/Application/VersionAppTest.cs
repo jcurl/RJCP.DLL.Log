@@ -21,7 +21,7 @@
         [Test]
         public void GetSimpleVersion()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 global.Terminal.Width = 132;
                 VersionApp.ShowSimpleVersion();
 
@@ -34,7 +34,7 @@
         [Test]
         public void GetVersion()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 global.Terminal.Width = 132;
                 VersionApp.ShowVersion();
 

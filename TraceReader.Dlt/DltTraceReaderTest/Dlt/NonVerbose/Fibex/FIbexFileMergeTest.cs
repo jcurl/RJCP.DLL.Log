@@ -26,8 +26,8 @@
         {
             XmlDocument fibexDoc = GetDocument(FibexPath);
             using (Stream stream = GetStream(fibexDoc)) {
-                HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
-                FibexFile fibex = new FibexFile(option);
+                HashSet<FibexWarnings> foundWarnings = new();
+                FibexFile fibex = new(option);
                 fibex.LoadErrorEvent += (s, e) => {
                     Console.WriteLine($"{e}");
                     foundWarnings.Add(e.Warning);
@@ -102,8 +102,8 @@
             XmlDocument fibexDoc1 = GetDocument_Frame10(FibexPath);
             XmlDocument fibexDoc2 = GetDocument_Frame11(FibexPath);
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -128,8 +128,8 @@
             XmlElement node = (XmlElement)fibexDoc2.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:ECUS/fx:ECU[@ID='TCB']", nsmgr2);
             node.Attributes["ID"].Value = "TCB2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -155,8 +155,8 @@
             XmlElement node = (XmlElement)fibexDoc2.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:ECUS/fx:ECU[@ID='TCB']", nsmgr2);
             node.Attributes["ID"].Value = "TCB2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -183,8 +183,8 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/APPLICATION_ID", nsmgr2);
             node.InnerText = "APP2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -220,8 +220,8 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/APPLICATION_ID", nsmgr2);
             node.InnerText = "APP2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -249,8 +249,8 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/CONTEXT_ID", nsmgr2);
             node.InnerText = "CTX2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);
@@ -286,8 +286,8 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/CONTEXT_ID", nsmgr2);
             node.InnerText = "CTX2";
 
-            FibexFile fibex = new FibexFile(option);
-            HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
+            FibexFile fibex = new(option);
+            HashSet<FibexWarnings> foundWarnings = new();
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 foundWarnings.Add(e.Warning);

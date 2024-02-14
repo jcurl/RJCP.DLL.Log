@@ -43,7 +43,7 @@
         /// <value>The format describing the PCAP file.</value>
         public PcapFormat Format { get; private set; }
 
-        private readonly List<DltTraceLineBase> m_List = new List<DltTraceLineBase>();
+        private readonly List<DltTraceLineBase> m_List = new();
 
         /// <summary>
         /// Decodes data from the buffer and returns a read only collection of trace lines.
@@ -96,7 +96,7 @@
 
                 m_Decoder = new PacketDecoder(Format.LinkType, m_TraceDecoderFactory);
 
-                if (Format is object && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
+                if (Format is not null && Log.Pcap.ShouldTrace(TraceEventType.Information)) {
                     Log.Pcap.TraceEvent(TraceEventType.Information, "PCAP File: {0}", Format.ToString());
                 }
             }
@@ -238,7 +238,7 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing) {
-                if (!m_IsDisposed && m_Decoder is object) {
+                if (!m_IsDisposed && m_Decoder is not null) {
                     m_Decoder.Dispose();
                 }
                 m_IsDisposed = true;

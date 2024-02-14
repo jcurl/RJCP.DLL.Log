@@ -5,8 +5,8 @@
 
     internal static class LabelGenFactory
     {
-        private static readonly object m_LabelLock = new object();
-        private static readonly Dictionary<ILGenerator, int> m_LabelNum = new Dictionary<ILGenerator, int>();
+        private static readonly object m_LabelLock = new();
+        private static readonly Dictionary<ILGenerator, int> m_LabelNum = new();
 
         public static LabelGen Create(ILGenerator ilGen)
         {

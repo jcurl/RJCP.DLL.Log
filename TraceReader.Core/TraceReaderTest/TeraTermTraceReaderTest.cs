@@ -33,31 +33,31 @@
             string path = Path.Combine(Deploy.TestDirectory, "TestResources", "TextFiles", "TeraTerm.txt");
             using (ITraceReader<LogTraceLine> reader = await new TeraTermTraceReaderFactory().CreateAsync(path)) {
                 LogTraceLine[] expected = {
-                    new LogTraceLine("login: root", 0, 0)
+                    new("login: root", 0, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 861) },
-                    new LogTraceLine("Password: ", 1, 0)
+                    new("Password: ", 1, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 861) },
-                    new LogTraceLine("hostname:/dev/shmem> *** JCURL:", 2, 0)
+                    new("hostname:/dev/shmem> *** JCURL:", 2, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 971) },
-                    new LogTraceLine("*** JCURL: -=> 1 <=-", 3, 0)
+                    new("*** JCURL: -=> 1 <=-", 3, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 971) },
-                    new LogTraceLine("*** JCURL:", 4, 0)
+                    new("*** JCURL:", 4, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 971) },
-                    new LogTraceLine("/opt/bin/LcCommander appreset", 5, 0)
+                    new("/opt/bin/LcCommander appreset", 5, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 30, 971) },
-                    new LogTraceLine("application reset", 6, 0)
+                    new("application reset", 6, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 32, 96) },
-                    new LogTraceLine("[MSG]@229406 (4104.6): LcRequester: Exec: Current=Normal; Requested=Reset", 7, 0)
+                    new("[MSG]@229406 (4104.6): LcRequester: Exec: Current=Normal; Requested=Reset", 7, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 32, 393) },
-                    new LogTraceLine("[MSG]@230547 (4104.6): LcRequester: Exec: Current=_preResetNormal; Requested=Reset", 8, 0)
+                    new("[MSG]@230547 (4104.6): LcRequester: Exec: Current=_preResetNormal; Requested=Reset", 8, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 33, 533) },
-                    new LogTraceLine("System shutting down", 9, 0)
+                    new("System shutting down", 9, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 33, 580) },
-                    new LogTraceLine(string.Empty, 10, 0)
+                    new(string.Empty, 10, 0)
                         { TimeStamp = new DateTime(2011, 8, 19, 16, 25, 33, 580) },
-                    new LogTraceLine(string.Empty, 11, 0)
+                    new(string.Empty, 11, 0)
                         { TimeStamp = new DateTime(2021, 1, 1, 0, 0, 0) },
-                    new LogTraceLine("Log File Parsed", 12, 0)
+                    new("Log File Parsed", 12, 0)
                         { TimeStamp = new DateTime(2021, 1, 1, 0, 0, 0) }
                 };
 
@@ -71,9 +71,9 @@
             string path = Path.Combine(Deploy.TestDirectory, "TestResources", "TextFiles", "TextFile.txt");
             using (ITraceReader<LogTraceLine> reader = await new TeraTermTraceReaderFactory().CreateAsync(path)) {
                 LogTraceLine[] expected = {
-                    new LogTraceLine("This is Line 1", 0, 0)
+                    new("This is Line 1", 0, 0)
                         { TimeStamp = DateTime.UnixEpoch },
-                    new LogTraceLine("And now for Line 2.", 1, 0)
+                    new("And now for Line 2.", 1, 0)
                         { TimeStamp = DateTime.UnixEpoch },
                 };
 

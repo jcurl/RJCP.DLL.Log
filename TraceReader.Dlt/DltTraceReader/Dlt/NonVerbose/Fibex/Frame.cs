@@ -50,7 +50,7 @@
         /// <value>The type of the message for this frame.</value>
         public DltType MessageType { get; set; }
 
-        private readonly List<Pdu> m_Arguments = new List<Pdu>();
+        private readonly List<Pdu> m_Arguments = new();
 
         /// <summary>
         /// Gets the arguments which make up this frame.
@@ -79,7 +79,7 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder($"EcuID={EcuId} AppId={ApplicationId} CtxId={ContextId} {Id} ({MessageType})");
+            StringBuilder sb = new($"EcuID={EcuId} AppId={ApplicationId} CtxId={ContextId} {Id} ({MessageType})");
 
             if (m_Arguments.Count > 0) {
                 foreach (IPdu pdu in m_Arguments) {

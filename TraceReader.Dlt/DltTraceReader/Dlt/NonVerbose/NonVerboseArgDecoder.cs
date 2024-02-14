@@ -96,7 +96,7 @@
         /// <returns>The length of the argument decoded, to allow advancing to the next argument.</returns>
         public Result<int> Decode(ReadOnlySpan<byte> buffer, bool msbf, IPdu pdu, out IDltArg arg)
         {
-            if (pdu.Description is object) {
+            if (pdu.Description is not null) {
                 arg = new StringDltArg(pdu.Description);
                 return 0;
             }

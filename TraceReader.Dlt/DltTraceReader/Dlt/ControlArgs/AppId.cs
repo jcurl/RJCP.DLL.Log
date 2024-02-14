@@ -68,7 +68,7 @@
         /// <remarks>The result shall not include the <see cref="Description"/> value.</remarks>
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             StringAppend(result);
             return result.ToString();
         }

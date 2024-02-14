@@ -24,7 +24,7 @@
         [Test]
         public void Encode([Values(false, true)] bool enabled)
         {
-            SetTimingPacketsRequest request = new SetTimingPacketsRequest(enabled);
+            SetTimingPacketsRequest request = new(enabled);
 
             Span<byte> buffer = ControlEncode(request, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x0B));
@@ -36,7 +36,7 @@
         {
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
-            SetTimingPacketsRequest request = new SetTimingPacketsRequest(true);
+            SetTimingPacketsRequest request = new(true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

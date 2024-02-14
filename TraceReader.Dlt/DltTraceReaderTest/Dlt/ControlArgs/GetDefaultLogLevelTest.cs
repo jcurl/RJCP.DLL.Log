@@ -8,7 +8,7 @@
         [Test]
         public void GetDefaultLogLevelReq()
         {
-            GetDefaultLogLevelRequest arg = new GetDefaultLogLevelRequest();
+            GetDefaultLogLevelRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x04));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_default_log_level]"));
@@ -20,7 +20,7 @@
         [TestCase(100, "[get_default_log_level status=100]")]
         public void GetDefaultLogLevelResp(int status, string result)
         {
-            GetDefaultLogLevelResponse arg = new GetDefaultLogLevelResponse(status, 0);
+            GetDefaultLogLevelResponse arg = new(status, 0);
             Assert.That(arg.ServiceId, Is.EqualTo(0x04));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

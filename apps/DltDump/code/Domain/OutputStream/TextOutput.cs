@@ -9,7 +9,7 @@
     /// </summary>
     public sealed class TextOutput : OutputBase, IOutputStream
     {
-        private readonly object m_WriteLock = new object();
+        private readonly object m_WriteLock = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextOutput"/> class.

@@ -52,7 +52,7 @@
         public void RawArgLarge(int messageId)
         {
             byte[] payload = new byte[65000];
-            Random r = new Random();
+            Random r = new();
             if (Endian == Endianness.Little) {
                 payload[0] = (byte)((payload.Length - 2) & 0xFF);
                 payload[1] = (byte)((payload.Length - 2) >> 8);

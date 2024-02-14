@@ -11,7 +11,7 @@
         [Test]
         public void CustomControlRequest()
         {
-            DltControlTraceLine line = new DltControlTraceLine(new CustomControlRequest());
+            DltControlTraceLine line = new(new CustomControlRequest());
 
             Assert.That(line.ApplicationId, Is.EqualTo(null));
             Assert.That(line.ContextId, Is.EqualTo(null));
@@ -41,7 +41,7 @@
         [Test]
         public void CustomControlResponse()
         {
-            DltControlTraceLine line = new DltControlTraceLine(new CustomControlResponse());
+            DltControlTraceLine line = new(new CustomControlResponse());
 
             Assert.That(line.ApplicationId, Is.EqualTo(null));
             Assert.That(line.ContextId, Is.EqualTo(null));

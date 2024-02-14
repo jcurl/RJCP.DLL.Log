@@ -22,7 +22,7 @@
 
         public ExitCode Run()
         {
-            FilterConfig config = new FilterConfig(m_Options.Arguments) {
+            FilterConfig config = new(m_Options.Arguments) {
                 ShowPosition = m_Options.Position,
                 InputFormat = m_Options.InputFormat,
                 OutputFileName = m_Options.OutputFileName,
@@ -43,7 +43,7 @@
                     return ExitCode.FibexError;
             }
             BuildFilter(m_Options, config);
-            FilterApp app = new FilterApp(config);
+            FilterApp app = new(config);
 
             Task<ExitCode> filterTask = app.Run();
             filterTask.ConfigureAwait(false);
@@ -57,10 +57,10 @@
                 return;
             }
 
-            HashSet<string> identifiers = new HashSet<string>();
-            HashSet<int> sessionIds = new HashSet<int>();
-            HashSet<int> messageIds = new HashSet<int>();
-            HashSet<DltType> types = new HashSet<DltType>();
+            HashSet<string> identifiers = new();
+            HashSet<int> sessionIds = new();
+            HashSet<int> messageIds = new();
+            HashSet<DltType> types = new();
 
             foreach (string ecuId in options.EcuId) {
                 if (identifiers.Contains(ecuId)) continue;

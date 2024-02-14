@@ -11,7 +11,7 @@
     /// </remarks>
     internal class FrameMapSimple : IFrameMapLoader
     {
-        private readonly Dictionary<int, IFrame> m_Frames = new Dictionary<int, IFrame>();
+        private readonly Dictionary<int, IFrame> m_Frames = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FrameMapSimple"/> class.

@@ -19,7 +19,7 @@
         /// </exception>
         public SwInjectionRequest(int serviceId, byte[] payload)
         {
-            if (serviceId >= 0 && serviceId < 0xFFF)
+            if (serviceId is >= 0 and < 0xFFF)
                 throw new ArgumentOutOfRangeException(nameof(serviceId), "ServiceID outside valid range of 0xFFF..0xFFFFFFFF");
 
             ServiceId = serviceId;
@@ -91,7 +91,7 @@
         {
             Span<byte> dataLength = stackalloc byte[4];
 
-            StringBuilder strBuilder = new StringBuilder("[] ", Payload.Length * 3 + 15);
+            StringBuilder strBuilder = new("[] ", Payload.Length * 3 + 15);
             BitOperations.Copy32ShiftLittleEndian(Payload.Length, dataLength);
             Args.HexConvert.ConvertToHex(strBuilder, dataLength);
             if (Payload.Length > 0) {

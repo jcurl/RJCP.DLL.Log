@@ -17,7 +17,7 @@
     public sealed class BlockReader : IDisposable
     {
         private const int MinimumBlockSize = 12;
-        private readonly List<InterfaceDescriptionBlock> m_Interfaces = new List<InterfaceDescriptionBlock>();
+        private readonly List<InterfaceDescriptionBlock> m_Interfaces = new();
         private bool m_HasSectionHeader = false;
         private bool m_LittleEndian;
         private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
@@ -259,7 +259,7 @@
         private void ClearInterfaces()
         {
             foreach (InterfaceDescriptionBlock idb in m_Interfaces) {
-                if (idb is object) idb.Dispose();
+                if (idb is not null) idb.Dispose();
             }
             m_Interfaces.Clear();
         }

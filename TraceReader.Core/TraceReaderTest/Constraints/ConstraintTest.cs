@@ -38,7 +38,7 @@
         [Test]
         public void Initialize()
         {
-            TraceLine line = new TraceLine("A", 0, 0);
+            TraceLine line = new("A", 0, 0);
             Constraint c = Constraint();
 
             // We haven't given it a valid constraint.
@@ -48,7 +48,7 @@
         [Test]
         public void None()
         {
-            TraceLine line = new TraceLine("A", 0, 0);
+            TraceLine line = new("A", 0, 0);
             IMatchConstraint c = Constraint().None;
 
             Assert.That(c.Check(line), Is.True);
@@ -58,7 +58,7 @@
         [TestCase("Foo", "Bar")]
         public void NoneFirst(string text, string match)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().None.TextEquals(match);
 
             Assert.That(c.Check(line), Is.EqualTo(text == match));
@@ -68,7 +68,7 @@
         [TestCase("Foo", "Bar")]
         public void NoneLast(string text, string match)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextEquals(match).None;
 
             Assert.That(c.Check(line), Is.EqualTo(text == match));
@@ -77,7 +77,7 @@
         [Test]
         public void NotNone()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().Not.None;
 
             // Will always fail. Users should really not be writing such test cases.
@@ -93,7 +93,7 @@
         [TestCase("Apple", "Banana", false)]
         public void TextString(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextString(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -102,7 +102,7 @@
         [Test]
         public void TextStringMultipleMatch()
         {
-            TraceLine line = new TraceLine("Apple", 0, 0);
+            TraceLine line = new("Apple", 0, 0);
             Constraint c = Constraint().TextString("App").TextString("ple");
 
             Assert.That(c.Check(line), Is.True);
@@ -111,7 +111,7 @@
         [Test]
         public void TextStringMultipleMismatch1()
         {
-            TraceLine line = new TraceLine("Apple", 0, 0);
+            TraceLine line = new("Apple", 0, 0);
             Constraint c = Constraint().TextString("Ban").TextString("ple");
 
             Assert.That(c.Check(line), Is.False);
@@ -120,7 +120,7 @@
         [Test]
         public void TextStringMultipleMismatch2()
         {
-            TraceLine line = new TraceLine("Apple", 0, 0);
+            TraceLine line = new("Apple", 0, 0);
             Constraint c = Constraint().TextString("App").TextString("ana");
 
             Assert.That(c.Check(line), Is.False);
@@ -136,7 +136,7 @@
             try {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("ja-JP");
 
-                TraceLine line = new TraceLine(text, 0, 0);
+                TraceLine line = new(text, 0, 0);
                 Constraint c = Constraint().TextString(match);
                 Assert.That(c.Check(line), Is.EqualTo(result));
             } finally {
@@ -161,7 +161,7 @@
         [TestCase("Apple", "Banana", false)]
         public void TextEquals(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextEquals(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -176,7 +176,7 @@
             try {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-MO");
 
-                TraceLine line = new TraceLine(text, 0, 0);
+                TraceLine line = new(text, 0, 0);
                 Constraint c = Constraint().TextStartsWith(match);
                 Assert.That(c.Check(line), Is.EqualTo(result));
 
@@ -207,7 +207,7 @@
         [TestCase("Apple Banana", @"^(\S+)$", false)]
         public void TextRegEx(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextRegEx(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -227,7 +227,7 @@
         [TestCase("Apple Banana", @"^(\S+)$", false)]
         public void TextRegExOption(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextRegEx(match, RegexOptions.CultureInvariant);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -263,7 +263,7 @@
         [TestCase("Apple Banana", @"^(\S+)$", false)]
         public void TextIRegEx(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextIRegEx(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -283,7 +283,7 @@
         [TestCase("Apple Banana", @"^(\S+)$", false)]
         public void TextIRegExOption(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextIRegEx(match, RegexOptions.CultureInvariant);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -313,7 +313,7 @@
         [TestCase("Apple", "Banana", false)]
         public void TextStartsWith(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().TextStartsWith(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -329,7 +329,7 @@
             try {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("ja-JP");
 
-                TraceLine line = new TraceLine(text, 0, 0);
+                TraceLine line = new(text, 0, 0);
                 Constraint c = Constraint().TextStartsWith(match);
                 Assert.That(c.Check(line), Is.EqualTo(result));
             } finally {
@@ -355,7 +355,7 @@
             try {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("zh-MO");
 
-                TraceLine line = new TraceLine(text, 0, 0);
+                TraceLine line = new(text, 0, 0);
                 Constraint c = Constraint().TextIEquals(match);
                 Assert.That(c.Check(line), Is.EqualTo(result));
 
@@ -382,7 +382,7 @@
             try {
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("ja-JP");
 
-                TraceLine line = new TraceLine(text, 0, 0);
+                TraceLine line = new(text, 0, 0);
                 Constraint c = Constraint().TextIString(match);
                 Assert.That(c.Check(line), Is.EqualTo(result));
             } finally {
@@ -401,7 +401,7 @@
         [Test]
         public void TypeOfSuccess()
         {
-            LogTraceLine line = new LogTraceLine("X", 0, 0);
+            LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<LogTraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(true));
@@ -410,7 +410,7 @@
         [Test]
         public void TypeOfFail1()
         {
-            TraceLine line = new TraceLine("X", 0, 0);
+            TraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<LogTraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(false));
@@ -419,7 +419,7 @@
         [Test]
         public void TypeOfFail2()
         {
-            LogTraceLine line = new LogTraceLine("X", 0, 0);
+            LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<TraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(false));
@@ -444,7 +444,7 @@
         [Test]
         public void InstanceOfSuccess1()
         {
-            LogTraceLine line = new LogTraceLine("X", 0, 0);
+            LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<LogTraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(true));
@@ -453,7 +453,7 @@
         [Test]
         public void InstanceOfFail()
         {
-            TraceLine line = new TraceLine("X", 0, 0);
+            TraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<LogTraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(false));
@@ -462,7 +462,7 @@
         [Test]
         public void InstanceOfSuccess2()
         {
-            LogTraceLine line = new LogTraceLine("X", 0, 0);
+            LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<TraceLine>();
 
             Assert.That(c.Check(line), Is.EqualTo(true));
@@ -487,7 +487,7 @@
         [Test]
         public void OrLeft()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().TextEquals("Text").Or.TextEquals("Bar");
 
             Assert.That(c.Check(line), Is.True);
@@ -496,7 +496,7 @@
         [Test]
         public void OrRight()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().TextEquals("Bar").Or.TextEquals("Text");
 
             Assert.That(c.Check(line), Is.True);
@@ -505,7 +505,7 @@
         [Test]
         public void OrPrecedenceLeft()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().TextString("Te").TextString("xt").Or.TextString("Foo").TextString("Bar");
 
             Assert.That(c.Check(line), Is.True);
@@ -514,7 +514,7 @@
         [Test]
         public void OrPrecedenceRight()
         {
-            TraceLine line = new TraceLine("FooBar", 0, 0);
+            TraceLine line = new("FooBar", 0, 0);
             Constraint c = Constraint().TextString("Te").TextString("xt").Or.TextString("Foo").TextString("Bar");
 
             Assert.That(c.Check(line), Is.True);
@@ -529,7 +529,7 @@
         [TestCase("Apple", "Banana", true)]
         public void NotTextEquals(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().Not.TextEquals(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -544,7 +544,7 @@
         [TestCase("Apple", "Banana", false)]
         public void NotNotTextEquals(string text, string match, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             Constraint c = Constraint().Not.Not.TextEquals(match);
 
             Assert.That(c.Check(line), Is.EqualTo(result));
@@ -554,7 +554,7 @@
         // Checks that "Not" only applies to the next operation, not to more than one.
         public void NotSingleToken()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().Not.TextString("Foo").TextString("xt");
 
             Assert.That(c.Check(line), Is.True);
@@ -563,7 +563,7 @@
         [Test]
         public void End()
         {
-            TraceLine line = new TraceLine("Apple", 0, 0);
+            TraceLine line = new("Apple", 0, 0);
             Constraint c = Constraint().TextString("App").TextString("ple").End();
 
             Assert.That(c.Check(line), Is.True);
@@ -584,7 +584,7 @@
         [TestCase("FooBar", false)]
         public void ComplexExpression1(string text, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
 
             // Both equivalent to de Morgan's theorem.
             Constraint c1 = Constraint().Not.TextString("Foo").Or.Not.TextString("Bar");
@@ -610,7 +610,7 @@
         [TestCase("BarHillBillies", true)]
         public void ComplexExpression2(string text, bool result)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
 
             // Both equivalent to de Morgan's theorem.
             Constraint c1 = Constraint()
@@ -641,7 +641,7 @@
 
             for (int i = 0; i < 63; i++) {
                 bool result = ComplexExpression3Calc(i, out string condition);
-                TraceLine line = new TraceLine(condition, 0, 0);
+                TraceLine line = new(condition, 0, 0);
                 Assert.That(c.Check(line), Is.EqualTo(result));
             }
         }
@@ -665,7 +665,7 @@
         [Test]
         public void InvalidExpressionDanglingNot()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().Not;
             Assert.That(() => { c.Check(line); }, Throws.TypeOf<ConstraintException>());
         }
@@ -673,7 +673,7 @@
         [Test]
         public void InvalidExpressionDanglingOr1()
         {
-            TraceLine line = new TraceLine("Text", 0, 0);
+            TraceLine line = new("Text", 0, 0);
             Constraint c = Constraint().Or;
             Assert.That(() => { c.Check(line); }, Throws.TypeOf<ConstraintException>());
         }
@@ -682,7 +682,7 @@
         [TestCase("Bar")]
         public void InvalidExpressionDanglingOr2(string match)
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
             Constraint c = Constraint().TextString(match).Or;
             Assert.That(() => { c.Check(line); }, Throws.TypeOf<ConstraintException>());
         }
@@ -691,7 +691,7 @@
         [TestCase("Bar")]
         public void InvalidExpressionUnityOr(string match)
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
             Constraint c = Constraint().Or.TextString(match);
             Assert.That(() => { c.Check(line); }, Throws.TypeOf<ConstraintException>());
         }
@@ -702,7 +702,7 @@
         [TestCase("FooBar")]
         public void InvalidExpressionNotOr(string text)
         {
-            TraceLine line = new TraceLine(text, 0, 0);
+            TraceLine line = new(text, 0, 0);
             // Should be .Or.Not
             Constraint c = Constraint().TextString("Foo").Not.Or.TextString("Bar");
 
@@ -712,7 +712,7 @@
         [Test]
         public void CustomPositionConstraintMatch()
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
 
             // This is how you would add your own constraints to an existing Constraint object.
             Constraint c = Constraint().Expr(new Position(0));
@@ -723,7 +723,7 @@
         [Test]
         public void CustomPositionConstraintMatchDirect()
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
 
             // You could also use it directly if you don't need anything else.
             IMatchConstraint c = new Position(0);
@@ -734,7 +734,7 @@
         [Test]
         public void ConstraintWithExceptionInCheck()
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
             Constraint c = Constraint().Expr(new InvalidConstraint());
 
             Assert.That(() => { c.Check(line); }, Throws.TypeOf<ConstraintException>());
@@ -750,7 +750,7 @@
         [Test]
         public void NullConstraintFalse()
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
             Constraint c = Constraint().Null;
 
             Assert.That(c.Check(line), Is.False);
@@ -766,7 +766,7 @@
         [Test]
         public void NotNullConstraintTrue()
         {
-            TraceLine line = new TraceLine("Foo", 0, 0);
+            TraceLine line = new("Foo", 0, 0);
             Constraint c = Constraint().Not.Null;
 
             Assert.That(c.Check(line), Is.True);
@@ -786,10 +786,10 @@
         [TestCase("BarFoo", 1, 1, 1, true)]
         public void AssociativityAnd(string text, int val1, int val2, int val3, bool result)
         {
-            Counter ctr1 = new Counter();
-            Counter ctr2 = new Counter();
-            Counter ctr3 = new Counter();
-            TraceLine line = new TraceLine(text, 0, 0);
+            Counter ctr1 = new();
+            Counter ctr2 = new();
+            Counter ctr3 = new();
+            TraceLine line = new(text, 0, 0);
 
             // With "and", evaluation should stop as soon as a result is false. When evaluation has stopped, the counter
             // is not incremented.
@@ -808,11 +808,11 @@
         [TestCase("BarFoo", 1, 1, 0, 0, true)]
         public void AssociativityOr(string text, int val1, int val2, int val3, int val4, bool result)
         {
-            Counter ctr1 = new Counter();
-            Counter ctr2 = new Counter();
-            Counter ctr3 = new Counter();
-            Counter ctr4 = new Counter();
-            TraceLine line = new TraceLine(text, 0, 0);
+            Counter ctr1 = new();
+            Counter ctr2 = new();
+            Counter ctr3 = new();
+            Counter ctr4 = new();
+            TraceLine line = new(text, 0, 0);
 
             // With "or", evaluation should stop as soon as a result is true. When evaluation has stopped, the counter
             // is not incremented.
@@ -829,9 +829,9 @@
         [TestCase("Bar", 1, 1, true)]
         public void AssociativityNot(string text, int val1, int val2, bool result)
         {
-            Counter ctr1 = new Counter();
-            Counter ctr2 = new Counter();
-            TraceLine line = new TraceLine(text, 0, 0);
+            Counter ctr1 = new();
+            Counter ctr2 = new();
+            TraceLine line = new(text, 0, 0);
 
             // Note, we can't have a "ctr" after "Not", as that would invert the result of "ctr" which is always true.
             // If you want to apply "not" to the result of TextString() with the counter, you need to make it an

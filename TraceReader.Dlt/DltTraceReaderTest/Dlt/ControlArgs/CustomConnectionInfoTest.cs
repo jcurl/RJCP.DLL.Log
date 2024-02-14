@@ -27,7 +27,7 @@
         [TestCase(100, -1, "[connection_info status=100] unknown eth0")]
         public void CustomConnectionInfoRes(int status, int state, string result)
         {
-            CustomConnectionInfoResponse arg = new CustomConnectionInfoResponse(status, state, "eth0");
+            CustomConnectionInfoResponse arg = new(status, state, "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -49,7 +49,7 @@
         [TestCase(100, 0x02, "[connection_info status=100] connected")]
         public void CustomConnectionInfoRes_NoComId(int status, int state, string result)
         {
-            CustomConnectionInfoResponse arg = new CustomConnectionInfoResponse(status, state, "");
+            CustomConnectionInfoResponse arg = new(status, state, "");
             Assert.That(arg.ServiceId, Is.EqualTo(0xF02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

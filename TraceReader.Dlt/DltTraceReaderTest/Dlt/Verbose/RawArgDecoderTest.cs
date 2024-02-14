@@ -46,7 +46,7 @@
         public void RawArgLarge()
         {
             byte[] payload = new byte[65000];
-            Random r = new Random();
+            Random r = new();
             if (Endian == Endianness.Little) {
                 payload[0] = 0x00;
                 payload[1] = 0x04;

@@ -68,11 +68,11 @@
         [TestCase(0xFFL, 8, "0x00000000000000ff")]
         public void LongHexValue(long value, int length, string output)
         {
-            HexIntDltArg hexArg = new HexIntDltArg(value, length);
+            HexIntDltArg hexArg = new(value, length);
             Assert.That(hexArg.ToString(), Is.EqualTo(output));
             Assert.That(hexArg.Data, Is.EqualTo(value));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(hexArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }

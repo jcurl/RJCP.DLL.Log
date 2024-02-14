@@ -18,7 +18,7 @@
         [TestCase(null, null)]
         public void AddEcuIdGetDefault(string appId, string ctxId)
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(0, "APP1", "CTX1", "ECU1", new TestFrame(1)), Is.True);
 
             Assert.That(frameMap.TryGetFrame(0, appId, ctxId, "ECU1", out IFrame frame), Is.True);
@@ -34,7 +34,7 @@
         [TestCase(null, null)]
         public void AddEcuIdsGetDefault(string appId, string ctxId)
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(0, "APP1", "CTX1", "ECU1", new TestFrame(1)), Is.True);
             Assert.That(frameMap.TryAddFrame(0, "APP1", "CTX1", "ECU2", new TestFrame(2)), Is.True);
 
@@ -56,7 +56,7 @@
         [TestCase(null, null)]
         public void AddNoEcuIdGet(string appId, string ctxId)
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(0, "APP1", "CTX1", null, new TestFrame(0)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", null, new TestFrame(1)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
@@ -84,7 +84,7 @@
         [TestCase(null, null)]
         public void AddEcuIdGetDuplicate(string appId, string ctxId)
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
             Assert.That(frameMap.TryAddFrame(0, "APP1", "CTX1", null, new TestFrame(0)), Is.True);
 
@@ -114,7 +114,7 @@
         [Test]
         public void AddEcuIdOverlap()
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", string.Empty, new TestFrame(0)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
 
@@ -132,7 +132,7 @@
         [Test]
         public void AddEcuIdOverlap2()
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", string.Empty, new TestFrame(0)), Is.True);
 
@@ -150,7 +150,7 @@
         [Test]
         public void NoEcuId()
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", string.Empty, new TestFrame(0)), Is.True);
 
@@ -164,7 +164,7 @@
         [Test]
         public void MultipleEcuIdenticalFrames()
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(0)), Is.False);
         }
@@ -172,7 +172,7 @@
         [Test]
         public void MultipleEcuFrames()
         {
-            FrameMapEcuSimpleAccessor frameMap = new FrameMapEcuSimpleAccessor();
+            FrameMapEcuSimpleAccessor frameMap = new();
             Assert.That(frameMap.TryAddFrame(2, "APP1", "CTX1", "ECU1", new TestFrame(2)), Is.True);
             Assert.That(frameMap.TryAddFrame(1, "APP1", "CTX1", "ECU1", new TestFrame(0)), Is.True);
 

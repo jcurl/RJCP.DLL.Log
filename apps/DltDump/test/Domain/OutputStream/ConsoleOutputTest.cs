@@ -22,7 +22,7 @@
         [TestCase(InputFormat.Pcap)]
         public void WriteLine(InputFormat inputFormat)
         {
-            using (TestApplication global = new TestApplication())
+            using (TestApplication global = new())
             using (IOutputStream output = new ConsoleOutput()) {
                 output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
@@ -40,7 +40,7 @@
         [TestCase(InputFormat.Pcap)]
         public void WriteLinePacket(InputFormat inputFormat)
         {
-            using (TestApplication global = new TestApplication())
+            using (TestApplication global = new())
             using (IOutputStream output = new ConsoleOutput()) {
                 output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose, new byte[] { 0x01 });
@@ -58,7 +58,7 @@
         [TestCase(InputFormat.Pcap)]
         public void WriteLineWithNoPosition(InputFormat inputFormat)
         {
-            using (TestApplication global = new TestApplication())
+            using (TestApplication global = new())
             using (IOutputStream output = new ConsoleOutput(false)) {
                 output.SetInput("input.dlt", inputFormat);
                 output.Write(TestLines.Verbose);
@@ -73,7 +73,7 @@
         [Test]
         public void WriteLineWithPosition()
         {
-            using (TestApplication global = new TestApplication())
+            using (TestApplication global = new())
             using (IOutputStream output = new ConsoleOutput(true)) {
                 output.Write(TestLines.Verbose);
                 Assert.That(global.Terminal.StdOutLines, Has.Count.EqualTo(1));

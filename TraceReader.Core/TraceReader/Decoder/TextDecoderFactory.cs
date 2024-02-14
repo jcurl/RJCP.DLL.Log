@@ -40,8 +40,8 @@
         /// <returns>A new instance of a <see cref="TextDecoder"/> object.</returns>
         public ITraceDecoder<TraceLine> Create()
         {
-            TextDecoder decoder = new TextDecoder();
-            if (m_Encoding is object) decoder.Encoding = m_Encoding;
+            TextDecoder decoder = new();
+            if (m_Encoding is not null) decoder.Encoding = m_Encoding;
             return decoder;
         }
     }

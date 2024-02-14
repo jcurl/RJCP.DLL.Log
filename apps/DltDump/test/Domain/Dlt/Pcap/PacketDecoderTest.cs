@@ -46,7 +46,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -71,7 +71,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -97,7 +97,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -123,7 +123,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -153,7 +153,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0x32, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(2));
@@ -179,7 +179,7 @@
                 0x00, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -201,7 +201,7 @@
                 0x00, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -219,7 +219,7 @@
                 0x20, 0x01, 0x00, 0x08, 0x01, 0x00, 0x00, 0x00                          // DLT
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -245,7 +245,7 @@
                 0x20, 0x01, 0x00, 0x08, 0x01, 0x00, 0x00, 0x00                          // DLT
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -270,7 +270,7 @@
                 0x20, 0x01, 0x00, 0x04                                                  // DLT, incomplete
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -289,7 +289,7 @@
                 0x20, 0x01, 0x00, 0x04,                                                 // DLT
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_LINUX_SLL, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -311,7 +311,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -336,7 +336,7 @@
 
             // We should not end up with any crashes.
             for (int packetLen = 0; packetLen < packet.Length - 1; packetLen++) {
-                using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+                using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                     IEnumerable<DltTraceLineBase> lines =
                         packetDecoder.DecodePacket(packet.AsSpan(0, packetLen), DateTime.UtcNow, 20);
                     Assert.That(lines, Is.Empty);
@@ -360,7 +360,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -382,7 +382,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -409,7 +409,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0x32, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(packet, Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(2));
@@ -483,7 +483,7 @@
         [Test]
         public void ReassembleIpFragmentInOrder()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(FragFrame1, Time1, 40), Is.Empty);
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
@@ -501,7 +501,7 @@
         [Test]
         public void ReassembleIpFragmentInReverse()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(FragFrame2, Time1, 40), Is.Empty);
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame1, Time2, 180));
@@ -522,7 +522,7 @@
             byte[] frame1 = FragFrame1.CopyArray();
             frame1[35] = 0xFF; frame1[37] = 0xFF;        // Change ports
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(frame1, Time1, 40), Is.Empty);
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
@@ -538,7 +538,7 @@
             byte[] frame1 = FragFrame1.CopyArray();
             frame1[39] += 1;   // Increase UDP length by 1, make it look truncated.
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(frame1, Time1, 40), Is.Empty);
                 IList<DltTraceLineBase> lines =
                     new List<DltTraceLineBase>(packetDecoder.DecodePacket(FragFrame2, Time2, 162));
@@ -551,7 +551,7 @@
         [Test]
         public void ReassemblyIpFragmentFrame1Repeated()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(FragFrame1, Time1, 40), Is.Empty);
 
                 // This packet will be ignored. Internally, it is seen as a duplicate fragment.
@@ -572,7 +572,7 @@
         [Test]
         public void Reassemble3IpFragmentInOrder()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame1, Time1, 0), Is.Empty);
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame2, Time2, 100), Is.Empty);
                 IList<DltTraceLineBase> lines =
@@ -593,7 +593,7 @@
         [Test]
         public void Reassemble3IpFragmentReverseOrder()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame3, Time1, 0), Is.Empty);
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame2, Time2, 100), Is.Empty);
                 IList<DltTraceLineBase> lines =
@@ -614,7 +614,7 @@
         [Test]
         public void Reassemble3IpFragmentReverseOrderDuplicated()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame3, Time1, 0), Is.Empty);
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame3, Time1b, 100), Is.Empty);
                 Assert.That(packetDecoder.DecodePacket(MiniFragFrame2, Time2, 200), Is.Empty);
@@ -656,7 +656,7 @@
             };
 
             packet[14] = (byte)ih;
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -677,7 +677,7 @@
             };
 
             packet[18] = (byte)ih;
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -699,7 +699,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -721,7 +721,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E // , 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -741,7 +741,7 @@
                 0x00, 0x00, 0x00, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -763,7 +763,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x2E, 0x2E, 0x00
             };
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IEnumerable<DltTraceLineBase> lines = packetDecoder.DecodePacket(packet, DateTime.UtcNow, 20);
                 Assert.That(lines, Is.Empty);
             }
@@ -814,8 +814,8 @@
         [Test]
         public void SplitUdpPacket1()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
-                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+                List<DltTraceLineBase> lines = new();
 
                 lines.AddRange(packetDecoder.DecodePacket(P1a, Time1, 0));
                 Assert.That(lines, Is.Empty);
@@ -830,8 +830,8 @@
         [Test]
         public void SplitUdpPacket2()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
-                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+                List<DltTraceLineBase> lines = new();
 
                 lines.AddRange(packetDecoder.DecodePacket(P2a, Time1, 0));
                 Assert.That(lines, Is.Empty);
@@ -846,8 +846,8 @@
         [Test]
         public void InterleavedSplitUdpPacket()
         {
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
-                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+                List<DltTraceLineBase> lines = new();
 
                 lines.AddRange(packetDecoder.DecodePacket(P1a, Time1, 0));
                 Assert.That(lines, Is.Empty);

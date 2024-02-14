@@ -79,8 +79,8 @@
         private Result<int> DecodeLogInfo(ReadOnlySpan<byte> buffer, bool msbf, int status, out GetLogInfoResponse response)
         {
             response = null;
-            List<AppId> appIds = new List<AppId>();
-            List<ContextId> ctxIds = new List<ContextId>();
+            List<AppId> appIds = new();
+            List<ContextId> ctxIds = new();
 
             int appIdCount = BitOperations.To16Shift(buffer[1..], !msbf);
             int appIdOffset = 3;

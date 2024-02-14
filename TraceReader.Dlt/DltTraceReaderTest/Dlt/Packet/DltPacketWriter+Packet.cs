@@ -57,7 +57,7 @@
 
                 int length = 4;
                 byte headerType = 0x38;  // WSID + WTMS + VERS(1)
-                if (ecuId is object) {
+                if (ecuId is not null) {
                     headerType |= 0x04;  // WEID
                     WriteId(m_Packet, length, ecuId);
                     length += 4;
@@ -80,7 +80,7 @@
             public void WriteStandardHeaderVersion(int version)
             {
                 if (!m_HasStandardHeader) throw new InvalidOperationException("Standard Header not yet constructed");
-                if (version < 0 || version > 7) throw new ArgumentOutOfRangeException(nameof(version));
+                if (version is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(version));
 
                 m_Packet[0] = (byte)(m_Packet[0] & 0x1F | (version << 5));
             }

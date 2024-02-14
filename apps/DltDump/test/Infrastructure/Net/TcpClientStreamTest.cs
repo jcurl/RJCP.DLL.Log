@@ -19,7 +19,7 @@
         [Test]
         public void DefaultState()
         {
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(stream.CanRead, Is.False);
                 Assert.That(stream.CanWrite, Is.False);
                 Assert.That(stream.CanTimeout, Is.False);  // We're not connected, so we don't know.
@@ -72,7 +72,7 @@
         [Test]
         public void NegativeReadTimeout()
         {
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(() => {
                     stream.ReadTimeout = -2;
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -82,7 +82,7 @@
         [Test]
         public void NegativeWriteTimeout()
         {
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(() => {
                     stream.WriteTimeout = -2;
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -92,7 +92,7 @@
         [Test]
         public void NegativeDisconnectTimeout()
         {
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(() => {
                     stream.DisconnectTimeout = -2;
                 }, Throws.TypeOf<ArgumentOutOfRangeException>());
@@ -106,7 +106,7 @@
         {
             // It throws an instance of SocketException, but not the exact type on .NET Core. The time it takes to
             // execute this test is dependent on the Operating System.
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(stream.Connect(), Is.False);
             }
         }
@@ -118,7 +118,7 @@
         {
             // It throws an instance of SocketException, but not the exact type on .NET Core. The time it takes to
             // execute this test is dependent on the Operating System.
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(await stream.ConnectAsync(), Is.False);
             }
         }
@@ -140,11 +140,11 @@
         [Category("Integration")]
         public void Connect()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                     Assert.That(stream.Connect(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
                 }
@@ -156,11 +156,11 @@
         [Category("Integration")]
         public void ConnectTwice()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                     Assert.That(stream.Connect(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
 
@@ -177,11 +177,11 @@
         [Category("Integration")]
         public async Task ConnectAsync()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                     Assert.That(await stream.ConnectAsync(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
                 }
@@ -193,11 +193,11 @@
         [Category("Integration")]
         public async Task ConnectAsyncTwice()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                     Assert.That(await stream.ConnectAsync(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
 
@@ -234,11 +234,11 @@
         [Category("Integration")]
         public void ConnectSeekUnsupported()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                     Assert.That(stream.Connect(), Is.True);
                     Assert.That(SeekUnsupported(stream), Is.True);
                 }
@@ -248,7 +248,7 @@
         [Test]
         public void SeekUnsupported()
         {
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490)) {
+            using (TcpClientStream stream = new("localhost", 3490)) {
                 Assert.That(SeekUnsupported(stream), Is.True);
             }
         }
@@ -259,7 +259,7 @@
         public void ConnectTimeout()
         {
             // Note, changing this to a valid IP address on your network will work faster.
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490) {
+            using (TcpClientStream stream = new("localhost", 3490) {
                 DisconnectTimeout = 200
             }) {
                 Assert.That(stream.Connect(), Is.False);
@@ -272,7 +272,7 @@
         public async Task ConnectAsyncTimeout()
         {
             // Note, changing this to a valid IP address on your network will work faster.
-            using (TcpClientStream stream = new TcpClientStream("localhost", 3490) {
+            using (TcpClientStream stream = new("localhost", 3490) {
                 DisconnectTimeout = 200
             }) {
                 Assert.That(await stream.ConnectAsync(), Is.False);
@@ -284,11 +284,11 @@
         [Category("Integration")]
         public void ConnectReadTimeout()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490) {
                     DisconnectTimeout = 200
                 }) {
                     Assert.That(stream.Connect(), Is.True);
@@ -303,11 +303,11 @@
         [Category("Integration")]
         public async Task ConnectReadAsyncTimeout()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490) {
                     DisconnectTimeout = 200
                 }) {
                     Assert.That(await stream.ConnectAsync(), Is.True);
@@ -325,7 +325,7 @@
         {
             // A rather large test that shows we don't timeout in 200ms if data arrives.
 
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 server.ClientConnected += (s, e) => {
                     Task.Factory.StartNew(() => {
                         NetworkStream serverStream = e.ConnectedClient.GetStream();
@@ -352,7 +352,7 @@
                 // Start the server listener in the background via a task. It will stop when the server is disposed.
                 _ = server.ListenAsync();
 
-                using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490) {
+                using (TcpClientStream stream = new("127.0.0.1", 3490) {
                     DisconnectTimeout = 200
                 }) {
                     Assert.That(await stream.ConnectAsync(), Is.True);
@@ -380,7 +380,7 @@
         [Test]
         public void ReadNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(() => {
                     _ = stream.Read(new byte[100].AsSpan());
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -390,7 +390,7 @@
         [Test]
         public void ReadDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(() => {
@@ -401,7 +401,7 @@
         [Test]
         public void ReadAsyncNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(async () => {
                     _ = await stream.ReadAsync(new byte[100].AsMemory());
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -411,7 +411,7 @@
         [Test]
         public void ReadAsyncDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(async () => {
@@ -423,7 +423,7 @@
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
         public void ReadAsyncBufferNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(async () => {
                     _ = await stream.ReadAsync(new byte[100], 0, 100);
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -434,7 +434,7 @@
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
         public void ReadAsyncBufferDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(async () => {
@@ -445,7 +445,7 @@
         [Test]
         public void WriteNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(() => {
                     stream.Write(new byte[100].AsSpan());
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -455,7 +455,7 @@
         [Test]
         public void WriteDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(() => {
@@ -466,7 +466,7 @@
         [Test]
         public void WriteAsyncNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(async () => {
                     await stream.WriteAsync(new byte[100].AsMemory());
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -476,7 +476,7 @@
         [Test]
         public void WriteAsyncDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(async () => {
@@ -488,7 +488,7 @@
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
         public void WriteAsyncBufferNotConnected()
         {
-            using (TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490)) {
+            using (TcpClientStream stream = new("127.0.0.1", 3490)) {
                 Assert.That(async () => {
                     await stream.WriteAsync(new byte[100], 0, 100);
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -499,7 +499,7 @@
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
         public void WriteAsyncBufferDisposed()
         {
-            TcpClientStream stream = new TcpClientStream("127.0.0.1", 3490);
+            TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
             Assert.That(async () => {

@@ -15,7 +15,7 @@
         [Test]
         public void DefaultLength()
         {
-            LineCacheAccessor cache = new LineCacheAccessor();
+            LineCacheAccessor cache = new();
             Assert.That(cache.CacheLength, Is.EqualTo(0));
         }
 
@@ -27,7 +27,7 @@
                 0x08, 0x09, 0x0a, 0x0b
             };
 
-            LineCacheAccessor cache = new LineCacheAccessor();
+            LineCacheAccessor cache = new();
             cache.Append(buffer.AsSpan());
             Assert.That(cache.CacheLength, Is.EqualTo(12));
         }
@@ -38,7 +38,7 @@
             byte[] buffer = new byte[CacheSize + 10];
             new Random().NextBytes(buffer);
 
-            LineCacheAccessor cache = new LineCacheAccessor();
+            LineCacheAccessor cache = new();
             Assert.That(() => {
                 cache.Append(buffer.AsSpan());
             }, Throws.TypeOf<InsufficientMemoryException>());

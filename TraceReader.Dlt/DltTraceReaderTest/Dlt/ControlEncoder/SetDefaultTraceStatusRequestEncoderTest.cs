@@ -25,7 +25,7 @@
         public void Encode()
         {
             SetDefaultTraceStatusRequest request =
-                new SetDefaultTraceStatusRequest(true);
+                new(true);
 
             Span<byte> buffer = ControlEncode(request, 9);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x12));
@@ -37,7 +37,7 @@
         public void EncodeWithCom()
         {
             SetDefaultTraceStatusRequest request =
-                new SetDefaultTraceStatusRequest(false, "COM1");
+                new(false, "COM1");
 
             Span<byte> buffer = ControlEncode(request, 9);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x12));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             SetDefaultTraceStatusRequest request =
-                new SetDefaultTraceStatusRequest(true);
+                new(true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

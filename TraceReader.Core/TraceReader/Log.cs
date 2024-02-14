@@ -4,6 +4,6 @@
 
     internal static class Log
     {
-        public static readonly LogSource Constraints = new LogSource("RJCP.Diagnostics.Log.Constraints");
+        public static readonly LogSource Constraints = new("RJCP.Diagnostics.Log.Constraints");
     }
 }

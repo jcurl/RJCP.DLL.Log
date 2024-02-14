@@ -68,11 +68,11 @@
         [TestCase(0xFFL, 8, "0b0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 1111 1111")]
         public void LongBinaryValue(long value, int length, string output)
         {
-            BinaryIntDltArg hexArg = new BinaryIntDltArg(value, length);
+            BinaryIntDltArg hexArg = new(value, length);
             Assert.That(hexArg.ToString(), Is.EqualTo(output));
             Assert.That(hexArg.Data, Is.EqualTo(value));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(hexArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }

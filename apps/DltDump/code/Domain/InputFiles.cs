@@ -13,7 +13,7 @@
     /// </remarks>
     public class InputFiles
     {
-        private readonly HashSet<FileSystemNodeInfo> m_ProtectedFiles = new HashSet<FileSystemNodeInfo>();
+        private readonly HashSet<FileSystemNodeInfo> m_ProtectedFiles = new();
 
         /// <summary>
         /// Adds a file name that should be protected from writing.
@@ -28,7 +28,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return;
 
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
+            FileSystemNodeInfo file = new(fileName);
             m_ProtectedFiles.Add(file);
         }
 
@@ -45,7 +45,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return false;
 
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
+            FileSystemNodeInfo file = new(fileName);
             return m_ProtectedFiles.Contains(file);
         }
 

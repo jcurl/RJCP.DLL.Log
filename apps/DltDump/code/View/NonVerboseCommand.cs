@@ -18,7 +18,7 @@
 
         public ExitCode Run()
         {
-            NonVerboseApp app = new NonVerboseApp(m_Options);
+            NonVerboseApp app = new(m_Options);
             return app.Run(m_FibexPaths);
         }
     }

@@ -23,7 +23,7 @@
 
         public override string ToString()
         {
-            if (Description is object) {
+            if (Description is not null) {
                 return $"[{Description}]";
             }
             return $"{PduType} ({PduLength})";
@@ -32,7 +32,7 @@
 
     public sealed class PduComparer : IEqualityComparer<IPdu>
     {
-        public static readonly PduComparer Comparer = new PduComparer();
+        public static readonly PduComparer Comparer = new();
 
         public bool Equals(IPdu x, IPdu y)
         {
@@ -47,8 +47,8 @@
         {
             int hash = obj.PduLength * 65532;
 
-            if (obj.Description is object) hash ^= obj.Description.GetHashCode();
-            if (obj.PduType is object) hash ^= obj.PduType.GetHashCode();
+            if (obj.Description is not null) hash ^= obj.Description.GetHashCode();
+            if (obj.PduType is not null) hash ^= obj.PduType.GetHashCode();
             return hash;
         }
     }

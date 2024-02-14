@@ -131,18 +131,18 @@
             DltTraceEncoder.WriteId(buffer, ctx.Name);
             int pos = 4;
 
-            if (status == GetLogInfoResponse.StatusWithLogNoTrace ||
-                status == GetLogInfoResponse.StatusWithLogWithTrace ||
-                status == GetLogInfoResponse.StatusFullInfo) {
+            if (status is GetLogInfoResponse.StatusWithLogNoTrace or
+                GetLogInfoResponse.StatusWithLogWithTrace or
+                GetLogInfoResponse.StatusFullInfo) {
                 if (buffer.Length < pos + 1)
                     return Result.FromException<int>(new DltEncodeException("'GetLogInfoResponseEncoder' insufficient buffer writing context"));
                 buffer[pos] = unchecked((byte)ctx.LogLevel);
                 pos++;
             }
 
-            if (status == GetLogInfoResponse.StatusNoLogWithTrace ||
-                status == GetLogInfoResponse.StatusWithLogWithTrace ||
-                status == GetLogInfoResponse.StatusFullInfo) {
+            if (status is GetLogInfoResponse.StatusNoLogWithTrace or
+                GetLogInfoResponse.StatusWithLogWithTrace or
+                GetLogInfoResponse.StatusFullInfo) {
                 if (buffer.Length < pos + 1)
                     return Result.FromException<int>(new DltEncodeException("'GetLogInfoResponseEncoder' insufficient buffer writing context"));
                 buffer[pos] = unchecked((byte)ctx.TraceStatus);

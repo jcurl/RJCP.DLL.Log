@@ -10,10 +10,10 @@
         [TestCase(false, "false")]
         public void BoolToString(bool value, string output)
         {
-            BoolDltArg boolArg = new BoolDltArg(value);
+            BoolDltArg boolArg = new(value);
             Assert.That(boolArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(boolArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }

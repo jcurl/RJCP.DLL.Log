@@ -27,7 +27,7 @@
         public void Encode(LogLevel level)
         {
             SetDefaultLogLevelRequest request =
-                new SetDefaultLogLevelRequest(level);
+                new(level);
 
             Span<byte> buffer = ControlEncode(request, 9);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x11));
@@ -39,7 +39,7 @@
         public void EncodeWithCom()
         {
             SetDefaultLogLevelRequest request =
-                new SetDefaultLogLevelRequest(LogLevel.Info, "COM1");
+                new(LogLevel.Info, "COM1");
 
             Span<byte> buffer = ControlEncode(request, 9);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x11));
@@ -53,7 +53,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             SetDefaultLogLevelRequest request =
-                new SetDefaultLogLevelRequest(LogLevel.Info);
+                new(LogLevel.Info);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

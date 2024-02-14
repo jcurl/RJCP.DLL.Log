@@ -62,7 +62,7 @@
         [Test]
         public void SetFactoryScheme()
         {
-            InputStreamFactory factory = new InputStreamFactory();
+            InputStreamFactory factory = new();
             Assert.That(() => {
                 factory.SetFactory(null, new NullInputStreamFactory());
             }, Throws.TypeOf<ArgumentNullException>());
@@ -71,7 +71,7 @@
         [Test]
         public void UnregisterFactoryScheme()
         {
-            InputStreamFactory factory = new InputStreamFactory();
+            InputStreamFactory factory = new();
             factory.SetFactory("file", null);
             using (IInputStream stream = factory.Create(EmptyFile)) {
                 Assert.That(stream, Is.Null);
@@ -81,7 +81,7 @@
         [Test]
         public void RegisterFactoryScheme()
         {
-            InputStreamFactory factory = new InputStreamFactory();
+            InputStreamFactory factory = new();
             factory.SetFactory("null", new NullInputStreamFactory());
             using (IInputStream stream = factory.Create("null:")) {
                 Assert.That(stream, Is.TypeOf<NullInputStream>());
@@ -91,7 +91,7 @@
         [Test]
         public void InvalidStreamFactory()
         {
-            TestInputStreamFactory factory = new TestInputStreamFactory();
+            TestInputStreamFactory factory = new();
             factory.SetFactory("invalid", new InvalidStreamFactory());
             using (IInputStream stream = factory.Create("invalid://")) {
                 Assert.That(stream, Is.Null);

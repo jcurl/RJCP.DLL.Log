@@ -23,7 +23,7 @@
         [TestCase(100, -18000, true, "[timezone status=100] -05:00 DST")]
         public void CustomTimeZoneRes(int status, int timeZone, bool isDst, string result)
         {
-            CustomTimeZoneResponse arg = new CustomTimeZoneResponse(status, timeZone, isDst);
+            CustomTimeZoneResponse arg = new(status, timeZone, isDst);
             Assert.That(arg.ServiceId, Is.EqualTo(0xF03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

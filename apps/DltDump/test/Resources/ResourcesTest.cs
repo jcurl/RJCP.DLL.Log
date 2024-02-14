@@ -16,14 +16,14 @@
         private const string AppResources = "RJCP.App.DltDump.Resources.AppResources";
 
         private static readonly CultureInfo[] Cultures = {
-            new CultureInfo("en"),
-            new CultureInfo("en-US"),    // Doesn't exist - inherit
-            new CultureInfo("en-GB"),    // Doesn't exist - inherit
-            new CultureInfo("en-AU"),    // Doesn't exist - inherit
-            new CultureInfo("de"),       // Doesn't exist - inherit
-            new CultureInfo("de-DE"),    // Doesn't exist - inherit
-            new CultureInfo("de-AT"),    // Doesn't exist - inherit
-            new CultureInfo("ro")        // Doesn't exist - inherit
+            new("en"),
+            new("en-US"),    // Doesn't exist - inherit
+            new("en-GB"),    // Doesn't exist - inherit
+            new("en-AU"),    // Doesn't exist - inherit
+            new("de"),       // Doesn't exist - inherit
+            new("de-DE"),    // Doesn't exist - inherit
+            new("de-AT"),    // Doesn't exist - inherit
+            new("ro")        // Doesn't exist - inherit
         };
 
         private static CultureInfo GetNeutralResourceLanguage()
@@ -60,11 +60,11 @@
 
         private static bool CheckMissingResources(string baseName, Assembly assembly, CultureInfo culture)
         {
-            ResourceManager rsrc = new ResourceManager(baseName, assembly);
+            ResourceManager rsrc = new(baseName, assembly);
             ResourceSet set = rsrc.GetResourceSet(culture, true, true);
             ResourceSet invariant = rsrc.GetResourceSet(GetNeutralResourceLanguage(), true, false);
 
-            HashSet<string> found = new HashSet<string>();
+            HashSet<string> found = new();
             foreach (DictionaryEntry entry in set) {
                 string key = entry.Key.ToString();
                 if (entry.Value is string resource && !string.IsNullOrWhiteSpace(resource))
@@ -80,7 +80,7 @@
             }
 
             Console.WriteLine("Resource: {0}; Culture: {1}; Parent: {2}", baseName, culture, culture.Parent);
-            List<string> missing = new List<string>();
+            List<string> missing = new();
             foreach (DictionaryEntry entry in invariant) {
                 string key = entry.Key.ToString();
                 if (!found.Contains(key)) {

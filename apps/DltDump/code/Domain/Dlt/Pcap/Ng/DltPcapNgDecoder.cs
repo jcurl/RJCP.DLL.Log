@@ -36,7 +36,7 @@
             m_BlockReader = new BlockReader(factory);
         }
 
-        private readonly List<DltTraceLineBase> m_List = new List<DltTraceLineBase>();
+        private readonly List<DltTraceLineBase> m_List = new();
 
         /// <summary>
         /// Decodes data from the buffer and returns a read only collection of trace lines.

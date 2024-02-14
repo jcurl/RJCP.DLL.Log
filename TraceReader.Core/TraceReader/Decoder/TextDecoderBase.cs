@@ -58,7 +58,7 @@
 
         private Decoder Decoder { get; set; }
 
-        private readonly List<T> m_Lines = new List<T>();
+        private readonly List<T> m_Lines = new();
 
         private readonly char[] m_LineBuffer = new char[BufferLength];
         private int m_Offset;       // Offset into m_LineBuffer for data already received and cached.

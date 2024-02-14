@@ -23,7 +23,7 @@
 
         public DltType MessageType { get; set; }
 
-        private readonly List<TestPdu> m_Pdus = new List<TestPdu>();
+        private readonly List<TestPdu> m_Pdus = new();
 
         public IReadOnlyList<IPdu> Arguments { get { return m_Pdus; } }
 
@@ -31,7 +31,7 @@
         {
             ArgumentNullException.ThrowIfNull(pdu);
 
-            if (pdu.Description is object) {
+            if (pdu.Description is not null) {
                 m_Pdus.Add(new TestPdu(pdu.Description));
             } else {
                 m_Pdus.Add(new TestPdu(pdu.PduType, pdu.PduLength));
@@ -57,7 +57,7 @@
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder($"EcuID={EcuId} AppId={ApplicationId} CtxId={ContextId} {Id} ({MessageType})");
+            StringBuilder sb = new($"EcuID={EcuId} AppId={ApplicationId} CtxId={ContextId} {Id} ({MessageType})");
 
             if (m_Pdus.Count > 0) {
                 foreach (TestPdu pdu in m_Pdus) {
@@ -70,7 +70,7 @@
 
     public sealed class FrameComparer : IEqualityComparer<IFrame>
     {
-        public static readonly FrameComparer Comparer = new FrameComparer();
+        public static readonly FrameComparer Comparer = new();
 
         public bool Equals(IFrame x, IFrame y)
         {
@@ -99,9 +99,9 @@
         {
             int hash = 0;
 
-            if (obj.EcuId is object) hash ^= obj.EcuId.GetHashCode();
-            if (obj.ApplicationId is object) hash ^= obj.ApplicationId.GetHashCode();
-            if (obj.ContextId is object) hash ^= obj.ContextId.GetHashCode();
+            if (obj.EcuId is not null) hash ^= obj.EcuId.GetHashCode();
+            if (obj.ApplicationId is not null) hash ^= obj.ApplicationId.GetHashCode();
+            if (obj.ContextId is not null) hash ^= obj.ContextId.GetHashCode();
             hash ^= (int)obj.MessageType << 16;
             hash ^= obj.Id;
 

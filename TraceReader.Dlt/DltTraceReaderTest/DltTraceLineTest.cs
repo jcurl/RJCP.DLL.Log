@@ -11,7 +11,7 @@
         [Test]
         public void DefaultTraceLine()
         {
-            DltTraceLine line = new DltTraceLine();
+            DltTraceLine line = new();
             Assert.That(line.Arguments, Is.Empty);
             Assert.That(line.ApplicationId, Is.Null);
             Assert.That(line.ContextId, Is.Null);
@@ -39,7 +39,7 @@
         [Test]
         public void TraceLineWithArgumentsArray()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(line.Arguments, Has.Count.EqualTo(1));
             Assert.That(line.Arguments[0], Is.TypeOf<StringDltArg>());
             Assert.That(line.ApplicationId, Is.Null);
@@ -71,7 +71,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyAdd()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(() => {
                 line.Arguments.Add(new HexIntDltArg(10, 1));
             }, Throws.TypeOf<NotSupportedException>());
@@ -80,7 +80,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyClear()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(() => {
                 line.Arguments.Clear();
             }, Throws.TypeOf<NotSupportedException>());
@@ -89,7 +89,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyInsert()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(() => {
                 line.Arguments.Insert(0, new BinaryIntDltArg(10, 1));
             }, Throws.TypeOf<NotSupportedException>());
@@ -99,7 +99,7 @@
         public void TraceLineWithArgumentsArrayReadOnlyRemove()
         {
             IDltArg arg = new StringDltArg("string");
-            DltTraceLine line = new DltTraceLine(new[] { arg });
+            DltTraceLine line = new(new[] { arg });
             Assert.That(() => {
                 line.Arguments.Remove(arg);
             }, Throws.TypeOf<NotSupportedException>());
@@ -108,7 +108,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyRemoveAt()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(() => {
                 line.Arguments.RemoveAt(0);
             }, Throws.TypeOf<NotSupportedException>());
@@ -118,7 +118,7 @@
         public void TraceLineWithArgumentsArrayReadOnlyCopyTo()
         {
             IDltArg arg = new StringDltArg("string");
-            DltTraceLine line = new DltTraceLine(new[] { arg });
+            DltTraceLine line = new(new[] { arg });
 
             IDltArg[] args = new IDltArg[1];
             line.Arguments.CopyTo(args, 0);
@@ -128,7 +128,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyContainsFalse()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(line.Arguments.Contains(new BinaryIntDltArg(10, 1)), Is.False);
         }
 
@@ -137,7 +137,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
+            DltTraceLine line = new(new[] { arg1, arg2 });
             Assert.That(line.Arguments.Contains(new BinaryIntDltArg(10, 1)), Is.False);
             Assert.That(line.Arguments.Contains(arg1), Is.True);
             Assert.That(line.Arguments.Contains(arg2), Is.True);
@@ -148,7 +148,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
+            DltTraceLine line = new(new[] { arg1, arg2 });
             Assert.That(line.Arguments.IndexOf(new BinaryIntDltArg(10, 1)), Is.EqualTo(-1));
             Assert.That(line.Arguments.IndexOf(arg1), Is.EqualTo(0));
             Assert.That(line.Arguments.IndexOf(arg2), Is.EqualTo(1));
@@ -159,7 +159,7 @@
         {
             IDltArg arg1 = new StringDltArg("string");
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
-            DltTraceLine line = new DltTraceLine(new[] { arg1, arg2 });
+            DltTraceLine line = new(new[] { arg1, arg2 });
             Assert.That(line.Arguments[0], Is.EqualTo(arg1));
             Assert.That(line.Arguments[1], Is.EqualTo(arg2));
         }
@@ -167,7 +167,7 @@
         [Test]
         public void TraceLineWithArgumentsArrayReadOnlyIndexSet()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("string") });
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("string") });
             Assert.That(() => {
                 line.Arguments[0] = new HexIntDltArg(10, 1);
             }, Throws.TypeOf<NotSupportedException>());

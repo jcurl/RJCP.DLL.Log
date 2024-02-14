@@ -8,7 +8,7 @@
         [Test]
         public void GetMessageFilteringStatusReq()
         {
-            GetMessageFilteringStatusRequest arg = new GetMessageFilteringStatusRequest();
+            GetMessageFilteringStatusRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x1A));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_message_filtering]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_message_filtering error]")]
         public void GetMessageFilteringStatusRes(int status, bool enabled, string result)
         {
-            GetMessageFilteringStatusResponse arg = new GetMessageFilteringStatusResponse(status, enabled);
+            GetMessageFilteringStatusResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1A));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

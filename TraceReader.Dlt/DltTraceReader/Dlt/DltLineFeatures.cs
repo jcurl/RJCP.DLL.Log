@@ -14,53 +14,53 @@
         /// <summary>
         /// The set of no features.
         /// </summary>
-        public static readonly DltLineFeatures NoFeatures = new DltLineFeatures(0);
+        public static readonly DltLineFeatures NoFeatures = new(0);
 
         /// <summary>
         /// The ECU Identifier is present, as defined by the WEID bit (not, the storage header does not set this
         /// feature).
         /// </summary>
-        public static readonly DltLineFeatures EcuIdFeature = new DltLineFeatures(1);
+        public static readonly DltLineFeatures EcuIdFeature = new(1);
 
         /// <summary>
         /// The Application Identifier is present, as defined by the UEH bit.
         /// </summary>
-        public static readonly DltLineFeatures AppIdFeature = new DltLineFeatures(2);
+        public static readonly DltLineFeatures AppIdFeature = new(2);
 
         /// <summary>
         /// The Context Identifier is present, as defined by the UEH bit.
         /// </summary>
-        public static readonly DltLineFeatures CtxIdFeature = new DltLineFeatures(4);
+        public static readonly DltLineFeatures CtxIdFeature = new(4);
 
         /// <summary>
         /// The log time stamp is present, as defined if there is a storage header present.
         /// </summary>
-        public static readonly DltLineFeatures LogTimeStampFeature = new DltLineFeatures(8);
+        public static readonly DltLineFeatures LogTimeStampFeature = new(8);
 
         /// <summary>
         /// The device time stamp is present, as defined by the WTMS bit.
         /// </summary>
-        public static readonly DltLineFeatures DevTimeStampFeature = new DltLineFeatures(16);
+        public static readonly DltLineFeatures DevTimeStampFeature = new(16);
 
         /// <summary>
         /// The Message Type is present, as defined by the UEH bit.
         /// </summary>
-        public static readonly DltLineFeatures MessageTypeFeature = new DltLineFeatures(32);
+        public static readonly DltLineFeatures MessageTypeFeature = new(32);
 
         /// <summary>
         /// The Session Identifier is present, as defined by the SEID bit.
         /// </summary>
-        public static readonly DltLineFeatures SessionIdFeature = new DltLineFeatures(64);
+        public static readonly DltLineFeatures SessionIdFeature = new(64);
 
         /// <summary>
         /// The Verbose bit is set, as defined by the VERB bit.
         /// </summary>
-        public static readonly DltLineFeatures VerboseFeature = new DltLineFeatures(128);
+        public static readonly DltLineFeatures VerboseFeature = new(128);
 
         /// <summary>
         /// The Big Endian encoding is enabled, as defined by the MSBF bit.
         /// </summary>
-        public static readonly DltLineFeatures BigEndianFeature = new DltLineFeatures(256);
+        public static readonly DltLineFeatures BigEndianFeature = new(256);
 
         private static readonly int FeatureMask = 0x1FF;
 

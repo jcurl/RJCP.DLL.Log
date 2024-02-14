@@ -27,7 +27,7 @@
         public void Encode(int statusCode)
         {
             CustomConnectionInfoResponse response =
-                new CustomConnectionInfoResponse(statusCode, CustomConnectionInfoResponse.Connected);
+                new(statusCode, CustomConnectionInfoResponse.Connected);
 
             Span<byte> buffer = ControlEncode(response, 10);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0xF02));
@@ -42,7 +42,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             CustomConnectionInfoResponse response =
-                new CustomConnectionInfoResponse(ControlResponse.StatusOk, CustomConnectionInfoResponse.Connected);
+                new(ControlResponse.StatusOk, CustomConnectionInfoResponse.Connected);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

@@ -15,10 +15,10 @@
         [TestCase(double.PositiveInfinity, "inf")]
         public void FloatToString(double value, string output)
         {
-            Float64DltArg floatArg = new Float64DltArg(value);
+            Float64DltArg floatArg = new(value);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -28,10 +28,10 @@
             double number = -4.42330604244772E-305;
             string output = string.Format(CultureInfo.InvariantCulture, "{0:0.00000e-000}", number);
 
-            Float64DltArg floatArg = new Float64DltArg(number);
+            Float64DltArg floatArg = new(number);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -42,10 +42,10 @@
             if (!BitConverter.IsLittleEndian) Array.Reverse(array);
             double number = BitConverter.ToDouble(array, 0);
 
-            Float64DltArg floatArg = new Float64DltArg(number);
+            Float64DltArg floatArg = new(number);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
     }

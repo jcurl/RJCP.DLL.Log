@@ -15,8 +15,8 @@
     /// </remarks>
     internal class FrameMapEcuSimple : IFrameMapLoader
     {
-        private readonly FrameMapSimple m_Frames = new FrameMapSimple();
-        private readonly Dictionary<string, FrameMapSimple> m_EcuFrames = new Dictionary<string, FrameMapSimple>();
+        private readonly FrameMapSimple m_Frames = new();
+        private readonly Dictionary<string, FrameMapSimple> m_EcuFrames = new();
 
         /// <summary>
         /// Tries to add the frame to the map.
@@ -34,7 +34,7 @@
         public bool TryAddFrame(int id, string appId, string ctxId, string ecuId, IFrame frame)
         {
             bool success = m_Frames.TryAddFrame(id, appId, ctxId, ecuId, frame);
-            if (ecuId is object) {
+            if (ecuId is not null) {
                 if (m_EcuFrames.TryGetValue(ecuId, out FrameMapSimple map)) {
                     return map.TryAddFrame(id, appId, ctxId, ecuId, frame);
                 }
@@ -99,7 +99,7 @@
         /// </remarks>
         public bool TryGetFrame(int id, string appId, string ctxId, string ecuId, out IFrame frame)
         {
-            if (ecuId is object) {
+            if (ecuId is not null) {
                 if (!m_EcuFrames.TryGetValue(ecuId, out FrameMapSimple map)) {
                     frame = null;
                     return false;

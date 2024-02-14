@@ -55,7 +55,7 @@
         public bool Position { get; private set; }
 
         [OptionArguments]
-        private readonly List<string> m_Arguments = new List<string>();
+        private readonly List<string> m_Arguments = new();
 
         [Option("format")]
         [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Set by reflection")]
@@ -98,7 +98,7 @@
         /// </summary>
         /// <value>The search string.</value>
         [Option('s', "string")]
-        private readonly List<string> m_SearchString = new List<string>();
+        private readonly List<string> m_SearchString = new();
 
         public IReadOnlyList<string> SearchString { get { return m_SearchString; } }
 
@@ -107,7 +107,7 @@
         /// </summary>
         /// <value>The search regular expression.</value>
         [Option('r', "regex")]
-        private readonly List<string> m_SearchRegex = new List<string>();
+        private readonly List<string> m_SearchRegex = new();
 
         public IReadOnlyList<string> SearchRegex { get { return m_SearchRegex; } }
 
@@ -121,7 +121,7 @@
         public bool IgnoreCase { get; private set; }
 
         [Option("ecuid")]
-        private readonly List<string> m_EcuId = new List<string>();
+        private readonly List<string> m_EcuId = new();
 
         /// <summary>
         /// A list of ECU IDs that should match.
@@ -129,7 +129,7 @@
         public IReadOnlyList<string> EcuId { get { return m_EcuId; } }
 
         [Option("appid")]
-        private readonly List<string> m_AppId = new List<string>();
+        private readonly List<string> m_AppId = new();
 
         /// <summary>
         /// A list of Application IDs that should match.
@@ -137,7 +137,7 @@
         public IReadOnlyList<string> AppId { get { return m_AppId; } }
 
         [Option("ctxid")]
-        private readonly List<string> m_CtxId = new List<string>();
+        private readonly List<string> m_CtxId = new();
 
         /// <summary>
         /// A list of Context IDs that should match.
@@ -145,7 +145,7 @@
         public IReadOnlyList<string> CtxId { get { return m_CtxId; } }
 
         [Option("sessionid")]
-        private readonly List<int> m_SessionId = new List<int>();
+        private readonly List<int> m_SessionId = new();
 
         /// <summary>
         /// A list of Session IDs that should match for lines that have a session identifier.
@@ -153,9 +153,9 @@
         public IReadOnlyList<int> SessionId { get { return m_SessionId; } }
 
         [Option("type")]
-        private readonly List<string> m_DltTypeFilters = new List<string>();
+        private readonly List<string> m_DltTypeFilters = new();
 
-        private readonly List<DltType> m_DltType = new List<DltType>();
+        private readonly List<DltType> m_DltType = new();
 
         /// <summary>
         /// Gets the list of DLT filter types to filter for.
@@ -247,9 +247,9 @@
         public DateTime? NotAfter { get; private set; }
 
         [Option("messageid")]
-        private readonly List<string> m_MessageIdString = new List<string>();
+        private readonly List<string> m_MessageIdString = new();
 
-        private readonly List<int> m_MessageId = new List<int>();
+        private readonly List<int> m_MessageId = new();
 
         /// <summary>
         /// The message identifiers that should match.
@@ -268,7 +268,7 @@
         /// </summary>
         /// <value>The list of FIBEX sources.</value>
         [Option('F', "fibex")]
-        private readonly List<string> m_Fibex = new List<string>();
+        private readonly List<string> m_Fibex = new();
 
         public IReadOnlyList<string> Fibex { get { return m_Fibex; } }
 

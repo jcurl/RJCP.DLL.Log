@@ -28,7 +28,7 @@
         [Test]
         public void NullDecoder()
         {
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 Assert.That(() => {
                     _ = new TraceReader<ITraceLine>(stream, null);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -46,10 +46,10 @@
         [Test]
         public void StreamOwnershipDefault()
         {
-            SimpleStream stream = new SimpleStream();
+            SimpleStream stream = new();
 
             using (stream) {
-                using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder())) {
+                using (TraceReader<ITraceLine> reader = new(stream, new TextDecoder())) {
                     /* Nothing to do, just wait for it to dispose */
                 }
 
@@ -62,10 +62,10 @@
         [TestCase(false)]
         public void StreamOwnership(bool owner)
         {
-            SimpleStream stream = new SimpleStream();
+            SimpleStream stream = new();
 
             using (stream) {
-                using (TraceReader<ITraceLine> reader = new TraceReader<ITraceLine>(stream, new TextDecoder(), owner)) {
+                using (TraceReader<ITraceLine> reader = new(stream, new TextDecoder(), owner)) {
                     /* Nothing to do, just wait for it to dispose */
                 }
 

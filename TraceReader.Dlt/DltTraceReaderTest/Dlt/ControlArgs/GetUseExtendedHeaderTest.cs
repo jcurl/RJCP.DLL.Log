@@ -8,7 +8,7 @@
         [Test]
         public void GetUseExtendedHeaderReq()
         {
-            GetUseExtendedHeaderRequest arg = new GetUseExtendedHeaderRequest();
+            GetUseExtendedHeaderRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x1E));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_use_extended_header]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_use_extended_header error]")]
         public void GetUseExtendedHeaderRes(int status, bool enabled, string result)
         {
-            GetUseExtendedHeaderResponse arg = new GetUseExtendedHeaderResponse(status, enabled);
+            GetUseExtendedHeaderResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1E));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

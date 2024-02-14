@@ -8,7 +8,7 @@
         [Test]
         public void GetTraceStatusTestReq()
         {
-            GetTraceStatusRequest arg = new GetTraceStatusRequest("APP1", "CTX1");
+            GetTraceStatusRequest arg = new("APP1", "CTX1");
             Assert.That(arg.ServiceId, Is.EqualTo(0x1F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_trace_status] APP1 (CTX1)"));
@@ -17,7 +17,7 @@
         [Test]
         public void GetTraceStatusTestReq_NoAppCtx()
         {
-            GetTraceStatusRequest arg = new GetTraceStatusRequest("", "");
+            GetTraceStatusRequest arg = new("", "");
             Assert.That(arg.ServiceId, Is.EqualTo(0x1F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_trace_status]"));
@@ -26,7 +26,7 @@
         [Test]
         public void GetTraceStatusTestReq_NullAppCtx()
         {
-            GetTraceStatusRequest arg = new GetTraceStatusRequest(null, null);
+            GetTraceStatusRequest arg = new(null, null);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_trace_status]"));
@@ -40,7 +40,7 @@
         [TestCase(0x02, false, "[get_trace_status error]")]
         public void GetTraceStatusRes(int status, bool enabled, string result)
         {
-            GetTraceStatusResponse arg = new GetTraceStatusResponse(status, enabled);
+            GetTraceStatusResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

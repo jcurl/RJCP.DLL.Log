@@ -18,8 +18,8 @@
         [Test]
         public void WriteOutput()
         {
-            MemoryOutput memOutput = new MemoryOutput();
-            DltFileTraceFilterDecoder decoder = new DltFileTraceFilterDecoder(memOutput);
+            MemoryOutput memOutput = new();
+            DltFileTraceFilterDecoder decoder = new(memOutput);
 
             decoder.Decode(Data.AsSpan(), 0);
             decoder.Flush();
@@ -31,8 +31,8 @@
         [Test]
         public void WriteLineOutput()
         {
-            MemoryOutput memOutput = new MemoryOutput();
-            DltFileTraceFilterDecoder decoder = new DltFileTraceFilterDecoder(memOutput);
+            MemoryOutput memOutput = new();
+            DltFileTraceFilterDecoder decoder = new(memOutput);
 
             decoder.Decode(SkipData.AsSpan(), 0);
             decoder.Flush();
@@ -54,7 +54,7 @@
         [Test]
         public void TextOutput()
         {
-            MemoryOutput memOutput = new MemoryOutput(false);
+            MemoryOutput memOutput = new(false);
             Assert.That(() => {
                 _ = new DltFileTraceFilterDecoder(memOutput);
             }, Throws.TypeOf<ArgumentException>());

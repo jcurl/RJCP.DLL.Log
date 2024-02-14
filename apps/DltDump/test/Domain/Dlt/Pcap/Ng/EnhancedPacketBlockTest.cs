@@ -19,7 +19,7 @@
         [TestCase(false)]
         public void DecodeBlockMicroSec(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
@@ -37,7 +37,7 @@
         [TestCase(false)]
         public void DecodeBlockNanoSec(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbDataNano : PcapBlocks.EpbDataNanoBigEndian, 0).ToList();
@@ -55,8 +55,8 @@
         [TestCase(false)]
         public void DecodeBlockOutputStream(bool littleEndian)
         {
-            using (MemoryOutput output = new MemoryOutput())
-            using (BlockReader reader = new BlockReader(new PcapTraceDecoderFactory(output))) {
+            using (MemoryOutput output = new())
+            using (BlockReader reader = new(new PcapTraceDecoderFactory(output))) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0).ToList();
@@ -76,7 +76,7 @@
         [TestCase(false)]
         public void DecodeBlockFirstInterfaceMicro(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthMicroSec : PcapBlocks.IdbEthMicroSecBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
@@ -95,7 +95,7 @@
         [TestCase(false)]
         public void DecodeBlockSecondInterfaceNano(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthMicroSec : PcapBlocks.IdbEthMicroSecBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbEthNanoSec : PcapBlocks.IdbEthNanoSecBigEndian, 0);
@@ -125,7 +125,7 @@
                     0x00, 0x00, 0x00, 0x14
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(idb, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
@@ -152,7 +152,7 @@
                     0x00, 0x00, 0x00, 0x14
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(idb, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
@@ -179,7 +179,7 @@
                     0x00, 0x00, 0x00, 0x14
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(idb, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
@@ -196,7 +196,7 @@
         [TestCase(false)]
         public void DecodeBlockUndefinedInterface(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
@@ -215,7 +215,7 @@
             byte[] epb = (littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian).ToArray();
             BitOperations.Copy32Shift(-1, epb, 8, littleEndian);  // Offset 8 is Interface identifier.
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
 
@@ -237,7 +237,7 @@
                     0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x10, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(idb, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbSmallLinkEth : PcapBlocks.IdbSmallLinkEthBigEndian, 0);
@@ -256,7 +256,7 @@
         {
             List<DltTraceLineBase> lines;
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 336).ToList();
@@ -288,7 +288,7 @@
                     0xEC, 0x68, 0x05, 0xFE, 0x00, 0x00, 0x00, 0x18
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 var lines = reader.DecodeBlock(data, 336);
@@ -331,7 +331,7 @@
                     0x00, 0x00, 0x00, 0x80
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 var lines = reader.DecodeBlock(data, 336);
@@ -372,7 +372,7 @@
                     0x00, 0x00, 0x00, 0x80
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 var lines = reader.DecodeBlock(data, 336);
@@ -384,7 +384,7 @@
         [TestCase(false)]
         public void DecodeMissingShb(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(littleEndian ? PcapBlocks.EpbData : PcapBlocks.EpbDataBigEndian, 0);
 
@@ -400,7 +400,7 @@
                 new byte[] { 0x06, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } :
                 new byte[] { 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(data, 0);
@@ -417,7 +417,7 @@
                 new byte[] { 0x06, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00 } :
                 new byte[] { 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x08 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 0);
                 var lines = reader.DecodeBlock(data, 0);
@@ -463,7 +463,7 @@
                     0x00, 0x00, 0x00, 0x80
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.ShbSmall : PcapBlocks.ShbSmallBigEndian, 0);
                 _ = reader.GetBlock(littleEndian ? PcapBlocks.IdbData : PcapBlocks.IdbDataBigEndian, 192);
                 var lines = reader.DecodeBlock(data, 336);

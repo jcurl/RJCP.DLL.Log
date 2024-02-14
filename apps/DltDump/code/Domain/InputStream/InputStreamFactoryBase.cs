@@ -56,7 +56,7 @@
                     if (pos + 2 <= len && uri[pos + 1] == '/' && uri[pos + 2] == '/')
                         return true;
                     return false;
-                } else if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')) {
+                } else if (c is (< 'a' or > 'z') and (< 'A' or > 'Z')) {
                     return false;
                 }
                 pos++;

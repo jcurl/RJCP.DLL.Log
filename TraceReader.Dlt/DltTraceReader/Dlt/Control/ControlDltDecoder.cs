@@ -15,8 +15,8 @@
     /// </remarks>
     public class ControlDltDecoder : IControlDltDecoder
     {
-        private readonly Dictionary<int, IControlArgDecoder> m_RequestDecoders = new Dictionary<int, IControlArgDecoder>();
-        private readonly Dictionary<int, IControlArgDecoder> m_ResponseDecoders = new Dictionary<int, IControlArgDecoder>();
+        private readonly Dictionary<int, IControlArgDecoder> m_RequestDecoders = new();
+        private readonly Dictionary<int, IControlArgDecoder> m_ResponseDecoders = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlDltDecoder"/> class.
@@ -190,7 +190,7 @@
 
                 serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                 if (!m_RequestDecoders.TryGetValue(serviceId, out decoder)) {
-                    if (serviceId >= 0 && serviceId < 0xFFF) {
+                    if (serviceId is >= 0 and < 0xFFF) {
                         string message = $"Control Message request decoder undefined for service 0x{serviceId:x}";
                         lineBuilder.SetErrorMessage(message);
                         return Result.FromException<int>(new DltDecodeException(message));
@@ -207,7 +207,7 @@
 
                 serviceId = BitOperations.To32Shift(buffer, !lineBuilder.BigEndian);
                 if (!m_ResponseDecoders.TryGetValue(serviceId, out decoder)) {
-                    if (serviceId >= 0 && serviceId < 0xFFF) {
+                    if (serviceId is >= 0 and < 0xFFF) {
                         string message = $"Control Message response decoder undefined for service 0x{serviceId:x}";
                         lineBuilder.SetErrorMessage(message);
                         return Result.FromException<int>(new DltDecodeException(message));

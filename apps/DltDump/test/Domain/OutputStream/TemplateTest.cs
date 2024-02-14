@@ -18,21 +18,21 @@
         [Test]
         public void EmptyTemplate()
         {
-            Template template = new Template(string.Empty);
+            Template template = new(string.Empty);
             Assert.That(template.ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
         public void NoSubstitution()
         {
-            Template template = new Template("foo");
+            Template template = new("foo");
             Assert.That(template.ToString(), Is.EqualTo("foo"));
         }
 
         [Test]
         public void SelfEscape()
         {
-            Template template = new Template("fo%%o");
+            Template template = new("fo%%o");
             Assert.That(template.ToString(), Is.EqualTo("fo%o"));
         }
 
@@ -43,7 +43,7 @@
         {
             Environment.SetEnvironmentVariable("TEMPLATETEST", "testVar");
 
-            Template template = new Template(templateStr);
+            Template template = new(templateStr);
             Assert.That(template.ToString(), Is.EqualTo(expected));
             Assert.That(template.ContainsVariable("TEMPLATETEST"), Is.True);
         }
@@ -53,7 +53,7 @@
         [TestCase("%INPUT%_var", "input_var")]
         public void VariableSubstitution(string templateStr, string expected)
         {
-            Template template = new Template(templateStr);
+            Template template = new(templateStr);
             template.Variables["INPUT"] = "input";
             Assert.That(template.ToString(), Is.EqualTo(expected));
             Assert.That(template.ContainsVariable("INPUT"), Is.True);
@@ -64,7 +64,7 @@
         {
             Environment.SetEnvironmentVariable("TEMPLATETEST", "envVar");
 
-            Template template = new Template("%TEMPLATETEST%");
+            Template template = new("%TEMPLATETEST%");
             template.Variables["TEMPLATETEST"] = "input";
             Assert.That(template.ToString(), Is.EqualTo("input"));
         }
@@ -74,7 +74,7 @@
         {
             Environment.SetEnvironmentVariable("TEMPLATETEST", "envVar");
 
-            Template template = new Template("%TEMPLATETEST%_%VARTEST%.txt");
+            Template template = new("%TEMPLATETEST%_%VARTEST%.txt");
             template.Variables["VARTEST"] = "input";
             Assert.That(template.ToString(), Is.EqualTo("envVar_input.txt"));
         }
@@ -82,7 +82,7 @@
         [Test]
         public void VariableSubstitutionUpdate()
         {
-            Template template = new Template("%INPUT%.dlt");
+            Template template = new("%INPUT%.dlt");
 
             template.Variables["INPUT"] = "input";
             Assert.That(template.ToString(), Is.EqualTo("input.dlt"));
@@ -96,7 +96,7 @@
         [TestCase("_%NONEXISTENTx%", "_")]
         public void NonExistentEnvOrVar(string templateStr, string expected)
         {
-            Template template = new Template(templateStr);
+            Template template = new(templateStr);
             Assert.That(template.ToString(), Is.EqualTo(expected));
         }
 
@@ -107,7 +107,7 @@
         [TestCase("%VAR%%", "%", true)]
         public void IncompleteVar(string templateStr, string expected, bool containsVar)
         {
-            Template template = new Template(templateStr);
+            Template template = new(templateStr);
             Assert.That(template.ToString(), Is.EqualTo(expected));
             Assert.That(template.ContainsVariable("VAR"), Is.EqualTo(containsVar));
         }
@@ -115,7 +115,7 @@
         [Test]
         public void ContainsNullVariable()
         {
-            Template template = new Template("%FILE%.txt");
+            Template template = new("%FILE%.txt");
             template.Variables["FILE"] = "input";
 
             Assert.That(() => {
@@ -126,7 +126,7 @@
         [Test]
         public void ContainsEmptyVariable()
         {
-            Template template = new Template("%FILE%.txt");
+            Template template = new("%FILE%.txt");
             template.Variables["FILE"] = "input";
 
             Assert.That(() => {
@@ -137,7 +137,7 @@
         [Test]
         public void ConcatenationAllowed()
         {
-            Template template = new Template("%FILE%.txt");
+            Template template = new("%FILE%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
@@ -148,7 +148,7 @@
         [Test]
         public void ConcatenationNotAllowed()
         {
-            Template template = new Template("%CTR%.txt");
+            Template template = new("%CTR%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
@@ -158,7 +158,7 @@
         [Test]
         public void SupportsSplitDate()
         {
-            Template template = new Template("file_%CDATE%.txt");
+            Template template = new("file_%CDATE%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
@@ -169,7 +169,7 @@
         [Test]
         public void SupportsSplitTime()
         {
-            Template template = new Template("file_%CTIME%.txt");
+            Template template = new("file_%CTIME%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
@@ -180,7 +180,7 @@
         [Test]
         public void SupportsSplitDateTime()
         {
-            Template template = new Template("file_%CDATETIME%.txt");
+            Template template = new("file_%CDATETIME%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 
@@ -191,7 +191,7 @@
         [Test]
         public void SupportsSplitCounter()
         {
-            Template template = new Template("file_%CTR%.txt");
+            Template template = new("file_%CTR%.txt");
             template.Variables["FILE"] = "input";
             template.Variables["CTR"] = 1.ToString(CultureInfo.InvariantCulture);
 

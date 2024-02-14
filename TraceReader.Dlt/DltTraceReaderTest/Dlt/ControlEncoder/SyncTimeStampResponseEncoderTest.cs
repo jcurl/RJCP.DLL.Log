@@ -25,7 +25,7 @@
         public void EncodeUtc()
         {
             SyncTimeStampResponse response =
-                new SyncTimeStampResponse(ControlResponse.StatusOk, new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc));
+                new(ControlResponse.StatusOk, new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc));
 
             Span<byte> buffer = ControlEncode(response, 15);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x24));
@@ -38,11 +38,11 @@
         [Test]
         public void EncodeLocal()
         {
-            DateTime time = new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc);
+            DateTime time = new(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc);
             DateTime localtime = time.ToLocalTime();   // The number of ticks is now different.
 
             SyncTimeStampResponse response =
-                new SyncTimeStampResponse(ControlResponse.StatusOk, localtime);
+                new(ControlResponse.StatusOk, localtime);
 
             Span<byte> buffer = ControlEncode(response, 15);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x24));
@@ -57,7 +57,7 @@
         public void EncodeError(int statusCode)
         {
             SyncTimeStampResponse response =
-                new SyncTimeStampResponse(statusCode, DateTime.UtcNow);
+                new(statusCode, DateTime.UtcNow);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x24));
@@ -70,7 +70,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             SyncTimeStampResponse response =
-                new SyncTimeStampResponse(ControlResponse.StatusOk, new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc));
+                new(ControlResponse.StatusOk, new DateTime(2023, 05, 22, 10, 54, 23, 991, DateTimeKind.Utc));
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

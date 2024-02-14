@@ -11,20 +11,20 @@
         public void EmptyArray()
         {
             byte[] value = Array.Empty<byte>();
-            RawDltArg rawArg = new RawDltArg(value);
+            RawDltArg rawArg = new(value);
             Assert.That(rawArg.ToString(), Is.EqualTo(string.Empty));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(string.Empty));
         }
 
         [Test]
         public void NullArray()
         {
-            RawDltArg rawDltArg = new RawDltArg(null);
+            RawDltArg rawDltArg = new(null);
             Assert.That(rawDltArg.ToString(), Is.EqualTo(string.Empty));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(rawDltArg.Append(sb).ToString(), Is.EqualTo(string.Empty));
         }
 
@@ -37,10 +37,10 @@
         public void OneElement(byte value, string output)
         {
             byte[] arg = { value };
-            RawDltArg rawArg = new RawDltArg(arg);
+            RawDltArg rawArg = new(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -53,10 +53,10 @@
         public void TwoElements(byte v1, byte v2, string output)
         {
             byte[] arg = { v1, v2 };
-            RawDltArg rawArg = new RawDltArg(arg);
+            RawDltArg rawArg = new(arg);
             Assert.That(rawArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -66,16 +66,16 @@
             byte[] data = new byte[256];
             new Random().NextBytes(data);
 
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             for (int i = 0; i < data.Length; i++) {
                 if (i != 0) builder.Append(' ');
                 builder.AppendFormat("{0:x2}", data[i]);
             }
 
-            RawDltArg rawArg = new RawDltArg(data);
+            RawDltArg rawArg = new(data);
             Assert.That(rawArg.ToString(), Is.EqualTo(builder.ToString()));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(rawArg.Append(sb).ToString(), Is.EqualTo(builder.ToString()));
         }
     }

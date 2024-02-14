@@ -9,7 +9,7 @@
         [TestCase(-1, new byte[] { 0x12, 0x34, 0x56, 0x67, 0x89 }, "[] 05 00 00 00 12 34 56 67 89")]
         public void SwInjectionReq(int serviceId, byte[] payload, string result)
         {
-            SwInjectionRequest arg = new SwInjectionRequest(serviceId, payload);
+            SwInjectionRequest arg = new(serviceId, payload);
             Assert.That(arg.ServiceId, Is.EqualTo(serviceId));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -23,7 +23,7 @@
         [TestCase(0xFFF, 100, "[ status=100]")]
         public void SwInjectionResp(int serviceId, int status, string result)
         {
-            SwInjectionResponse arg = new SwInjectionResponse(serviceId, status);
+            SwInjectionResponse arg = new(serviceId, status);
             Assert.That(arg.ServiceId, Is.EqualTo(serviceId));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

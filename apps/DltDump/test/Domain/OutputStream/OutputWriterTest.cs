@@ -14,7 +14,7 @@
         [Test]
         public void StreamDefaults()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(writer.Length, Is.EqualTo(0));
                 Assert.That(writer.IsOpen, Is.False);
             }
@@ -23,7 +23,7 @@
         [Test]
         public void WriterNotOpenWrite()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 byte[] buffer = new byte[10];
 
                 Assert.That(writer.IsOpen, Is.False);
@@ -36,7 +36,7 @@
         [Test]
         public void WriterNotOpenWriteBuffer()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 byte[] buffer = new byte[10];
 
                 Assert.That(writer.IsOpen, Is.False);
@@ -48,7 +48,7 @@
         [Test]
         public void WriterNotOpenFlush()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(writer.IsOpen, Is.False);
                 Assert.That(() => {
                     writer.Flush();
@@ -59,7 +59,7 @@
         [Test]
         public void WriterNotOpenClose()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(writer.IsOpen, Is.False);
                 writer.Close();
             }
@@ -68,7 +68,7 @@
         [Test]
         public void WriterOpenNullName()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(() => {
                     writer.Open((string)null);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -78,7 +78,7 @@
         [Test]
         public void WriterOpenNullStream()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(() => {
                     writer.Open((Stream)null);
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -106,7 +106,7 @@
         [Test]
         public void WriteOpenStream()
         {
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 OutputWriter writer;
                 using (writer = new OutputWriter()) {
                     Assert.That(writer.IsOpen, Is.False);
@@ -139,7 +139,7 @@
 
                 Assert.That(writer.IsOpen, Is.False);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(buffer.Length));
             }
         }
@@ -148,7 +148,7 @@
         public void WriterOpenCloseStream()
         {
             byte[] buffer = new byte[10];
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 OutputWriter writer;
                 using (writer = new OutputWriter()) {
                     writer.Open(stream);
@@ -195,7 +195,7 @@
                     Assert.That(writer.Length, Is.EqualTo(buffer.Length));
 
                     // Must call writer.Flush() before this call, that it is written to the file system.
-                    FileInfo fileInfo = new FileInfo("File.txt");
+                    FileInfo fileInfo = new("File.txt");
                     Assert.That(fileInfo.Length, Is.EqualTo(buffer.Length));
                 }
 
@@ -209,7 +209,7 @@
         {
             byte[] buffer = new byte[10];
 
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 OutputWriter writer;
                 using (writer = new OutputWriter()) {
                     writer.Open(stream);
@@ -277,7 +277,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open("File.txt");
                 writer.Write(buffer.AsSpan());
                 Assert.That(writer.Length, Is.EqualTo(buffer.Length));
@@ -309,8 +309,8 @@
         {
             byte[] buffer = new byte[10];
 
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 writer.Write(buffer.AsSpan());
                 Assert.That(writer.Length, Is.EqualTo(buffer.Length));
@@ -341,7 +341,7 @@
         public void OverWriteFileWithoutForce()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open("File.txt");
                 Assert.That(writer.IsOpen, Is.True);
                 writer.Close();
@@ -360,7 +360,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open("File.txt");
                 Assert.That(writer.IsOpen, Is.True);
                 writer.Write(buffer.AsSpan()[..5]);
@@ -381,7 +381,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad()) {
-                using (OutputWriter writer = new OutputWriter()) {
+                using (OutputWriter writer = new()) {
                     writer.Open("File.txt");
                     Assert.That(writer.IsOpen, Is.True);
                     writer.Write(buffer.AsSpan()[..5]);
@@ -395,7 +395,7 @@
                     Assert.That(writer.Length, Is.EqualTo(5 + buffer.Length));
                 }
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(5 + buffer.Length));
             }
         }
@@ -404,7 +404,7 @@
         public void WriterOpenWhenDisposed()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Dispose();
                 Assert.That(() => {
                     writer.Open("File.txt");
@@ -415,8 +415,8 @@
         [Test]
         public void WriteOpenStreamWhenDisposed()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Dispose();
                 Assert.That(() => {
                     writer.Open(stream);
@@ -427,8 +427,8 @@
         [Test]
         public void WriteOpenDisposedStream()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 stream.Dispose();
                 Assert.That(() => {
                     // Stream is not writable, as it's disposed.
@@ -444,7 +444,7 @@
             streamMock.Setup(stream => stream.CanWrite).Returns(true);
             streamMock.Setup(stream => stream.Position).Throws<PlatformNotSupportedException>();
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(() => {
                     // Stream is not writable, as it's disposed.
                     writer.Open(streamMock.Object);
@@ -456,7 +456,7 @@
         public void WriterFlushWhenDisposed()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Dispose();
                 Assert.That(() => {
                     writer.Flush();
@@ -468,7 +468,7 @@
         public void WriterOpenFlushWhenDisposed()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open("file.txt");
                 writer.Dispose();
                 Assert.That(() => {
@@ -483,7 +483,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Dispose();
                 Assert.That(() => {
                     writer.Write(buffer.AsSpan());
@@ -497,7 +497,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Dispose();
                 Assert.That(() => {
                     writer.Write(buffer, 0, buffer.Length);
@@ -511,7 +511,7 @@
             byte[] buffer = new byte[10];
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open("file.txt");
                 writer.Dispose();
                 Assert.That(() => {
@@ -523,8 +523,8 @@
         [Test]
         public void WriteBufferNull()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(null, 0, 1);
@@ -535,8 +535,8 @@
         [Test]
         public void WriteBufferNegativeOffset()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(new byte[10], -1, 1);
@@ -547,8 +547,8 @@
         [Test]
         public void WriteBufferNegativeCount()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(new byte[10], 0, -1);
@@ -559,8 +559,8 @@
         [Test]
         public void WriteBufferOutOfBoundsIndex()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(new byte[10], 11, 1);
@@ -571,8 +571,8 @@
         [Test]
         public void WriteBufferOutOfBoundsCount()
         {
-            using (MemoryStream stream = new MemoryStream())
-            using (OutputWriter writer = new OutputWriter()) {
+            using (MemoryStream stream = new())
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(new byte[10], 5, 10);
@@ -590,7 +590,7 @@
                 .Setup(stream => stream.Write(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Throws<PlatformNotSupportedException>();
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
                 Assert.That(() => {
                     writer.Write(new byte[10], 0, 10);
@@ -615,7 +615,7 @@
                 })
                 .CallBase();
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
                 writer.Write(new byte[50], 0, 50);
                 Assert.That(writer.Length, Is.EqualTo(50));
@@ -650,7 +650,7 @@
         public void WriteSpanWithException()
         {
             using (Stream stream = new NullStreamSpan(0))
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 Assert.That(() => {
                     writer.Write(new byte[10]);
@@ -663,7 +663,7 @@
         public void WriteSpanWithException2()
         {
             using (Stream stream = new NullStreamSpan(1))
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(stream);
                 writer.Write(new byte[50]);
                 Assert.That(writer.Length, Is.EqualTo(50));
@@ -684,7 +684,7 @@
             };
             streamMock.Setup(stream => stream.Flush()).Throws<PlatformNotSupportedException>();
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
                 writer.Write(new byte[50], 0, 50);
                 Assert.That(writer.Length, Is.EqualTo(50));
@@ -700,7 +700,7 @@
         [Test]
         public void AutoFlush()
         {
-            using ManualResetEventSlim ev = new ManualResetEventSlim();
+            using ManualResetEventSlim ev = new();
             var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
@@ -711,7 +711,7 @@
                 if (flushCount == 2) ev.Set();
             });
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
                 writer.AutoFlush(50);
                 Assert.That(ev.Wait(500), Is.True);
@@ -730,7 +730,7 @@
         [Test]
         public void AutoFlushTwice()
         {
-            using ManualResetEventSlim ev = new ManualResetEventSlim();
+            using ManualResetEventSlim ev = new();
             var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
@@ -741,7 +741,7 @@
                 ev.Set();
             });
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
 
                 // Only start autoflush with 5s
@@ -757,7 +757,7 @@
         [Test]
         public void AutoFlushWhenNotOpen()
         {
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 Assert.That(() => {
                     writer.AutoFlush(10);
                 }, Throws.TypeOf<InvalidOperationException>());
@@ -767,7 +767,7 @@
         [Test]
         public void AutoFlushWithException()
         {
-            using ManualResetEventSlim ev = new ManualResetEventSlim();
+            using ManualResetEventSlim ev = new();
             var streamMock = new Mock<SimpleStream>(StreamMode.ReadWrite) {
                 CallBase = true
             };
@@ -783,7 +783,7 @@
                 })
                 .CallBase();
 
-            using (OutputWriter writer = new OutputWriter()) {
+            using (OutputWriter writer = new()) {
                 writer.Open(streamMock.Object);
                 writer.AutoFlush(50);
                 ev.Wait(500);

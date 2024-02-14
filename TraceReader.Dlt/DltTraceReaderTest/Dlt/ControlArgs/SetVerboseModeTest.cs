@@ -9,7 +9,7 @@
         [TestCase(false, "[set_verbose_mode] off")]
         public void SetVerboseModeReq(bool enabled, string result)
         {
-            SetVerboseModeRequest arg = new SetVerboseModeRequest(enabled);
+            SetVerboseModeRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x09));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[set_verbose_mode status=100]")]
         public void SetVerboseModeResp(int status, string result)
         {
-            SetVerboseModeResponse arg = new SetVerboseModeResponse(status);
+            SetVerboseModeResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x09));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

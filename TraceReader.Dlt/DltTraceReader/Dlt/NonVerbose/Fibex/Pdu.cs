@@ -29,7 +29,7 @@
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            if (Description is object) {
+            if (Description is not null) {
                 return $"[{Description}]";
             }
             return $"{PduType} ({PduLength})";

@@ -13,7 +13,7 @@
         [TestCase(true)]
         public void DefaultCollection(bool littleEndian)
         {
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             Assert.That(options, Is.Empty);
             Assert.That(options.Contains(0), Is.False);
             Assert.That(options.IndexOf(0), Is.EqualTo(-1));
@@ -25,7 +25,7 @@
         {
             byte[] data = new byte[] { 0x00, 0x00, 0x00, 0x00 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.TypeOf<EndOfOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.EndOfOpt));
@@ -50,7 +50,7 @@
             BitOperations.Copy16Shift(2, data.AsSpan(2), littleEndian);
             int optionCode = littleEndian ? 0xFFEA : 0xEAFF;
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(blockCode, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
 
@@ -100,7 +100,7 @@
         public void InvalidOptionZeroLength()
         {
             byte[] data = Array.Empty<byte>();
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.Null);
         }
@@ -109,7 +109,7 @@
         public void InvalidOptionIncompleteOptionField()
         {
             byte[] data = new byte[] { 0x00 };
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.Null);
         }
@@ -118,7 +118,7 @@
         public void InvalidOptionNoLengthField()
         {
             byte[] data = new byte[] { 0x00, 0x00 };
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.Null);
         }
@@ -127,7 +127,7 @@
         public void InvalidOptionPartialLengthField()
         {
             byte[] data = new byte[] { 0x00, 0x00, 0x00 };
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.Null);
         }
@@ -136,7 +136,7 @@
         public void InvalidLength()
         {
             byte[] data = new byte[] { 0x01, 0x00, 0x05, 0x00, 0x41 };
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.Null);
         }
@@ -152,7 +152,7 @@
         [Test]
         public void IndexOf()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, TsResData);
@@ -167,7 +167,7 @@
         public void IndexOfInval()
         {
             // Even with invalid data, the option code is translated, but the type cannot be interpreted.
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, TsResDataInval);
@@ -181,7 +181,7 @@
         [Test]
         public void IndexOfMultiple()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
@@ -207,7 +207,7 @@
         [Test]
         public void Indexer()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
@@ -222,7 +222,7 @@
         [Test]
         public void Enumerator()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
@@ -255,7 +255,7 @@
         [Test]
         public void EnumeratorObject()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, FcsData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
@@ -292,14 +292,14 @@
         [Test]
         public void DefaultReadOnly()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             Assert.That(options.IsReadOnly, Is.False);
         }
 
         [Test]
         public void SetReadOnly()
         {
-            PcapOptions options = new PcapOptions(true) {
+            PcapOptions options = new(true) {
                 IsReadOnly = true
             };
 
@@ -312,7 +312,7 @@
         [Test]
         public void SetReadOnly2()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             options.IsReadOnly = true;
 
@@ -326,7 +326,7 @@
         [Test]
         public void SetReadOnlyCantReset()
         {
-            PcapOptions options = new PcapOptions(true) {
+            PcapOptions options = new(true) {
                 IsReadOnly = true
             };
 
@@ -357,7 +357,7 @@
         [Test]
         public void DecodeOptions()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24));
             Assert.That(length, Is.EqualTo(164));
             Assert.That(options.IsReadOnly, Is.True);
@@ -383,7 +383,7 @@
         [TestCase(163)]
         public void DecodeOptionsNoEndOfOpts(int blockLen)
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, blockLen));
             Assert.That(length, Is.EqualTo(160));
             Assert.That(options.IsReadOnly, Is.True);
@@ -405,7 +405,7 @@
         [Test]
         public void DecodeOptionsTruncated()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, 6));
             Assert.That(length, Is.EqualTo(-1));
             Assert.That(options.IsReadOnly, Is.False);
@@ -417,7 +417,7 @@
         {
             // Decoding options is atomic. All must be decoded, else none will be added.
 
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             int length = options.Decode(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(24, 72));
             Assert.That(length, Is.EqualTo(-1));
             Assert.That(options.IsReadOnly, Is.False);
@@ -427,7 +427,7 @@
         [Test]
         public void DecodeReadOnly()
         {
-            PcapOptions options = new PcapOptions(true) {
+            PcapOptions options = new(true) {
                 IsReadOnly = true
             };
 
@@ -439,7 +439,7 @@
         [Test]
         public void DecodeClears()
         {
-            PcapOptions options = new PcapOptions(true);
+            PcapOptions options = new(true);
             _ = options.Add(BlockCodes.SectionHeaderBlock, ShbData.AsSpan(84, 44));
 
             Assert.That(options.IsReadOnly, Is.False);

@@ -23,12 +23,12 @@
         [TestCase(0xFFul, "255")]
         public void UnsignedUlong(ulong value, string output)
         {
-            UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value);
+            UnsignedIntDltArg unsignedInt = new(value);
             Assert.That(unsignedInt.ToString(), Is.EqualTo(output));
             Assert.That(unsignedInt.Data, Is.EqualTo(unchecked((long)value)));
             Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(unsignedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -52,12 +52,12 @@
         [TestCase(0xFF, "255")]
         public void UnsignedLong(long value, string output)
         {
-            UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value);
+            UnsignedIntDltArg unsignedInt = new(value);
             Assert.That(unsignedInt.ToString(), Is.EqualTo(output));
             Assert.That(unsignedInt.Data, Is.EqualTo(value));
             Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(unchecked((ulong)value)));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(unsignedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -77,7 +77,7 @@
         {
             foreach (int size in new[] { 1, 2, 4, 8 }) {
                 if (size >= minSize) {
-                    UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value, size);
+                    UnsignedIntDltArg unsignedInt = new(value, size);
                     Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
                     Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(size));
                 }
@@ -100,7 +100,7 @@
         {
             foreach (int size in new[] { 1, 2, 4, 8 }) {
                 if (size >= minSize) {
-                    UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(unchecked((long)value), size);
+                    UnsignedIntDltArg unsignedInt = new(unchecked((long)value), size);
                     Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
                     Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(size));
                 }
@@ -121,7 +121,7 @@
         [TestCase(ulong.MaxValue - 1, 8)]
         public void UnsignedIntEstimateSize(ulong value, int expSize)
         {
-            UnsignedIntDltArg unsignedInt = new UnsignedIntDltArg(value);
+            UnsignedIntDltArg unsignedInt = new(value);
             Assert.That(unsignedInt.DataUnsigned, Is.EqualTo(value));
             Assert.That(unsignedInt.DataBytesLength, Is.EqualTo(expSize));
         }

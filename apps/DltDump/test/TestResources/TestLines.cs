@@ -8,7 +8,7 @@
 
     internal static class TestLines
     {
-        public static readonly DltTraceLine Verbose = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltTraceLine Verbose = new(new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -25,7 +25,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltTraceLine Verbose2 = new DltTraceLine(new[] { new StringDltArg("Message 2") }) {
+        public static readonly DltTraceLine Verbose2 = new(new[] { new StringDltArg("Message 2") }) {
             EcuId = "ECU1",
             ApplicationId = "APP2",
             ContextId = "CTX2",
@@ -42,7 +42,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltTraceLine NoEcuId = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltTraceLine NoEcuId = new(new[] { new StringDltArg("Message 1") }) {
             ApplicationId = "APP1",
             ContextId = "CTX1",
             Position = 3,
@@ -58,7 +58,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltTraceLine NoEcuIdStorageHeader = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltTraceLine NoEcuIdStorageHeader = new(new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -75,7 +75,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltTraceLine NoExtHdr = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltTraceLine NoExtHdr = new(new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             Position = 3,
             Line = 0,
@@ -89,7 +89,7 @@
                        DltLineFeatures.DevTimeStampFeature + DltLineFeatures.LogTimeStampFeature
         };
 
-        public static readonly DltTraceLine NoSessionId = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltTraceLine NoSessionId = new(new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -105,7 +105,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltControlTraceLine Control = new DltControlTraceLine(
+        public static readonly DltControlTraceLine Control = new(
             new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "22w10.6")) {
             EcuId = "ECU1",
             ApplicationId = "DA1",
@@ -122,7 +122,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltControlTraceLine ControlVerbose = new DltControlTraceLine(
+        public static readonly DltControlTraceLine ControlVerbose = new(
             new GetSoftwareVersionResponse(GetSoftwareVersionResponse.StatusOk, "22w10.6")) {
             EcuId = "ECU1",
             ApplicationId = "DA1",
@@ -139,7 +139,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltNonVerboseTraceLine NonVerboseWithArgs = new DltNonVerboseTraceLine(42, new[] { new StringDltArg("Message 1") }) {
+        public static readonly DltNonVerboseTraceLine NonVerboseWithArgs = new(42, new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -154,7 +154,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        public static readonly DltNonVerboseTraceLine NonVerbose = new DltNonVerboseTraceLine(42) {
+        public static readonly DltNonVerboseTraceLine NonVerbose = new(42) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",

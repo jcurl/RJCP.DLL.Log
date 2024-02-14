@@ -20,13 +20,13 @@
         private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         public string Scheme { get { return "net"; } }
@@ -53,10 +53,10 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            if (InputStream is object)
+            if (InputStream is not null)
                 throw new InvalidOperationException("TestNetworkStream already opened");
 
-            ConnectSuccessEventArgs createArgs = new ConnectSuccessEventArgs();
+            ConnectSuccessEventArgs createArgs = new();
             OnOpenEvent(this, createArgs);
             if (!createArgs.Succeed) throw new InputStreamException("TestNetworkStream creation failed");
 
@@ -68,14 +68,14 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(NullInputStream));
 
-            ConnectSuccessEventArgs args = new ConnectSuccessEventArgs();
+            ConnectSuccessEventArgs args = new();
             OnConnectEvent(this, args);
             return Task.FromResult(args.Succeed);
         }
 
         public void Close()
         {
-            if (InputStream is object) InputStream.Dispose();
+            if (InputStream is not null) InputStream.Dispose();
             InputStream = null;
         }
 

@@ -21,12 +21,12 @@
         private const int StringType = 0x0200;
         private const int RawType = 0x0400;
 
-        private readonly BoolArgDecoder m_BoolArgDecoder = new BoolArgDecoder();
-        private readonly SignedIntArgDecoder m_SignedIntArgDecoder = new SignedIntArgDecoder();
-        private readonly UnsignedIntArgDecoder m_UnsignedIntArgDecoder = new UnsignedIntArgDecoder();
-        private readonly FloatArgDecoder m_FloatArgDecoder = new FloatArgDecoder();
-        private readonly StringArgDecoder m_StringArgDecoder = new StringArgDecoder();
-        private readonly RawArgDecoder m_RawArgDecoder = new RawArgDecoder();
+        private readonly BoolArgDecoder m_BoolArgDecoder = new();
+        private readonly SignedIntArgDecoder m_SignedIntArgDecoder = new();
+        private readonly UnsignedIntArgDecoder m_UnsignedIntArgDecoder = new();
+        private readonly FloatArgDecoder m_FloatArgDecoder = new();
+        private readonly StringArgDecoder m_StringArgDecoder = new();
+        private readonly RawArgDecoder m_RawArgDecoder = new();
 
         /// <summary>
         /// Decodes the DLT verbose argument given in the current buffer.

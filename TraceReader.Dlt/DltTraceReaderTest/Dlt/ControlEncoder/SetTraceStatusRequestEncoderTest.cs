@@ -27,7 +27,7 @@
         public void Encode(int traceLevel)
         {
             SetTraceStatusRequest request =
-                new SetTraceStatusRequest("APP1", "CTX1", traceLevel);
+                new("APP1", "CTX1", traceLevel);
 
             Span<byte> buffer = ControlEncode(request, 17);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x02));
@@ -41,7 +41,7 @@
         public void EncodeWithCom()
         {
             SetTraceStatusRequest request =
-                new SetTraceStatusRequest("APP1", "CTX1", SetTraceStatusRequest.LogLevelEnabled, "COM1");
+                new("APP1", "CTX1", SetTraceStatusRequest.LogLevelEnabled, "COM1");
 
             Span<byte> buffer = ControlEncode(request, 17);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x02));
@@ -57,7 +57,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             SetTraceStatusRequest request =
-                new SetTraceStatusRequest("APP1", "CTX1", SetTraceStatusRequest.LogLevelDefault);
+                new("APP1", "CTX1", SetTraceStatusRequest.LogLevelDefault);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

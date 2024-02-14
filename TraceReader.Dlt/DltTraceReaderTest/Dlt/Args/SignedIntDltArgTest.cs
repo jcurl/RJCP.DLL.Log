@@ -23,10 +23,10 @@
         [TestCase(9223372036854775807, "9223372036854775807")]
         public void SignedIntToString(long value, string output)
         {
-            SignedIntDltArg signedInt = new SignedIntDltArg(value);
+            SignedIntDltArg signedInt = new(value);
             Assert.That(signedInt.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(signedInt.Append(sb).ToString(), Is.EqualTo(output));
         }
 
@@ -49,7 +49,7 @@
         {
             foreach (int size in new[] { 1, 2, 4, 8 }) {
                 if (size >= minSize) {
-                    SignedIntDltArg signedInt = new SignedIntDltArg(value, size);
+                    SignedIntDltArg signedInt = new(value, size);
                     Assert.That(signedInt.Data, Is.EqualTo(value));
                     Assert.That(signedInt.DataBytesLength, Is.EqualTo(size));
                 }
@@ -73,7 +73,7 @@
         [TestCase(long.MaxValue, 8)]
         public void SignedIntEstimateSize(long value, int expSize)
         {
-            SignedIntDltArg signedInt = new SignedIntDltArg(value);
+            SignedIntDltArg signedInt = new(value);
             Assert.That(signedInt.Data, Is.EqualTo(value));
             Assert.That(signedInt.DataBytesLength, Is.EqualTo(expSize));
         }

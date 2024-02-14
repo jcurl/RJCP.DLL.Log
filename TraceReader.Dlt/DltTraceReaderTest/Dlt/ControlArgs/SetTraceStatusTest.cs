@@ -12,7 +12,7 @@
         [TestCase(100, "[set_trace_status] status=100")]
         public void SetTraceStatusReqAllNull(int logLevel, string result)
         {
-            SetTraceStatusRequest arg = new SetTraceStatusRequest(null, null, logLevel);
+            SetTraceStatusRequest arg = new(null, null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -28,7 +28,7 @@
         [TestCase(100, "[set_trace_status] status=100 APP1 ()")]
         public void SetTraceStatusReqAppId(int logLevel, string result)
         {
-            SetTraceStatusRequest arg = new SetTraceStatusRequest("APP1", null, logLevel);
+            SetTraceStatusRequest arg = new("APP1", null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -44,7 +44,7 @@
         [TestCase(100, "[set_trace_status] status=100")]
         public void SetTraceStatusReqAll(int logLevel, string result)
         {
-            SetTraceStatusRequest arg = new SetTraceStatusRequest("", "", logLevel);
+            SetTraceStatusRequest arg = new("", "", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -60,7 +60,7 @@
         [TestCase(100, "[set_trace_status] status=100 APP1 (CTX1)")]
         public void SetTraceStatusReq(int logLevel, string result)
         {
-            SetTraceStatusRequest arg = new SetTraceStatusRequest("APP1", "CTX1", logLevel);
+            SetTraceStatusRequest arg = new("APP1", "CTX1", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -76,7 +76,7 @@
         [TestCase(100, "[set_trace_status] status=100 APP1 (CTX1) SERB")]
         public void SetTraceStatusReqComIntf(int logLevel, string result)
         {
-            SetTraceStatusRequest arg = new SetTraceStatusRequest("APP1", "CTX1", logLevel, "SERB");
+            SetTraceStatusRequest arg = new("APP1", "CTX1", logLevel, "SERB");
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -92,7 +92,7 @@
         [TestCase(100, "[set_trace_status status=100]")]
         public void SetTraceStatusResp(int status, string result)
         {
-            SetTraceStatusResponse arg = new SetTraceStatusResponse(status);
+            SetTraceStatusResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x02));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

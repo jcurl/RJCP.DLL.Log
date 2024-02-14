@@ -14,7 +14,7 @@
     public class PcapOptions : IEnumerable<IPcapOption>
     {
         private readonly bool m_LittleEndian;
-        private readonly List<IPcapOption> m_Options = new List<IPcapOption>();
+        private readonly List<IPcapOption> m_Options = new();
         private readonly PcapOptionFactory m_Factory;
 
         /// <summary>
@@ -75,7 +75,7 @@
             if (m_IsReadOnly) throw new InvalidOperationException(AppResources.InfraCollectionReadOnly);
 
             int length = 0;
-            List<IPcapOption> options = new List<IPcapOption>();
+            List<IPcapOption> options = new();
             while (buffer.Length >= 4) {
                 IPcapOption option = DecodeOption(block, buffer);
                 if (option is null) return -1;

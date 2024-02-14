@@ -81,7 +81,7 @@
                 return null;
             }
 
-            List<IInputStream> inputs = new List<IInputStream>();
+            List<IInputStream> inputs = new();
             foreach (string uri in m_Config.Input) {
                 IInputStream input;
                 try {
@@ -104,7 +104,7 @@
                 inputs.Add(input);
 
                 // A mock object might not have set this property, in which case ignore.
-                if (Global.Instance.OutputStreamFactory.InputFiles is object) {
+                if (Global.Instance.OutputStreamFactory.InputFiles is not null) {
                     // Ensure our inputs are not overwritten.
                     if (input.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase)) {
                         Global.Instance.OutputStreamFactory.InputFiles.AddProtectedFile(input.Connection);
@@ -139,11 +139,11 @@
                         DltTraceLineBase line;
                         do {
                             line = await reader.GetLineAsync();
-                            if (line is object) {
+                            if (line is not null) {
                                 receivedLine = true;
                                 output.Write(line);
                             }
-                        } while (line is object);
+                        } while (line is not null);
                     } catch (OutputStreamException) {
                         // Propagate this exception upstream
                         throw;
@@ -271,7 +271,7 @@
 
         private static Task<ITraceReader<DltTraceLineBase>> GetReader(IInputStream input)
         {
-            if (input.InputStream is object)
+            if (input.InputStream is not null)
                 return Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
 
             if (input.InputPacket is object)

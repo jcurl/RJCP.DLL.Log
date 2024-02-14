@@ -8,7 +8,7 @@
         [Test]
         public void GetUseSessionIdReq()
         {
-            GetUseSessionIdRequest arg = new GetUseSessionIdRequest();
+            GetUseSessionIdRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x1C));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_use_session_id]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_use_session_id error]")]
         public void GetUseSessionIdRes(int status, bool enabled, string result)
         {
-            GetUseSessionIdResponse arg = new GetUseSessionIdResponse(status, enabled);
+            GetUseSessionIdResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1C));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

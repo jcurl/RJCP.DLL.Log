@@ -9,7 +9,7 @@
         [TestCase(false, "[set_default_trace_status] off")]
         public void SetDefaultTraceStatusReqNoComId(bool enabled, string result)
         {
-            SetDefaultTraceStatusRequest arg = new SetDefaultTraceStatusRequest(enabled);
+            SetDefaultTraceStatusRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x12));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -20,7 +20,7 @@
         [TestCase(false, "[set_default_trace_status] off eth0")]
         public void SetDefaultTraceStatusReq(bool enabled, string result)
         {
-            SetDefaultTraceStatusRequest arg = new SetDefaultTraceStatusRequest(enabled, "eth0");
+            SetDefaultTraceStatusRequest arg = new(enabled, "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0x12));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -34,7 +34,7 @@
         [TestCase(100, "[set_default_trace_status status=100]")]
         public void SetTraceStatusResp(int status, string result)
         {
-            SetDefaultTraceStatusResponse arg = new SetDefaultTraceStatusResponse(status);
+            SetDefaultTraceStatusResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x12));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

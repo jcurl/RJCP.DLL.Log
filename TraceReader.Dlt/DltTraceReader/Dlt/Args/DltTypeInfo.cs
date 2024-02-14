@@ -93,7 +93,7 @@
         /// <returns>A <see cref="string" /> that represents this instance.</returns>
         public override string ToString()
         {
-            StringBuilder strBuilder = new StringBuilder(Bytes.Length * 3);
+            StringBuilder strBuilder = new(Bytes.Length * 3);
             HexConvert.ConvertToHex(strBuilder, Bytes);
             return strBuilder.ToString();
         }

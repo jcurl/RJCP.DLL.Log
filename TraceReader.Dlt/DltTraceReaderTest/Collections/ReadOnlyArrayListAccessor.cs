@@ -10,7 +10,7 @@
         private const string AssemblyName = "RJCP.Diagnostics.Log.Dlt";
         private const string TypeName = "RJCP.Diagnostics.Log.Collections.ReadOnlyArrayList`1";
         private static readonly PrivateType AccType =
-            new PrivateType(AssemblyName, TypeName, new Type[] { typeof(T) });
+            new(AssemblyName, TypeName, new Type[] { typeof(T) });
 
         public ReadOnlyArrayListAccessor(T[] array)
             : base(AccType, new Type[] { typeof(T[]) }, new object[] { array }) { }

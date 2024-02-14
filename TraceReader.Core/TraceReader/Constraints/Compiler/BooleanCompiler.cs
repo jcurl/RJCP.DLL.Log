@@ -41,9 +41,9 @@
         {
             BTree<BNode> node = expressionTree.Expression;
             EvalData[] state = new EvalData[expressionTree.Nodes];
-            Stack<BTree<BNode>> evalStack = new Stack<BTree<BNode>>();
+            Stack<BTree<BNode>> evalStack = new();
 
-            BooleanIlGenerator compiledEvaluation = new BooleanIlGenerator(expressionTree.CheckNodes);
+            BooleanIlGenerator compiledEvaluation = new(expressionTree.CheckNodes);
 
             while (true) {
                 if (state[node.Value.Id].Visited) {

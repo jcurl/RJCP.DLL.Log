@@ -40,13 +40,13 @@
         public void ContextCheck(int before, int after, int matches)
         {
             ContextPacket[] lines = {
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x00 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x01 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x02 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x04 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x05 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x06 })
+                new(TestLines.Verbose, new byte[] { 0x00 }),
+                new(TestLines.Verbose, new byte[] { 0x01 }),
+                new(TestLines.Verbose, new byte[] { 0x02 }),
+                new(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x04 }),
+                new(TestLines.Verbose, new byte[] { 0x05 }),
+                new(TestLines.Verbose, new byte[] { 0x06 })
             };
             Assert.That(Matches(lines, before, after), Is.EqualTo(matches));
             Assert.That(Matches(lines, before, after, true), Is.EqualTo(matches));
@@ -59,14 +59,14 @@
         public void ContextCheckTwoMatchesSpace0(int before, int after, int matches)
         {
             ContextPacket[] lines = {
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x00 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x01 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x02 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x04 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x05 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x06 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x07 }),
+                new(TestLines.Verbose, new byte[] { 0x00 }),
+                new(TestLines.Verbose, new byte[] { 0x01 }),
+                new(TestLines.Verbose, new byte[] { 0x02 }),
+                new(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
+                new(TestLines.Verbose2, new byte[] { 0x04 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x05 }),
+                new(TestLines.Verbose, new byte[] { 0x06 }),
+                new(TestLines.Verbose, new byte[] { 0x07 }),
             };
             Assert.That(Matches(lines, before, after), Is.EqualTo(matches));
             Assert.That(Matches(lines, before, after, true), Is.EqualTo(matches));
@@ -79,15 +79,15 @@
         public void ContextCheckTwoMatchesSpace1(int before, int after, int matches)
         {
             ContextPacket[] lines = {
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x00 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x01 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x02 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x04 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x05 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x06 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x07 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x08 }),
+                new(TestLines.Verbose, new byte[] { 0x00 }),
+                new(TestLines.Verbose, new byte[] { 0x01 }),
+                new(TestLines.Verbose, new byte[] { 0x02 }),
+                new(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x04 }),
+                new(TestLines.Verbose2, new byte[] { 0x05 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x06 }),
+                new(TestLines.Verbose, new byte[] { 0x07 }),
+                new(TestLines.Verbose, new byte[] { 0x08 }),
             };
             Assert.That(Matches(lines, before, after), Is.EqualTo(matches));
             Assert.That(Matches(lines, before, after, true), Is.EqualTo(matches));
@@ -100,16 +100,16 @@
         public void ContextCheckTwoMatchesSpace2(int before, int after, int matches)
         {
             ContextPacket[] lines = {
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x00 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x01 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x02 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x04 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x05 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x06 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x07 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x08 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x09 }),
+                new(TestLines.Verbose, new byte[] { 0x00 }),
+                new(TestLines.Verbose, new byte[] { 0x01 }),
+                new(TestLines.Verbose, new byte[] { 0x02 }),
+                new(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x04 }),
+                new(TestLines.Verbose, new byte[] { 0x05 }),
+                new(TestLines.Verbose2, new byte[] { 0x06 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x07 }),
+                new(TestLines.Verbose, new byte[] { 0x08 }),
+                new(TestLines.Verbose, new byte[] { 0x09 }),
             };
             Assert.That(Matches(lines, before, after), Is.EqualTo(matches));
             Assert.That(Matches(lines, before, after, true), Is.EqualTo(matches));
@@ -122,17 +122,17 @@
         public void ContextCheckTwoMatchesSpace3(int before, int after, int matches)
         {
             ContextPacket[] lines = {
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x00 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x01 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x02 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x04 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x05 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x06 }),
-                new ContextPacket(TestLines.Verbose2, new byte[] { 0x07 }),   // Match
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x08 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x09 }),
-                new ContextPacket(TestLines.Verbose, new byte[] { 0x0A }),
+                new(TestLines.Verbose, new byte[] { 0x00 }),
+                new(TestLines.Verbose, new byte[] { 0x01 }),
+                new(TestLines.Verbose, new byte[] { 0x02 }),
+                new(TestLines.Verbose2, new byte[] { 0x03 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x04 }),
+                new(TestLines.Verbose, new byte[] { 0x05 }),
+                new(TestLines.Verbose, new byte[] { 0x06 }),
+                new(TestLines.Verbose2, new byte[] { 0x07 }),   // Match
+                new(TestLines.Verbose, new byte[] { 0x08 }),
+                new(TestLines.Verbose, new byte[] { 0x09 }),
+                new(TestLines.Verbose, new byte[] { 0x0A }),
             };
             Assert.That(Matches(lines, before, after), Is.EqualTo(matches));
             Assert.That(Matches(lines, before, after, true), Is.EqualTo(matches));
@@ -146,7 +146,7 @@
         private static int Matches(IEnumerable<ContextPacket> lines, int before, int after, bool packets)
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            Context context = new Context(filter, before, after);
+            Context context = new(filter, before, after);
             int matches = 0;
 
             // This example shows how to use the Context class. A check is always needed, so that the after context is
@@ -179,7 +179,7 @@
         public void NoContextNoMatch()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            Context context = new Context(filter, 0, 0);
+            Context context = new(filter, 0, 0);
 
             Assert.That(context.Check(TestLines.Verbose), Is.False);
             Assert.That(context.GetBeforeContext(), Is.Empty);
@@ -190,7 +190,7 @@
         public void NoContextMatch()
         {
             Constraint filter = new Constraint().DltAppId("APP1");
-            Context context = new Context(filter, 0, 0);
+            Context context = new(filter, 0, 0);
 
             Assert.That(context.Check(TestLines.Verbose), Is.True);
             Assert.That(context.GetBeforeContext(), Is.Empty);

@@ -27,7 +27,7 @@
         [TestCaseSource(nameof(ReadChunks))]
         public async Task CorruptedVersionPacketReSync(int maxBytes)
         {
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1")
@@ -59,7 +59,7 @@
         [TestCaseSource(nameof(ReadChunks))]
         public async Task RandomDataPacketReSync(int maxBytes)
         {
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 m_Factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1")
@@ -92,7 +92,7 @@
             // This test case checks for when the length is too small. We specially craft the message so that it has an
             // extended header, time stamp, session and ECU ID, so the length is expected to be at least 26 bytes, but
             // specify it to be 25 bytes.
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 int l1 = m_Factory
@@ -125,7 +125,7 @@
             // By decoding the verbose payload, we check the contents against the packet length. If they don't match,
             // then we consider the packet as invalid. This uses a different heuristic to `InvalidLengthTooShort`, where
             // here the length is still plausible after decoding only the standard header.
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 int l1 = m_Factory
@@ -155,7 +155,7 @@
         [TestCaseSource(nameof(ReadChunks))]
         public async Task InvalidLengthNoPayload(int maxBytes)
         {
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
@@ -231,7 +231,7 @@
 
         private async Task CorruptPayload32bitNum(int maxBytes, byte typeInfo)
         {
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.
@@ -278,7 +278,7 @@
 
         private async Task CorruptPayloadStringLength(int maxBytes, byte typeInfo, byte length)
         {
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Number of arguments is 1, but there is no payload. The packet length is correct. Should result in an invalid packet.

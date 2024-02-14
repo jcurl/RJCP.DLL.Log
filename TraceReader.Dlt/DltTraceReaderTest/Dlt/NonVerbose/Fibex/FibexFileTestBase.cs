@@ -60,7 +60,7 @@
         .AddArgument("Build ID:")
         .AddArgument("S_STRG_ASCII", 0);
 
-        protected static readonly Dictionary<int, IFrame> DefaultFrames = new Dictionary<int, IFrame>() {
+        protected static readonly Dictionary<int, IFrame> DefaultFrames = new() {
             {10, Frame10 },
             {11, Frame11 },
             {12, Frame12 },
@@ -110,7 +110,7 @@
         .AddArgument("Build ID:")
         .AddArgument("S_STRG_ASCII", 0);
 
-        protected static readonly Dictionary<int, IFrame> DefaultFramesNoEcu = new Dictionary<int, IFrame>() {
+        protected static readonly Dictionary<int, IFrame> DefaultFramesNoEcu = new() {
             {10, Frame10NoEcu },
             {11, Frame11NoEcu },
             {12, Frame12NoEcu },
@@ -165,7 +165,7 @@
         .AddArgument("Build ID:")
         .AddArgument("S_STRG_ASCII", 0);
 
-        protected static readonly Dictionary<int, IFrame> DefaultFramesTCB2 = new Dictionary<int, IFrame>() {
+        protected static readonly Dictionary<int, IFrame> DefaultFramesTCB2 = new() {
             {10, Frame10TCB2 },
             {11, Frame11TCB2 },
             {12, Frame12TCB2 },
@@ -176,14 +176,14 @@
 
         protected static XmlDocument GetDocument(string fileName)
         {
-            XmlDocument fibexDoc = new XmlDocument();
+            XmlDocument fibexDoc = new();
             fibexDoc.Load(fileName);
             return fibexDoc;
         }
 
         protected static XmlNamespaceManager GetNsMgr(XmlDocument doc)
         {
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            XmlNamespaceManager nsmgr = new(doc.NameTable);
             nsmgr.AddNamespace("", "");
             nsmgr.AddNamespace("fx", "http://www.asam.net/xml/fbx");
             nsmgr.AddNamespace("ho", "http://www.asam.net/xml");
@@ -192,7 +192,7 @@
 
         protected static Stream GetStream(XmlDocument doc)
         {
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
             doc.Save(stream);
             stream.Position = 0;
             return stream;

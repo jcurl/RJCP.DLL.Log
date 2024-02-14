@@ -29,7 +29,7 @@
         [Category("Integration")]
         public void ListenerDoNothing()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 _ = server.ListenAsync();
                 Thread.Sleep(10);
             }
@@ -51,7 +51,7 @@
 
                 await listen;
             } finally {
-                if (server is object) server.Dispose();
+                if (server is not null) server.Dispose();
             }
         }
 
@@ -61,7 +61,7 @@
         [Category("Integration")]
         public async Task ListenConnect()
         {
-            using (TcpServer server = new TcpServer(IPAddress.Parse("127.0.0.1"), 3490)) {
+            using (TcpServer server = new(IPAddress.Parse("127.0.0.1"), 3490)) {
                 server.ClientConnected += (s, e) => {
                     Console.WriteLine("Client connected");
                     Task.Factory.StartNew(() => {
@@ -83,7 +83,7 @@
                 Console.WriteLine("Listener started in the background");
                 Task listen = server.ListenAsync();
 
-                using (TcpClient tcpClient = new TcpClient()) {
+                using (TcpClient tcpClient = new()) {
                     await tcpClient.ConnectAsync("127.0.0.1", 3490);
 
                     NetworkStream stream = tcpClient.GetStream();

@@ -26,7 +26,7 @@
         [TestCase(GetLogInfoResponse.StatusOverflow)]
         public void EncodeError(int statusCode)
         {
-            GetLogInfoResponse response = new GetLogInfoResponse(statusCode);
+            GetLogInfoResponse response = new(statusCode);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x03));
@@ -36,7 +36,7 @@
         [Test]
         public void EncodeUnknownStatus()
         {
-            GetLogInfoResponse response = new GetLogInfoResponse(20);
+            GetLogInfoResponse response = new(20);
 
             byte[] buffer = new byte[1024];
             _ = ControlEncode(buffer, response, out Result<int> result);
@@ -45,17 +45,17 @@
 
         private static GetLogInfoResponse GetResponse(int statusCode)
         {
-            GetLogInfoResponse response = new GetLogInfoResponse(statusCode);
+            GetLogInfoResponse response = new(statusCode);
 
-            ContextId app1c1 = new ContextId("CTX1", LogLevel.Info, 1, "App1 Context 1");
-            ContextId app1c2 = new ContextId("CTX2", LogLevel.Debug, 1, "App1 Context 2");
-            AppId app1 = new AppId("APP1", "Application 1");
+            ContextId app1c1 = new("CTX1", LogLevel.Info, 1, "App1 Context 1");
+            ContextId app1c2 = new("CTX2", LogLevel.Debug, 1, "App1 Context 2");
+            AppId app1 = new("APP1", "Application 1");
             app1.ContextIds.Add(app1c1);
             app1.ContextIds.Add(app1c2);
 
-            ContextId app2c1 = new ContextId("CTX3", LogLevel.Error, 0, "App2 Context 3");
-            ContextId app2c2 = new ContextId("CTX4", LogLevel.Fatal, 1, "App2 Context 4");
-            AppId app2 = new AppId("APP2", "Application 2");
+            ContextId app2c1 = new("CTX3", LogLevel.Error, 0, "App2 Context 3");
+            ContextId app2c2 = new("CTX4", LogLevel.Fatal, 1, "App2 Context 4");
+            AppId app2 = new("APP2", "Application 2");
             app2.ContextIds.Add(app2c1);
             app2.ContextIds.Add(app2c2);
 
@@ -258,15 +258,15 @@
         [Test]
         public void FullResponseZeroLengthDescription()
         {
-            GetLogInfoResponse response = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo);
-            ContextId app1c1 = new ContextId("CTX1", LogLevel.Info, 1, "");
-            ContextId app1c2 = new ContextId("CTX2", LogLevel.Debug, 1, "");
-            AppId app1 = new AppId("APP1", "");
+            GetLogInfoResponse response = new(GetLogInfoResponse.StatusFullInfo);
+            ContextId app1c1 = new("CTX1", LogLevel.Info, 1, "");
+            ContextId app1c2 = new("CTX2", LogLevel.Debug, 1, "");
+            AppId app1 = new("APP1", "");
             app1.ContextIds.Add(app1c1);
             app1.ContextIds.Add(app1c2);
-            ContextId app2c1 = new ContextId("CTX3", LogLevel.Error, 0, "");
-            ContextId app2c2 = new ContextId("CTX4", LogLevel.Fatal, 1, "");
-            AppId app2 = new AppId("APP2", "");
+            ContextId app2c1 = new("CTX3", LogLevel.Error, 0, "");
+            ContextId app2c2 = new("CTX4", LogLevel.Fatal, 1, "");
+            AppId app2 = new("APP2", "");
             app2.ContextIds.Add(app2c1);
             app2.ContextIds.Add(app2c2);
             response.AppIds.Add(app1);
@@ -312,15 +312,15 @@
         {
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
-            GetLogInfoResponse response = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo);
-            ContextId app1c1 = new ContextId("CTX1", LogLevel.Info, 1, "");
-            ContextId app1c2 = new ContextId("CTX2", LogLevel.Debug, 1, "");
-            AppId app1 = new AppId("APP1", "");
+            GetLogInfoResponse response = new(GetLogInfoResponse.StatusFullInfo);
+            ContextId app1c1 = new("CTX1", LogLevel.Info, 1, "");
+            ContextId app1c2 = new("CTX2", LogLevel.Debug, 1, "");
+            AppId app1 = new("APP1", "");
             app1.ContextIds.Add(app1c1);
             app1.ContextIds.Add(app1c2);
-            ContextId app2c1 = new ContextId("CTX3", LogLevel.Error, 0, "");
-            ContextId app2c2 = new ContextId("CTX4", LogLevel.Fatal, 1, "");
-            AppId app2 = new AppId("APP2", "");
+            ContextId app2c1 = new("CTX3", LogLevel.Error, 0, "");
+            ContextId app2c2 = new("CTX4", LogLevel.Fatal, 1, "");
+            AppId app2 = new("APP2", "");
             app2.ContextIds.Add(app2c1);
             app2.ContextIds.Add(app2c2);
             response.AppIds.Add(app1);

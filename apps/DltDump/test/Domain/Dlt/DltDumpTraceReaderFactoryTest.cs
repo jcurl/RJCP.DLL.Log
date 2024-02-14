@@ -94,7 +94,7 @@
 
         private static Stream GetTestStream(InputFormat streamType, TestLineType lineType)
         {
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
 
             byte[] payload;
             switch (lineType) {
@@ -143,7 +143,7 @@
         [Test]
         public void NullFileName()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
 
@@ -155,7 +155,7 @@
         [Test]
         public void NullStream()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
 
@@ -167,7 +167,7 @@
         [Test]
         public void NullPacket()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true
             };
@@ -180,7 +180,7 @@
         [Test]
         public async Task GetFileDecoder()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
             Assert.That(factory.InputFormat, Is.EqualTo(InputFormat.File));
@@ -189,14 +189,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltFileTraceDecoder>());
         }
 
         [Test]
         public async Task GetFileDecoderAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
 
@@ -210,7 +210,7 @@
         [Test]
         public async Task GetFileDecoderAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File,
                 FrameMap = FrameMap
             };
@@ -225,7 +225,7 @@
         [Test]
         public async Task GetFileFilterDecoder()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File,
                 OutputStream = new MemoryOutput()
             };
@@ -235,15 +235,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltFileTraceFilterDecoder>());
         }
 
         [Test]
         public async Task GetFileFilterDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File,
                 OutputStream = output
             };
@@ -259,8 +259,8 @@
         [Test]
         public async Task GetFileFilterDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File,
                 OutputStream = output,
                 FrameMap = FrameMap
@@ -277,7 +277,7 @@
         [Test]
         public async Task GetTcpDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true
             };
@@ -287,14 +287,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltTraceDecoder>());
         }
 
         [Test]
         public async Task GetTcpDecoderOnlineAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true
             };
@@ -309,7 +309,7 @@
         [Test]
         public async Task GetTcpDecoderOnlineAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true,
                 FrameMap = FrameMap
@@ -325,7 +325,7 @@
         [Test]
         public async Task GetTcpDecoderOffline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false
             };
@@ -335,14 +335,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltTraceDecoder>());
         }
 
         [Test]
         public async Task GetTcpDecoderOfflineAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false
             };
@@ -357,7 +357,7 @@
         [Test]
         public async Task GetTcpDecoderOfflineAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false,
                 FrameMap = FrameMap
@@ -373,7 +373,7 @@
         [Test]
         public async Task GetTcpFilterDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true,
                 OutputStream = new MemoryOutput()
@@ -384,15 +384,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltNetworkTraceFilterDecoder>());
         }
 
         [Test]
         public async Task GetTcpFilterOnlineDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true,
                 OutputStream = output
@@ -409,8 +409,8 @@
         [Test]
         public async Task GetTcpFilterOnlineDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true,
                 OutputStream = output,
@@ -428,7 +428,7 @@
         [Test]
         public async Task GetTcpFilterDecoderOffline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false,
                 OutputStream = new MemoryOutput()
@@ -439,15 +439,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltNetworkTraceFilterDecoder>());
         }
 
         [Test]
         public async Task GetTcpFilterOfflineDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false,
                 OutputStream = output
@@ -464,8 +464,8 @@
         [Test]
         public async Task GetTcpFilterOfflineDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = false,
                 OutputStream = output,
@@ -483,7 +483,7 @@
         [Test]
         public async Task GetSerialDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true
             };
@@ -493,14 +493,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceDecoder>());
         }
 
         [Test]
         public async Task GetSerialDecoderOnlineAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true
             };
@@ -515,7 +515,7 @@
         [Test]
         public async Task GetSerialDecoderOnlineAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true,
                 FrameMap = FrameMap
@@ -531,7 +531,7 @@
         [Test]
         public async Task GetSerialDecoderOffline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false
             };
@@ -541,14 +541,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceDecoder>());
         }
 
         [Test]
         public async Task GetSerialDecoderOfflineAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false
             };
@@ -563,7 +563,7 @@
         [Test]
         public async Task GetSerialDecoderOfflineAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false,
                 FrameMap = FrameMap
@@ -579,7 +579,7 @@
         [Test]
         public async Task GetSerialFilterDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true,
                 OutputStream = new MemoryOutput()
@@ -590,15 +590,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceFilterDecoder>());
         }
 
         [Test]
         public async Task GetSerialFilterOnlineDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true,
                 OutputStream = output
@@ -615,8 +615,8 @@
         [Test]
         public async Task GetSerialFilterOnlineDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = true,
                 OutputStream = output,
@@ -634,7 +634,7 @@
         [Test]
         public async Task GetSerialFilterDecoderOffline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false,
                 OutputStream = new MemoryOutput()
@@ -645,15 +645,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltSerialTraceFilterDecoder>());
         }
 
         [Test]
         public async Task GetSerialFilterOfflineDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false,
                 OutputStream = output
@@ -670,8 +670,8 @@
         [Test]
         public async Task GetSerialFilterOfflineDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Serial,
                 OnlineMode = false,
                 OutputStream = output,
@@ -689,7 +689,7 @@
         [Test]
         public async Task GetPcapDecoder()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false
             };
@@ -699,14 +699,14 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
         }
 
         [Test]
         public async Task GetPcapDecoderAndDecodeVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false
             };
@@ -721,7 +721,7 @@
         [Test]
         public async Task GetPcapDecoderAndDecodeNonVerbose()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 FrameMap = FrameMap
@@ -737,7 +737,7 @@
         [Test]
         public async Task GetPcapDecoderFilterWriter()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = new MemoryOutput()
@@ -748,15 +748,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
         }
 
         [Test]
         public async Task GetPcapFilterWriterDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = output
@@ -773,8 +773,8 @@
         [Test]
         public async Task GetPcapFilterWriterDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput();
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new();
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = output,
@@ -792,7 +792,7 @@
         [Test]
         public async Task GetPcapDecoderFilter()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = new MemoryOutput(false)
@@ -803,15 +803,15 @@
 
             ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(file);
 
-            TraceReaderAccessor readerAcc = new TraceReaderAccessor(reader);
+            TraceReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.Decoder, Is.TypeOf<DltPcapTraceDecoder>());
         }
 
         [Test]
         public async Task GetPcapFilterDecoderAndDecodeVerbose()
         {
-            MemoryOutput output = new MemoryOutput(false);
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new(false);
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = output
@@ -827,8 +827,8 @@
         [Test]
         public async Task GetPcapFilterDecoderAndDecodeNonVerbose()
         {
-            MemoryOutput output = new MemoryOutput(false);
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            MemoryOutput output = new(false);
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Pcap,
                 OnlineMode = false,
                 OutputStream = output,
@@ -845,7 +845,7 @@
         [Test]
         public async Task GetPacketTcpDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true
             };
@@ -858,14 +858,14 @@
 
             // This reader is used for packets, and decoders aren't created yet. So we create one to test the type of
             // decoder that will be used.
-            TracePacketReaderAccessor readerAcc = new TracePacketReaderAccessor(reader);
+            TracePacketReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.CreateDecoder(), Is.TypeOf<DltTraceDecoder>());
         }
 
         [Test]
         public async Task GetPacketTcpFilterDecoderOnline()
         {
-            DltDumpTraceReaderFactory factory = new DltDumpTraceReaderFactory() {
+            DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true,
                 OutputStream = new MemoryOutput()
@@ -879,7 +879,7 @@
 
             // This reader is used for packets, and decoders aren't created yet. So we create one to test the type of
             // decoder that will be used.
-            TracePacketReaderAccessor readerAcc = new TracePacketReaderAccessor(reader);
+            TracePacketReaderAccessor readerAcc = new(reader);
             Assert.That(readerAcc.CreateDecoder(), Is.TypeOf<DltNetworkTraceFilterDecoder>());
         }
     }

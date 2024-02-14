@@ -12,21 +12,21 @@
         [Test]
         public void FilterConfigEmptyList()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             Assert.That(config.Input, Is.Empty);
         }
 
         [Test]
         public void FilterConfigSingleEntry()
         {
-            FilterConfig config = new FilterConfig(new[] { "" });
+            FilterConfig config = new(new[] { "" });
             Assert.That(config.Input, Has.Count.EqualTo(1));
         }
 
         [Test]
         public void FilterConfigDefaultInputFormat()
         {
-            FilterConfig config = new FilterConfig(new[] { "" });
+            FilterConfig config = new(new[] { "" });
             Assert.That(config.InputFormat, Is.EqualTo(InputFormat.Automatic));
         }
 
@@ -36,7 +36,7 @@
         [TestCase("", false, TestName = "FilterEcuIdNotFoundEmpty")]
         public void FilterEcuId(string ecuid, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId(ecuid);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -45,7 +45,7 @@
         [Test]
         public void FilterEcuIdMultiple()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId("ECU2");
             config.AddEcuId("ECU1");
 
@@ -56,7 +56,7 @@
         [TestCase("", TestName = "FilterEcuIdNotPresentEmpty")]
         public void FilterEcuIdNotPresent(string ecuid)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId(ecuid);
 
             Assert.That(config.GetFilter().Check(TestLines.NoEcuId), Is.False);
@@ -66,7 +66,7 @@
         [TestCase("", TestName = "FilterEcuIdNotPresentEmptyButSet")]
         public void FilterEcuIdNotPresentButSet(string ecuid)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId(ecuid);
 
             // The field is set, but the feature bit is not, thus it should always return false.
@@ -79,7 +79,7 @@
         [TestCase("", false, TestName = "FilterAppIdNotFoundEmpty")]
         public void FilterAppId(string appid, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddAppId(appid);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -88,7 +88,7 @@
         [Test]
         public void FilterAppIdMultiple()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddAppId("APP1");
             config.AddAppId("CTX1");
 
@@ -99,7 +99,7 @@
         [TestCase("", TestName = "FilterAppIdNotPresentEmpty")]
         public void FilterAppIdNotPresent(string ctxid)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddAppId(ctxid);
 
             Assert.That(config.GetFilter().Check(TestLines.NoExtHdr), Is.False);
@@ -111,7 +111,7 @@
         [TestCase("", false, TestName = "FilterCtxIdNotFoundEmpty")]
         public void FilterCtxId(string ctxid, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddCtxId(ctxid);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -120,7 +120,7 @@
         [Test]
         public void FilterCtxIdMultiple()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddCtxId("CTX2");
             config.AddCtxId("CTX1");
 
@@ -131,7 +131,7 @@
         [TestCase("", TestName = "FilterCtxIdNotPresentEmpty")]
         public void FilterCtxIdNotPresent(string ctxid)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddCtxId(ctxid);
 
             Assert.That(config.GetFilter().Check(TestLines.NoExtHdr), Is.False);
@@ -141,7 +141,7 @@
         [TestCase(128, false, TestName = "FilterSessionIdNotFound")]
         public void FilterSessionId(int sessiond, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddSessionId(sessiond);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -150,7 +150,7 @@
         [Test]
         public void FilterSessionIdMultiple()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddSessionId(128);
             config.AddSessionId(127);
 
@@ -160,7 +160,7 @@
         [Test]
         public void FilterSessionIdNotPresent()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddSessionId(127);
 
             Assert.That(config.GetFilter().Check(TestLines.NoSessionId), Is.False);
@@ -169,7 +169,7 @@
         [Test]
         public void FilterVerbose()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetVerbose();
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.True);
@@ -178,7 +178,7 @@
         [Test]
         public void FilterVerboseNotSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetVerbose();
 
             Assert.That(config.GetFilter().Check(TestLines.NoExtHdr), Is.False);
@@ -187,7 +187,7 @@
         [Test]
         public void FilterVerboseControlSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetVerbose();
 
             // Regardless of the verbose bit, control messages are not accepted.
@@ -197,7 +197,7 @@
         [Test]
         public void FilterVerboseControl()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetVerbose();
 
             // Regardless of the verbose bit, control messages are not accepted.
@@ -207,7 +207,7 @@
         [Test]
         public void FilterNonVerboseNotSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetNonVerbose();
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.False);
@@ -216,7 +216,7 @@
         [Test]
         public void FilterNonVerbose()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetNonVerbose();
 
             Assert.That(config.GetFilter().Check(TestLines.NoExtHdr), Is.True);
@@ -225,7 +225,7 @@
         [Test]
         public void FilterNonVerboseControlSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetNonVerbose();
 
             // Regardless of the verbose bit, control messages are not accepted.
@@ -235,7 +235,7 @@
         [Test]
         public void FilterNonVerboseControl()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetNonVerbose();
 
             // Regardless of the verbose bit, control messages are not accepted.
@@ -245,7 +245,7 @@
         [Test]
         public void FilterControlMessage()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetControlMessage();
 
             Assert.That(config.GetFilter().Check(TestLines.Control), Is.True);
@@ -254,7 +254,7 @@
         [Test]
         public void FilterControlMessageVerbose()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetControlMessage();
 
             Assert.That(config.GetFilter().Check(TestLines.ControlVerbose), Is.True);
@@ -263,7 +263,7 @@
         [Test]
         public void FilterNonControlMessage()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetControlMessage();
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.False);
@@ -272,7 +272,7 @@
         [Test]
         public void FilterAllMessagesSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId("ECU1");
             config.SetControlMessage();
             config.SetVerbose();
@@ -286,7 +286,7 @@
         [Test]
         public void FilterAllMessagesNotSet()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddEcuId("ECU1");
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.True);
@@ -297,14 +297,14 @@
         [Test]
         public void FilterAllThrough()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             Assert.That(config.GetFilter(), Is.Null);
         }
 
         [Test]
         public void FilterAllThroughWithVerbose()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.SetControlMessage();
             config.SetVerbose();
             config.SetNonVerbose();
@@ -324,7 +324,7 @@
         [TestCase("SAGE 1", true, true, TestName = "FilterStringCaseInsensitiveEndMatchNotStart")]
         public void FilterString(string search, bool ignoreCase, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddSearchString(search, ignoreCase);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -342,7 +342,7 @@
         [TestCase("S+AGE\\s+\\d", true, true, TestName = "FilterRegexCaseInsensitiveEndMatchNotStart")]
         public void FilterRegex(string search, bool ignoreCase, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddRegexString(search, ignoreCase);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -351,7 +351,7 @@
         [Test]
         public void FilterRegexBadString()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
 
             // On .NET 5 and later, this is a RegexParseException
             Assert.That(() => {
@@ -365,7 +365,7 @@
         [TestCase(DltType.LOG_WARN, false)]
         public void FilterDltTypeVerboseInfo(DltType dltType, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageType(dltType);
 
             Assert.That(config.GetFilter().Check(TestLines.Verbose), Is.EqualTo(result));
@@ -376,7 +376,7 @@
         [TestCase(DltType.LOG_WARN, false)]
         public void FilterDltTypeControlResponse(DltType dltType, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageType(dltType);
 
             Assert.That(config.GetFilter().Check(TestLines.Control), Is.EqualTo(result));
@@ -387,7 +387,7 @@
         [TestCase(-1, false)]
         public void FilterDltMessageId(int messageId, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageId(messageId);
 
             Assert.That(config.GetFilter().Check(TestLines.NonVerbose), Is.EqualTo(result));
@@ -398,7 +398,7 @@
         [TestCase(-1, false)]
         public void FilterDltMessageIdWithArgs(int messageId, bool result)
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageId(messageId);
 
             Assert.That(config.GetFilter().Check(TestLines.NonVerboseWithArgs), Is.EqualTo(result));
@@ -407,7 +407,7 @@
         [Test]
         public void FilterDltMessageIds()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageId(42);
             config.AddMessageId(43);
 
@@ -417,7 +417,7 @@
         [Test]
         public void FilterDltMessageIdsNoMatch()
         {
-            FilterConfig config = new FilterConfig(Array.Empty<string>());
+            FilterConfig config = new(Array.Empty<string>());
             config.AddMessageId(41);
             config.AddMessageId(43);
 

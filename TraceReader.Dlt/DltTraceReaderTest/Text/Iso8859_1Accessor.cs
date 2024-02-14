@@ -10,7 +10,7 @@
         private const string TypeName = "RJCP.Diagnostics.Log.Text.Iso8859_1";
 
         public static readonly PrivateType AccType =
-            new PrivateType(AssemblyName, TypeName);
+            new(AssemblyName, TypeName);
 
         private delegate int ConvertFromBytesDelegate(ReadOnlySpan<byte> bytes, char[] chars);
 

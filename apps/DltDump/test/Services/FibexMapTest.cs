@@ -27,14 +27,14 @@
         [Test]
         public void Default()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(map.EventLog, Is.Empty);
         }
 
         [Test]
         public void LoadFibex()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
             WriteLog(map.EventLog);
 
@@ -57,7 +57,7 @@
         [Test]
         public void LoadFibexMergeNoOptions()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
             Assert.That(map.EventLog, Is.Empty);
 
@@ -88,7 +88,7 @@
         [Test]
         public void LoadFibexMergeWithEcuId()
         {
-            FibexMap map = new FibexMap(FibexOptions.WithEcuId);
+            FibexMap map = new(FibexOptions.WithEcuId);
             Assert.That(map.LoadFibex(FibexTcb), Is.True);
             Assert.That(map.EventLog, Is.Empty);
 
@@ -120,7 +120,7 @@
         [Test]
         public void LoadFibexMergeDirNoOptions()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(map.LoadFibex(FibexDir), Is.False);
             WriteLog(map.EventLog);
 
@@ -148,7 +148,7 @@
         [Test]
         public void LoadFibexMergeDirWithEcuId()
         {
-            FibexMap map = new FibexMap(FibexOptions.WithEcuId);
+            FibexMap map = new(FibexOptions.WithEcuId);
             Assert.That(map.LoadFibex(FibexDir), Is.True);
             WriteLog(map.EventLog);
 
@@ -174,7 +174,7 @@
         [Test]
         public void LoadFibexNull()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(() => {
                 _ = map.LoadFibex(null);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -183,7 +183,7 @@
         [Test]
         public void LoadFibexEmpty()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(() => {
                 _ = map.LoadFibex(string.Empty);
             }, Throws.TypeOf<ArgumentException>());
@@ -192,7 +192,7 @@
         [Test]
         public void LoadFibexWhitespace()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(() => {
                 _ = map.LoadFibex(" ");
             }, Throws.TypeOf<ArgumentException>());
@@ -201,7 +201,7 @@
         [Test]
         public void LoadFibexNotFound()
         {
-            FibexMap map = new FibexMap(FibexOptions.None);
+            FibexMap map = new(FibexOptions.None);
             Assert.That(() => {
                 _ = map.LoadFibex(Path.Combine(FibexDir, "x"));
             }, Throws.TypeOf<FileNotFoundException>());

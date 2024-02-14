@@ -73,7 +73,7 @@
         public void EncodeNvBytesMax()
         {
             byte[] data = new byte[65535 - (IsVerbose ? 6 : 0) - HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             EncodeNvBytes(data);
@@ -84,7 +84,7 @@
         {
             byte[] buffer = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
             byte[] data = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             ArgEncode(buffer, new NonVerboseDltArg(data), out Result<int> result);
@@ -95,7 +95,7 @@
         public void EncodeUNvBytesMax()
         {
             byte[] data = new byte[65535 - (IsVerbose ? 6 : 0) - HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             EncodeUNvBytes(data);
@@ -106,7 +106,7 @@
         {
             byte[] buffer = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
             byte[] data = new byte[65536 - (IsVerbose ? 6 : 0) + HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             ArgEncode(buffer, new UnknownNonVerboseDltArg(data), out Result<int> result);

@@ -48,7 +48,7 @@
         [TestCase(TestName = "Encode_Utf8Full")]
         public void EncodeUtf8Max()
         {
-            StringBuilder sb = new StringBuilder(65536);
+            StringBuilder sb = new(65536);
             sb.Append('x', 65535 - (IsVerbose ? 4 : 0) - 3 - HeaderLen);
 
             EncodeUtf8(sb.ToString(), sb.Length);
@@ -77,7 +77,7 @@
         [TestCase(TestName = "Encode_AsciiFull")]
         public void EncodeAsciiMax()
         {
-            StringBuilder sb = new StringBuilder(65536);
+            StringBuilder sb = new(65536);
             sb.Append('x', 65535 - (IsVerbose ? 4 : 0) - 3 - HeaderLen);
 
             EncodeAscii(sb.ToString(), sb.Length);
@@ -88,7 +88,7 @@
         public void EncodeStringOverSize(StringEncodingType strType)
         {
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 2 + 65535];
-            StringBuilder sb = new StringBuilder(65536);
+            StringBuilder sb = new(65536);
             sb.Append('x', 65535 - (IsVerbose ? 4 : 0));
 
             ArgEncode(buffer, new StringDltArg(sb.ToString(), strType), out Result<int> result);

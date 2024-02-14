@@ -10,7 +10,7 @@
         public void ShowHelpCommand()
         {
             Options cmdLine = Options.Parse(null, null);
-            HelpCommand cmd = new HelpCommand(cmdLine, HelpCommand.Mode.ShowHelp);
+            HelpCommand cmd = new(cmdLine, HelpCommand.Mode.ShowHelp);
             Assert.That(cmd.HelpMode, Is.EqualTo(HelpCommand.Mode.ShowHelp));
             Assert.That(cmd.Run(), Is.EqualTo(ExitCode.Success));
         }
@@ -19,7 +19,7 @@
         public void ShowVersionCommand()
         {
             Options cmdLine = Options.Parse(null, null);
-            HelpCommand cmd = new HelpCommand(cmdLine, HelpCommand.Mode.ShowVersion);
+            HelpCommand cmd = new(cmdLine, HelpCommand.Mode.ShowVersion);
             Assert.That(cmd.HelpMode, Is.EqualTo(HelpCommand.Mode.ShowVersion));
             Assert.That(cmd.Run(), Is.EqualTo(ExitCode.Success));
         }

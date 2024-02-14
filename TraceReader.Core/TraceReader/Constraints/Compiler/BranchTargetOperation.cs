@@ -10,7 +10,7 @@
     /// </summary>
     internal class BranchTargetOperation : IOperation
     {
-        private readonly List<BranchBaseOperation> m_Branches = new List<BranchBaseOperation>();
+        private readonly List<BranchBaseOperation> m_Branches = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchTargetOperation"/> class.
@@ -52,7 +52,7 @@
         /// </remarks>
         public virtual void SetUpBranches(ILGenerator ilGen)
         {
-            if (Target is object) throw new InvalidOperationException("SetUpBranches has already been called");
+            if (Target is not null) throw new InvalidOperationException("SetUpBranches has already been called");
 
             bool finished;
             do {

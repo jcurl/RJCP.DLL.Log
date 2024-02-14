@@ -11,18 +11,18 @@
         private void OnOpenEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = OpenEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         private void OnConnectEvent(object sender, ConnectSuccessEventArgs args)
         {
             EventHandler<ConnectSuccessEventArgs> handler = ConnectEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         public override IInputStream Create(Uri uri)
         {
-            TestPacketReader inputPacket = new TestPacketReader();
+            TestPacketReader inputPacket = new();
             inputPacket.OpenEvent += OnOpenEvent;
             inputPacket.ConnectEvent += OnConnectEvent;
             return inputPacket;

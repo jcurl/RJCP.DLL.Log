@@ -25,7 +25,7 @@
         public void EncodeSuccess([Values(false, true)] bool overflow)
         {
             MessageBufferOverflowResponse response =
-                new MessageBufferOverflowResponse(ControlResponse.StatusOk, overflow);
+                new(ControlResponse.StatusOk, overflow);
 
             Span<byte> buffer = ControlEncode(response, 6);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x14));
@@ -38,7 +38,7 @@
         public void EncodeError(int statusCode)
         {
             MessageBufferOverflowResponse response =
-                new MessageBufferOverflowResponse(statusCode, false);
+                new(statusCode, false);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x14));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             MessageBufferOverflowResponse response =
-                new MessageBufferOverflowResponse(ControlResponse.StatusOk, true);
+                new(ControlResponse.StatusOk, true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

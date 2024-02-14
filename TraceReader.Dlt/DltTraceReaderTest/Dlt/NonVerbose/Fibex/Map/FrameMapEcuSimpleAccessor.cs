@@ -7,7 +7,7 @@
     {
         private const string AssemblyName = "RJCP.Diagnostics.Log.Dlt";
         private const string TypeName = "RJCP.Diagnostics.Log.Dlt.NonVerbose.Fibex.Map.FrameMapEcuSimple";
-        private static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        private static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public FrameMapEcuSimpleAccessor() : base(AccType) { }
 

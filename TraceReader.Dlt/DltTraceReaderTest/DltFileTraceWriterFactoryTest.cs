@@ -31,7 +31,7 @@
                 0x22, 0x00, 0x00, 0x00, 0x2D, 0x00
             };
 
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 ITraceWriterFactory<DltTraceLineBase> writerFactory = new DltFileTraceWriterFactory();
                 using (ITraceWriter<DltTraceLineBase> writer = await writerFactory.CreateAsync(stream)) {
                     Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);

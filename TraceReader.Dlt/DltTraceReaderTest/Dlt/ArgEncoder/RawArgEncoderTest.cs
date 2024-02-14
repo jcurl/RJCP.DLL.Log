@@ -48,7 +48,7 @@
         public void EncodeRawMax()
         {
             byte[] data = new byte[65535 - (IsVerbose ? 4 : 0) - 2 - HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             EncodeRaw(data);
@@ -58,7 +58,7 @@
         public void EncodeRawOverSize()
         {
             byte[] data = new byte[65535 - (IsVerbose ? 4 : 0) - 1 - HeaderLen];
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(data);
 
             byte[] buffer = new byte[(IsVerbose ? 4 : 0) + HeaderLen + 2 + 65535];

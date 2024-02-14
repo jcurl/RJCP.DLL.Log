@@ -30,7 +30,7 @@
         public void DefaultProperties()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
                 Assert.That(output.SupportsBinary, Is.False);
                 Assert.That(output.Force, Is.False);
@@ -41,7 +41,7 @@
         public void DefaultPropertiesWithForce()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt", true)) {
+            using (TextOutput output = new("File.txt", true)) {
                 Assert.That(File.Exists("File.txt"), Is.False);
                 Assert.That(output.SupportsBinary, Is.False);
                 Assert.That(output.Force, Is.True);
@@ -55,7 +55,7 @@
         public void WriteTextLine(InputFormat inputFormat)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.SetInput("input.dlt", inputFormat);
@@ -64,7 +64,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -77,7 +77,7 @@
         public void WriteTextLineWithPosition(InputFormat inputFormat)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 output.ShowPosition = true;
 
                 Assert.That(File.Exists("File.txt"), Is.False);
@@ -88,7 +88,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(10 + TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -103,7 +103,7 @@
             byte[] data = new byte[] { 0x00 };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.SetInput("input.dlt", inputFormat);
@@ -113,7 +113,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -124,7 +124,7 @@
         public void SetInputNullStringInitNoFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose);
@@ -133,7 +133,7 @@
                 Assert.That(File.Exists("File.txt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -144,7 +144,7 @@
         public void SetInputNullStringInitFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+            using (TextOutput output = new("File_%FILE%.txt")) {
                 Assert.That(File.Exists("File_.txt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose);
@@ -153,7 +153,7 @@
                 Assert.That(File.Exists("File_.txt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File_.txt");
+                FileInfo fileInfo = new("File_.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -164,7 +164,7 @@
         public void SetInputNullStringFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+            using (TextOutput output = new("File_%FILE%.txt")) {
                 Assert.That(File.Exists("File_.txt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose);
@@ -177,7 +177,7 @@
                 output.Flush();
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File_.txt");
+                FileInfo fileInfo = new("File_.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(2 * (TestLines.Verbose.ToString().Length + Environment.NewLine.Length)));
             }
@@ -188,14 +188,14 @@
         public void SetInputFromValidToNullStringFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File_%FILE%.txt")) {
+            using (TextOutput output = new("File_%FILE%.txt")) {
                 Assert.That(File.Exists("File_.txt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
                 Assert.That(File.Exists("File_input.txt"), Is.True);
-                FileInfo fileInfo = new FileInfo("File_input.txt");
+                FileInfo fileInfo = new("File_input.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
 
@@ -205,7 +205,7 @@
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
                 Assert.That(File.Exists("File_.txt"), Is.True);
-                FileInfo fileInfoEmpty = new FileInfo("File_.txt");
+                FileInfo fileInfoEmpty = new("File_.txt");
                 Assert.That(fileInfoEmpty.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -215,7 +215,7 @@
         public void SetInputUnknownFormat()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 Assert.That(() => {
@@ -228,7 +228,7 @@
         public void SetInputUnsupportedFormatAutomatic()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 Assert.That(() => {
@@ -241,7 +241,7 @@
         public void SetInputValid()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TextOutput output = new TextOutput("File.txt")) {
+            using (TextOutput output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
 

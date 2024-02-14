@@ -10,7 +10,7 @@
 
     public class ContextBenchmark
     {
-        private static readonly DltTraceLine Verbose = new DltTraceLine(new[] { new StringDltArg("Message 1") }) {
+        private static readonly DltTraceLine Verbose = new(new[] { new StringDltArg("Message 1") }) {
             EcuId = "ECU1",
             ApplicationId = "APP1",
             ContextId = "CTX1",
@@ -27,7 +27,7 @@
                        DltLineFeatures.AppIdFeature + DltLineFeatures.CtxIdFeature
         };
 
-        private static readonly DltTraceLine Verbose2 = new DltTraceLine(new[] { new StringDltArg("Message 2") }) {
+        private static readonly DltTraceLine Verbose2 = new(new[] { new StringDltArg("Message 2") }) {
             EcuId = "ECU1",
             ApplicationId = "APP2",
             ContextId = "CTX2",

@@ -16,7 +16,7 @@
         [TestCase(100, "[set_log_level] log_level=100")]
         public void SetLogLevelReqAllNull(LogLevel logLevel, string result)
         {
-            SetLogLevelRequest arg = new SetLogLevelRequest(null, null, logLevel);
+            SetLogLevelRequest arg = new(null, null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -37,7 +37,7 @@
         [TestCase(100, "[set_log_level] log_level=100 APP1 ()")]
         public void SetLogLevelReqAppId(LogLevel logLevel, string result)
         {
-            SetLogLevelRequest arg = new SetLogLevelRequest("APP1", null, logLevel);
+            SetLogLevelRequest arg = new("APP1", null, logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -58,7 +58,7 @@
         [TestCase(100, "[set_log_level] log_level=100")]
         public void SetLogLevelReqAll(LogLevel logLevel, string result)
         {
-            SetLogLevelRequest arg = new SetLogLevelRequest("", "", logLevel);
+            SetLogLevelRequest arg = new("", "", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -79,7 +79,7 @@
         [TestCase(100, "[set_log_level] log_level=100 APP1 (CTX1)")]
         public void SetLogLevelReq(LogLevel logLevel, string result)
         {
-            SetLogLevelRequest arg = new SetLogLevelRequest("APP1", "CTX1", logLevel);
+            SetLogLevelRequest arg = new("APP1", "CTX1", logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -100,7 +100,7 @@
         [TestCase(100, "[set_log_level] log_level=100 APP1 (CTX1) SERB")]
         public void SetLogLevelReqComIntf(LogLevel logLevel, string result)
         {
-            SetLogLevelRequest arg = new SetLogLevelRequest("APP1", "CTX1", logLevel, "SERB");
+            SetLogLevelRequest arg = new("APP1", "CTX1", logLevel, "SERB");
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -116,7 +116,7 @@
         [TestCase(100, "[set_log_level status=100]")]
         public void SetLogLevelResp(int status, string result)
         {
-            SetLogLevelResponse arg = new SetLogLevelResponse(status);
+            SetLogLevelResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x01));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

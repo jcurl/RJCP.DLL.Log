@@ -27,7 +27,7 @@
             [Values(false, true)] bool isDst)
         {
             CustomTimeZoneResponse response =
-                new CustomTimeZoneResponse(statusCode, new TimeSpan(-6, 0, 0), isDst);
+                new(statusCode, new TimeSpan(-6, 0, 0), isDst);
 
             byte[] expectedTzOffset = IsBigEndian ?
                 new byte[] { 0xFF, 0xFF, 0xAB, 0xA0 } :
@@ -46,7 +46,7 @@
             [Values(false, true)] bool isDst)
         {
             CustomTimeZoneResponse response =
-                new CustomTimeZoneResponse(statusCode, new TimeSpan(9, 30, 0), isDst);
+                new(statusCode, new TimeSpan(9, 30, 0), isDst);
 
             byte[] expectedTzOffset = IsBigEndian ?
                 new byte[] { 0x00, 0x00, 0x85, 0x98 } :
@@ -65,7 +65,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             CustomConnectionInfoResponse response =
-                new CustomConnectionInfoResponse(ControlResponse.StatusOk, CustomConnectionInfoResponse.Connected);
+                new(ControlResponse.StatusOk, CustomConnectionInfoResponse.Connected);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

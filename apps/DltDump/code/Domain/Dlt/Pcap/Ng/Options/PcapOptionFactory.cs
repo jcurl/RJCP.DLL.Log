@@ -12,7 +12,7 @@
         private static readonly IPcapOption EndOfOption = new EndOfOption();
 
         private readonly bool m_LittleEndian;
-        private readonly Dictionary<int, HashSet<int>> m_Logged = new Dictionary<int, HashSet<int>>();
+        private readonly Dictionary<int, HashSet<int>> m_Logged = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PcapOptionFactory"/> class.

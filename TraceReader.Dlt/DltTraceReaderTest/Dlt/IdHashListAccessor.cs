@@ -7,7 +7,7 @@
         private const string AssemblyName = "RJCP.Diagnostics.Log.Dlt";
         private const string TypeName = "RJCP.Diagnostics.Log.Dlt.IdHashList";
 
-        public static readonly PrivateType AccType = new PrivateType(AssemblyName, TypeName);
+        public static readonly PrivateType AccType = new(AssemblyName, TypeName);
 
         public IdHashListAccessor() : base(AccType) { }
 

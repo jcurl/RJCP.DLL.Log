@@ -268,44 +268,44 @@
         {
             if (m_None) return new Constraint().Expr(new BlockAll());
 
-            Constraint constraint = new Constraint();
+            Constraint constraint = new();
             bool filtered = false;
-            if (m_EcuId is object) {
+            if (m_EcuId is not null) {
                 constraint.Expr(m_EcuId);
                 filtered = true;
             }
 
-            if (m_AppId is object) {
+            if (m_AppId is not null) {
                 constraint.Expr(m_AppId);
                 filtered = true;
             }
 
-            if (m_CtxId is object) {
+            if (m_CtxId is not null) {
                 constraint.Expr(m_CtxId);
                 filtered = true;
             }
 
-            if (m_Session is object) {
+            if (m_Session is not null) {
                 constraint.Expr(m_Session);
                 filtered = true;
             }
 
-            if (m_Time is object) {
+            if (m_Time is not null) {
                 constraint.Expr(m_Time);
                 filtered = true;
             }
 
-            if (m_Search is object) {
+            if (m_Search is not null) {
                 constraint.Expr(m_Search);
                 filtered = true;
             }
 
-            if (m_MessageType is object) {
+            if (m_MessageType is not null) {
                 constraint.Expr(m_MessageType);
                 filtered = true;
             }
 
-            if (m_MessageId is object) {
+            if (m_MessageId is not null) {
                 constraint.Expr(m_MessageId);
                 filtered = true;
             }

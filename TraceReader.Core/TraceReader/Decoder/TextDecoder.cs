@@ -17,7 +17,7 @@
         /// <returns>A new <see cref="ITraceLine"/> derived object.</returns>
         protected override TraceLine GetLine(Span<char> line, long position)
         {
-            TraceLine traceLine = new TraceLine(new string(line), m_Line, position);
+            TraceLine traceLine = new(new string(line), m_Line, position);
             m_Line++;
             return traceLine;
         }

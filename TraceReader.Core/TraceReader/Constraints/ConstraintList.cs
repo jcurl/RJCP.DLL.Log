@@ -14,12 +14,11 @@
         // This precedence table is fixed also in code, and is not customizable (not that you want to, else all laws of
         // boolean logic don't work)! That is because this implementation makes the "and" logic implicit with the
         // previous result.
-        private readonly Dictionary<Operation, int> ConstraintPrecedence =
-            new Dictionary<Operation, int>() {
-                { Operation.Not, 1 },
-                { Operation.Check, 2 },
-                { Operation.Or, 3 }
-            };
+        private readonly Dictionary<Operation, int> ConstraintPrecedence = new() {
+            { Operation.Not, 1 },
+            { Operation.Check, 2 },
+            { Operation.Or, 3 }
+        };
 
         private IEnumerator<Token> m_Tokens;
 

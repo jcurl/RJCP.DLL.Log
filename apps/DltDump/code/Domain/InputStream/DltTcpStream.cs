@@ -31,7 +31,7 @@
             ArgumentNullException.ThrowIfNull(hostname);
             if (string.IsNullOrWhiteSpace(hostname))
                 throw new ArgumentException(AppResources.InfraTcpStreamInvalidHostName, nameof(hostname));
-            if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_HostName = hostname;
             m_Port = port;
@@ -111,7 +111,7 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltTcpStream));
-            if (InputStream is object) return;
+            if (InputStream is not null) return;
 
             InputStream = new TcpClientStream(m_HostName, m_Port) {
                 DisconnectTimeout = 5000
@@ -137,7 +137,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputStream is object) InputStream.Close();
+            if (InputStream is not null) InputStream.Close();
             InputStream = null;
         }
 

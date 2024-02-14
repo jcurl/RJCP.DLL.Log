@@ -12,21 +12,21 @@
         [TestCase("abc DEF", "abc DEF")]
         public void StringToString(string input, string output)
         {
-            StringDltArg stringArg = new StringDltArg(input);
+            StringDltArg stringArg = new(input);
             Assert.That(stringArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(stringArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 
         [Test]
         public void Coding()
         {
-            StringDltArg stringArg = new StringDltArg("string", StringEncodingType.Ascii);
+            StringDltArg stringArg = new("string", StringEncodingType.Ascii);
             Assert.That(stringArg.ToString(), Is.EqualTo("string"));
             Assert.That(stringArg.Coding, Is.EqualTo(StringEncodingType.Ascii));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(stringArg.Append(sb).ToString(), Is.EqualTo("string"));
         }
     }

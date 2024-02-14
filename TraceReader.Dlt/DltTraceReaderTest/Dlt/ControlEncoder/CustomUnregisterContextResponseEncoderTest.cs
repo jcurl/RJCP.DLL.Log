@@ -27,7 +27,7 @@
         public void Encode(int statusCode)
         {
             CustomUnregisterContextResponse response =
-                new CustomUnregisterContextResponse(statusCode, "APP1", "CTX1", null);
+                new(statusCode, "APP1", "CTX1", null);
 
             Span<byte> buffer = ControlEncode(response, 17);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0xF01));
@@ -43,7 +43,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             CustomUnregisterContextResponse response =
-                new CustomUnregisterContextResponse(ControlResponse.StatusOk, "APP1", "CTX1", null);
+                new(ControlResponse.StatusOk, "APP1", "CTX1", null);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

@@ -22,7 +22,7 @@
             if (chunkSize == 0)
                 return new List<DltTraceLineBase>(traceDecoder.Decode(data, 0, flush));
 
-            List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            List<DltTraceLineBase> lines = new();
             int offset = 0;
             while (offset < data.Length) {
                 int chunkLength = Math.Min(chunkSize, data.Length - offset);
@@ -44,7 +44,7 @@
         [TestCaseSource(nameof(ReadChunks))]
         public void DecodeDlt(int chunkSize)
         {
-            using (DltTraceDecoder decoder = new DltTraceDecoder()) {
+            using (DltTraceDecoder decoder = new()) {
                 var lines = Decode(decoder, Data, false, chunkSize);
 
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -58,7 +58,7 @@
         [TestCaseSource(nameof(ReadChunks))]
         public void DecodeDltPacket(int chunkSize)
         {
-            using (DltTraceDecoder decoder = new DltTraceDecoder()) {
+            using (DltTraceDecoder decoder = new()) {
                 var lines = Decode(decoder, Data, true, chunkSize);
 
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -80,7 +80,7 @@
                 0xFF, 0xFF, 0xFF, 0xFF, 0x3D, 0x7F, 0x00, 0x2B, 0x45, 0x43, 0x55, 0x31
             };
 
-            using (DltTraceDecoder decoder = new DltTraceDecoder()) {
+            using (DltTraceDecoder decoder = new()) {
                 var lines = Decode(decoder, packet, true, chunkSize);
 
                 Assert.That(lines, Has.Count.EqualTo(2));
@@ -109,7 +109,7 @@
                 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
             };
 
-            using (DltTraceDecoder decoder = new DltTraceDecoder()) {
+            using (DltTraceDecoder decoder = new()) {
                 var lines = Decode(decoder, packet, true, chunkSize);
 
                 Assert.That(lines, Has.Count.EqualTo(2));
@@ -141,8 +141,8 @@
                 0x61, 0x67, 0x65, 0x20, 0x30, 0x30, 0x00
             };
 
-            using (DltFileTraceDecoder decoder = new DltFileTraceDecoder()) {
-                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            using (DltFileTraceDecoder decoder = new()) {
+                List<DltTraceLineBase> lines = new();
 
                 lines.AddRange(decoder.Decode(packet.AsSpan(0, 4), 0, false));
                 Assert.That(lines, Is.Empty);
@@ -181,8 +181,8 @@
                 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF  // 95 .. 106
             };
 
-            using (DltFileTraceDecoder decoder = new DltFileTraceDecoder()) {
-                List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            using (DltFileTraceDecoder decoder = new()) {
+                List<DltTraceLineBase> lines = new();
 
                 // This special sequence causes the decoder to enter a if statement where there is no cached data (it's
                 // looking for a header), but there are skipped bytes.

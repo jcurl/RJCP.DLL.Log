@@ -34,21 +34,21 @@
 
         public BTree<T> Copy(Func<T, T> copyAction)
         {
-            Queue<BTree<T>> queue = new Queue<BTree<T>>();
-            Queue<BTree<T>> qcopy = new Queue<BTree<T>>();
-            BTree<T> tree = new BTree<T>(copyAction(Value));
+            Queue<BTree<T>> queue = new();
+            Queue<BTree<T>> qcopy = new();
+            BTree<T> tree = new(copyAction(Value));
 
             queue.Enqueue(this);
             qcopy.Enqueue(tree);
             while (queue.Count > 0) {
                 BTree<T> node = queue.Dequeue();
                 BTree<T> copy = qcopy.Dequeue();
-                if (node.Left is object) {
+                if (node.Left is not null) {
                     copy.Left = new BTree<T>(copyAction(node.Left.Value));
                     queue.Enqueue(node.Left);
                     qcopy.Enqueue(copy.Left);
                 }
-                if (node.Right is object) {
+                if (node.Right is not null) {
                     copy.Right = new BTree<T>(copyAction(node.Right.Value));
                     queue.Enqueue(node.Right);
                     qcopy.Enqueue(copy.Right);

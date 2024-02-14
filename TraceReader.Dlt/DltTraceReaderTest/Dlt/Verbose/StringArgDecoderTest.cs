@@ -161,7 +161,7 @@
         public void DecodeAsciiLargePayloadLE()
         {
             byte[] payload = new byte[65000];
-            Random r = new Random();
+            Random r = new();
             if (Endian == Endianness.Little) {
                 payload[0] = 0x00;
                 payload[1] = 0x02;
@@ -178,7 +178,7 @@
                 payload[5] = (byte)((payload.Length - 6) & 0xFF);
             }
 
-            StringBuilder strBuilder = new StringBuilder();
+            StringBuilder strBuilder = new();
             for (int i = 6; i < payload.Length; i++) {
                 payload[i] = (byte)r.Next(32, 126);
                 strBuilder.Append((char)payload[i]);

@@ -108,7 +108,7 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(0x03); // GetLogInfoRequestEncoder
-            GetLogInfoRequest request = new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
+            GetLogInfoRequest request = new(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
             Result<int> result = encoder.Encode(buffer, false, request);
             Assert.That(result.HasValue, Is.False);
@@ -120,7 +120,7 @@
             byte[] buffer = new byte[1024];
 
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(0x13); // GetSoftwareVersionResponseEncoder
-            GetSoftwareVersionResponse request = new GetSoftwareVersionResponse(ControlResponse.StatusOk, "Version1");
+            GetSoftwareVersionResponse request = new(ControlResponse.StatusOk, "Version1");
 
             Result<int> result = encoder.Encode(buffer, false, request);
             Assert.That(result.HasValue, Is.False);
@@ -133,7 +133,7 @@
 
             // Should just ignore that it wasn't registered.
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
-            UnknownControlRequest request = new UnknownControlRequest(serviceId);
+            UnknownControlRequest request = new(serviceId);
 
             Result<int> result = encoder.Encode(buffer, false, request);
             Assert.That(result.HasValue, Is.False);
@@ -154,7 +154,7 @@
 
             // Should just ignore that it is unsupported.
             IControlArgEncoder encoder = new ControlArgEncoderUnregUnsupported(0x03);
-            GetLogInfoRequest request = new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
+            GetLogInfoRequest request = new(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
             Result<int> result = encoder.Encode(buffer, false, request);
             Assert.That(result.Value, Is.EqualTo(17));
@@ -167,7 +167,7 @@
 
             // The default encoder will still be used after unregistering. Only for SW Injection Requests / Responses
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
-            SwInjectionRequest request = new SwInjectionRequest(serviceId, new byte[] { 0x41, 0x42, 0x43, 0x44 });
+            SwInjectionRequest request = new(serviceId, new byte[] { 0x41, 0x42, 0x43, 0x44 });
 
             Result<int> result = encoder.Encode(buffer, false, request);
             Assert.That(result.Value, Is.EqualTo(12));
@@ -182,7 +182,7 @@
 
             // The default encoder will still be used after unregistering. Only for SW Injection Requests / Responses
             IControlArgEncoder encoder = new ControlArgEncoderUnreg(serviceId);
-            SwInjectionResponse response = new SwInjectionResponse(serviceId, SwInjectionResponse.StatusPending);
+            SwInjectionResponse response = new(serviceId, SwInjectionResponse.StatusPending);
 
             Result<int> result = encoder.Encode(buffer, false, response);
             Assert.That(result.Value, Is.EqualTo(5));

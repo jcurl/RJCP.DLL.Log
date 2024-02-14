@@ -25,7 +25,7 @@
         public void Encode()
         {
             GetLogInfoRequest request =
-                new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
+                new(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
             Span<byte> buffer = ControlEncode(request, 17);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x03));
@@ -40,7 +40,7 @@
         public void EncodeWithCom()
         {
             GetLogInfoRequest request =
-                new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1", "COM1");
+                new(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1", "COM1");
 
             Span<byte> buffer = ControlEncode(request, 17);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x03));
@@ -57,7 +57,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetLogInfoRequest request =
-                new GetLogInfoRequest(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
+                new(GetLogInfoRequest.OptionsFullInfo, "APP1", "CTX1");
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

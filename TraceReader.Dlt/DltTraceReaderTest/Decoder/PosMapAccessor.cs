@@ -9,7 +9,7 @@
 
         private static PrivateType GetNestedPosMapType()
         {
-            PrivateType parent = new PrivateType(AssemblyName, TypeName);
+            PrivateType parent = new(AssemblyName, TypeName);
             return parent.GetNestedType("PosMap");
         }
 

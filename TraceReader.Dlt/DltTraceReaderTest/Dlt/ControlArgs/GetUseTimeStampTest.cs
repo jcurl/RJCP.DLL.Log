@@ -8,7 +8,7 @@
         [Test]
         public void GetUseTimeStampReq()
         {
-            GetUseTimeStampRequest arg = new GetUseTimeStampRequest();
+            GetUseTimeStampRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x1D));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_use_timestamp]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_use_timestamp error]")]
         public void GetUseTimeStampRes(int status, bool enabled, string result)
         {
-            GetUseTimeStampResponse arg = new GetUseTimeStampResponse(status, enabled);
+            GetUseTimeStampResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1D));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

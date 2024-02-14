@@ -7,10 +7,10 @@
 
     public sealed class CancelTask
     {
-        private readonly ManualResetEventSlim m_Started = new ManualResetEventSlim(false);
-        private readonly CancellationTokenSource m_TokenSource = new CancellationTokenSource();
+        private readonly ManualResetEventSlim m_Started = new(false);
+        private readonly CancellationTokenSource m_TokenSource = new();
         private readonly Task m_Task;
-        private readonly object m_CancelLock = new object();
+        private readonly object m_CancelLock = new();
 
         public CancelTask(Action<CancellationToken> action)
         {

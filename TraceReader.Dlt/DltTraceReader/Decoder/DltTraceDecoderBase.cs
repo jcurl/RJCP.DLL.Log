@@ -15,8 +15,8 @@
     /// </summary>
     public abstract partial class DltTraceDecoderBase : ITraceDecoder<DltTraceLineBase>
     {
-        private readonly LineCache m_Cache = new LineCache();
-        private readonly PosMap m_PosMap = new PosMap();
+        private readonly LineCache m_Cache = new();
+        private readonly PosMap m_PosMap = new();
         private readonly IVerboseDltDecoder m_VerboseDecoder;
         private readonly INonVerboseDltDecoder m_NonVerboseDecoder;
         private readonly IControlDltDecoder m_ControlDecoder;
@@ -95,7 +95,7 @@
             m_DltLineBuilder = lineBuilder;
         }
 
-        private readonly List<DltTraceLineBase> m_Lines = new List<DltTraceLineBase>();
+        private readonly List<DltTraceLineBase> m_Lines = new();
 
         /// <summary>
         /// Decodes data from the buffer and returns a read only collection of trace lines.

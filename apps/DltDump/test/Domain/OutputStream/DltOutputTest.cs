@@ -28,8 +28,8 @@
 
         private static byte[] GetFile(string fileName)
         {
-            using (MemoryStream mem = new MemoryStream())
-            using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+            using (MemoryStream mem = new())
+            using (FileStream file = new(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                 file.CopyTo(mem);
                 return mem.ToArray();
             }
@@ -55,7 +55,7 @@
         public void DefaultProperties()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
                 Assert.That(output.SupportsBinary, Is.True);
                 Assert.That(output.Force, Is.False);
@@ -66,7 +66,7 @@
         public void DefaultPropertiesWithForce()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt", true)) {
+            using (DltOutput output = new("File.dlt", true)) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
                 Assert.That(output.SupportsBinary, Is.True);
                 Assert.That(output.Force, Is.True);
@@ -77,7 +77,7 @@
         public void WriteLineAsPacketFile()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.File);
@@ -87,7 +87,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
             }
         }
@@ -96,7 +96,7 @@
         public void WriteLinesAsPacketFile()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.File);
@@ -107,7 +107,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length * 2));
             }
         }
@@ -116,7 +116,7 @@
         public void WriteLineAsPacketTcp()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.raw", InputFormat.Network);
@@ -126,7 +126,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. A storage header is added.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
             }
         }
@@ -135,7 +135,7 @@
         public void WriteLineAsPacketSer()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.ser", InputFormat.Serial);
@@ -145,7 +145,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. A storage header is added, and the serial header is removed.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(SerData.Length + 12));
             }
         }
@@ -154,7 +154,7 @@
         public void WriteLineAsPacketPcap()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.pcap", InputFormat.Pcap);
@@ -164,7 +164,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. A storage header is added.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
             }
         }
@@ -173,7 +173,7 @@
         public void WriteLineAsPacketPcapNg()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.pcapng", InputFormat.Pcap);
@@ -183,7 +183,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. A storage header is added.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(TcpData.Length + 16));
             }
         }
@@ -193,7 +193,7 @@
         public void SetInputNullStringInitNoFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose, FileData);
@@ -202,7 +202,7 @@
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
             }
         }
@@ -212,7 +212,7 @@
         public void SetInputNullStringInitFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+            using (DltOutput output = new("File_%FILE%.dlt")) {
                 Assert.That(File.Exists("File_.dlt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose, FileData);
@@ -221,7 +221,7 @@
                 Assert.That(File.Exists("File_.dlt"), Is.True);
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File_.dlt");
+                FileInfo fileInfo = new("File_.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
             }
         }
@@ -231,7 +231,7 @@
         public void SetInputNullStringFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+            using (DltOutput output = new("File_%FILE%.dlt")) {
                 Assert.That(File.Exists("File_.dlt"), Is.False);
                 output.SetInput(inputFileName, InputFormat.File);
                 output.Write(TestLines.Verbose, FileData);
@@ -244,7 +244,7 @@
                 output.Flush();
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
-                FileInfo fileInfo = new FileInfo("File_.dlt");
+                FileInfo fileInfo = new("File_.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(2 * FileData.Length));
             }
         }
@@ -254,14 +254,14 @@
         public void SetInputFromValidToNullStringFileTemplate(string inputFileName)
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File_%FILE%.dlt")) {
+            using (DltOutput output = new("File_%FILE%.dlt")) {
                 Assert.That(File.Exists("File_.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 output.Write(TestLines.Verbose, FileData);
                 output.Flush();
 
                 Assert.That(File.Exists("File_input.dlt"), Is.True);
-                FileInfo fileInfo = new FileInfo("File_input.dlt");
+                FileInfo fileInfo = new("File_input.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(FileData.Length));
 
                 output.SetInput(inputFileName, InputFormat.File);
@@ -270,7 +270,7 @@
 
                 // The data is written exactly as the packet says. There is no interpretation of the data.
                 Assert.That(File.Exists("File_.dlt"), Is.True);
-                FileInfo fileInfoEmpty = new FileInfo("File_.dlt");
+                FileInfo fileInfoEmpty = new("File_.dlt");
                 Assert.That(fileInfoEmpty.Length, Is.EqualTo(FileData.Length));
             }
         }
@@ -279,7 +279,7 @@
         public void SetInputUnknownFormat()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 Assert.That(() => {
@@ -292,7 +292,7 @@
         public void SetInputUnsupportedFormatAutomatic()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 Assert.That(() => {
@@ -305,7 +305,7 @@
         public void SetInputValid()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("File.dlt")) {
+            using (DltOutput output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
 
@@ -318,10 +318,10 @@
         public void WriteControlMessage()
         {
             DltControlTraceLine line =
-                new DltControlTraceLine(new GetSoftwareVersionResponse(ControlResponse.StatusOk, "Version"));
+                new(new GetSoftwareVersionResponse(ControlResponse.StatusOk, "Version"));
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -335,7 +335,7 @@
         [Test]
         public void WriteSkippedLine()
         {
-            DltSkippedTraceLine line = new DltSkippedTraceLine(100, "Test") {
+            DltSkippedTraceLine line = new(100, "Test") {
                 EcuId = "ECU1",
                 Count = 50,
                 TimeStamp = new DateTime(2022, 4, 16, 18, 47, 23, 387, DateTimeKind.Utc),
@@ -355,7 +355,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -368,7 +368,7 @@
         [Test]
         public void WriteLineMinimal()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO
             };
@@ -381,7 +381,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -394,7 +394,7 @@
         [Test]
         public void WriteLineTimeStamp()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 TimeStamp = new DateTime(2022, 4, 16, 18, 47, 23, 387, DateTimeKind.Utc),
@@ -409,7 +409,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -422,7 +422,7 @@
         [Test]
         public void WriteLineTimeStamps()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 TimeStamp = new DateTime(2022, 4, 16, 18, 47, 23, 387, DateTimeKind.Utc),
@@ -438,7 +438,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -451,7 +451,7 @@
         [Test]
         public void WriteLineEcuId()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 EcuId = "ECU1",
@@ -467,7 +467,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -480,7 +480,7 @@
         [Test]
         public void WriteLineEmptyEcuId()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 EcuId = "",
@@ -496,7 +496,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -509,7 +509,7 @@
         [Test]
         public void WriteLineSessionId()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 SessionId = unchecked((int)0xDEADBEEF),
@@ -525,7 +525,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -538,7 +538,7 @@
         [Test]
         public void WriteLineEcuIdAppIdCtxId()
         {
-            DltTraceLine line = new DltTraceLine(new IDltArg[] { new StringDltArg("Test") }) {
+            DltTraceLine line = new(new IDltArg[] { new StringDltArg("Test") }) {
                 Count = 50,
                 Type = DltType.LOG_INFO,
                 EcuId = "ECU1",
@@ -557,7 +557,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt")) {
+            using (DltOutput output = new("out.dlt")) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
                 output.SetInput("input.dlt", InputFormat.File);
                 Assert.That(output.Write(line), Is.True);
@@ -594,7 +594,7 @@
             };
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt") {
+            using (DltOutput output = new("out.dlt") {
                 ConvertNonVerbose = true
             }) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
@@ -626,7 +626,7 @@
             DltTraceLineBase line = builder.GetResult();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt") {
+            using (DltOutput output = new("out.dlt") {
                 ConvertNonVerbose = true
             }) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
@@ -656,7 +656,7 @@
             DltTraceLineBase line = builder.GetResult();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt") {
+            using (DltOutput output = new("out.dlt") {
                 ConvertNonVerbose = true
             }) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
@@ -685,7 +685,7 @@
             DltTraceLineBase line = builder.GetResult();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt") {
+            using (DltOutput output = new("out.dlt") {
                 ConvertNonVerbose = true
             }) {
                 Assert.That(File.Exists("out.dlt"), Is.False);
@@ -714,7 +714,7 @@
             DltTraceLineBase line = builder.GetResult();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (DltOutput output = new DltOutput("out.dlt") {
+            using (DltOutput output = new("out.dlt") {
                 ConvertNonVerbose = true
             }) {
                 Assert.That(File.Exists("out.dlt"), Is.False);

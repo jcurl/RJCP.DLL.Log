@@ -9,7 +9,7 @@
         [TestCase(false, "[use_extended_header] off")]
         public void SetUseExtendedHeaderReq(bool enabled, string result)
         {
-            SetUseExtendedHeaderRequest arg = new SetUseExtendedHeaderRequest(enabled);
+            SetUseExtendedHeaderRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x10));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[use_extended_header status=100]")]
         public void SetUseExtendedHeaderResp(int status, string result)
         {
-            SetUseExtendedHeaderResponse arg = new SetUseExtendedHeaderResponse(status);
+            SetUseExtendedHeaderResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x10));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

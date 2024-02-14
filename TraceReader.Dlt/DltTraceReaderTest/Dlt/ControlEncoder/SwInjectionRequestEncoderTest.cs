@@ -24,7 +24,7 @@
         [Test]
         public void Encode()
         {
-            SwInjectionRequest request = new SwInjectionRequest(0x1000, new byte[] { 0x41, 0x42, 0x43, 0x44 });
+            SwInjectionRequest request = new(0x1000, new byte[] { 0x41, 0x42, 0x43, 0x44 });
 
             Span<byte> buffer = ControlEncode(request, 12);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1000));
@@ -37,7 +37,7 @@
         {
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
-            SwInjectionRequest request = new SwInjectionRequest(0x1000, new byte[] { 0x41, 0x42, 0x43, 0x44 });
+            SwInjectionRequest request = new(0x1000, new byte[] { 0x41, 0x42, 0x43, 0x44 });
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

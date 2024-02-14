@@ -9,7 +9,7 @@
         [TestCase(false, "[use_timestamp] off")]
         public void SetUseTimeStampReq(bool enabled, string result)
         {
-            SetUseTimeStampRequest arg = new SetUseTimeStampRequest(enabled);
+            SetUseTimeStampRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[use_timestamp status=100]")]
         public void SetUseTimeStampResp(int status, string result)
         {
-            SetUseTimeStampResponse arg = new SetUseTimeStampResponse(status);
+            SetUseTimeStampResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0F));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

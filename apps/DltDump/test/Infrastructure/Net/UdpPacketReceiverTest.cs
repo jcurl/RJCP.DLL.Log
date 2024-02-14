@@ -28,7 +28,7 @@
         [Test]
         public void InvalidIPv6Family()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("::1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("::1"), 3490);
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep);
             }, Throws.TypeOf<ArgumentException>());
@@ -37,7 +37,7 @@
         [Test]
         public void InvalidIPv4Port0()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 0);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 0);
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep);
             }, Throws.TypeOf<ArgumentException>());
@@ -46,8 +46,8 @@
         [Test]
         public void UnicastAnyEndPoint()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 3490);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep);
+            IPEndPoint ep = new(IPAddress.Any, 3490);
+            UdpPacketReceiver receiver = new(ep);
             Assert.That(receiver.ChannelCount, Is.EqualTo(0));
             receiver.Dispose();
         }
@@ -55,8 +55,8 @@
         [Test]
         public void UnicastEndPoint()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 3490);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
+            UdpPacketReceiver receiver = new(ep);
             Assert.That(receiver.ChannelCount, Is.EqualTo(0));
             receiver.Dispose();
         }
@@ -64,8 +64,8 @@
         [Test]
         public void MulticastEndPoint()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("224.0.1.1"), 3490);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep);
+            IPEndPoint ep = new(IPAddress.Parse("224.0.1.1"), 3490);
+            UdpPacketReceiver receiver = new(ep);
             Assert.That(receiver.ChannelCount, Is.EqualTo(0));
             receiver.Dispose();
         }
@@ -81,7 +81,7 @@
         [Test]
         public void NullMulticastAddr()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, null);
             }, Throws.TypeOf<ArgumentNullException>());
@@ -90,7 +90,7 @@
         [Test]
         public void InvalidBindIPv6Family()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("::1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("::1"), 3490);
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, IPAddress.Parse("224.0.1.1"));
             }, Throws.TypeOf<ArgumentException>());
@@ -99,7 +99,7 @@
         [Test]
         public void InvalidMulticastIPv6Family()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             IPAddress mc = IPAddress.Parse("ff00::1");
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, mc);
@@ -109,7 +109,7 @@
         [Test]
         public void InvalidBindIPv4Port0()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 0);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 0);
             IPAddress mc = IPAddress.Parse("224.0.1.1");
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, mc);
@@ -119,7 +119,7 @@
         [Test]
         public void InvalidBindMulticast()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("224.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("224.0.0.1"), 3490);
             IPAddress mc = IPAddress.Parse("224.0.1.1");
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, mc);
@@ -129,7 +129,7 @@
         [Test]
         public void InvalidMulticastAsUnicast()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             IPAddress mc = IPAddress.Parse("10.0.1.1");
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, mc);
@@ -141,9 +141,9 @@
         [TestCase("239.255.255.255")]
         public void BindMulticast(string multicastGroup)
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("10.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             IPAddress mc = IPAddress.Parse(multicastGroup);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep, mc);
+            UdpPacketReceiver receiver = new(ep, mc);
             Assert.That(receiver.ChannelCount, Is.EqualTo(0));
             receiver.Dispose();
         }
@@ -153,9 +153,9 @@
         [TestCase("239.255.255.255")]
         public void BindMulticastAny(string multicastGroup)
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Any, 3490);
+            IPEndPoint ep = new(IPAddress.Any, 3490);
             IPAddress mc = IPAddress.Parse(multicastGroup);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep, mc);
+            UdpPacketReceiver receiver = new(ep, mc);
             Assert.That(receiver.ChannelCount, Is.EqualTo(0));
             receiver.Dispose();
         }
@@ -165,8 +165,8 @@
         [Category("Integration")]
         public void OpenLocalHost()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 receiver.Open();
             }
         }
@@ -176,7 +176,7 @@
         [Category("Integration")]
         public void OpenLocalHostCloseAfterDispose()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             UdpPacketReceiver receiver = null;
             try {
                 receiver = new UdpPacketReceiver(ep);
@@ -185,7 +185,7 @@
                 receiver.Close();
                 receiver = null;
             } finally {
-                if (receiver is object) receiver.Dispose();
+                if (receiver is not null) receiver.Dispose();
             }
         }
 
@@ -194,22 +194,22 @@
         [Category("Integration")]
         public void OpenLocalHostDisposeAfterClose()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             UdpPacketReceiver receiver = null;
             try {
                 receiver = new UdpPacketReceiver(ep);
                 receiver.Open();
                 receiver.Close();
             } finally {
-                if (receiver is object) receiver.Dispose();
+                if (receiver is not null) receiver.Dispose();
             }
         }
 
         [Test]
         public void OpenAfterDispose()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            UdpPacketReceiver receiver = new UdpPacketReceiver(ep);
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            UdpPacketReceiver receiver = new(ep);
             receiver.Dispose();
             Assert.That(() => {
                 receiver.Open();
@@ -219,8 +219,8 @@
         [Test]
         public void CloseAfterInstantiation()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 receiver.Close();
             }
         }
@@ -230,8 +230,8 @@
         [Category("Integration")]
         public void OpenTwice()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 receiver.Open();
                 Assert.That(() => {
                     receiver.Open();
@@ -266,7 +266,7 @@
                     sender = new Udp(srcAddr, destAddr);
                     return sender.Send();
                 } catch {
-                    if (sender is object) sender.Dispose();
+                    if (sender is not null) sender.Dispose();
                     throw;
                 }
             }
@@ -295,9 +295,9 @@
         [Timeout(5000)]
         public async Task ReceiveAsync(string endpoint)
         {
-            IPEndPoint src = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint src = new(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 int count = -1;
                 receiver.NewChannel += (s, e) => {
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
@@ -327,9 +327,9 @@
         [Timeout(5000)]
         public async Task ReceiveAsyncWait(string endpoint)
         {
-            IPEndPoint src = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint src = new(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 int count = -1;
                 receiver.NewChannel += (s, e) => {
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
@@ -362,10 +362,10 @@
         [Timeout(5000)]
         public async Task ReceiveAsync2(string endpoint)
         {
-            IPEndPoint src1 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            IPEndPoint src2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8001);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint src1 = new(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint src2 = new(IPAddress.Parse("127.0.0.1"), 8001);
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 int count = -1;
                 receiver.NewChannel += (s, e) => {
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
@@ -406,10 +406,10 @@
         [Timeout(5000)]
         public async Task ReceiveAsync3(string endpoint)
         {
-            IPEndPoint src1 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
-            IPEndPoint src2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8001);
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint src1 = new(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint src2 = new(IPAddress.Parse("127.0.0.1"), 8001);
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 int count = -1;
                 receiver.NewChannel += (s, e) => {
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
@@ -417,8 +417,8 @@
                 receiver.Open();
                 Assert.That(receiver.ChannelCount, Is.EqualTo(0));
 
-                using (Udp udp1 = new Udp(src1, ep))
-                using (Udp udp2 = new Udp(src2, ep)) {
+                using (Udp udp1 = new(src1, ep))
+                using (Udp udp2 = new(src2, ep)) {
                     byte[] buffer = new byte[65536];
                     udp1.Send();
                     PacketReadResult result1 = await receiver.ReadAsync(buffer);
@@ -473,8 +473,8 @@
         [Test]
         public void ReceiveWhenNotOpen()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 byte[] buffer = new byte[65536];
                 Assert.That(async () => {
                     _ = await receiver.ReadAsync(buffer);
@@ -489,8 +489,8 @@
         [Timeout(5000)]
         public void ReceiveWhenClosed()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 byte[] buffer = new byte[65536];
                 receiver.Open();
                 receiver.Close();
@@ -508,7 +508,7 @@
         [Timeout(5000)]
         public void ReceiveWhenDisposed()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             UdpPacketReceiver receiver = null;
             try {
                 receiver = new UdpPacketReceiver(ep);
@@ -520,7 +520,7 @@
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
             } finally {
-                if (receiver is object) receiver.Dispose();
+                if (receiver is not null) receiver.Dispose();
             }
         }
 
@@ -531,8 +531,8 @@
         [Timeout(5000)]
         public void ReceiveAsyncClose(string endpoint)
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
-            using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
+            using (UdpPacketReceiver receiver = new(ep)) {
                 receiver.Open();
                 byte[] buffer = new byte[65536];
 
@@ -554,7 +554,7 @@
         [Timeout(5000)]
         public void ReceiveAsyncDispose(string endpoint)
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(endpoint), 3490);
+            IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
             UdpPacketReceiver receiver = null;
             try {
                 receiver = new UdpPacketReceiver(ep);
@@ -571,7 +571,7 @@
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
             } finally {
-                if (receiver is object) receiver.Dispose();
+                if (receiver is not null) receiver.Dispose();
             }
         }
 
@@ -583,9 +583,9 @@
         [Timeout(5000)]
         public void OpenInvalidAddress()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("255.255.255.255"), 3490);
+            IPEndPoint ep = new(IPAddress.Parse("255.255.255.255"), 3490);
             Assert.That(() => {
-                using (UdpPacketReceiver receiver = new UdpPacketReceiver(ep)) {
+                using (UdpPacketReceiver receiver = new(ep)) {
                     receiver.Open();
                 }
             }, Throws.TypeOf<SocketException>());

@@ -12,14 +12,14 @@
         public static ExitCode Run(string[] arguments)
         {
             if (Log.App.ShouldTrace(TraceEventType.Information)) {
-                StringBuilder args = new StringBuilder();
+                StringBuilder args = new();
                 foreach (string arg in arguments) {
                     args.AppendFormat("Arg: '{0}'; ", arg);
                 }
                 Log.App.TraceEvent(TraceEventType.Information, args.ToString());
             }
 
-            CmdOptions cmdOptions = new CmdOptions();
+            CmdOptions cmdOptions = new();
 
             Options cmdLine;
             try {

@@ -23,7 +23,7 @@
         /// Gets a value indicating whether this instance is open.
         /// </summary>
         /// <value>Is <see langword="true"/> if this instance is open; otherwise, <see langword="false"/>.</value>
-        public bool IsOpen { get { return m_FileStream is object; } }
+        public bool IsOpen { get { return m_FileStream is not null; } }
 
         /// <summary>
         /// Opens a file for the specified file name.
@@ -51,7 +51,7 @@
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
             ArgumentNullException.ThrowIfNull(fileName);
-            if (m_FileStream is object) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
+            if (m_FileStream is not null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
 
             try {
                 m_FileStream = new FileStream(fileName, mode, FileAccess.Write, FileShare.Read);
@@ -59,7 +59,7 @@
                 Length = m_FileStream.Position;
                 m_OwnsStream = true;
             } catch (Exception ex) {
-                if (m_FileStream is object) m_FileStream.Dispose();
+                if (m_FileStream is not null) m_FileStream.Dispose();
                 m_FileStream = null;
                 Length = 0;
                 throw new OutputStreamException(ex.Message, ex);
@@ -81,7 +81,7 @@
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
             ArgumentNullException.ThrowIfNull(stream);
-            if (m_FileStream is object) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
+            if (m_FileStream is not null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
             if (!stream.CanWrite) throw new InvalidOperationException(AppResources.DomainOutputWriterCantWrite);
 
             try {
@@ -165,7 +165,7 @@
         }
 
         private CancelTask m_AutoFlushTask;
-        private readonly object m_CloseLock = new object();
+        private readonly object m_CloseLock = new();
 
         /// <summary>
         /// Automatically flushes the output at regular intervals in a Task.
@@ -174,7 +174,7 @@
         /// <exception cref="InvalidOperationException">This method was previously called.</exception>
         public void AutoFlush(int milliSeconds)
         {
-            if (m_AutoFlushTask is object) return;
+            if (m_AutoFlushTask is not null) return;
             if (m_FileStream is null) throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
 
             m_AutoFlushTask = new CancelTask((t) => {
@@ -206,14 +206,14 @@
         {
             if (m_Disposed) return;
 
-            if (m_AutoFlushTask is object) {
+            if (m_AutoFlushTask is not null) {
                 m_AutoFlushTask.Cancel().GetAwaiter().GetResult();
                 m_AutoFlushTask = null;
             }
 
             lock (m_CloseLock) {
                 // The AutoFlush method might be checking the file stream in parallel.
-                if (m_FileStream is object) {
+                if (m_FileStream is not null) {
                     if (m_OwnsStream) m_FileStream.Dispose();
                     m_FileStream = null;
                 }

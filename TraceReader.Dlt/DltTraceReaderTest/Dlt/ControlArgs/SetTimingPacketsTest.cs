@@ -9,7 +9,7 @@
         [TestCase(false, "[set_timing_packets] off")]
         public void SetTimingPacketsReq(bool enabled, string result)
         {
-            SetTimingPacketsRequest arg = new SetTimingPacketsRequest(enabled);
+            SetTimingPacketsRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0B));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[set_timing_packets status=100]")]
         public void SetVerboseModeResp(int status, string result)
         {
-            SetTimingPacketsResponse arg = new SetTimingPacketsResponse(status);
+            SetTimingPacketsResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0B));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

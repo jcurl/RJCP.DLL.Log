@@ -8,7 +8,7 @@
         [Test]
         public void MessageBufferOverflowReq()
         {
-            MessageBufferOverflowRequest arg = new MessageBufferOverflowRequest();
+            MessageBufferOverflowRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x14));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[message_buffer_overflow]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[message_buffer_overflow error]")]
         public void MessageBufferOverflowRes(int status, bool overflow, string result)
         {
-            MessageBufferOverflowResponse arg = new MessageBufferOverflowResponse(status, overflow);
+            MessageBufferOverflowResponse arg = new(status, overflow);
             Assert.That(arg.ServiceId, Is.EqualTo(0x14));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

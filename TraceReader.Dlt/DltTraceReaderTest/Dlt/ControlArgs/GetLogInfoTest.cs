@@ -17,7 +17,7 @@
         [TestCase(255, "[get_log_info options=255] -all-")]
         public void GetLogInfoReqAllAppIdNoComId(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, null, null);
+            GetLogInfoRequest arg = new(options, null, null);
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -38,7 +38,7 @@
         [TestCase(255, "[get_log_info options=255] -all-")]
         public void GetLogInfoReqAllAppIdIgnCtxIdNoComId(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, null, "CTX1");
+            GetLogInfoRequest arg = new(options, null, "CTX1");
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -59,7 +59,7 @@
         [TestCase(255, "[get_log_info options=255] APP1 (CTX1)")]
         public void GetLogInfoReqNoComId(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, "APP1", "CTX1");
+            GetLogInfoRequest arg = new(options, "APP1", "CTX1");
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -80,7 +80,7 @@
         [TestCase(255, "[get_log_info options=255] APP1 (CTX1)")]
         public void GetLogInfoReqComIdNull(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, "APP1", "CTX1", null);
+            GetLogInfoRequest arg = new(options, "APP1", "CTX1", null);
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -101,7 +101,7 @@
         [TestCase(255, "[get_log_info options=255] -all- eth0")]
         public void GetLogInfoReqAllAppId(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, null, null, "eth0");
+            GetLogInfoRequest arg = new(options, null, null, "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -122,7 +122,7 @@
         [TestCase(255, "[get_log_info options=255] APP1 (CTX1) eth0")]
         public void GetLogInfoReq(int options, string result)
         {
-            GetLogInfoRequest arg = new GetLogInfoRequest(options, "APP1", "CTX1", "eth0");
+            GetLogInfoRequest arg = new(options, "APP1", "CTX1", "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -142,7 +142,7 @@
         [TestCase(GetLogInfoResponse.StatusNoMatch, "[get_log_info no_matching_context_id]")]
         public void GetLogInfoResNoApps(int status, string result)
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(status, "eth0");
+            GetLogInfoResponse arg = new(status, "eth0");
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -162,7 +162,7 @@
         [TestCase(GetLogInfoResponse.StatusNoMatch, "[get_log_info no_matching_context_id]")]
         public void GetLogInfoResNoAppsNoComId(int status, string result)
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(status, null);
+            GetLogInfoResponse arg = new(status, null);
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -174,7 +174,7 @@
         [Test]
         public void GetLogInfoResOneApp()
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
+            GetLogInfoResponse arg = new(GetLogInfoResponse.StatusFullInfo, null);
             arg.AppIds.Add(new AppId("APP1", "Application"));
 
             Assert.That(arg.ServiceId, Is.EqualTo(0x03));
@@ -192,8 +192,8 @@
         [TestCase(ContextId.StatusUndefined, "[get_log_info 7] APP1 (CTX1 info);")]
         public void GetLogInfoResOneAppOneCtx(int traceStatus, string result)
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
-            AppId app1 = new AppId("APP1", "Application");
+            GetLogInfoResponse arg = new(GetLogInfoResponse.StatusFullInfo, null);
+            AppId app1 = new("APP1", "Application");
             app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, traceStatus, "Context"));
             arg.AppIds.Add(app1);
 
@@ -209,8 +209,8 @@
         [Test]
         public void GetLogInfoResOneAppMultiCtx()
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
-            AppId app1 = new AppId("APP1", "Application");
+            GetLogInfoResponse arg = new(GetLogInfoResponse.StatusFullInfo, null);
+            AppId app1 = new("APP1", "Application");
             app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
             app1.ContextIds.Add(new ContextId("CTX2", LogLevel.Fatal, ContextId.StatusOn, "Context2"));
             arg.AppIds.Add(app1);
@@ -227,11 +227,11 @@
         [Test]
         public void GetLogInfoResMultiAppOneCtx()
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
-            AppId app1 = new AppId("APP1", "Application");
+            GetLogInfoResponse arg = new(GetLogInfoResponse.StatusFullInfo, null);
+            AppId app1 = new("APP1", "Application");
             app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
             arg.AppIds.Add(app1);
-            AppId app2 = new AppId("APP2", "Application 2");
+            AppId app2 = new("APP2", "Application 2");
             app2.ContextIds.Add(new ContextId("VSIP", LogLevel.Info, ContextId.StatusOn, "Context"));
             arg.AppIds.Add(app2);
 
@@ -248,12 +248,12 @@
         [Test]
         public void GetLogInfoResMultiAppMultiCtx()
         {
-            GetLogInfoResponse arg = new GetLogInfoResponse(GetLogInfoResponse.StatusFullInfo, null);
-            AppId app1 = new AppId("APP1", "Application");
+            GetLogInfoResponse arg = new(GetLogInfoResponse.StatusFullInfo, null);
+            AppId app1 = new("APP1", "Application");
             app1.ContextIds.Add(new ContextId("CTX1", LogLevel.Info, ContextId.StatusOn, "Context"));
             app1.ContextIds.Add(new ContextId("CTX2", LogLevel.Fatal, ContextId.StatusOn, "Context2"));
             arg.AppIds.Add(app1);
-            AppId app2 = new AppId("APP2", "Application 2");
+            AppId app2 = new("APP2", "Application 2");
             app2.ContextIds.Add(new ContextId("CTX3", LogLevel.Info, ContextId.StatusOff, "Context3"));
             app2.ContextIds.Add(new ContextId("CTX4", LogLevel.Fatal, ContextId.StatusOn, "Context4"));
             arg.AppIds.Add(app2);

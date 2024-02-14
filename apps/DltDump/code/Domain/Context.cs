@@ -143,11 +143,11 @@
             return false;
         }
 
-        private static readonly EmptyContext EmptyEnumerable = new EmptyContext();
+        private static readonly EmptyContext EmptyEnumerable = new();
 
         private sealed class EmptyContext : IEnumerable<ContextPacket>
         {
-            private static readonly EmptyContextEnumerator EmptyEnumerator = new EmptyContextEnumerator();
+            private static readonly EmptyContextEnumerator EmptyEnumerator = new();
 
             public IEnumerator<ContextPacket> GetEnumerator()
             {

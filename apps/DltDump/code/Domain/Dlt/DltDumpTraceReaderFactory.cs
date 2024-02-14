@@ -12,7 +12,7 @@
     /// </summary>
     public class DltDumpTraceReaderFactory : IDltDumpTraceReaderFactory
     {
-        private readonly DltDumpTraceDecoderFactory m_DecoderFactory = new DltDumpTraceDecoderFactory();
+        private readonly DltDumpTraceDecoderFactory m_DecoderFactory = new();
 
         /// <summary>
         /// Gets or sets the input format which is used to decide which decoder to create.

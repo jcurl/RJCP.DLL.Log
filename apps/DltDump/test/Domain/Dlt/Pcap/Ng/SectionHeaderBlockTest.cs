@@ -14,7 +14,7 @@
         [TestCase(false)]
         public void ReadSectionHeaderBlock(bool littleEndian)
         {
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(littleEndian ? PcapBlocks.ShbData : PcapBlocks.ShbDataBigEndian, 0);
 
                 Assert.That(block, Is.TypeOf<SectionHeaderBlock>());
@@ -56,7 +56,7 @@
                     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x18
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(buffer, 0);
 
                 // Even though the block is invalid, we return a "generic" block from the reader. This is in the hope we can continue
@@ -79,7 +79,7 @@
                     0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x1C
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(buffer, 0);
 
                 // Even though the block is invalid, we return a "generic" block from the reader. This is in the hope we can continue
@@ -102,7 +102,7 @@
                     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x1C
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(buffer, 0);
 
                 // Even though the block is invalid, we return a "generic" block from the reader. This is in the hope we can continue
@@ -125,7 +125,7 @@
                     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x1C
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(buffer, 0);
 
                 // Even though the block is invalid, we return a "generic" block from the reader. This is in the hope we can continue
@@ -148,7 +148,7 @@
                     0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x02, 0x00, 0x36, 0x00, 0x00, 0x00, 0x00, 0x20
                 };
 
-            using (BlockReader reader = new BlockReader(DefaultPcapFactory)) {
+            using (BlockReader reader = new(DefaultPcapFactory)) {
                 IPcapBlock block = reader.GetBlock(buffer, 0);
 
                 // Even though the block is invalid, we return a "generic" block from the reader. This is in the hope we can continue

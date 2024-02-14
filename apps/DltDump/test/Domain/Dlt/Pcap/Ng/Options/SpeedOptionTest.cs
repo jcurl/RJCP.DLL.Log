@@ -19,7 +19,7 @@
                 new byte[] { 0xFF, 0xFF, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x42, 0x40 };
             BitOperations.Copy16Shift(optionCode, data, 0, littleEndian);
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<SpeedOption>());
             Assert.That(option.OptionCode, Is.EqualTo(optionCode));
@@ -42,7 +42,7 @@
                 new byte[] { 0xFF, 0xFF, 0x00, 0x04, 0x00, 0x0F, 0x42, 0x40 };
             BitOperations.Copy16Shift(optionCode, data, 0, littleEndian);
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
             Assert.That(option.OptionCode, Is.EqualTo(optionCode));

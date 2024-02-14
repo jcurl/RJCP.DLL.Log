@@ -13,10 +13,10 @@
         [TestCase(float.PositiveInfinity, "inf")]
         public void FloatToString(float value, string output)
         {
-            Float32DltArg floatArg = new Float32DltArg(value);
+            Float32DltArg floatArg = new(value);
             Assert.That(floatArg.ToString(), Is.EqualTo(output));
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             Assert.That(floatArg.Append(sb).ToString(), Is.EqualTo(output));
         }
 

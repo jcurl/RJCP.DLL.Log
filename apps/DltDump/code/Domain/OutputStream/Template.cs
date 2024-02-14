@@ -60,8 +60,8 @@
             public string Value { get; }
         }
 
-        private readonly List<Token> m_TokenList = new List<Token>();
-        private readonly HashSet<string> m_Found = new HashSet<string>();
+        private readonly List<Token> m_TokenList = new();
+        private readonly HashSet<string> m_Found = new();
         private string m_Template;
 
         /// <summary>
@@ -169,9 +169,9 @@
         /// <returns>A <see cref="string"/> that has all variables substituted.</returns>
         public override string ToString()
         {
-            if (m_Template is object) return m_Template;
+            if (m_Template is not null) return m_Template;
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (Token token in m_TokenList) {
                 switch (token.TokenType) {
                 case TokenType.String:
@@ -181,7 +181,7 @@
                     string envVar = Environment.GetEnvironmentVariable(token.Value);
                     if (Variables.TryGetValue(token.Value, out string var)) {
                         sb.Append(var);
-                    } else if (envVar is object) {
+                    } else if (envVar is not null) {
                         sb.Append(envVar);
                     }
                     break;

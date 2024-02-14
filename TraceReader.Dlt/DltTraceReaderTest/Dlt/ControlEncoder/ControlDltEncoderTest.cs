@@ -17,7 +17,7 @@
         [Test]
         public void EncodeNullLine()
         {
-            ControlDltEncoder encoder = new ControlDltEncoder();
+            ControlDltEncoder encoder = new();
             Assert.That(() => {
                 _ = encoder.Encode(new byte[1024], null);
             }, Throws.TypeOf<ArgumentNullException>());

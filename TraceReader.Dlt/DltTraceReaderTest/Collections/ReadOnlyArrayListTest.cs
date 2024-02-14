@@ -19,7 +19,7 @@
         public void Length()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(list, Has.Count.EqualTo(array.Length));
             Assert.That(list.IsReadOnly, Is.True);
@@ -29,7 +29,7 @@
         public void GetItems()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(list[0], Is.EqualTo(1));
             Assert.That(list[8], Is.EqualTo(9));
@@ -39,7 +39,7 @@
         public void SetItems()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list[0] = 0;
@@ -50,7 +50,7 @@
         public void Add()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list.Add(42);
@@ -61,7 +61,7 @@
         public void Clear()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list.Clear();
@@ -73,7 +73,7 @@
         public void Contains()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(list.Contains(1), Is.True);
             Assert.That(list.Contains(42), Is.False);
@@ -84,7 +84,7 @@
         public void IndexOf()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(list.IndexOf(1), Is.EqualTo(0));
             Assert.That(list.IndexOf(9), Is.EqualTo(8));
@@ -96,7 +96,7 @@
         public void Insert()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list.Insert(0, 42);
@@ -107,7 +107,7 @@
         public void Remove()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list.Remove(5);
@@ -118,7 +118,7 @@
         public void RemoveAt()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(() => {
                 list.RemoveAt(5);
@@ -129,7 +129,7 @@
         public void CopyTo()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             int[] cpArray = new int[array.Length];
             list.CopyTo(cpArray, 0);
@@ -141,7 +141,7 @@
         public void Enumerator()
         {
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ReadOnlyArrayListAccessor<int> list = new ReadOnlyArrayListAccessor<int>(array);
+            ReadOnlyArrayListAccessor<int> list = new(array);
 
             Assert.That(list, Is.EqualTo(array));
         }

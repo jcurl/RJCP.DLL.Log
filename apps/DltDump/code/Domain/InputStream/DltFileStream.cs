@@ -126,7 +126,7 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
-            if (InputStream is object) return;
+            if (InputStream is not null) return;
 
             try {
                 InputStream = new FileStream(m_FileName, FileMode.Open, FileAccess.Read, FileShare.Read,
@@ -180,7 +180,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputStream is object) InputStream.Close();
+            if (InputStream is not null) InputStream.Close();
             InputStream = null;
         }
 

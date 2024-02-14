@@ -12,7 +12,7 @@
     internal static class PcapLegacyLines
     {
         public static readonly DltTraceLine Line1 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
+            new(new[] { new StringDltArg("DLT Argument test string..") }) {
                 EcuId = "ECU1",
                 ApplicationId = "APP1",
                 ContextId = "CTX1",
@@ -30,7 +30,7 @@
             };
 
         public static readonly DltTraceLine Line2 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
+            new(new[] { new StringDltArg("DLT Argument test string 2") }) {
                 EcuId = "ECU1",
                 ApplicationId = "APP1",
                 ContextId = "CTX1",
@@ -48,7 +48,7 @@
             };
 
         public static readonly DltTraceLine Line3 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string..") }) {
+            new(new[] { new StringDltArg("DLT Argument test string..") }) {
                 EcuId = "ECU1",
                 ApplicationId = "APP1",
                 ContextId = "CTX1",
@@ -66,7 +66,7 @@
             };
 
         public static readonly DltTraceLine Line4 =
-            new DltTraceLine(new[] { new StringDltArg("DLT Argument test string 2") }) {
+            new(new[] { new StringDltArg("DLT Argument test string 2") }) {
                 EcuId = "ECU1",
                 ApplicationId = "APP1",
                 ContextId = "CTX1",

@@ -9,8 +9,8 @@
         [Test]
         public void IdHashStress()
         {
-            IdHashListAccessor idHashList = new IdHashListAccessor();
-            Random rand = new Random();
+            IdHashListAccessor idHashList = new();
+            Random rand = new();
             int[] idList = GenerateIds();
 
             int count = 500000;
@@ -23,7 +23,7 @@
 
         private static int[] GenerateIds()
         {
-            Random rand = new Random();
+            Random rand = new();
             int[] idList = new int[400];
             for (int i = 0; i < idList.Length; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -47,14 +47,14 @@
         [TestCase(unchecked((int)0xa0a1a2a3), " !\"#")] // The 8th bit is stripped to be ASCII
         public void ParseId(int value, string expected)
         {
-            IdHashListAccessor idHashList = new IdHashListAccessor();
+            IdHashListAccessor idHashList = new();
             Assert.That(idHashList.ParseId(value), Is.EqualTo(expected));
         }
 
         [Test]
         public void ParseIdCollision()
         {
-            IdHashListAccessor idHashList = new IdHashListAccessor();
+            IdHashListAccessor idHashList = new();
             Assert.That(idHashList.ParseId(0x41414242), Is.EqualTo("AABB"));
             Assert.That(idHashList.ParseId(0x42424141), Is.EqualTo("BBAA"));
 

@@ -18,7 +18,7 @@
         [Test]
         public void NullPacket()
         {
-            TracePacketReaderFactory factory = new TracePacketReaderFactory(new DltTraceDecoderFactory());
+            TracePacketReaderFactory factory = new(new DltTraceDecoderFactory());
             Assert.That(async () => {
                 _ = await factory.CreateAsync(null);
             }, Throws.TypeOf<ArgumentNullException>());

@@ -17,7 +17,7 @@
         /// <returns>A list of strings in the order of the comma separated list of parameters.</returns>
         public static IReadOnlyList<string> ParseCommaSeparatedList(string connparams)
         {
-            List<string> list = new List<string>();
+            List<string> list = new();
 
             if (connparams.Trim().Length == 0) return list;
 
@@ -25,7 +25,7 @@
             char quotes = '\0';
             bool esc = false;
             bool quoted = false;
-            StringBuilder token = new StringBuilder();
+            StringBuilder token = new();
 
             for (int i = 0; i < connparams.Length; i++) {
                 char c = connparams[i];
@@ -36,7 +36,7 @@
                     if (c == '\\') {
                         // Escape the next character, regardless
                         esc = true;
-                    } else if (c == '\'' || c == '\"') {
+                    } else if (c is '\'' or '\"') {
                         if (quotes == '\0') {
                             if (quoted)
                                 throw new ArgumentException(AppResources.InfraUriError_QuotesMultiple, nameof(connparams));
@@ -98,7 +98,7 @@
             string query = uri.Query;
             if (query.Length == 0) return Array.Empty<KeyValuePair<string, string>>();
 
-            List<KeyValuePair<string, string>> kvps = new List<KeyValuePair<string, string>>();
+            List<KeyValuePair<string, string>> kvps = new();
             int keyStart = 0;
             int valueStart = -1;
 
@@ -126,7 +126,7 @@
         }
 
         private static readonly KeyValuePair<string, string> EmptyKeyValue =
-            new KeyValuePair<string, string>(string.Empty, string.Empty);
+            new(string.Empty, string.Empty);
 
         private static KeyValuePair<string, string> GetPair(string query, int keyStart, int valuePos, int endPos)
         {

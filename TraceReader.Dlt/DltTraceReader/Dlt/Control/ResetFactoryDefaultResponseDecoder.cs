@@ -28,8 +28,8 @@
             }
 
             int status = buffer[4];
-            if (status == ControlResponse.StatusError ||
-                status == ControlResponse.StatusNotSupported) {
+            if (status is ControlResponse.StatusError or
+                ControlResponse.StatusNotSupported) {
                 service = new ControlErrorNotSupported(serviceId, status, "reset_to_factory_default");
                 return 5;
             }

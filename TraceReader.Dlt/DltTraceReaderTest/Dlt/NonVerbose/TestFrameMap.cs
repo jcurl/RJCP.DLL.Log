@@ -5,7 +5,7 @@
 
     public class TestFrameMap : IFrameMap
     {
-        private readonly Dictionary<int, IFrame> m_Map = new Dictionary<int, IFrame>();
+        private readonly Dictionary<int, IFrame> m_Map = new();
 
         public TestFrameMap Add(int messageId, IPdu pdu)
         {

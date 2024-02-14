@@ -17,7 +17,7 @@
             m_EncoderType = encType;
         }
 
-        private static readonly DltTraceLine TraceLine = new DltTraceLine(new IDltArg[] {
+        private static readonly DltTraceLine TraceLine = new(new IDltArg[] {
             new StringDltArg("Temperature:"),
             new SignedIntDltArg(45, 2)
         }) {
@@ -45,7 +45,7 @@
         private static Span<byte> EncodeArguments(DltTraceLine line, int len)
         {
             byte[] buffer = new byte[len];
-            VerboseDltEncoder encoder = new VerboseDltEncoder();
+            VerboseDltEncoder encoder = new();
 
             Result<int> result = encoder.Encode(buffer, line);
             if (!result.HasValue) return Array.Empty<byte>();

@@ -18,8 +18,8 @@
         private readonly IControlArgEncoder[] m_ResponseEncodersStandard = new IControlArgEncoder[128];
         private readonly IControlArgEncoder[] m_RequestEncodersCustom = new IControlArgEncoder[128];
         private readonly IControlArgEncoder[] m_ResponseEncodersCustom = new IControlArgEncoder[128];
-        private readonly Dictionary<int, IControlArgEncoder> m_RequestSwInjection = new Dictionary<int, IControlArgEncoder>();
-        private readonly Dictionary<int, IControlArgEncoder> m_ResponseSwInjection = new Dictionary<int, IControlArgEncoder>();
+        private readonly Dictionary<int, IControlArgEncoder> m_RequestSwInjection = new();
+        private readonly Dictionary<int, IControlArgEncoder> m_ResponseSwInjection = new();
 
         /// <summary>
         /// A default Empty Request encoder, for when there is nothing, other than the service id, to encode.
@@ -131,7 +131,7 @@
                 } else if (serviceId >= 0xF00 && serviceId <= m_RequestEncodersCustom.Length + 0xF00) {
                     m_RequestEncodersCustom[serviceId - 0xF00] = encoder;
                     return;
-                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                } else if (serviceId is >= 0xFFF or < 0) {
                     m_RequestSwInjection[serviceId] = encoder;
                     return;
                 }
@@ -143,7 +143,7 @@
                 } else if (serviceId >= 0xF00 && serviceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                     m_ResponseEncodersCustom[serviceId - 0xF00] = encoder;
                     return;
-                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                } else if (serviceId is >= 0xFFF or < 0) {
                     m_ResponseSwInjection[serviceId] = encoder;
                     return;
                 }
@@ -170,7 +170,7 @@
                     m_RequestEncodersStandard[serviceId] = null;
                 } else if (serviceId >= 0xF00 && serviceId <= m_RequestEncodersCustom.Length + 0xF00) {
                     m_RequestEncodersCustom[serviceId - 0xF00] = null;
-                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                } else if (serviceId is >= 0xFFF or < 0) {
                     m_RequestSwInjection.Remove(serviceId);
                 }
                 break;
@@ -179,7 +179,7 @@
                     m_ResponseEncodersStandard[serviceId] = null;
                 } else if (serviceId >= 0xF00 && serviceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                     m_ResponseEncodersCustom[serviceId - 0xF00] = null;
-                } else if (serviceId >= 0xFFF || serviceId < 0) {
+                } else if (serviceId is >= 0xFFF or < 0) {
                     m_ResponseSwInjection.Remove(serviceId);
                 }
                 break;
@@ -215,7 +215,7 @@
                 encoder = m_RequestEncodersStandard[arg.ServiceId];
             } else if (arg.ServiceId >= 0xF00 && arg.ServiceId <= m_RequestEncodersCustom.Length + 0xF00) {
                 encoder = m_RequestEncodersCustom[arg.ServiceId - 0xF00];
-            } else if (arg.ServiceId >= 0xFFF || arg.ServiceId < 0) {
+            } else if (arg.ServiceId is >= 0xFFF or < 0) {
                 if (!m_RequestSwInjection.TryGetValue(arg.ServiceId, out encoder))
                     encoder = DefaultRequestSwInjection;
             }
@@ -235,7 +235,7 @@
                 encoder = m_ResponseEncodersStandard[arg.ServiceId];
             } else if (arg.ServiceId >= 0xF00 && arg.ServiceId <= m_ResponseEncodersCustom.Length + 0xF00) {
                 encoder = m_ResponseEncodersCustom[arg.ServiceId - 0xF00];
-            } else if (arg.ServiceId >= 0xFFF || arg.ServiceId < 0) {
+            } else if (arg.ServiceId is >= 0xFFF or < 0) {
                 if (!m_ResponseSwInjection.TryGetValue(arg.ServiceId, out encoder))
                     encoder = EmptyResponseEncoder;
             }

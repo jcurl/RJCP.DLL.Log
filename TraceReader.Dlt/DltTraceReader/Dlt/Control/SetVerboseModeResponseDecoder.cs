@@ -28,8 +28,8 @@
             }
 
             int status = buffer[4];
-            if (status == ControlResponse.StatusError ||
-                status == ControlResponse.StatusNotSupported) {
+            if (status is ControlResponse.StatusError or
+                ControlResponse.StatusNotSupported) {
                 service = new ControlErrorNotSupported(serviceId, status, "set_verbose_mode");
                 return 5;
             }

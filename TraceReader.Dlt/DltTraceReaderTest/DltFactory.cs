@@ -35,7 +35,7 @@
 
         public Task<ITraceReader<DltTraceLineBase>> DltReaderFactory(Stream stream)
         {
-            if (Factory is object) {
+            if (Factory is not null) {
                 return Factory.CreateAsync(stream);
             }
 

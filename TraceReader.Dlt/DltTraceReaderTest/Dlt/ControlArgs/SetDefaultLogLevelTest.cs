@@ -15,7 +15,7 @@
         [TestCase(100, "[set_default_log_level] log_level=100")]
         public void SetDefaultLogLevelReq(LogLevel logLevel, string result)
         {
-            SetDefaultLogLevelRequest arg = new SetDefaultLogLevelRequest(logLevel);
+            SetDefaultLogLevelRequest arg = new(logLevel);
             Assert.That(arg.ServiceId, Is.EqualTo(0x11));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -33,7 +33,7 @@
         [TestCase(100, "eth0", "[set_default_log_level] log_level=100 eth0")]
         public void SetDefaultLogLevelReq(LogLevel logLevel, string comInterface, string result)
         {
-            SetDefaultLogLevelRequest arg = new SetDefaultLogLevelRequest(logLevel, comInterface);
+            SetDefaultLogLevelRequest arg = new(logLevel, comInterface);
             Assert.That(arg.ServiceId, Is.EqualTo(0x11));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -46,7 +46,7 @@
         [TestCase(ControlResponse.StatusError, "[set_default_log_level error]")]
         public void SetDefaultLogLevelRes(int status, string result)
         {
-            SetDefaultLogLevelResponse arg = new SetDefaultLogLevelResponse(status);
+            SetDefaultLogLevelResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x11));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

@@ -25,7 +25,7 @@
         public void EncodeSuccess([Values(false, true)] bool enabled)
         {
             GetMessageFilteringStatusResponse response =
-                new GetMessageFilteringStatusResponse(ControlResponse.StatusOk, enabled);
+                new(ControlResponse.StatusOk, enabled);
 
             Span<byte> buffer = ControlEncode(response, 6);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1A));
@@ -38,7 +38,7 @@
         public void EncodeError(int statusCode)
         {
             GetMessageFilteringStatusResponse response =
-                new GetMessageFilteringStatusResponse(statusCode, false);
+                new(statusCode, false);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1A));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetMessageFilteringStatusResponse response =
-                new GetMessageFilteringStatusResponse(ControlResponse.StatusOk, true);
+                new(ControlResponse.StatusOk, true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

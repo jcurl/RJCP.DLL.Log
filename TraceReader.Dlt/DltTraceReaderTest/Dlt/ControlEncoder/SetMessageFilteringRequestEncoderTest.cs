@@ -24,7 +24,7 @@
         [Test]
         public void Encode([Values(false, true)] bool enabled)
         {
-            SetMessageFilteringRequest request = new SetMessageFilteringRequest(enabled);
+            SetMessageFilteringRequest request = new(enabled);
 
             Span<byte> buffer = ControlEncode(request, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x0A));
@@ -36,7 +36,7 @@
         {
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
-            SetMessageFilteringRequest request = new SetMessageFilteringRequest(true);
+            SetMessageFilteringRequest request = new(true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, request, out Result<int> result);

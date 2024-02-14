@@ -28,7 +28,7 @@
         [Test]
         public void InitialPacketReader()
         {
-            TracePacketReader reader = new TracePacketReader(new EmptyPacketReceiver(), new DltTraceDecoderFactory());
+            TracePacketReader reader = new(new EmptyPacketReceiver(), new DltTraceDecoderFactory());
             reader.Dispose();
         }
 
@@ -51,7 +51,7 @@
         [Test]
         public async Task GetPacketSingleChannel()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1),
                 (0, line2)
             })) {
@@ -62,7 +62,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -83,7 +83,7 @@
         [Test]
         public async Task GetPacketMultiChannel()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1),
                 (1, line2)
             })) {
@@ -94,7 +94,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -116,7 +116,7 @@
         [Test]
         public async Task GetFragmentedPacketSingleChannel()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1[0..16]),
                 (0, line1[16..32]),
                 (0, line1[32..48]),
@@ -130,7 +130,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -149,7 +149,7 @@
         {
             // Interleaving shows that we are really using two different decoders.
 
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1[0..16]),
                 (1, line2[0..16]),
                 (0, line1[16..32]),
@@ -168,7 +168,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -192,7 +192,7 @@
         [Test]
         public async Task GetFragmentedPacketMultiChannelInterleavedIncomplete1()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1[0..16]),
                 (1, line2[0..16]),
                 (0, line1[16..32]),
@@ -210,7 +210,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -234,7 +234,7 @@
         [Test]
         public async Task GetFragmentedPacketMultiChannelInterleavedIncomplete2()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1[0..16]),
                 (1, line2[0..16]),
                 (0, line1[16..32]),
@@ -252,7 +252,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
@@ -276,7 +276,7 @@
         [Test]
         public async Task GetFragmentedPacketMultiChannelInterleavedIncompleteBoth()
         {
-            using (SimulatedPacketReceiver packet = new SimulatedPacketReceiver(new[] {
+            using (SimulatedPacketReceiver packet = new(new[] {
                 (0, line1[0..16]),
                 (1, line2[0..16]),
                 (0, line1[16..32]),
@@ -293,7 +293,7 @@
                 };
                 Assert.That(packet.ChannelCount, Is.EqualTo(0));
 
-                TracePacketReader reader = new TracePacketReader(packet, new DltTraceDecoderFactory());
+                TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 // The order of flushing should be based on the channel number. Channel 0 is flushed first.

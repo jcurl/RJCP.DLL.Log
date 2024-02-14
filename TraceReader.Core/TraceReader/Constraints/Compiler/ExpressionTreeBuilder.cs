@@ -66,7 +66,7 @@
 
         protected BTree<BNode> Node(BOperation operation, BTree<BNode> left, BTree<BNode> right)
         {
-            BTree<BNode> node = new BTree<BNode>(new BNode(operation), left, right);
+            BTree<BNode> node = new(new BNode(operation), left, right);
             node.Value.Id = Nodes;
             Nodes++;
             return node;
@@ -74,7 +74,7 @@
 
         protected BTree<BNode> Node(IMatchConstraint constraint)
         {
-            BTree<BNode> node = new BTree<BNode>(new BNode(constraint));
+            BTree<BNode> node = new(new BNode(constraint));
             node.Value.Id = Nodes;
             Nodes++;
             CheckNodes++;

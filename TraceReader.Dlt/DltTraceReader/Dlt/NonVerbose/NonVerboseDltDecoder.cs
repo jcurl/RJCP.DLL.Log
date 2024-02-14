@@ -73,7 +73,7 @@
             try {
                 if (buffer.Length < 4) {
                     lineBuilder.SetMessageId(0);
-                    NonVerboseDltArg arg = new NonVerboseDltArg(Array.Empty<byte>());
+                    NonVerboseDltArg arg = new(Array.Empty<byte>());
                     lineBuilder.AddArgument(arg);
                     lineBuilder.SetErrorMessage("Buffer too small to contain the message identifier ({0} bytes)", buffer.Length);
                     return buffer.Length;

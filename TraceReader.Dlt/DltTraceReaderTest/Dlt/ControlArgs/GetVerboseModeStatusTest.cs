@@ -8,7 +8,7 @@
         [Test]
         public void GetVerboseModeStatusReq()
         {
-            GetVerboseModeStatusRequest arg = new GetVerboseModeStatusRequest();
+            GetVerboseModeStatusRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x19));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_verbose_mode]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_verbose_mode error]")]
         public void GetVerboseModeStatusRes(int status, bool enabled, string result)
         {
-            GetVerboseModeStatusResponse arg = new GetVerboseModeStatusResponse(status, enabled);
+            GetVerboseModeStatusResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x19));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

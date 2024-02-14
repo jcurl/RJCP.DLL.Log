@@ -32,7 +32,7 @@
         [Test]
         public async Task CreateStream()
         {
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 ITraceWriterFactory<DltTraceLineBase> writerFactory = new DltTraceWriterFactory();
                 using (ITraceWriter<DltTraceLineBase> writer = await writerFactory.CreateAsync(stream)) {
                     Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);
@@ -64,7 +64,7 @@
                 Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);
             }
 
-            using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (FileStream file = new(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 byte[] buffer = file.ReadStream();
                 Assert.That(buffer, Is.EqualTo(Expected));
             }
@@ -88,7 +88,7 @@
         [Test]
         public async Task CustomEncoderFactory()
         {
-            using (MemoryStream stream = new MemoryStream()) {
+            using (MemoryStream stream = new()) {
                 ITraceWriterFactory<DltTraceLineBase> writerFactory = new MyWriter();
                 using (ITraceWriter<DltTraceLineBase> writer = await writerFactory.CreateAsync(stream)) {
                     Assert.That(await writer.WriteLineAsync(Builder.GetResult()), Is.True);

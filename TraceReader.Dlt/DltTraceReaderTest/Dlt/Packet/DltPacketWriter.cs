@@ -26,7 +26,7 @@
     public sealed partial class DltPacketWriter : IDisposable
     {
         private const int PacketSize = 65536 + 16;
-        private readonly List<byte[]> m_Packets = new List<byte[]>();
+        private readonly List<byte[]> m_Packets = new();
 
         /// <summary>
         /// Gets or sets the ecu identifier that should be generated.
@@ -102,7 +102,7 @@
         /// <returns>A <see cref="System.IO.Stream"/> that can be read</returns>
         public Stream Stream()
         {
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
             foreach (byte[] packet in m_Packets) {
                 stream.Write(packet, 0, packet.Length);
             }
@@ -120,7 +120,7 @@
         public void Write(string fileName)
         {
             using (Stream stream = Stream())
-            using (FileStream file = new FileStream(fileName, FileMode.Create)) {
+            using (FileStream file = new(fileName, FileMode.Create)) {
                 stream.CopyTo(file);
             }
         }
@@ -136,7 +136,7 @@
         public async Task WriteAsync(string fileName)
         {
             using (Stream stream = Stream())
-            using (FileStream file = new FileStream(fileName, FileMode.Create)) {
+            using (FileStream file = new(fileName, FileMode.Create)) {
                 await stream.CopyToAsync(file);
             }
         }

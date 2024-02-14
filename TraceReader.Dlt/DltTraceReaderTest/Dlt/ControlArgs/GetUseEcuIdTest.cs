@@ -8,7 +8,7 @@
         [Test]
         public void GetUseEcuIdReq()
         {
-            GetUseEcuIdRequest arg = new GetUseEcuIdRequest();
+            GetUseEcuIdRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x1B));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[get_use_ecu_id]"));
@@ -22,7 +22,7 @@
         [TestCase(0x02, false, "[get_use_ecu_id error]")]
         public void GetUseEcuIdRes(int status, bool enabled, string result)
         {
-            GetUseEcuIdResponse arg = new GetUseEcuIdResponse(status, enabled);
+            GetUseEcuIdResponse arg = new(status, enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x1B));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

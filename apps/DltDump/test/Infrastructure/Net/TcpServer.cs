@@ -7,13 +7,13 @@
 
     public sealed class TcpServer : IDisposable
     {
-        private readonly object m_StartLock = new object();
+        private readonly object m_StartLock = new();
         private readonly TcpListener m_Listener;
 
         public TcpServer(IPAddress localAddress, int port)
         {
             ArgumentNullException.ThrowIfNull(localAddress);
-            if (port <= 0 || port > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
             m_Listener = new TcpListener(localAddress, port) {
                 // This allows a new instance to start immediately after it's closed, ignoring the linger state.
                 ExclusiveAddressUse = false
@@ -25,7 +25,7 @@
         private void OnClientConnected(object sender, TcpConnectionEventArgs args)
         {
             EventHandler<TcpConnectionEventArgs> handler = ClientConnected;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         private bool m_Started;

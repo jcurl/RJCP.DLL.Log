@@ -42,7 +42,7 @@
                 throw new ArgumentException(AppResources.SerialOpenError_InvalidPort, nameof(port));
             if (baud <= 0)
                 throw new ArgumentOutOfRangeException(nameof(baud), AppResources.SerialOpenError_InvalidBaud);
-            if (data < 5 || data > 8)
+            if (data is < 5 or > 8)
                 throw new ArgumentOutOfRangeException(nameof(data), AppResources.SerialOpenError_InvalidDataBits);
             if (!Enum.IsDefined(typeof(Parity), parity))
                 throw new ArgumentOutOfRangeException(nameof(parity), AppResources.SerialOpenError_InvalidParity);
@@ -163,9 +163,9 @@
         public void Open()
         {
             if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltSerialStream));
-            if (InputStream is object) return;
+            if (InputStream is not null) return;
 
-            SerialPortStream stream = new SerialPortStream() {
+            SerialPortStream stream = new() {
                 PortName = m_PortName,
                 BaudRate = m_Baud,
                 DataBits = m_Data,
@@ -200,7 +200,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputStream is object) InputStream.Close();
+            if (InputStream is not null) InputStream.Close();
             InputStream = null;
         }
 

@@ -31,7 +31,7 @@
         public void FilterSupportsBinary(bool binary)
         {
             Constraint filter = new Constraint().DltAppId("APP1");
-            MemoryOutput output = new MemoryOutput(binary);
+            MemoryOutput output = new(binary);
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.SupportsBinary, Is.EqualTo(binary));
             }
@@ -41,7 +41,7 @@
         public void FilterLinePass()
         {
             Constraint filter = new Constraint().DltAppId("APP1");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.True);
                 Assert.That(output.Lines, Has.Count.EqualTo(1));
@@ -57,7 +57,7 @@
         public void FilterLineFail()
         {
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose), Is.False);
                 Assert.That(output.Lines, Is.Empty);
@@ -69,7 +69,7 @@
         {
             byte[] packet = new byte[] { 0x00, 0x01 };
             Constraint filter = new Constraint().DltAppId("APP1");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet.AsSpan()), Is.True);
                 Assert.That(output.Lines, Has.Count.EqualTo(1));
@@ -86,7 +86,7 @@
         {
             byte[] packet = new byte[] { 0x00, 0x01 };
             Constraint filter = new Constraint().DltAppId("APP2");
-            MemoryOutput output = new MemoryOutput();
+            MemoryOutput output = new();
             using (IOutputStream filterOutput = new FilterOutput(filter, output)) {
                 Assert.That(filterOutput.Write(TestLines.Verbose, packet.AsSpan()), Is.False);
                 Assert.That(output.Lines, Is.Empty);

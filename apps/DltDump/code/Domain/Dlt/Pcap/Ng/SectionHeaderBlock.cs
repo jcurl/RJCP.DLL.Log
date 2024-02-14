@@ -43,7 +43,7 @@
                 return null;
             }
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             int optionLength = options.Decode(BlockCodes.SectionHeaderBlock, buffer[24..^4]);
             if (optionLength == -1) {
                 Log.Pcap.TraceEvent(TraceEventType.Warning,

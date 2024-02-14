@@ -45,7 +45,7 @@
 
         public void Close()
         {
-            if (InputStream is object) InputStream.Dispose();
+            if (InputStream is not null) InputStream.Dispose();
             InputStream = null;
         }
 

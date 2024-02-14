@@ -16,7 +16,7 @@
     internal class FrameMapDefault : IFrameMapLoader
     {
         private readonly FrameMapSimple m_Frames;
-        private readonly Dictionary<(string, string), FrameMapSimple> m_StdHdrFrames = new Dictionary<(string, string), FrameMapSimple>();
+        private readonly Dictionary<(string, string), FrameMapSimple> m_StdHdrFrames = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FrameMapDefault"/> class.
@@ -141,7 +141,7 @@
         /// </remarks>
         public bool TryGetFrame(int id, string appId, string ctxId, string ecuId, out IFrame frame)
         {
-            if (appId is object && ctxId is object) {
+            if (appId is not null && ctxId is not null) {
                 if (!m_StdHdrFrames.TryGetValue((appId, ctxId), out FrameMapSimple map)) {
                     frame = null;
                     return false;

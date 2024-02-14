@@ -8,7 +8,7 @@
         [Test]
         public void BufferOverflowNotificationReq()
         {
-            BufferOverflowNotificationRequest arg = new BufferOverflowNotificationRequest();
+            BufferOverflowNotificationRequest arg = new();
             Assert.That(arg.ServiceId, Is.EqualTo(0x23));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo("[buffer_overflow]"));
@@ -25,7 +25,7 @@
         [TestCase(ControlResponse.StatusError, -1, "[buffer_overflow error]")]
         public void BufferOverflowNotificationRes(int status, int counter, string result)
         {
-            BufferOverflowNotificationResponse arg = new BufferOverflowNotificationResponse(status, counter);
+            BufferOverflowNotificationResponse arg = new(status, counter);
             Assert.That(arg.ServiceId, Is.EqualTo(0x23));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

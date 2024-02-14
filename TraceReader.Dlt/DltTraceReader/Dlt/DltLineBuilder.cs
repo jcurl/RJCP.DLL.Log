@@ -25,7 +25,7 @@
     {
         private int m_Line;
         private readonly bool m_Online;
-        private readonly List<IDltArg> m_Arguments = new List<IDltArg>();
+        private readonly List<IDltArg> m_Arguments = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DltLineBuilder"/> class in offline mode.
@@ -223,7 +223,7 @@
         public DltTraceLineBase GetSkippedResult()
         {
             if (m_Online) TimeStamp = DateTime.Now;
-            DltSkippedTraceLine line = new DltSkippedTraceLine(SkippedBytes, m_SkippedReason) {
+            DltSkippedTraceLine line = new(SkippedBytes, m_SkippedReason) {
                 Line = m_Line,
                 Position = Position,
                 TimeStamp = m_LastValidTimeStamp
@@ -649,7 +649,7 @@
         /// </returns>
         public bool HasErrorMessage()
         {
-            return m_ErrorMessage is object;
+            return m_ErrorMessage is not null;
         }
     }
 }

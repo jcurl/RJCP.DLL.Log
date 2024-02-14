@@ -7,7 +7,7 @@
         /// <summary>
         /// The default time stamp when creating a DLT line.
         /// </summary>
-        public static readonly DateTime DefaultTimeStamp = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
+        public static readonly DateTime DefaultTimeStamp = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
         /// <summary>
         /// The number of bytes (maximum) that the storage header can consume.

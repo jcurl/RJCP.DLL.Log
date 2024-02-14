@@ -96,7 +96,7 @@
         {
             if (AppIds.Count == 0) return string.Format("[get_log_info {0}]", ToString(Status));
 
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new();
             result.AppendFormat("[get_log_info {0}]", ToString(Status));
             for (int index = 0; index < AppIds.Count; index++) {
                 result.Append(' ');

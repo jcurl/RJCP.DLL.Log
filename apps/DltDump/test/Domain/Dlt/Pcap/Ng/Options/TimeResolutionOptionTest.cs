@@ -10,7 +10,7 @@
         [Test]
         public void DecodeTimeResMicroSecDefault()
         {
-            TimeResolutionOption timeOption = new TimeResolutionOption();
+            TimeResolutionOption timeOption = new();
             Assert.That(timeOption.Multiplier, Is.EqualTo(TimeResolutionOption.MultiplierMode.DecimalSi));
             Assert.That(timeOption.Value, Is.EqualTo(6));  // Units of microseconds, 10^-6
 
@@ -27,7 +27,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x00 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x00 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -50,7 +50,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x03 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x03 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -73,7 +73,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x06 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x06 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -96,7 +96,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x09 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x09 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -120,7 +120,7 @@
                 new byte[] { 0x09, 0x00, 0x02, 0x00, 0x06, 0x00 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x02, 0x00, 0x06 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -135,7 +135,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x00 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x00 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -158,7 +158,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x00 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x00 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -181,7 +181,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x03 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x03 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -204,7 +204,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x03 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x03 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -228,7 +228,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x0C } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x0C };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -243,7 +243,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x80 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x80 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -266,7 +266,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x81 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x81 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -289,7 +289,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x8A } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x8A };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -312,7 +312,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0x94 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0x94 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -335,7 +335,7 @@
                 new byte[] { 0x09, 0x00, 0x02, 0x00, 0x14, 0x80 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x02, 0x80, 0x14 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -350,7 +350,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0xA0 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0xA0 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<TimeResolutionOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));
@@ -374,7 +374,7 @@
                 new byte[] { 0x09, 0x00, 0x01, 0x00, 0xA1 } :
                 new byte[] { 0x00, 0x09, 0x00, 0x01, 0xA1 };
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(BlockCodes.InterfaceDescriptionBlock, data);
             Assert.That(option, Is.TypeOf<PcapOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.IdbTsResolution));

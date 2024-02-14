@@ -59,7 +59,7 @@
                 return null;
             }
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             int optionLength = options.Decode(BlockCodes.InterfaceDescriptionBlock, buffer[16..^4]);
             if (optionLength == -1) {
                 Log.Pcap.TraceEvent(TraceEventType.Warning,
@@ -67,7 +67,7 @@
                 return null;
             }
 
-            PacketDecoder decoder = new PacketDecoder(linkType, factory);
+            PacketDecoder decoder = new(linkType, factory);
             return new InterfaceDescriptionBlock(buffer.Length, options, decoder) {
                 LinkType = linkType,
                 SnapLength = snapLen

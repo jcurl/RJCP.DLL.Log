@@ -73,7 +73,7 @@
         /// </remarks>
         public bool Evaluate(ITraceLine line)
         {
-            Stack<BTree<BNode>> evalStack = new Stack<BTree<BNode>>();
+            Stack<BTree<BNode>> evalStack = new();
             BTree<BNode> node = m_ExpressionTree.Expression;
 
             // EvalData maintains the visit flag using the node.Value.Id as the index to the array. This allows two

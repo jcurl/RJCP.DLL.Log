@@ -122,7 +122,7 @@
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
 
-                using (MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new())
                 using (ITraceWriter<DltTraceLineBase> writer = new DltTraceWriter(stream))
                 using (FileStream file = GetFile(fileName)) {
                     stream.Write(DltFileTraceEncoderTest.StorageHeader);
@@ -133,7 +133,7 @@
                     }
                     long end = stream.Position;
                     stream.Seek(0, SeekOrigin.Begin);
-                    if (file is object) {
+                    if (file is not null) {
                         stream.CopyTo(file);
                         stream.Seek(0, SeekOrigin.Begin);
                     }

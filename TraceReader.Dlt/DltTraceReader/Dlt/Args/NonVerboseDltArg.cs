@@ -25,12 +25,12 @@
         public override string ToString()
         {
             if (m_NonVerboseArg is null) {
-                StringBuilder builder = new StringBuilder(4 * Data.Length + 20);
+                StringBuilder builder = new(4 * Data.Length + 20);
                 if (Data.Length > 0) {
                     int offset = builder.Length;
                     builder.Length += Data.Length;
                     for (int i = 0; i < Data.Length; i++) {
-                        if (Data[i] >= 32 && Data[i] <= 126) {
+                        if (Data[i] is >= 32 and <= 126) {
                             builder[offset + i] = (char)Data[i];
                         } else {
                             builder[offset + i] = '-';

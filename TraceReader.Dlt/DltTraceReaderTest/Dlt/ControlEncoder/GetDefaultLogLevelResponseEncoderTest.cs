@@ -25,7 +25,7 @@
         public void EncodeSuccess()
         {
             GetDefaultLogLevelResponse response =
-                new GetDefaultLogLevelResponse(ControlResponse.StatusOk, LogLevel.Info);
+                new(ControlResponse.StatusOk, LogLevel.Info);
 
             Span<byte> buffer = ControlEncode(response, 6);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x04));
@@ -38,7 +38,7 @@
         public void EncodeError(int statusCode)
         {
             GetDefaultLogLevelResponse response =
-                new GetDefaultLogLevelResponse(statusCode, LogLevel.Info);
+                new(statusCode, LogLevel.Info);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x04));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetDefaultLogLevelResponse response =
-                new GetDefaultLogLevelResponse(ControlResponse.StatusOk, LogLevel.Info);
+                new(ControlResponse.StatusOk, LogLevel.Info);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

@@ -16,8 +16,8 @@
         private readonly IPEndPoint m_BindAddress;
         private readonly IPAddress m_MulticastGroup;
 
-        private readonly object m_ChannelLock = new object();
-        private readonly List<IPEndPoint> m_Channels = new List<IPEndPoint>();
+        private readonly object m_ChannelLock = new();
+        private readonly List<IPEndPoint> m_Channels = new();
 
         private Socket m_Socket;
 
@@ -44,7 +44,7 @@
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(endPoint));
 
             // It's not possible to assign an EndPoint with a port of 65536 or larger, but we make it explicit anyway.
-            if (endPoint.Port <= 0 || endPoint.Port > 65535) {
+            if (endPoint.Port is <= 0 or > 65535) {
                 string message = string.Format(AppResources.InfraUdpReceiverInvalidPort, endPoint.Port);
                 throw new ArgumentException(message, nameof(endPoint));
             }
@@ -97,7 +97,7 @@
             }
 
             // It's not possible to assign an EndPoint with a port of 65536 or larger, but we make it explicit anyway.
-            if (bindAddr.Port <= 0 || bindAddr.Port > 65535) {
+            if (bindAddr.Port is <= 0 or > 65535) {
                 string message = string.Format(AppResources.InfraUdpReceiverInvalidPort, bindAddr.Port);
                 throw new ArgumentException(message, nameof(bindAddr));
             }
@@ -148,7 +148,7 @@
         protected virtual void OnNewChannel(object sender, PacketNewChannelEventArgs newChannel)
         {
             EventHandler<PacketNewChannelEventArgs> handler = NewChannel;
-            if (handler is object) handler(sender, newChannel);
+            if (handler is not null) handler(sender, newChannel);
         }
 
         /// <summary>
@@ -167,15 +167,15 @@
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(UdpPacketReceiver));
 
-            if (m_Socket is object)
+            if (m_Socket is not null)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverOpen);
 
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             try {
-                if (m_MulticastGroup is object) {
+                if (m_MulticastGroup is not null) {
                     MulticastOption mcastOption
-                        = new MulticastOption(m_MulticastGroup, m_BindAddress.Address);
+                        = new(m_MulticastGroup, m_BindAddress.Address);
                     socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, mcastOption);
                 }
                 socket.Bind(m_BindAddress);
@@ -276,7 +276,7 @@
             if (disposing) {
                 if (!m_IsDisposed) {
                     m_IsDisposed = true;
-                    if (m_Socket is object) {
+                    if (m_Socket is not null) {
                         m_Socket.Close();
                         m_Socket = null;
                     }

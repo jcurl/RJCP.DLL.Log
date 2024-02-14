@@ -9,7 +9,7 @@
         [Test]
         public void GetSimpleHelp()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Options cmdLine = Options.Parse(null, null);
                 HelpApp.ShowSimpleHelp(cmdLine);
 
@@ -21,7 +21,7 @@
         [Test]
         public void GetHelp()
         {
-            using (TestApplication global = new TestApplication()) {
+            using (TestApplication global = new()) {
                 Options cmdLine = Options.Parse(null, null);
                 HelpApp.ShowHelp(cmdLine);
 

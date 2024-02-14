@@ -32,8 +32,8 @@
             }
 
             int status = buffer[4];
-            if (status == ControlResponse.StatusError ||
-                status == ControlResponse.StatusNotSupported) {
+            if (status is ControlResponse.StatusError or
+                ControlResponse.StatusNotSupported) {
                 service = new ControlErrorNotSupported(serviceId, status, "get_software_version");
                 return 5;
             }
@@ -61,7 +61,7 @@
                 versionLength--;
 
             int cu = Iso8859_1.Convert(buffer[VersionStringOffset..(VersionStringOffset + versionLength)], m_CharResult);
-            string swVersion = new string(m_CharResult, 0, cu);
+            string swVersion = new(m_CharResult, 0, cu);
 
             service = new GetSoftwareVersionResponse(status, swVersion);
             return VersionStringOffset + (int)payloadLength;

@@ -16,7 +16,7 @@
     {
         private readonly int m_LinkType;
         private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
-        private readonly Dictionary<ConnectionKey, Connection> m_Connections = new Dictionary<ConnectionKey, Connection>();
+        private readonly Dictionary<ConnectionKey, Connection> m_Connections = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PacketDecoder"/> class.
@@ -249,14 +249,14 @@
         {
             // A small optimisation, that we don't create a list unless we need to, and when we return, we return the
             // list only if it was created. Otherwise the list of packets that we decoded.
-            if (lines is object) return lines;
+            if (lines is not null) return lines;
             if (packet is object) return packet;
             return Array.Empty<DltTraceLineBase>();
         }
 
         private Connection GetConnection(int srcAddr, int dstAddr)
         {
-            ConnectionKey key = new ConnectionKey(srcAddr, dstAddr);
+            ConnectionKey key = new(srcAddr, dstAddr);
             if (!m_Connections.TryGetValue(key, out Connection connection)) {
                 connection = new Connection(srcAddr, dstAddr, m_TraceDecoderFactory);
                 m_Connections.Add(key, connection);
@@ -303,7 +303,7 @@
                     retry = true;
 
                     if (Log.Pcap.ShouldTrace(TraceEventType.Warning)) {
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb = new();
                         foreach (IpFragment fragment in ipFragments.GetFragments()) {
                             if (sb.Length != 0) sb.Append(", ");
                             sb.AppendFormat("(0x{0:x}, 0x{1:x})", fragment.Position, fragment.FragmentOffset);
@@ -327,7 +327,7 @@
 
             ReadOnlySpan<byte> dltBuffer;
             IPcapTraceDecoder decoder = null;
-            List<DltTraceLineBase> lines = new List<DltTraceLineBase>();
+            List<DltTraceLineBase> lines = new();
 
             foreach (IpFragment fragment in fragments.GetFragments()) {
                 long position;

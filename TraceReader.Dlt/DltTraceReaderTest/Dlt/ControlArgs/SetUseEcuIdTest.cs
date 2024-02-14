@@ -9,7 +9,7 @@
         [TestCase(false, "[use_ecu_id] off")]
         public void SetUseEcuIdReq(bool enabled, string result)
         {
-            SetUseEcuIdRequest arg = new SetUseEcuIdRequest(enabled);
+            SetUseEcuIdRequest arg = new(enabled);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0D));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(arg.ToString(), Is.EqualTo(result));
@@ -22,7 +22,7 @@
         [TestCase(100, "[use_ecu_id status=100]")]
         public void SetUseEcuIdResp(int status, string result)
         {
-            SetUseEcuIdResponse arg = new SetUseEcuIdResponse(status);
+            SetUseEcuIdResponse arg = new(status);
             Assert.That(arg.ServiceId, Is.EqualTo(0x0D));
             Assert.That(arg.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));
             Assert.That(arg.ToString(), Is.EqualTo(result));

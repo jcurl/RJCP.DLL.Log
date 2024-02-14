@@ -15,9 +15,9 @@
     /// </remarks>
     public abstract class OutputBase : IDisposable
     {
-        private readonly OutputWriter m_Writer = new OutputWriter();
+        private readonly OutputWriter m_Writer = new();
         private readonly Template m_Template;
-        private readonly HashSet<FileSystemNodeInfo> m_OutputFiles = new HashSet<FileSystemNodeInfo>();
+        private readonly HashSet<FileSystemNodeInfo> m_OutputFiles = new();
         private readonly InputFiles m_InputFiles;
         private List<string> m_Segments;
         private readonly long m_Split;
@@ -128,7 +128,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return;
 
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
+            FileSystemNodeInfo file = new(fileName);
             m_OutputFiles.Add(file);
         }
 
@@ -137,7 +137,7 @@
             fileName = Path.GetFullPath(fileName);
             if (!File.Exists(fileName)) return;
 
-            FileSystemNodeInfo file = new FileSystemNodeInfo(fileName);
+            FileSystemNodeInfo file = new(fileName);
             if (m_OutputFiles.Contains(file)) {
                 // We don't overwrite files that we've just created.
                 string message = string.Format(AppResources.DomainOutputNoOverwrite, m_Template.ToString());

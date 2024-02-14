@@ -32,7 +32,7 @@
             int length = Encoding.UTF8.GetBytes("TestString", 0, 10, data, 4);
             BitOperations.Copy16Shift(length, data.AsSpan(2), littleEndian);
 
-            PcapOptions options = new PcapOptions(littleEndian);
+            PcapOptions options = new(littleEndian);
             IPcapOption option = options.Add(blockCode, data);
             Assert.That(option, Is.TypeOf<StringOption>());
             Assert.That(option.OptionCode, Is.EqualTo(optionCode));

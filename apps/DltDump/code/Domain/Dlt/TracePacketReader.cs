@@ -30,8 +30,8 @@
         private readonly IPacket m_Packet;
         private readonly ITraceDecoderFactory<DltTraceLineBase> m_DecoderFactory;
 
-        private readonly object m_DecodersLock = new object();
-        private readonly List<DecoderState> m_Decoders = new List<DecoderState>();
+        private readonly object m_DecodersLock = new();
+        private readonly List<DecoderState> m_Decoders = new();
 
         private readonly byte[] m_Buffer = new byte[65536];
         private readonly Memory<byte> m_BufferMem;
@@ -209,7 +209,7 @@
 
             private bool MoveNextDecoder()
             {
-                if (m_Decoders.MoveNext() && m_Decoders.Current is object) {
+                if (m_Decoders.MoveNext() && m_Decoders.Current is not null) {
                     m_Lines = m_Decoders.Current.Decoder.Flush().GetEnumerator();
                     return true;
                 }

@@ -21,7 +21,7 @@
         [Test]
         public void EncodeTimeMarker([Values(0, 64)] int len)
         {
-            DltTimeMarker response = new DltTimeMarker();
+            DltTimeMarker response = new();
 
             Span<byte> payload = ControlEncode(response, len);
             Assert.That(payload.Length, Is.EqualTo(0));

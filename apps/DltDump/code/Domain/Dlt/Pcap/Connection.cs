@@ -11,8 +11,8 @@
     /// </summary>
     public sealed class Connection : IDisposable
     {
-        private readonly Dictionary<EndPointKey, IPcapTraceDecoder> m_Decoders = new Dictionary<EndPointKey, IPcapTraceDecoder>();
-        private readonly Dictionary<int, IpFragments> m_Fragments = new Dictionary<int, IpFragments>();
+        private readonly Dictionary<EndPointKey, IPcapTraceDecoder> m_Decoders = new();
+        private readonly Dictionary<int, IpFragments> m_Fragments = new();
         private readonly ITraceDecoderFactory<DltTraceLineBase> m_TraceDecoderFactory;
 
         /// <summary>
@@ -59,7 +59,7 @@
         /// <returns>The decoder for this end point if it already exists, or a new decoder.</returns>
         public IPcapTraceDecoder GetDltDecoder(short srcPort, short dstPort)
         {
-            EndPointKey key = new EndPointKey(srcPort, dstPort);
+            EndPointKey key = new(srcPort, dstPort);
             if (!m_Decoders.TryGetValue(key, out IPcapTraceDecoder decoder)) {
                 Log.Pcap.TraceEvent(TraceEventType.Information,
                     "New virtual connection {0:x8}:{1:x4} -> {2:x8}:{3:x4}", SourceAddress, srcPort, DestinationAddress, dstPort);

@@ -11,7 +11,7 @@
 
         public LineTraceReader(IEnumerable<T> lines)
         {
-            List<T> list = new List<T>(lines);
+            List<T> list = new(lines);
             m_LineEnumerable = list.GetEnumerator();
         }
 
@@ -31,7 +31,7 @@
         private T OnGetLineEvent(object sender, LineEventArgs<T> args)
         {
             EventHandler<LineEventArgs<T>> handler = GetLineEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
             return args.Line;
         }
 

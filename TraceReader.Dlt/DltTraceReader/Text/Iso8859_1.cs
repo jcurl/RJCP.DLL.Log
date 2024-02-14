@@ -51,7 +51,7 @@
             int bu = 0;
             foreach (char c in value) {
                 if (c == 0) return bu;
-                if (c >= 1 && c <= 255) {
+                if (c is >= (char)1 and <= (char)255) {
                     // ISO-8859-1 and the first 256 bytes of Unicode match exactly.
                     bytes[bu] = unchecked((byte)c);
                     bu++;

@@ -13,7 +13,7 @@
     /// </summary>
     public class FibexFile : IFrameMap
     {
-        private static readonly Dictionary<string, string> m_XmlNs = new Dictionary<string, string>() {
+        private static readonly Dictionary<string, string> m_XmlNs = new() {
             ["ho"] = "http://www.asam.net/xml",
             ["fx"] = "http://www.asam.net/xml/fbx",
             [""] = ""
@@ -57,7 +57,7 @@
         protected virtual void OnLoadErrorEvent(FibexLoadErrorEventArgs args)
         {
             EventHandler<FibexLoadErrorEventArgs> handler = LoadErrorEvent;
-            if (handler is object) handler(this, args);
+            if (handler is not null) handler(this, args);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@
         {
             ArgumentNullException.ThrowIfNull(fileName);
 
-            using (FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+            using (FileStream file = new(fileName, FileMode.Open, FileAccess.Read, FileShare.Read)) {
                 LoadFile(file);
             }
         }
@@ -160,13 +160,13 @@
         private void LoadFileInternal(Stream stream)
         {
             string ecuId = null;
-            Dictionary<string, Pdu> pdus = new Dictionary<string, Pdu>();
+            Dictionary<string, Pdu> pdus = new();
 
             // The XML standard says we have to have a unique ID. But it doesn't have to be unique when loading
             // different FIBEX files.
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>();
+            Dictionary<int, IFrame> frames = new();
 
-            XmlTreeReader xmlReader = new XmlTreeReader() {
+            XmlTreeReader xmlReader = new() {
                 Nodes = {
                     new XmlTreeNode("fx:FIBEX") {
                         Nodes = {
@@ -176,7 +176,7 @@
                                         Nodes = {
                                             new XmlTreeNode("fx:ECU") {
                                                 ProcessElement = (n, e) => {
-                                                    if (ecuId is object) {
+                                                    if (ecuId is not null) {
                                                         OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.EcusMultipleDefined, e.Reader.GetPosition()));
                                                         return;
                                                     }
@@ -239,7 +239,7 @@
                                                                                 ((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType = string.Empty;
                                                                                 return;
                                                                             }
-                                                                            if (((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType is object) {
+                                                                            if (((KeyValuePair<string, Pdu>)e.UserObject).Value.PduType is not null) {
                                                                                 OnLoadErrorEvent(new FibexLoadErrorEventArgs(FibexWarnings.MultipleSignalsInPduDefined, e.Reader.GetPosition()));
                                                                                 return;
                                                                             }
@@ -290,7 +290,7 @@
                                                         e.Reader.Skip();  // Don't parse the rest.
                                                         return;
                                                     }
-                                                    Frame frame = new Frame() {
+                                                    Frame frame = new() {
                                                         Id = msgId,
                                                         EcuId = ecuId
                                                     };

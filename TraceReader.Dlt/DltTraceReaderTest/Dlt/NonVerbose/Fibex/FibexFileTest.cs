@@ -24,7 +24,7 @@
         private static void WriteDocument(XmlDocument doc)
         {
             string fileName = $"{Deploy.TestName}.xml";
-            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
+            using (FileStream file = new(fileName, FileMode.Create, FileAccess.Write, FileShare.None)) {
                 doc.Save(file);
             }
         }
@@ -48,15 +48,15 @@
             using (Stream stream = GetStream(fibexDoc)) {
                 WriteDocument(fibexDoc);
 
-                HashSet<FibexWarnings> foundWarnings = new HashSet<FibexWarnings>();
-                FibexFile fibex = new FibexFile(m_FibexOptions);
+                HashSet<FibexWarnings> foundWarnings = new();
+                FibexFile fibex = new(m_FibexOptions);
                 fibex.LoadErrorEvent += (s, e) => {
                     Console.WriteLine($"{e}");
                     foundWarnings.Add(e.Warning);
                 };
                 fibex.LoadFile(stream);
 
-                HashSet<FibexWarnings> expectedWarnings = new HashSet<FibexWarnings>(warnings);
+                HashSet<FibexWarnings> expectedWarnings = new(warnings);
                 Assert.That(foundWarnings, Is.EquivalentTo(expectedWarnings));
 
                 CompareFrames(fibex, frames);
@@ -67,7 +67,7 @@
         [Test]
         public void LoadNullFile()
         {
-            FibexFile fibex = new FibexFile(m_FibexOptions);
+            FibexFile fibex = new(m_FibexOptions);
             Assert.That(() => {
                 string fileName = null;
                 fibex.LoadFile(fileName);
@@ -77,7 +77,7 @@
         [Test]
         public void LoadNullStream()
         {
-            FibexFile fibex = new FibexFile(m_FibexOptions);
+            FibexFile fibex = new(m_FibexOptions);
             Assert.That(() => {
                 Stream file = null;
                 fibex.LoadFile(file);
@@ -88,7 +88,7 @@
         public void LoadFibexFile()
         {
             bool error = false;
-            FibexFile fibex = new FibexFile(m_FibexOptions);
+            FibexFile fibex = new(m_FibexOptions);
             fibex.LoadErrorEvent += (s, e) => {
                 Console.WriteLine($"{e}");
                 error = true;
@@ -207,7 +207,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_10_0']", nsmgr);
             pduNode.RemoveAttribute("ID");
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {11, Frame11 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -227,7 +227,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_10_0']", nsmgr);
             pduNode.Attributes["ID"].Value = string.Empty;
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {11, Frame11 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -247,7 +247,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_10_0']", nsmgr);
             pduNode.Attributes["ID"].Value = " ";
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {11, Frame11 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -293,7 +293,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:BYTE-LENGTH", nsmgr);
             pduNode.InnerText = "";
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -313,7 +313,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:BYTE-LENGTH", nsmgr);
             pduNode.RemoveElement();
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -333,7 +333,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:BYTE-LENGTH", nsmgr);
             pduNode.InnerText = "-1";
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -355,7 +355,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:BYTE-LENGTH", nsmgr);
             pduNode.InnerText = hex;
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -375,7 +375,7 @@
             XmlElement pduNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_10_0']/ho:DESC", nsmgr);
             pduNode.InnerText = string.Empty;
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {11, Frame11 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -395,7 +395,7 @@
             XmlElement sigNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:SIGNAL-INSTANCES/fx:SIGNAL-INSTANCE/fx:SIGNAL-REF", nsmgr);
             sigNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -415,7 +415,7 @@
             XmlElement sigNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:SIGNAL-INSTANCES/fx:SIGNAL-INSTANCE/fx:SIGNAL-REF", nsmgr);
             sigNode.RemoveAttribute("ID-REF");
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -435,7 +435,7 @@
             XmlElement sigNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:PDUS/fx:PDU[@ID='PDU_11_1']/fx:SIGNAL-INSTANCES/fx:SIGNAL-INSTANCE/fx:SIGNAL-REF", nsmgr);
             sigNode.Attributes["ID-REF"].Value = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -507,7 +507,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']", nsmgr);
             frameNode.RemoveAttribute("ID");
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -525,7 +525,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']", nsmgr);
             frameNode.Attributes["ID"].Value = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -548,7 +548,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']", nsmgr);
             frameNode.Attributes["ID"].Value = id;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -566,7 +566,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']", nsmgr);
             frameNode.Attributes["ID"].Value = "ID_10";
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -584,7 +584,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -605,7 +605,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION", nsmgr);
             frameNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -626,7 +626,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -647,7 +647,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/APPLICATION_ID", nsmgr);
             frameNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -665,7 +665,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/APPLICATION_ID", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -684,7 +684,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/CONTEXT_ID", nsmgr);
             frameNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -702,7 +702,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/CONTEXT_ID", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -721,7 +721,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_TYPE", nsmgr);
             frameNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -739,7 +739,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_TYPE", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -758,7 +758,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_INFO", nsmgr);
             frameNode.RemoveElement();
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -776,7 +776,7 @@
 
             XmlElement frameNode = (XmlElement)fibexDoc.SelectSingleNode("/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_INFO", nsmgr);
             frameNode.InnerXml = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -796,7 +796,7 @@
             XmlElement refNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:PDU-INSTANCES/fx:PDU-INSTANCE/fx:PDU-REF[@ID-REF='PDU_11_0']", nsmgr);
             refNode.RemoveAttribute("ID-REF");
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -815,7 +815,7 @@
             XmlElement refNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:PDU-INSTANCES/fx:PDU-INSTANCE/fx:PDU-REF[@ID-REF='PDU_11_0']", nsmgr);
             refNode.Attributes["ID-REF"].Value = string.Empty;
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -834,7 +834,7 @@
             XmlElement refNode = (XmlElement)fibexDoc.SelectSingleNode(
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:PDU-INSTANCES/fx:PDU-INSTANCE/fx:PDU-REF[@ID-REF='PDU_11_0']", nsmgr);
             refNode.Attributes["ID-REF"].Value = "X";
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -877,7 +877,7 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_INFO", nsmgr);
             infoNode.InnerText = dltInfoStr;
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },
@@ -904,7 +904,7 @@
                 "/fx:FIBEX/fx:ELEMENTS/fx:FRAMES/fx:FRAME[@ID='ID_11']/fx:MANUFACTURER-EXTENSION/MESSAGE_INFO", nsmgr);
             infoNode.InnerText = dltInfoStr;
 
-            Dictionary<int, IFrame> frames = new Dictionary<int, IFrame>() {
+            Dictionary<int, IFrame> frames = new() {
                 {10, Frame10 },
                 {12, Frame12 },
                 {13, Frame13 },

@@ -22,7 +22,7 @@
 
         public static FibexMap LoadFrameMap(IEnumerable<string> paths, FibexOptions options)
         {
-            FibexMap map = new FibexMap(options);
+            FibexMap map = new(options);
             try {
                 foreach (string fibexPath in paths) {
                     map.LoadFibex(fibexPath);

@@ -20,7 +20,7 @@
         public void ConstructUnicast()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(address, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(address, 3490)) {
                 Assert.That(receiver.Connection, Is.EqualTo("udp://127.0.0.1:3490"));
                 Assert.That(receiver.InputStream, Is.Null);
                 Assert.That(receiver.InputPacket, Is.Null);
@@ -34,7 +34,7 @@
         [Test]
         public void ConstructUnicastAny()
         {
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(IPAddress.Any, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(IPAddress.Any, 3490)) {
                 Assert.That(receiver.Connection, Is.EqualTo("udp://0.0.0.0:3490"));
                 Assert.That(receiver.InputStream, Is.Null);
                 Assert.That(receiver.InputPacket, Is.Null);
@@ -49,7 +49,7 @@
         public void ConstructMulticast()
         {
             IPAddress address = IPAddress.Parse("239.200.200.10");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(address, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(address, 3490)) {
                 Assert.That(receiver.Connection, Is.EqualTo("udp://239.200.200.10:3490"));
                 Assert.That(receiver.InputStream, Is.Null);
                 Assert.That(receiver.InputPacket, Is.Null);
@@ -109,7 +109,7 @@
         {
             IPAddress bindAddress = IPAddress.Parse("10.0.0.1");
             IPAddress groupCast = IPAddress.Parse("224.100.150.255");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(bindAddress, 3490, groupCast)) {
+            using (DltUdpPacketReceiver receiver = new(bindAddress, 3490, groupCast)) {
                 Assert.That(receiver.Connection, Is.EqualTo("udp://224.100.150.255:3490/?bindto=10.0.0.1"));
                 Assert.That(receiver.InputStream, Is.Null);
                 Assert.That(receiver.InputPacket, Is.Null);
@@ -184,7 +184,7 @@
         public void OpenLocalClose()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(address, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(address, 3490)) {
                 receiver.Open();
                 Assert.That(receiver.InputPacket, Is.Not.Null);
                 Assert.That(receiver.InputPacket, Is.TypeOf<UdpPacketReceiver>());
@@ -216,7 +216,7 @@
         public async Task OpenLocalConnectClose()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(address, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(address, 3490)) {
                 receiver.Open();
                 Assert.That(receiver.InputPacket, Is.Not.Null);
                 Assert.That(receiver.InputPacket, Is.TypeOf<UdpPacketReceiver>());
@@ -234,7 +234,7 @@
         public void OpenTwice()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
-            using (DltUdpPacketReceiver receiver = new DltUdpPacketReceiver(address, 3490)) {
+            using (DltUdpPacketReceiver receiver = new(address, 3490)) {
                 receiver.Open();
                 IPacket packet = receiver.InputPacket;
                 Assert.That(packet, Is.Not.Null);

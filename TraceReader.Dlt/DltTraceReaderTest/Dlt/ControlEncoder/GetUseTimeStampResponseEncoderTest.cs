@@ -25,7 +25,7 @@
         public void EncodeSuccess([Values(false, true)] bool enabled)
         {
             GetUseTimeStampResponse response =
-                new GetUseTimeStampResponse(ControlResponse.StatusOk, enabled);
+                new(ControlResponse.StatusOk, enabled);
 
             Span<byte> buffer = ControlEncode(response, 6);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1D));
@@ -38,7 +38,7 @@
         public void EncodeError(int statusCode)
         {
             GetUseTimeStampResponse response =
-                new GetUseTimeStampResponse(statusCode, false);
+                new(statusCode, false);
 
             Span<byte> buffer = ControlEncode(response, 5);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x1D));
@@ -51,7 +51,7 @@
             if (IsWriter) Assert.Inconclusive("Test case is meaningless");
 
             GetUseTimeStampResponse response =
-                new GetUseTimeStampResponse(ControlResponse.StatusOk, true);
+                new(ControlResponse.StatusOk, true);
 
             byte[] buffer = new byte[length];
             _ = ControlEncode(buffer, response, out Result<int> result);

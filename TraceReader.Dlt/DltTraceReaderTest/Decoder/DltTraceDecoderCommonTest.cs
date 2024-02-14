@@ -37,7 +37,7 @@
         public async Task WriteDltPacket(int maxBytes)
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append();
@@ -54,7 +54,7 @@
         public async Task WriteDltPacket()
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Test boundaries of the packet, looking for potential issues
@@ -89,10 +89,10 @@
         public async Task WriteDltPackets(int maxBytes)
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
-                List<int> plen = new List<int> {
+                List<int> plen = new() {
                     factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append(),
                     factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append()
                 };
@@ -109,7 +109,7 @@
         public async Task WriteDltPackets()
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 // Test boundaries of the packet, looking for potential issues
@@ -118,7 +118,7 @@
                 //  - offset 26 bytes where the first argument starts
                 //  - offset 30 bytes payload starts
 
-                List<int> plen = new List<int> {
+                List<int> plen = new() {
                     factory.Verbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), DltType.LOG_INFO, "Message 1").Append(),
                     factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append()
                 };
@@ -147,7 +147,7 @@
         public async Task WriteDltPacketVersion2(int maxBytes)
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 int l1 = factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_INFO, "Message").Version(2).Append();
@@ -172,7 +172,7 @@
         public async Task WriteDltInvalidDataAtEnd(int maxBytes)
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 int p1 = factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
@@ -200,7 +200,7 @@
         public async Task WriteDltPartialDataAtEnd(int maxBytes)
         {
             DltFactory factory = GetFactory();
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 int l1 = factory.Verbose(writer, DltTestData.Time2, DltTime.DeviceTime(1.232), DltType.LOG_WARN, "Warning").Append();
@@ -239,7 +239,7 @@
                 DltTraceLineBase line;
                 do {
                     line = await reader.GetLineAsync();
-                } while (line is object);
+                } while (line is not null);
             }
         }
 
@@ -250,7 +250,7 @@
                 .Add(1, "ECU1", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
@@ -272,7 +272,7 @@
                 .Add(1, "ECU2", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
@@ -294,7 +294,7 @@
                 .Add(1, "ECU1", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU1", AppId = "APP1", CtxId = "CTX1", Counter = 127, SessionId = 50
             }) {
                 factory.NonVerboseExt(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
@@ -316,7 +316,7 @@
                 .Add(1, "ECU1", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),
@@ -338,7 +338,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), Array.Empty<byte>()).Append();
@@ -370,7 +370,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00 }).Append();
@@ -402,7 +402,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00 }).Append();
@@ -434,7 +434,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00 }).Append();
@@ -466,7 +466,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00 }).Append();
@@ -498,7 +498,7 @@
                 .Add(1, "ECU2", "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
@@ -528,7 +528,7 @@
         {
             DltFactory factory = GetFactory();
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
@@ -560,7 +560,7 @@
                 .Add(1, null, "APP2", "CTX2", DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
@@ -592,7 +592,7 @@
                 .Add(1, "ECU2", null, null, DltType.LOG_INFO, new TestPdu("S_SINT32", 4));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231), new byte[] { 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xFF }).Append();
@@ -624,7 +624,7 @@
                 .Add(1, "ECU1", "APP1", "CTX1", DltType.LOG_INFO, new TestPdu("S_STRG_UTF8", 0));
             DltFactory factory = GetFactory(map);
 
-            using (DltPacketWriter writer = new DltPacketWriter() {
+            using (DltPacketWriter writer = new() {
                 EcuId = "ECU2", Counter = 127, SessionId = 50
             }) {
                 factory.NonVerbose(writer, DltTestData.Time1, DltTime.DeviceTime(1.231),

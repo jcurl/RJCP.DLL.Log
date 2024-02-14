@@ -25,7 +25,7 @@
             if (Data.Length == 0) return "(00)";
 
             int strLength = 10 + Data.Length * 3;
-            StringBuilder strBuilder = new StringBuilder(strLength);
+            StringBuilder strBuilder = new(strLength);
             return Append(strBuilder).ToString();
         }
 

@@ -123,7 +123,7 @@
         public DateTime GetTimeStamp(ulong timeStamp)
         {
             if (Value == 0) {
-                if (timeStamp > 0 && timeStamp <= MaxTimeSeconds) {
+                if (timeStamp is > 0 and <= MaxTimeSeconds) {
                     return DateTimeOffset.FromUnixTimeSeconds((long)timeStamp).UtcDateTime;
                 } else {
                     return DateTimeOffset.FromUnixTimeSeconds(MaxTimeSeconds)

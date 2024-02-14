@@ -6,7 +6,7 @@
     public sealed class OneShotTimer : IDisposable
     {
         private readonly int m_DueTime;
-        private readonly object m_DisposeLock = new object();
+        private readonly object m_DisposeLock = new();
         private Timer m_Timer;
 
         public OneShotTimer(int dueTime)
@@ -19,7 +19,7 @@
         private void OnTimerEvent(object sender, TimerEventArgs args)
         {
             EventHandler<TimerEventArgs> handler = TimerEvent;
-            if (handler is object) handler(sender, args);
+            if (handler is not null) handler(sender, args);
         }
 
         public bool Fired { get; private set; }
@@ -28,7 +28,7 @@
         {
             if (m_IsDisposed)
                 throw new ObjectDisposedException(nameof(OneShotTimer));
-            if (m_Timer is object)
+            if (m_Timer is not null)
                 throw new InvalidOperationException("Timer already initialized");
 
             m_Timer = new Timer(TimerExpired, this, m_DueTime, Timeout.Infinite);
@@ -56,7 +56,7 @@
 
         public void Dispose()
         {
-            if (m_Timer is object) {
+            if (m_Timer is not null) {
                 lock (m_DisposeLock) {
                     m_Timer.Dispose();
                     m_IsDisposed = true;

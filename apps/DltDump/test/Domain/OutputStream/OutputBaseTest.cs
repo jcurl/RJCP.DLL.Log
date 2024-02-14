@@ -34,7 +34,7 @@
         public void WriteTextLine()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.Write(TestLines.Verbose);
@@ -42,7 +42,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -52,7 +52,7 @@
         public void WriteFormatTextLine()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 output.ShowPosition = true;
 
                 Assert.That(File.Exists("File.txt"), Is.False);
@@ -62,7 +62,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(10 + TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -72,7 +72,7 @@
         public void WriteMultipleTextLine()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.Write(TestLines.Verbose);
@@ -84,7 +84,7 @@
                 int expectedLength =
                     TestLines.Verbose.ToString().Length + Environment.NewLine.Length +
                     TestLines.Verbose2.ToString().Length + Environment.NewLine.Length;
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(expectedLength));
             }
         }
@@ -93,7 +93,7 @@
         public void WriteAsciiTextLine()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 output.Encoding = Encoding.ASCII;
                 Assert.That(File.Exists("File.txt"), Is.False);
 
@@ -102,7 +102,7 @@
 
                 Assert.That(File.Exists("File.txt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.txt");
+                FileInfo fileInfo = new("File.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -112,7 +112,7 @@
         public void NullEncoding()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 Assert.That(() => {
                     output.Encoding = null;
                 }, Throws.TypeOf<ArgumentNullException>());
@@ -167,7 +167,7 @@
         public void WriteFullPacket()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.File);
@@ -176,7 +176,7 @@
 
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(PacketFile.Length));
             }
         }
@@ -185,7 +185,7 @@
         public void WriteFullPacketFromNetwork()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.Network);
@@ -194,7 +194,7 @@
 
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(PacketNet.Length + 16));
             }
         }
@@ -203,7 +203,7 @@
         public void WriteFullPacketFromSerial()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.Serial);
@@ -212,7 +212,7 @@
 
                 Assert.That(File.Exists("File.dlt"), Is.True);
 
-                FileInfo fileInfo = new FileInfo("File.dlt");
+                FileInfo fileInfo = new("File.dlt");
                 Assert.That(fileInfo.Length, Is.EqualTo(PacketSerial.Length + 12));
             }
         }
@@ -221,7 +221,7 @@
         public void WriteTextLineAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 Assert.That(File.Exists("File.txt"), Is.False);
 
                 output.Dispose();
@@ -235,7 +235,7 @@
         public void WriteFormatTextLineAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 output.ShowPosition = true;
 
                 Assert.That(File.Exists("File.txt"), Is.False);
@@ -251,7 +251,7 @@
         public void WriteFullPacketAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.File);
@@ -266,7 +266,7 @@
         public void WriteFullPacketFromNetworkAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.Network);
@@ -281,7 +281,7 @@
         public void WriteFullPacketFromSerialAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.Serial);
@@ -296,7 +296,7 @@
         public void FlushAfterDispose()
         {
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.dlt")) {
+            using (TestOutputBase output = new("File.dlt")) {
                 Assert.That(File.Exists("File.dlt"), Is.False);
 
                 output.SetInput("input.dlt", InputFormat.Serial);
@@ -316,7 +316,7 @@
             using (ScratchPad pad = Deploy.ScratchPad()) {
                 Deploy.Item(EmptyFile, pad.Path);
 
-                using (TestOutputBase output = new TestOutputBase("EmptyFile.dlt", false)) {
+                using (TestOutputBase output = new("EmptyFile.dlt", false)) {
                     Assert.That(output.Force, Is.False);
 
                     output.SetInput("input.dlt", InputFormat.Serial);
@@ -334,14 +334,14 @@
             using (ScratchPad pad = Deploy.ScratchPad()) {
                 Deploy.Item(EmptyFile, pad.Path);
 
-                using (TestOutputBase output = new TestOutputBase("EmptyFile.dlt", true)) {
+                using (TestOutputBase output = new("EmptyFile.dlt", true)) {
                     Assert.That(output.Force, Is.True);
 
                     output.SetInput("input.dlt", InputFormat.Serial);
                     output.Write(TestLines.Verbose);
                     output.Flush();
 
-                    FileInfo fileInfo = new FileInfo("EmptyFile.dlt");
+                    FileInfo fileInfo = new("EmptyFile.dlt");
                     Assert.That(fileInfo.Length,
                         Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
                 }
@@ -353,7 +353,7 @@
         {
             Environment.SetEnvironmentVariable("TESTVAR", "testVar");
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File_%TESTVAR%.txt", false)) {
+            using (TestOutputBase output = new("File_%TESTVAR%.txt", false)) {
                 output.SetInput("input.dlt", InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
@@ -369,7 +369,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", force)) {
+            using (TestOutputBase output = new("%FILE%.txt", force)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
@@ -386,7 +386,7 @@
             string inputFile2 = Platform.IsWinNT() ? @"c:\foo\input.dlt" : "/foo/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", force)) {
+            using (TestOutputBase output = new("%FILE%.txt", force)) {
                 output.SetInput(inputFile1, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 Assert.That(() => {
@@ -407,7 +407,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
+            using (TestOutputBase output = new("%FILE%.txt", false)) {
                 pad.DeployEmptyFile("input.txt");
                 Assert.That(() => {
                     output.SetInput(inputFile, InputFormat.File);
@@ -428,7 +428,7 @@
             string inputFile2 = Platform.IsWinNT() ? @"c:\other.dlt" : "/other.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", false)) {
+            using (TestOutputBase output = new("%FILE%.txt", false)) {
                 pad.DeployEmptyFile("input.txt");
                 Assert.That(() => {
                     output.SetInput(inputFile1, InputFormat.File);
@@ -452,13 +452,13 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", true)) {
+            using (TestOutputBase output = new("%FILE%.txt", true)) {
                 pad.DeployEmptyFile("input.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
-                FileInfo fileInfo = new FileInfo("input.txt");
+                FileInfo fileInfo = new("input.txt");
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -470,14 +470,14 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%CDATETIME%.txt", true)) {
+            using (TestOutputBase output = new("%CDATETIME%.txt", true)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
                 string fileName = string.Format("{0:yyyyMMdd\\THHmmss}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
 
-                FileInfo fileInfo = new FileInfo(fileName);
+                FileInfo fileInfo = new(fileName);
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -489,14 +489,14 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%CDATE%.txt", true)) {
+            using (TestOutputBase output = new("%CDATE%.txt", true)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
                 string fileName = string.Format("{0:yyyyMMdd}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
 
-                FileInfo fileInfo = new FileInfo(fileName);
+                FileInfo fileInfo = new(fileName);
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -508,14 +508,14 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%CTIME%.txt", true)) {
+            using (TestOutputBase output = new("%CTIME%.txt", true)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Flush();
 
                 string fileName = string.Format("{0:HHmmss}.txt", TestLines.Verbose.TimeStamp.ToLocalTime());
 
-                FileInfo fileInfo = new FileInfo(fileName);
+                FileInfo fileInfo = new(fileName);
                 Assert.That(fileInfo.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
             }
@@ -528,7 +528,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file.txt", 1, force)) {
+            using (TestOutputBase output = new("file.txt", 1, force)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
@@ -537,7 +537,7 @@
                 long expectedLength =
                     TestLines.Verbose.ToString().Length + Environment.NewLine.Length +
                     TestLines.Verbose2.ToString().Length + Environment.NewLine.Length;
-                FileInfo fileInfo = new FileInfo("file.txt");
+                FileInfo fileInfo = new("file.txt");
                 Assert.That(fileInfo.Length, Is.EqualTo(expectedLength));
             }
         }
@@ -549,16 +549,16 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, force)) {
+            using (TestOutputBase output = new("file_%CTR%.txt", 1, force)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
                 output.Flush();
 
-                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                FileInfo fileInfo1 = new("file_001.txt");
                 Assert.That(fileInfo1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                FileInfo fileInfo2 = new("file_002.txt");
                 Assert.That(fileInfo2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -571,7 +571,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file_%CDATETIME%.txt", 1, force)) {
+            using (TestOutputBase output = new("file_%CDATETIME%.txt", 1, force)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
@@ -580,10 +580,10 @@
                 string date1 = TestLines.Verbose.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
                 string date2 = TestLines.Verbose2.TimeStamp.ToLocalTime().ToString(@"yyyyMMdd\THHmmss");
 
-                FileInfo fileInfo1 = new FileInfo($"file_{date1}.txt");
+                FileInfo fileInfo1 = new($"file_{date1}.txt");
                 Assert.That(fileInfo1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2 = new FileInfo($"file_{date2}.txt");
+                FileInfo fileInfo2 = new($"file_{date2}.txt");
                 Assert.That(fileInfo2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -596,7 +596,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file_%CDATE%.txt", 1, force)) {
+            using (TestOutputBase output = new("file_%CDATE%.txt", 1, force)) {
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose);
@@ -606,7 +606,7 @@
 
                 long expectedLength =
                     TestLines.Verbose.ToString().Length + Environment.NewLine.Length;
-                FileInfo fileInfo1 = new FileInfo($"file_{date}.txt");
+                FileInfo fileInfo1 = new($"file_{date}.txt");
                 Assert.That(fileInfo1.Length, Is.EqualTo(expectedLength * 2));
             }
         }
@@ -617,17 +617,17 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, true)) {
+            using (TestOutputBase output = new("file_%CTR%.txt", 1, true)) {
                 pad.DeployEmptyFile("file_002.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
                 output.Flush();
 
-                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                FileInfo fileInfo1 = new("file_001.txt");
                 Assert.That(fileInfo1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                FileInfo fileInfo2 = new("file_002.txt");
                 Assert.That(fileInfo2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -639,7 +639,7 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("file_%CTR%.txt", 1, false)) {
+            using (TestOutputBase output = new("file_%CTR%.txt", 1, false)) {
                 pad.DeployEmptyFile("file_002.txt");
                 output.SetInput(inputFile, InputFormat.File);
                 output.Write(TestLines.Verbose);
@@ -651,10 +651,10 @@
                 }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<IOException>());
                 output.Flush();
 
-                FileInfo fileInfo1 = new FileInfo("file_001.txt");
+                FileInfo fileInfo1 = new("file_001.txt");
                 Assert.That(fileInfo1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2 = new FileInfo("file_002.txt");
+                FileInfo fileInfo2 = new("file_002.txt");
                 Assert.That(fileInfo2.Length, Is.EqualTo(0));  // File was not overwritten
 
                 // And we didn't get to create the third file.
@@ -669,7 +669,7 @@
             string inputFile2 = Platform.IsWinNT() ? @"c:\input2.dlt" : "/input2.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%_%CTR%.txt", 1, false)) {
+            using (TestOutputBase output = new("%FILE%_%CTR%.txt", 1, false)) {
                 output.SetInput(inputFile1, InputFormat.File);
                 output.Write(TestLines.Verbose);
                 output.Write(TestLines.Verbose2);
@@ -680,17 +680,17 @@
                 output.Write(TestLines.Verbose2);
                 output.Flush();
 
-                FileInfo fileInfo1_1 = new FileInfo("input1_001.txt");
+                FileInfo fileInfo1_1 = new("input1_001.txt");
                 Assert.That(fileInfo1_1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo1_2 = new FileInfo("input1_002.txt");
+                FileInfo fileInfo1_2 = new("input1_002.txt");
                 Assert.That(fileInfo1_2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
 
-                FileInfo fileInfo2_1 = new FileInfo("input2_001.txt");
+                FileInfo fileInfo2_1 = new("input2_001.txt");
                 Assert.That(fileInfo2_1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2_2 = new FileInfo("input2_002.txt");
+                FileInfo fileInfo2_2 = new("input2_002.txt");
                 Assert.That(fileInfo2_2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -703,7 +703,7 @@
             string inputFile2 = Platform.IsWinNT() ? @"c:\input2.dlt" : "/input2.dlt";
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%_%CTR%.txt", 1, false)) {
+            using (TestOutputBase output = new("%FILE%_%CTR%.txt", 1, false)) {
                 pad.DeployEmptyFile("input1_002.txt");
                 output.SetInput(inputFile1, InputFormat.File);
                 output.Write(TestLines.Verbose);
@@ -717,16 +717,16 @@
                 output.Write(TestLines.Verbose2);
                 output.Flush();
 
-                FileInfo fileInfo1_1 = new FileInfo("input1_001.txt");
+                FileInfo fileInfo1_1 = new("input1_001.txt");
                 Assert.That(fileInfo1_1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo1_2 = new FileInfo("input1_002.txt");
+                FileInfo fileInfo1_2 = new("input1_002.txt");
                 Assert.That(fileInfo1_2.Length, Is.EqualTo(0));
 
-                FileInfo fileInfo2_1 = new FileInfo("input2_001.txt");
+                FileInfo fileInfo2_1 = new("input2_001.txt");
                 Assert.That(fileInfo2_1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
-                FileInfo fileInfo2_2 = new FileInfo("input2_002.txt");
+                FileInfo fileInfo2_2 = new("input2_002.txt");
                 Assert.That(fileInfo2_2.Length,
                     Is.EqualTo(TestLines.Verbose2.ToString().Length + Environment.NewLine.Length));
             }
@@ -738,10 +738,10 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             // The `IOutputStreamFactory` would define this and give it to the `IOutputStream` object.
-            InputFiles inputs = new InputFiles();
+            InputFiles inputs = new();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", inputs, 1, true)) {
+            using (TestOutputBase output = new("%FILE%.txt", inputs, 1, true)) {
                 using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
 
                 // Must be added any time before any write is done.
@@ -762,10 +762,10 @@
             string inputFile = Platform.IsWinNT() ? @"c:\input.dlt" : "/input.dlt";
 
             // The `IOutputStreamFactory` would define this and give it to the `IOutputStream` object.
-            InputFiles inputs = new InputFiles();
+            InputFiles inputs = new();
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("%FILE%.txt", inputs, 1, true)) {
+            using (TestOutputBase output = new("%FILE%.txt", inputs, 1, true)) {
                 using (Stream newFile = new FileStream("input.txt", FileMode.CreateNew)) { /* Empty File */ }
 
                 // Must be added any time before any write is done.
@@ -785,7 +785,7 @@
             // gave it to the OutputWriter, other than through coverage in the private OpenWriter method.
 
             using (ScratchPad pad = Deploy.ScratchPad())
-            using (TestOutputBase output = new TestOutputBase("File.txt")) {
+            using (TestOutputBase output = new("File.txt")) {
                 output.ShowPosition = true;
                 output.AutoFlushPeriod = 50;
 
@@ -802,7 +802,7 @@
             int end = unchecked(Environment.TickCount + timeout);
             do {
                 Thread.Sleep(50);
-                FileInfo fileInfo = new FileInfo(fileName);
+                FileInfo fileInfo = new(fileName);
                 if (fileInfo.Exists) {
                     long length = fileInfo.Length;
                     if (length > 0) return length;

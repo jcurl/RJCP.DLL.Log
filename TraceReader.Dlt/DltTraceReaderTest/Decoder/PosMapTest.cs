@@ -9,7 +9,7 @@
         [Test]
         public void DefaultPosition()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             Assert.That(posmap.Position, Is.EqualTo(0));
             Assert.That(posmap.Length, Is.EqualTo(0));
         }
@@ -17,7 +17,7 @@
         [Test]
         public void AppendSingle()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             Assert.That(posmap.Position, Is.EqualTo(0));
             Assert.That(posmap.Length, Is.EqualTo(100));
@@ -26,7 +26,7 @@
         [Test]
         public void AppendZero()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 0);
 
             Assert.That(posmap.Position, Is.EqualTo(0));
@@ -36,7 +36,7 @@
         [Test]
         public void AppendZeroConsume()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 0);
             posmap.Consume(0);
 
@@ -47,7 +47,7 @@
         [Test]
         public void ConsumeSingleSubsection()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Consume(50);
             Assert.That(posmap.Position, Is.EqualTo(50));
@@ -57,7 +57,7 @@
         [Test]
         public void ConsumeSingleAll()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Consume(100);
             Assert.That(posmap.Position, Is.EqualTo(100));
@@ -67,7 +67,7 @@
         [Test]
         public void AppendTwiceConsecutive()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Append(100, 100);
             Assert.That(posmap.Position, Is.EqualTo(0));
@@ -77,7 +77,7 @@
         [Test]
         public void AppendTwiceGap()
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Append(200, 100);
             Assert.That(posmap.Position, Is.EqualTo(0));
@@ -91,7 +91,7 @@
             // Tests if the position is based on packets, and those packets are not in order, e.g. as obtained by
             // Ethernet and then it needs rejoining after fragmentation.
 
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(150, 50);
             posmap.Append(10, 50);
             Assert.That(posmap.Position, Is.EqualTo(150));
@@ -134,7 +134,7 @@
         [TestCase(50)]
         public void AppendTwiceConsecutiveConsumeBytes(int size)
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 90);
             posmap.Append(90, 110);
 
@@ -151,7 +151,7 @@
         [TestCase(50)]
         public void AppendTwiceGapConsumeBytes(int size)
         {
-            PosMapAccessor posmap = new PosMapAccessor();
+            PosMapAccessor posmap = new();
             posmap.Append(0, 90);
             posmap.Append(100, 110);
 
@@ -172,7 +172,7 @@
         [Test]
         public void AppendReallocNoWrap()
         {
-            PosMapAccessor posMap = new PosMapAccessor(4);
+            PosMapAccessor posMap = new(4);
             posMap.Append(0, 10);
             posMap.Append(20, 10);
             posMap.Append(40, 10);
@@ -201,7 +201,7 @@
         [TestCase(7)]
         public void AppendReallocWrap(int when)
         {
-            PosMapAccessor posMap = new PosMapAccessor(4);
+            PosMapAccessor posMap = new(4);
             posMap.Append(0, 10);
             if (when == 1) posMap.Consume(10);
             posMap.Append(20, 10);
@@ -234,7 +234,7 @@
         [Test]
         public void ConsumeTooMuch()
         {
-            PosMapAccessor posMap = new PosMapAccessor();
+            PosMapAccessor posMap = new();
 #if DEBUG
             Assert.That(() => {
                 posMap.Consume(1);

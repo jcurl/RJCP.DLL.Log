@@ -34,7 +34,7 @@
             m_Factories[scheme] = factory;
         }
 
-        private readonly Dictionary<string, IInputStreamFactory> m_Factories = new Dictionary<string, IInputStreamFactory>() {
+        private readonly Dictionary<string, IInputStreamFactory> m_Factories = new() {
             { "file", new DltFileStreamFactory() },
             { "tcp", new DltTcpStreamFactory() },
             { "ser", new DltSerialStreamFactory() },

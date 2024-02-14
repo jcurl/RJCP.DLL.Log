@@ -69,7 +69,7 @@
         {
             base.SetUpBranches(ilGen);
 
-            if (SkipBranch is object) {
+            if (SkipBranch is not null) {
                 m_SkipBranch = new BranchAlwaysOperation();
                 SkipBranch.Branches.Add(m_SkipBranch);
 

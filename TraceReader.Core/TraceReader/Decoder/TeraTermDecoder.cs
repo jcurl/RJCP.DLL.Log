@@ -9,7 +9,7 @@
     public class TeraTermDecoder : TextDecoderBase<LogTraceLine>
     {
         private int m_Line;
-        private DateTime m_CurrentTimeStamp = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
+        private DateTime m_CurrentTimeStamp = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
         /// <summary>
         /// Gets the line that was decoded.
@@ -35,7 +35,7 @@
                 text = new string(line);
             }
 
-            LogTraceLine traceLine = new LogTraceLine(text, m_Line, position) {
+            LogTraceLine traceLine = new(text, m_Line, position) {
                 TimeStamp = m_CurrentTimeStamp
             };
             m_Line++;

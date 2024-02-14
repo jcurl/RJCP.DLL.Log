@@ -109,7 +109,7 @@
             (byte dlthi, byte dltlo) = Split16(encMessage.Length + 33);
             (byte shi, byte slo) = Split16(encMessage.Length + 1);
 
-            List<byte> dltPayload = new List<byte>(new byte[] {
+            List<byte> dltPayload = new(new byte[] {
                 0x3D, 0x0B, dlthi, dltlo, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
                 0x00, 0x01, 0x54, 0x4A, 0x41, 0x01, 0x41, 0x50, 0x50, 0x31, 0x43, 0x54,
                 0x58, 0x31, 0x00, 0x02, 0x00, 0x00, slo, shi
@@ -132,13 +132,13 @@
         [TestCase(0x45, 0x01, 0x49, 0x01, TestName = "DecodeVlan2TecmpPacketVlan2")]
         public void DecodeTecmpPacket(byte ethVlanOuter, byte ethVlanInner, byte captureVlanOuter, byte captureVlanInner)
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
             if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
             AddTecmpHeader(packet);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             if (captureVlanOuter != 0) AddVlan(payload, captureVlanOuter);
             if (captureVlanInner != 0) AddVlan(payload, captureVlanInner);
@@ -146,7 +146,7 @@
 
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -166,27 +166,27 @@
         [TestCase(0x45, 0x01, 0x49, 0x01, TestName = "DecodeVlan2TecmpPacketVlan2Multi")]
         public void DecodeTecmpPacketMulti(byte ethVlanOuter, byte ethVlanInner, byte captureVlanOuter, byte captureVlanInner)
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
             if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
             AddTecmpHeader(packet);
 
-            List<byte> payload1 = new List<byte>();
+            List<byte> payload1 = new();
             AddEthMac(payload1);
             if (captureVlanOuter != 0) AddVlan(payload1, captureVlanOuter);
             if (captureVlanInner != 0) AddVlan(payload1, captureVlanInner);
             AddDltPayload(payload1, "DLT Argument test string..");
             AddTecmpPayload(packet, payload1);
 
-            List<byte> payload2 = new List<byte>();
+            List<byte> payload2 = new();
             AddEthMac(payload2);
             if (captureVlanOuter != 0) AddVlan(payload2, captureVlanOuter);
             if (captureVlanInner != 0) AddVlan(payload2, captureVlanInner);
             AddDltPayload(payload2, "DLT Argument test string 2");
             AddTecmpPayload(packet, payload2);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(2));
@@ -200,26 +200,26 @@
         [Test]
         public void DecodeTecmpPacketMulti2()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet);
 
-            List<byte> payload1 = new List<byte>();
+            List<byte> payload1 = new();
             AddEthMac(payload1);
             AddDltPayload(payload1, "DLT Argument test string..");
             AddTecmpPayload(packet, payload1);
 
-            List<byte> payload2 = new List<byte>();
+            List<byte> payload2 = new();
             AddEthMac(payload2);
             AddDltPayload(payload2, "DLT Argument test string 2");
             AddTecmpPayload(packet, payload2);
 
-            List<byte> payload3 = new List<byte>();
+            List<byte> payload3 = new();
             AddEthMac(payload3);
             AddDltPayload(payload3, "DLT Argument test string 3");
             AddTecmpPayload(packet, payload3);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(3));
@@ -237,16 +237,16 @@
         [TestCase(3, 3, 0x7F, TestName = "TecmpUnknownDataStream")]
         public void TecmpUnknown(byte version, byte logStream, int dataStream)
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet, CmFlags.UnsegmentedMessage | CmFlags.Receive, version, logStream, dataStream);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);
@@ -256,19 +256,19 @@
         [Test]
         public void UnknownProto()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             packet.AddRange(new byte[] {
                 0x99, 0xFF,                                                             // TECMP protocol
                 0x00, 0x80, 0x72, 0x14, 0x03, 0x03, 0x00, 0x80, 0x00, 0x00, 0x00, 0x0F, // TECMP header
             });
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);
@@ -280,16 +280,16 @@
         [TestCase(CmFlags.EndSegmentedMessage, TestName = "TecmpUnknownEndSegment")]
         public void TecmpUnknownCmFlags(CmFlags flags)
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet, CmFlags.Receive | flags, 0x03, 0x03, 0x80);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);
@@ -299,16 +299,16 @@
         [Test]
         public void TecmpCmFlagOverflow()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet, CmFlags.Receive | CmFlags.UnsegmentedMessage | CmFlags.Overflow, 0x03, 0x03, 0x80);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             AddDltPayload(payload, "DLT Argument test string..");
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -320,12 +320,12 @@
         [Test]
         public void EmptyPayload()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet);
             AddTecmpPayload(packet, new List<byte>());
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);
@@ -335,11 +335,11 @@
         [Test]
         public void IncompleteDltPayload()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             AddUdpPayload(payload, new List<byte>(new byte[] {
                 0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
@@ -350,7 +350,7 @@
             }));
             AddTecmpPayload(packet, payload);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);
@@ -360,11 +360,11 @@
         [Test]
         public void PayloadOverTwoPackets()
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             AddTecmpHeader(packet);
 
-            List<byte> payload1 = new List<byte>();
+            List<byte> payload1 = new();
             AddEthMac(payload1);
             AddUdpPayload(payload1, new List<byte>(new byte[] {
                 0x3D, 0x0B, 0x00, 0x3B, 0x45, 0x43, 0x55, 0x31, 0x00, 0x00, 0x03, 0x8E, // DLT
@@ -372,7 +372,7 @@
             }));
             AddTecmpPayload(packet, payload1);
 
-            List<byte> payload2 = new List<byte>();
+            List<byte> payload2 = new();
             AddEthMac(payload2);
             AddUdpPayload(payload2, new List<byte>(new byte[] {
                 0x58, 0x31, 0x00, 0x02, 0x00, 0x00, 0x1B, 0x00, 0x44, 0x4C, 0x54, 0x20,
@@ -381,7 +381,7 @@
             }));
             AddTecmpPayload(packet, payload2);
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Has.Count.EqualTo(1));
@@ -401,13 +401,13 @@
         [TestCase(0x45, 0x01, 0x49, 0x01, TestName = "DecodeIncompleteVlan2TecmpPacketVlan2")]
         public void DecodeIncompleteTecmpPacket(byte ethVlanOuter, byte ethVlanInner, byte captureVlanOuter, byte captureVlanInner)
         {
-            List<byte> packet = new List<byte>();
+            List<byte> packet = new();
             AddEthMac(packet);
             if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
             if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
             AddTecmpHeader(packet);
 
-            List<byte> payload = new List<byte>();
+            List<byte> payload = new();
             AddEthMac(payload);
             if (captureVlanOuter != 0) AddVlan(payload, captureVlanOuter);
             if (captureVlanInner != 0) AddVlan(payload, captureVlanInner);
@@ -418,7 +418,7 @@
             byte[] bytePacket = packet.ToArray();
             for (int i = 0; i < bytePacket.Length; i++) {
                 Console.WriteLine($"Packet Size = {i} of {bytePacket.Length}");
-                using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+                using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                     IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                         packetDecoder.DecodePacket(bytePacket.AsSpan(0, i), Time1, 20));
                     Assert.That(lines, Is.Empty);
@@ -437,7 +437,7 @@
             (byte lhi, byte llo) = Split16(length);
 
             // Nominal length is 0x6d = 109
-            List<byte> packet = new List<byte>(new byte[] {
+            List<byte> packet = new(new byte[] {
                 0x10, 0xdf, 0x23, 0x41, 0xe4, 0xc2, 0x74, 0xe7, 0xb1, 0x14, 0x44, 0x5e,  // [00..0B] PCAP MAC Dst/Src
                 0x81, 0x00, 0x00, 0x45, 0x81, 0x00, 0x00, 0x01,                          // [0C..13] VLAN Inner / Outer
                 0x99, 0xfe,                                                              // [14..15] Proto TECMP
@@ -458,7 +458,7 @@
                 0x74, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x2e, 0x2e, 0x00         // [94..9E]
             });
 
-            using (PacketDecoder packetDecoder = new PacketDecoder(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
+            using (PacketDecoder packetDecoder = new(LinkTypes.LINKTYPE_ETHERNET, DefaultPcapFactory)) {
                 IList<DltTraceLineBase> lines = new List<DltTraceLineBase>(
                     packetDecoder.DecodePacket(packet.ToArray(), Time1, 20));
                 Assert.That(lines, Is.Empty);

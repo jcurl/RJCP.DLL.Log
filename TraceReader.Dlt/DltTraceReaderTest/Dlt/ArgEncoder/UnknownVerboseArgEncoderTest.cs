@@ -44,7 +44,7 @@
                 value[2] = 0x00;
                 value[3] = 0x00;
             }
-            Random rnd = new Random();
+            Random rnd = new();
             rnd.NextBytes(value.AsSpan(4));
             EncodeUnknownVerbose(value);
         }
