@@ -32,9 +32,7 @@
         /// </exception>
         public TcpClientStream(string hostname, int port)
         {
-            ArgumentNullException.ThrowIfNull(hostname);
-            if (string.IsNullOrWhiteSpace(hostname))
-                throw new ArgumentException(AppResources.InfraTcpStreamInvalidHostName, nameof(hostname));
+            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(AppResources.InfraTcpStreamInvalidHostName, hostname);
             if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
 
             m_HostName = hostname;

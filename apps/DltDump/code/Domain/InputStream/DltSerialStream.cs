@@ -37,9 +37,7 @@
         /// <exception cref="ArgumentOutOfRangeException">handshake</exception>
         public DltSerialStream(string port, int baud, int data, Parity parity, StopBits stopbits, Handshake handshake)
         {
-            ArgumentNullException.ThrowIfNull(port);
-            if (string.IsNullOrWhiteSpace(port))
-                throw new ArgumentException(AppResources.SerialOpenError_InvalidPort, nameof(port));
+            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(AppResources.SerialOpenError_InvalidPort, port);
             if (baud <= 0)
                 throw new ArgumentOutOfRangeException(nameof(baud), AppResources.SerialOpenError_InvalidBaud);
             if (data is < 5 or > 8)

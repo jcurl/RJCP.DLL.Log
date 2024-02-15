@@ -62,9 +62,7 @@
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         protected OutputBase(string fileName, InputFiles inputs, long split, bool force)
         {
-            ArgumentNullException.ThrowIfNull(fileName);
-            if (string.IsNullOrEmpty(fileName))
-                throw new ArgumentException(AppResources.FileOpenError_EmptyName, nameof(fileName));
+            ThrowHelper.ThrowIfNullOrEmptyMsg(AppResources.FileOpenError_EmptyName, fileName);
             m_InputFiles = inputs;
 
             m_Template = new Template(fileName);

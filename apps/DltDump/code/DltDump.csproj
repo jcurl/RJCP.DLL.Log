@@ -53,6 +53,7 @@
     <ProjectReference Include="..\..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
     <ProjectReference Include="..\..\..\..\commandline\code\RJCP.Core.CommandLine.csproj" />
+    <ProjectReference Include="..\..\..\..\environment\SysCompat\RJCP.Core.SysCompat.csproj" />
     <ProjectReference Include="..\..\..\..\environment\Environment\RJCP.Environment.csproj" />
     <ProjectReference Include="..\..\..\..\crashreporter\CrashReporter\RJCP.Diagnostics.CrashReporter.csproj" />
     <ProjectReference Include="..\..\..\..\trace\Trace\RJCP.Diagnostics.Trace.csproj" />
