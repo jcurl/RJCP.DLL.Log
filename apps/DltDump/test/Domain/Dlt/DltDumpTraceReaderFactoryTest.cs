@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.Dlt
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
     using Domain.OutputStream;
@@ -46,11 +47,17 @@
             0xFF, 0xFF,                 // UDP Length
             0x00, 0x00,                 // UDP checksum (incorrect, but ignored)
         };
+        private readonly static string PcapLocalTime =
+            DateTimeOffset.FromUnixTimeSeconds(0x5F191188).UtcDateTime
+                .ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
         private readonly static byte[] StorageHeader = new byte[] {
             0x44, 0x4C, 0x54, 0x01,     // DLT1
             0xB7, 0xA8, 0xBB, 0x61, 0x20, 0xA0, 0x03, 0x00, // Time stamp
             0x45, 0x43, 0x55, 0x31      // ECU
         };
+        private readonly static string StorageHdrLocalTime =
+            DateTimeOffset.FromUnixTimeSeconds(0x61BBA8B7).UtcDateTime
+                .ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
         private readonly static byte[] SerialHeader = new byte[] { 0x44, 0x4C, 0x53, 0x01 };
         private readonly static byte[] VerbosePayload = new byte[] {
             0x3D,                       // HTYP
@@ -203,7 +210,7 @@
             using (Stream stream = GetTestStream(InputFormat.File, TestLineType.Verbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2021/12/16 21:59:35.237600 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+                Assert.That(line.ToString(), Is.EqualTo($"{StorageHdrLocalTime}.237600 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
             }
         }
 
@@ -218,7 +225,7 @@
             using (Stream stream = GetTestStream(InputFormat.File, TestLineType.NonVerbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2021/12/16 21:59:35.237600 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+                Assert.That(line.ToString(), Is.EqualTo($"{StorageHdrLocalTime}.237600 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
             }
         }
 
@@ -252,7 +259,7 @@
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 Assert.That(await reader.GetLineAsync(), Is.Null);
                 DltTraceLineBase line = output.Lines[0].Line;
-                Assert.That(line.ToString(), Is.EqualTo("2021/12/16 21:59:35.237600 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+                Assert.That(line.ToString(), Is.EqualTo($"{StorageHdrLocalTime}.237600 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
             }
         }
 
@@ -270,7 +277,7 @@
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 Assert.That(await reader.GetLineAsync(), Is.Null);
                 DltTraceLineBase line = output.Lines[0].Line;
-                Assert.That(line.ToString(), Is.EqualTo("2021/12/16 21:59:35.237600 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+                Assert.That(line.ToString(), Is.EqualTo($"{StorageHdrLocalTime}.237600 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
             }
         }
 
@@ -714,7 +721,7 @@
             using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.Verbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
             }
         }
 
@@ -730,7 +737,7 @@
             using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.NonVerbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
             }
         }
 
@@ -766,7 +773,7 @@
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 Assert.That(await reader.GetLineAsync(), Is.Null);
                 DltTraceLineBase line = output.Lines[0].Line;
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
             }
         }
 
@@ -785,7 +792,7 @@
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 Assert.That(await reader.GetLineAsync(), Is.Null);
                 DltTraceLineBase line = output.Lines[0].Line;
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
             }
         }
 
@@ -820,7 +827,7 @@
             using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.Verbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info verbose 1 Message 00"));
             }
         }
 
@@ -838,7 +845,7 @@
             using (Stream stream = GetTestStream(InputFormat.Pcap, TestLineType.NonVerbose)) {
                 ITraceReader<DltTraceLineBase> reader = await factory.CreateAsync(stream);
                 DltTraceLineBase line = await reader.GetLineAsync();
-                Assert.That(line.ToString(), Is.EqualTo("2020/07/23 06:26:48.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
+                Assert.That(line.ToString(), Is.EqualTo($"{PcapLocalTime}.638351 1.2310 127 ECU1 APP1 CTX1 50 log info non-verbose 1 [1] Message 01"));
             }
         }
 

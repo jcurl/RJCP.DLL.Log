@@ -146,6 +146,11 @@ Each frame follows the Link-layer type. It is formatted as:
 A frame is only decoded if the captured packet length and the original packet
 length are the same. Else data is lost and the frame is ignored.
 
+The seconds value is a 32-bit unsigned integer that represents the number of
+seconds that have elapsed since 1970-01-01 00:00:00 UTC, and the microseconds or
+nanoseconds value represents the number of microseconds or nanoseconds that have
+elapsed since that seconds.
+
 ## 3. PCAP-NG Format
 
 This format is much more detailed and supports many more recording formats, but
