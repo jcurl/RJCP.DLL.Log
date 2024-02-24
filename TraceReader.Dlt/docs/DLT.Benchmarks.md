@@ -57,16 +57,16 @@ Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical co
 
 Description of the test results:
 
-* `DltDecoderBenchmark.*`: Decodes **ten** normal DLT packets with a storage
+- `DltDecoderBenchmark.*`: Decodes **ten** normal DLT packets with a storage
   header that are already in memory. Each message is a normal verbose DLT
   message with a single argument.
-  * `DecodeStringFilePackets`: Decodes a single argument of string type which is
+  - `DecodeStringFilePackets`: Decodes a single argument of string type which is
     UTF8 little endian.
-  * `DecodeIntFilePackets`: Decodes a single argument of an integer 32-bit which
+  - `DecodeIntFilePackets`: Decodes a single argument of an integer 32-bit which
     is little endian.
-  * For this particular test, arguments are not decoded, and so should show
+  - For this particular test, arguments are not decoded, and so should show
     equivalent results.
-* `DltDecoderArgBenchmark.*`: These decode a single argument. This can be used
+- `DltDecoderArgBenchmark.*`: These decode a single argument. This can be used
   to estimate how much time it takes to decode a single trace line when the
   argument is present. To estimate how long it takes to decode a line with the
   argument, take the `DltDecoderBenchmark` and divide by 10, subtract the

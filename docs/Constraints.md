@@ -136,9 +136,9 @@ Constraint c = new Constraint().Not.IsEmpty();
 Calculations of the logical expression are done from left to right and only
 calculates constraints as required. That means:
 
-* For `OR`, if the left is `TRUE`, the right is skipped as the result is known
+- For `OR`, if the left is `TRUE`, the right is skipped as the result is known
   to be `TRUE`.
-* For `AND`, if the left is `FALSE`, the right is skipped as the result is known
+- For `AND`, if the left is `FALSE`, the right is skipped as the result is known
   to be `FALSE`.
 
 #### 1.2.2. Side Effects in Constraints
@@ -248,14 +248,14 @@ trees.
 
 Using IL brings quite a few benefits for performance:
 
-* IL is a stack based language. Binary expression trees can naturally generate
+- IL is a stack based language. Binary expression trees can naturally generate
   expressions that use a stack for their evaluation. Thus there is no need to
   keep stack data structures, use the model of IL directly.
-* Parsing through the binary expression tree only needs to be done once to
+- Parsing through the binary expression tree only needs to be done once to
   generate the IL. Then when invoking the check, the instructions pass from top
   to bottom in order, allowing for smaller code and inlining. Branching occurs
   based on the previous result only if required.
-* All values can be cached and organized ahead of time for the fastest possible
+- All values can be cached and organized ahead of time for the fastest possible
   memory accesses.
 
 #### 2.4.3. Dynamic Method Preparation
@@ -619,11 +619,11 @@ cases that fail.
 
 ## 3. Work to be Done
 
-* The number of nodes for the Check functions can be reduced, by counting only
+- The number of nodes for the Check functions can be reduced, by counting only
   the number of check nodes. This means we can reduce memory requirements a
   little bit.
-* To implement the simplest `AND`, `OR`, `NOT` operations without optimizations
+- To implement the simplest `AND`, `OR`, `NOT` operations without optimizations
   and test the speed.
-* To figure out how to implement the optimization. I don't think we'll be able
+- To figure out how to implement the optimization. I don't think we'll be able
   to emit the IL directly as we did before, but need to generate now a list that
   keeps tracks of the labels and can relabel based on the optimizations.

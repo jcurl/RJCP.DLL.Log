@@ -11,8 +11,8 @@ The extra steps for generating and committing the diagrams is necessary to allow
 for the widest audience when reviewing documentation. Prerendered diagrams are
 preferred as:
 
-* Proxies don't work as they pull in the diagram defined by HEAD in Git
-* they solve the problem and are committed at the same time as the documentation
+- Proxies don't work as they pull in the diagram defined by HEAD in Git
+- they solve the problem and are committed at the same time as the documentation
   itself, so there is consistency.
-* they are viewed directly in the browser for GitHub and BitBucket
-* they are rendered directly using Visual Studio Code, to preview Markdown.
+- they are viewed directly in the browser for GitHub and BitBucket
+- they are rendered directly using Visual Studio Code, to preview Markdown.

@@ -27,10 +27,10 @@ R20-11 and earlier.
 There are three trace writers for DLT. A trace writer prepares a packet and
 ensures that a write is done as a single packet.
 
-* TCP based streams, where a DLT packet starts with the standard header.
-* Storage files, where a header based on the ECU and the recorded time stamp is
+- TCP based streams, where a DLT packet starts with the standard header.
+- Storage files, where a header based on the ECU and the recorded time stamp is
   recorded.
-* Serial based streams.
+- Serial based streams.
 
 ### 1.1. Purpose of the DLT Trace Writer
 
@@ -42,13 +42,13 @@ packets to the stream interfaces.
 
 The following use cases are considered:
 
-* Take a decoded trace line (verbose or non-verbose) and write, where possible,
+- Take a decoded trace line (verbose or non-verbose) and write, where possible,
   as a verbose message.
-* Data will be taken from the trace line and serialized to a temporary buffer,
+- Data will be taken from the trace line and serialized to a temporary buffer,
   which is then written. The buffer is fixed, up to 64kB. A trace line would
   result in a single write call to the stream.
-* Arguments as provided by the DLT Trace Decoeder should be supported.
-* It should be possible to extend functionality based on custom arguments.
+- Arguments as provided by the DLT Trace Decoder should be supported.
+- It should be possible to extend functionality based on custom arguments.
 
 ## 2. Design for the Writer
 
@@ -63,9 +63,9 @@ This will allow a common implementation for writing DLT packets, which can be
 extended to prepend appropriate headers. The encoder would be the same for all
 the various writers:
 
-* Network Writer (no headers)
-* File Writer (with a storage header)
-* Serial Writer (with a serial header)
+- Network Writer (no headers)
+- File Writer (with a storage header)
+- Serial Writer (with a serial header)
 
 and this is independent of how to write the individual packets, which parses the
 trace line, and the arguments in the trace line to serialize the data.
@@ -154,8 +154,8 @@ The following are not listed in the current standard, or marked as deprecated:
 The following are observed implementations that are implemented in Covesa DLT,
 but not documented in the AutoSAR PRS.
 
-* ¹: This is made obsolete in PRS 1.3.0 and later
-* ²: Was renamed in later version of the standard, but the message structure
+- ¹: This is made obsolete in PRS 1.3.0 and later
+- ²: Was renamed in later version of the standard, but the message structure
   remains the same.
 
 | Service Id | Name               | Request | Response |
@@ -171,11 +171,11 @@ The `ControlArgEncoder` shall use an array based lookup from mapping the service
 identifier of the control messages to the encoder. This allows for a very fast
 O(1) lookup scheme. The sequence is:
 
-* If the message is an instance of `ControlResponse` look up the service
+- If the message is an instance of `ControlResponse` look up the service
   identifier in array of encoders for control responses.
-* If the message is an instance of `ControlRequest`, similarly, lookup up the
+- If the message is an instance of `ControlRequest`, similarly, lookup up the
   service identifier for control requests.
-* In specific cases, handle all others. There is only one other known
+- In specific cases, handle all others. There is only one other known
   control message: `DltTimeMarker`.
 
 If further messages need to be added, the `ControlArgEncoder` can handle the

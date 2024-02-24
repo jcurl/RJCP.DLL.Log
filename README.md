@@ -17,6 +17,10 @@ in .NET Core.
 
 ## 1. Further Documentation
 
+[Introduction to RJCP.Diagnostics.Log](TraceReader.Core/README.md)
+
+[The DLT RJCP.Diagnostics.Log.Dlt Reader](TraceReader.Dlt/README.md)
+
 See [Documentation and Design](docs/README.md).
 
 ## 2. Libraries
@@ -50,12 +54,12 @@ with the goal of just reading and writing the files. As such, speed is of
 concern, buffering is removed where possible, threading is reduced to using
 asynchronous and awaitable methods instead.
 
-* The reader and writer are no longer using threads to try and prefetch data
+- The reader and writer are no longer using threads to try and prefetch data
   from streams. The original implementation would enumerate lines on the current
   thread, while a background thread would try to decode. This introduced
   concurrency issues, especially with call backs and made implementation
   difficult.
-* Use modern .NET Core, along with C# Asynchronous I/O. Makes the code easier to
+- Use modern .NET Core, along with C# Asynchronous I/O. Makes the code easier to
   manage and readable.
 
 Some optimisations can certainly be done, but there is more responsibility (and

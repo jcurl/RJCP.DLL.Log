@@ -55,9 +55,9 @@ used asynchronously and would need to be wrapped).
 Factories also allow construction of the `MyTraceDecoder` and related objects to
 be better written:
 
-* Each step of construction can be more explicit, allowing for anything more
+- Each step of construction can be more explicit, allowing for anything more
   than just the simplest types of construction, and easier to read code;
-* Automatic detection of input file formats could be part of the factory, and
+- Automatic detection of input file formats could be part of the factory, and
   factories can be effectively nested.
 
 ### The Trace Reader and the Trace Decoder

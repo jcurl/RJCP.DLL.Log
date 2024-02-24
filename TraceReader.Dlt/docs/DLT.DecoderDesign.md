@@ -62,11 +62,11 @@ The decoder is based on the [DLT Format](DLT.Format.md).
 
 There are three trace decoders for DLT:
 
-* TCP based streams, where a DLT packet starts with the Standard Header
-* Storage files, where a DLT packet has a Storage Header describing the time
+- TCP based streams, where a DLT packet starts with the Standard Header
+- Storage files, where a DLT packet has a Storage Header describing the time
   stamp of each DLT packet when it was recorded.
-* Serial based streams, which are like TCP streams, but each packet is prepended
-  with the header `DLS\1`. This format is used by the Genivi DLT Viewer, but it
+- Serial based streams, which are like TCP streams, but each packet is prepended
+  with the header `DLS\1`. This format is used by the COVESA DLT Viewer, but it
   is not specified by AutoSAR of itself.
 
 ![DltTraceDecoder](out/diagrams/DLT.DecoderClass/DLT.DecoderClass.svg)
@@ -84,23 +84,23 @@ determined by analysing the content). As the packet is decoded, the
 The following use cases are considered of the trace decoder, that influences its
 design:
 
-* It shall try to be as fast as possible. Decoding packets shall be done in
+- It shall try to be as fast as possible. Decoding packets shall be done in
   place, with copy operations only occurring as necessary (copy operations are
   needed to cache a partial line, ready for the next decode method call).
-* Other decoders can be derived from this decoder. One example would be to
+- Other decoders can be derived from this decoder. One example would be to
   calculate statistics. That means a new trace decoder, derived from
   `DltTraceDecoderBase` and related classes, may provide its own implementation
   of `IDltLineBuilder` that returns a different object type than `DltTraceLine`
   (not shown in the diagram above, but constructed by the `DltLineBuilder`).
-* It may be possible to inject functionality into the `DltTraceDecoderBase`.
+- It may be possible to inject functionality into the `DltTraceDecoderBase`.
   These are called "filters", which are similar to plugins. The filter may parse
   the contents of the line, write the packet to a new stream, insert or modify
   data. It may take a raw packet and decode it based on a new format such as:
-  * Decode file uploads within the DLT file;
-  * Decode data streams, such as IPC and byte data;
-  * etc.
-* Support DLT encapsulated in other protocols, such as PCAP.
-* Make it easy to write an encoder later. This impacts the design of the
+  - Decode file uploads within the DLT file;
+  - Decode data streams, such as IPC and byte data;
+  - etc.
+- Support DLT encapsulated in other protocols, such as PCAP.
+- Make it easy to write an encoder later. This impacts the design of the
   `DltTraceLine`.
 
 ### 1.3. Identifying DLT Packets
@@ -131,29 +131,29 @@ The raw format assumes there is no data loss. This is generally incorrect, and
 is observed that DLT streams can still be corrupted requiring some heuristics to
 determine the start of each packet. Reasons for loss of data are:
 
-* Incorrectly written software, which sends the DLT streams. Often buffer
+- Incorrectly written software, which sends the DLT streams. Often buffer
   overflows in the applications that send streams lost data and then lose
   synchronicity with the stream.
-* The transport may lose packets. TCP generally doesn't, but there is no such
+- The transport may lose packets. TCP generally doesn't, but there is no such
   guarantee for UDP streams.
-* The AutoSAR standard doesn't specify the transport, which may also be the
+- The AutoSAR standard doesn't specify the transport, which may also be the
   UART, which is known to lose (or insert) individual bytes within the stream.
 
 As such, when synchronizing with standard streams, the assumptions are:
 
-* The packet is first assumed to be correct. The length field is obtained, which
+- The packet is first assumed to be correct. The length field is obtained, which
   is an unsigned 16-bit value. Parsing can only start when enough bytes have
   been received. Should the stream be closed before all bytes are received, then
   one must start parsing, with the assumption of data corruption (e.g. there may
   be valid packets).
-* In practice, the length of the DLT packet should be the same as the length of
+- In practice, the length of the DLT packet should be the same as the length of
   the headers and the arguments as part of the payload.
-  * For verbose messages, this means implementing the specification to parse all
+  - For verbose messages, this means implementing the specification to parse all
     argument types;
-  * For non-verbose messages, this means having a valid file (usually a Fibex
+  - For non-verbose messages, this means having a valid file (usually a Fibex
     file) that additionally describes the dynamic data which is part of the
     payload.
-* One can only know the length of the payload, if the payload is known. If an
+- One can only know the length of the payload, if the payload is known. If an
   unknown control message, or an unknown argument type is provided, then the
   length of an argument is unknown and heuristics cannot be applied. By
   extension, if the message is non-verbose, the length of the data is unknown if
@@ -187,10 +187,10 @@ for brevity.
 If when entering the `Decode` method the start of the packet start should be
 scanned. This depends on the header:
 
-* *TCP*: There is no header. Thus, no scanning is required, we have to assume
+- *TCP*: There is no header. Thus, no scanning is required, we have to assume
   that we're at the start of the packet.
-* *Storage Header*: Scan for `DLT\1` to identify the start of the packet.
-* *Serial Header*: Scan for `DLS\1` to identify the start of the packet.
+- *Storage Header*: Scan for `DLT\1` to identify the start of the packet.
+- *Serial Header*: Scan for `DLS\1` to identify the start of the packet.
 
 If there is no cached data, then simply scan from the input buffer.
 
@@ -204,10 +204,10 @@ may be split between the two buffers).
 
 The standard header has an offset in the frame, depending on the format:
 
-* *TCP*: It is at the start, so the offset is zero
-* *Storage Header*: The storage header has a fixed size of 16 bytes, including
+- *TCP*: It is at the start, so the offset is zero
+- *Storage Header*: The storage header has a fixed size of 16 bytes, including
   `DLT\1`.
-* *Serial Header*: The standard header has an offset of 4 bytes, immediately
+- *Serial Header*: The standard header has an offset of 4 bytes, immediately
   after the `DLS\1`.
 
 If the input has not enough data, i.e. less than the offset plus the length of
@@ -231,11 +231,11 @@ the packet and calculate the minimum length of the packet.
 
 The minimum length is expected to be:
 
-* 4 bytes for the standard header, to the length
-* 4 bytes for the ECU ID if present (WEID)
-* 4 bytes for the Session ID if present (WSID)
-* 4 bytes for the Time Stamp if present (WTMS)
-* 10 bytes for the extended header if present (UEH)
+- 4 bytes for the standard header, to the length
+- 4 bytes for the ECU ID if present (WEID)
+- 4 bytes for the Session ID if present (WSID)
+- 4 bytes for the Time Stamp if present (WTMS)
+- 10 bytes for the extended header if present (UEH)
 
 The length field in the packet does not include the storage header or the serial
 marker.
@@ -280,10 +280,10 @@ start of the frame simpler.
 Once the Standard Header has been identified, the correct number of bytes are
 available, the packet can now be decoded:
 
-* The HTYP field of the Standard Header (ECU, SEID, TMSP) if available.
-* The extended header if UEH is set. The extended header is always expected to
+- The HTYP field of the Standard Header (ECU, SEID, TMSP) if available.
+- The extended header if UEH is set. The extended header is always expected to
   be present for verbose messages and control messages
-* The arguments if the UEH is set.
+- The arguments if the UEH is set.
 
 ##### 1.4.5.1. Non-Verbose Messages
 
@@ -370,9 +370,9 @@ A summary of the bits, as copied from the AutoSAR PRS
 | TRAI          |       |       |       |   X   |
 | STRU          |       |   O   |       |       |
 
-* `X` - Mandatory to set
-* `O` - Optional to set
-* Others will be ignored
+- `X` - Mandatory to set
+- `O` - Optional to set
+- Others will be ignored
 
 ### 2.2. Decoding Arguments
 
@@ -441,7 +441,7 @@ Software supports these argument types and formats
 | Raw           | -     | -        | -      | -      | -        | No   | A byte array, shown as a hex string          |
 | String        | -     | -        | -      | -      | -        | No   |                                              |
 
-* †: This argument is returned as an `UnknownDltArg`. Thus, while the argument
+- †: This argument is returned as an `UnknownDltArg`. Thus, while the argument
   cannot be represented as a native type, it is still decoded and the byte
   contents are returned.
 
@@ -463,7 +463,7 @@ optimized way.
 
 #### 2.4.2. Decoding Integer Types
 
-The Genivi DLT implementation also provides coding support for binary and
+The Covesa DLT implementation also provides coding support for binary and
 hexadecimal for unsigned integer types, which is supported by this decoder
 (signed integer types are not affected). The following coding bits are
 supported:
@@ -493,22 +493,22 @@ A control line can either be a control request (typically received from a device
 external to the application logging) or a control response, which is a response
 to a control request, or an unsolicited message (such as version information,
 logging level or a timing response). The timer response is a special purpose
-message implemented by the Genivi DLT Daemon, but not explicitly specified in
+message implemented by the COVESA DLT Daemon, but not explicitly specified in
 the AutoSAR PRS (it defines a timing message differently).
 
 The parts of a DLT message that make up a control message are:
 
-* The standard header includes the extended header
-* The extended header has the message info field MSTP which is the value of 3
-  * `1` is a control request
-  * `2` is a control response
-  * `3` is a time message
-  * All other values are considered an error and result in a corrupted packet.
-* The argument count (NOAR) in the extended header is expected to be zero and is
+- The standard header includes the extended header
+- The extended header has the message info field MSTP which is the value of 3
+  - `1` is a control request
+  - `2` is a control response
+  - `3` is a time message
+  - All other values are considered an error and result in a corrupted packet.
+- The argument count (NOAR) in the extended header is expected to be zero and is
   ignored.
-* The verbose flag (VERB) in the extended header is expected to be zero and is
+- The verbose flag (VERB) in the extended header is expected to be zero and is
   ignored.
-* The payload immediately after is the control message. The contents of the
+- The payload immediately after is the control message. The contents of the
   control message are specified by the AutoSAR PRS. In use implementations do
   not implement precisely to the AutoSAR standards, and so some messages contain
   more data than is specified. In these specific cases, the data will be parsed,
@@ -642,11 +642,11 @@ The following are not listed in the current standard, or marked as deprecated:
 | `0x1D`     | GetUseTimestamp¹             |    X    |    X     | SWS 4.2.2 |
 | `0x1E`     | GetUseExtendedHeader¹        |    X    |    X     | SWS 4.2.2 |
 
-The following are observed implementations that are implemented in Genivi DLT,
+The following are observed implementations that are implemented in COVESA DLT,
 but not documented in the AutoSAR PRS.
 
-* ¹: This is made obsolete in PRS 1.3.0 and later
-* ²: Was renamed in later version of the standard, but the message structure
+- ¹: This is made obsolete in PRS 1.3.0 and later
+- ²: Was renamed in later version of the standard, but the message structure
   remains the same.
 
 | Service Id | Name               | Request | Response |
@@ -659,10 +659,10 @@ but not documented in the AutoSAR PRS.
 #### 3.3.1. Variations to DLT Viewer 2.19.0 STABLE
 
 This section highlights some of the output differences between the request and
-response objects implemented by this library compared to the Genivi DLT Viewer
+response objects implemented by this library compared to the COVESA DLT Viewer
 2.21.3, 15th December 2021 (commit a3c77c3d9bd7523d8dc4f6401109d29f973b01ba).
 
-| Service | Type     | Genivi DLT-Viewer                          | TraceReader.DLT                                                   |
+| Service | Type     | COVESA DLT-Viewer                          | TraceReader.DLT                                                   |
 | ------- | -------- | ------------------------------------------ | ----------------------------------------------------------------- |
 | `0x01`  | Request  | `[set_log_level] <bytes>`                  | `[set_log_level] <level> APP1 (CTX1) COM1`                        |
 | `0x02`  | Request  | `[set_trace_status] <bytes>`               | `[set_trace_status] <status> APP1 (CTX1) COM1`                    |
@@ -899,12 +899,12 @@ It is expected that the ECU is at the top of the FIBEX file.
 
 The COVESA DLT-Viewer obtains the `IFrame` for a given message:
 
-* In reading in the FIBEX file, a global mapping of the message identifier to
+- In reading in the FIBEX file, a global mapping of the message identifier to
   the frame is created, independent of the application and context identifier.
   If the message emitted by the ECU does not contain an extended header with
   this information, then this global mapping is used. i.e. only the message
   identifier is used to obtain the frame in this case.
-* A second mapping is created, that for each frame is grouped by each unique
+- A second mapping is created, that for each frame is grouped by each unique
   combination of application and context identifier. If a message to decode
   contains an extended header, thus meaning that the application and context
   identifier is defined, then this second mapping is used to find the frame, and
@@ -949,8 +949,8 @@ To support the extensions, which differ in behaviour from the DLT Viewer, there
 will be a `FibexOptions` enumeration (as flags, only required when loading the
 FIBEX file):
 
-* `WithEcuId`: Uses the extensions for the ECU Identifier.
-* `WithoutExtHeader`: Uses the extensions to ignore the application and context
+- `WithEcuId`: Uses the extensions for the ECU Identifier.
+- `WithoutExtHeader`: Uses the extensions to ignore the application and context
   identifier.
 
 Based on the options, it shall load the Fibex file and create the in-memory data
@@ -960,11 +960,11 @@ structures as required.
 
 Only one of the data structures is used by `FibexFile`
 
-* `FrameMapDefault`: Same behaviour as COVESA DLT Viewer
-* `FrameMapSimple`: Only map the message identifier. Useful if it's known that
+- `FrameMapDefault`: Same behaviour as COVESA DLT Viewer
+- `FrameMapSimple`: Only map the message identifier. Useful if it's known that
   logs don't contain application and context identifier information.
-* `FrameMapEcu`: Map each ECU to a `FrameMapDefault`
-* `FrameMapEcuSimple`: Map each ECU to a `FrameMapSimple`
+- `FrameMapEcu`: Map each ECU to a `FrameMapDefault`
+- `FrameMapEcuSimple`: Map each ECU to a `FrameMapSimple`
 
 The default options would be `FrameMapDefault`, the most full-featured is
 `FrameMapEcu`.
@@ -1001,12 +1001,12 @@ The class `NonVerboseArgDecoder` contains the mapping for a PDU string type, to
 a decoder in a binary stream to create the argument type. The typical steps to
 extend the decoder for your own type would be:
 
-* Create a new `MyTypeArg : IDltArg`
-* Create a new `MyTypeArgDecoder : INonVerboseArgDecoder`
-* Create a new `MyNonVerboseArgDecoder : NonVerboseArgDecoder` which registers
+- Create a new `MyTypeArg : IDltArg`
+- Create a new `MyTypeArgDecoder : INonVerboseArgDecoder`
+- Create a new `MyNonVerboseArgDecoder : NonVerboseArgDecoder` which registers
   the PDU string to the new `INonVerboseArgDecoder`
-  * You can also unregister the decoders if you don't want it.
-* Pass the `MyNonVerboseArgDecoder` to `NonVerboseDltDecoder` when instantiating
+  - You can also unregister the decoders if you don't want it.
+- Pass the `MyNonVerboseArgDecoder` to `NonVerboseDltDecoder` when instantiating
   it.
 
 ## 5. Trace Lines
@@ -1018,8 +1018,8 @@ Other trace lines may be generated as required from the decoder.
 It is important to recognize here that a DLT trace line, and a DLT Control trace
 line are different.
 
-* A Control Trace Line doesn't have arguments
-* A DLT Trace Line may contain arguments, either decoded from the packet data,
+- A Control Trace Line doesn't have arguments
+- A DLT Trace Line may contain arguments, either decoded from the packet data,
   or from dynamic data and an external file describing how to parse the dynamic
   data.
 

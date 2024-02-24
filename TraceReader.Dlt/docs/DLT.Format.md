@@ -7,10 +7,10 @@ DLT format should be obtained by the relevant specifications.
 
 The DLT v1 packet consists of:
 
-* A storage header (for files recorded from a DLT talker)
-* A standard header
-* An extended header
-* A payload
+- A storage header (for files recorded from a DLT talker)
+- A standard header
+- An extended header
+- A payload
 
 The storage header is optional, and contains information on when the data was
 recorded. It is the format for on disk DLT logs.

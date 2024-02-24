@@ -38,23 +38,23 @@ packet.
 In reality, one cannot assume that each packet is perfectly written. The
 following issues are well known:
 
-* Serial port transport, may result in bit flips, bytes lost, or occasionally
+- Serial port transport, may result in bit flips, bytes lost, or occasionally
   bytes are injected (typically 0xFF or 0x00). This changes the length or the
   meaning of the content of the packet. The length of the packet is no longer
   reliable.
-* Encapsulation within UDP packets may result in larger chunks of data being
+- Encapsulation within UDP packets may result in larger chunks of data being
   lost, up to 1472 bytes. If a UDP packet is lost, and the DLT packets are
   fragmented over multiple UDP packets (as opposed to IPv4 fragmentation),
   synchronisation must occur
-* Buffer handling errors in implementations when sending data may result in
+- Buffer handling errors in implementations when sending data may result in
   corruption of the DLT packets before the data is even sent. In this case, an
   arbitrary amount of data may be lost anywhere in the stream, even a TCP stream
   which would otherwise be considered reliable.
 
 Due to the lack of the following in the packet description:
 
-* there being no well defined boundaries between the packets; or
-* frame checksums to test the integrity of the data being decoded
+- there being no well defined boundaries between the packets; or
+- frame checksums to test the integrity of the data being decoded
 
 a decoder cannot reliably decode data in a stream after an error has occurred.
 How it does this is completely implementation dependent.
@@ -81,13 +81,13 @@ byte, and is tried again.
 
 The fields that can be used initially are:
 
-* The DLT version is expected to be 1. If it isn't, it is assumed data
+- The DLT version is expected to be 1. If it isn't, it is assumed data
   corruption. If a new version is invented, this decoder either shouldn't be
   used, or the chances of recovery is reduced depending on how the new protocol
   version is defined (if it fixes these problems or not by defining at least a
   frame checksum or some other similar marker to determine the validity of a
   packet once it's decoded).
-* The minimum length of a packet must be at least the minimum length as defined
+- The minimum length of a packet must be at least the minimum length as defined
   by the standard header, and the presence of an extended header if it should be
   present. If the packet is less than the protocol bits specify, then the packet
   is invalid.
@@ -115,9 +115,9 @@ For example, let's assume that the first byte of this message is lost.
 
 Consider now the first byte is lost, as could be on a serial stream.
 
-* `7f` - Version = 3 which is invalid
-* `00` - Version = 0 which is invalid
-* `28` - Version = 1 which is now valid. The counter is now 0x45, length is 0x4355 bytes.
+- `7f` - Version = 3 which is invalid
+- `00` - Version = 0 which is invalid
+- `28` - Version = 1 which is now valid. The counter is now 0x45, length is 0x4355 bytes.
 
 We've now found a packet that has the correct version, a valid length. We might
 now discard a significant amount of data which prevents analysis, simply through
@@ -137,9 +137,9 @@ This means that a parser must have as much knowledge about the protocol as
 possible, and assume that every implementation implements this protocol and
 doesn't introduce its own errors. Possible additional heuristics include:
 
-* Parse extra fields, such as the Message Info;
-* For verbose messages, check the type info for each argument
-* Sum the lengths of each argument and ensure that it matches also the packet
+- Parse extra fields, such as the Message Info;
+- For verbose messages, check the type info for each argument
+- Sum the lengths of each argument and ensure that it matches also the packet
   length
 
 If any writer doesn't conform properly to the DLT PRS standard, decoders have
@@ -220,7 +220,7 @@ indicate the presence of a new protocol.
 By extending the last two bytes of the packet as such, existing implementations
 with the DLT version 1 could still be made to work, as they could effectively
 ignore the last two bytes, depending on their heuristics (for example, the
-Genivi DLT viewer does not check the length of the packet that it matches the
+COVESA DLT viewer does not check the length of the packet that it matches the
 length of all the arguments).
 
 Then for more advanced implementations that recognise the next version, they
@@ -242,9 +242,9 @@ Negatively, this proposal necessarily increases the size of a DLT message, which
 may not be desirable for small embedded devices that are memory constrained when
 sending logs. The smallest possible non-verbose packet is:
 
-* 8 bytes containing only a message identifier that is mapped to a static string
-* 10 bytes if a 16-bit integer is transmitted in addition as dynamic data
-* add 4 bytes if a timestamp when that message is transmitted is needed (which
+- 8 bytes containing only a message identifier that is mapped to a static string
+- 10 bytes if a 16-bit integer is transmitted in addition as dynamic data
+- add 4 bytes if a timestamp when that message is transmitted is needed (which
   is very common).
 
 Arguably, the minimum useful size of a DLT non-verbose message is 14 bytes,
