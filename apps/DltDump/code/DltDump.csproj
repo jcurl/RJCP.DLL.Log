@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net60</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
     <Configurations>Debug;Release</Configurations>
@@ -42,13 +42,24 @@
     <RevisionControlStrict>true</RevisionControlStrict>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.4" PrivateAssets="all" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RJCP.MSBuildTasks" Version="0.2.4" PrivateAssets="all" />
     <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.495" PrivateAssets="all" />
     <ProjectReference Include="..\..\..\TraceReader.Core\TraceReader\RJCP.Diagnostics.Log.csproj" />
     <ProjectReference Include="..\..\..\TraceReader.Dlt\DltTraceReader\RJCP.Diagnostics.Log.Dlt.csproj" />
