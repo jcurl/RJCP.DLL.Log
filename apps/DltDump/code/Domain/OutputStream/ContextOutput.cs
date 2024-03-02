@@ -29,8 +29,8 @@
         {
             ArgumentNullException.ThrowIfNull(filter);
             ArgumentNullException.ThrowIfNull(output);
-            if (beforeContext < 0) throw new ArgumentOutOfRangeException(nameof(beforeContext));
-            if (afterContext < 0) throw new ArgumentOutOfRangeException(nameof(afterContext));
+            ThrowHelper.ThrowIfNegative(beforeContext);
+            ThrowHelper.ThrowIfNegative(afterContext);
 
             m_Context = new Context(filter, beforeContext, afterContext);
             m_Output = output;

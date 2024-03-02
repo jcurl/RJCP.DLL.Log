@@ -28,8 +28,8 @@
         /// </exception>
         public DltTcpStream(string hostname, int port)
         {
-            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(AppResources.InfraTcpStreamInvalidHostName, hostname);
-            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(hostname, AppResources.InfraTcpStreamInvalidHostName);
+            ThrowHelper.ThrowIfNotBetween(port, 1, 65535);
 
             m_HostName = hostname;
             m_Port = port;

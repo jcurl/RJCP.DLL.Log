@@ -62,7 +62,7 @@
         /// <exception cref="ArgumentException"><paramref name="fileName"/> is empty.</exception>
         protected OutputBase(string fileName, InputFiles inputs, long split, bool force)
         {
-            ThrowHelper.ThrowIfNullOrEmptyMsg(AppResources.FileOpenError_EmptyName, fileName);
+            ThrowHelper.ThrowIfNullOrEmptyMsg(fileName, AppResources.FileOpenError_EmptyName);
             m_InputFiles = inputs;
 
             m_Template = new Template(fileName);

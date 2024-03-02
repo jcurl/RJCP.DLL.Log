@@ -32,8 +32,8 @@
         /// </exception>
         public TcpClientStream(string hostname, int port)
         {
-            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(AppResources.InfraTcpStreamInvalidHostName, hostname);
-            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(hostname, AppResources.InfraTcpStreamInvalidHostName);
+            ThrowHelper.ThrowIfNotBetween(port, 1, 65535);
 
             m_HostName = hostname;
             m_Port = port;
@@ -241,9 +241,7 @@
             get { return m_ReadTimeout; }
             set
             {
-                if (value is not Timeout.Infinite and < 0)
-                    throw new ArgumentOutOfRangeException(nameof(ReadTimeout));
-
+                ThrowHelper.ThrowIfLessThan(value, Timeout.Infinite, nameof(ReadTimeout));
                 m_ReadTimeout = value;
                 if (IsConnected) m_TcpStream.ReadTimeout = m_ReadTimeout;
             }
@@ -261,9 +259,7 @@
             get { return m_WriteTimeout; }
             set
             {
-                if (value is not Timeout.Infinite and < 0)
-                    throw new ArgumentOutOfRangeException(nameof(WriteTimeout));
-
+                ThrowHelper.ThrowIfLessThan(value, Timeout.Infinite, nameof(WriteTimeout));
                 m_WriteTimeout = value;
                 if (IsConnected) m_TcpStream.WriteTimeout = m_WriteTimeout;
             }
@@ -286,9 +282,7 @@
             get { return m_DisconnectTimeout; }
             set
             {
-                if (value is not Timeout.Infinite and < 0)
-                    throw new ArgumentOutOfRangeException(nameof(DisconnectTimeout));
-
+                ThrowHelper.ThrowIfLessThan(value, Timeout.Infinite, nameof(DisconnectTimeout));
                 m_DisconnectTimeout = value;
             }
         }

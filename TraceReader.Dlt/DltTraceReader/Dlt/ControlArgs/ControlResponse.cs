@@ -60,8 +60,7 @@
 
             protected set
             {
-                if (value < 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), "Status code cannot be negative");
+                ThrowHelper.ThrowIfNegative(value, nameof(Status));
                 m_Status = value;
             }
         }

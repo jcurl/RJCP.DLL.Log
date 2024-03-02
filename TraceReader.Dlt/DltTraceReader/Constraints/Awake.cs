@@ -19,8 +19,7 @@
         /// </exception>
         public Awake(int timeout)
         {
-            if (timeout < 0)
-                throw new ArgumentOutOfRangeException(nameof(timeout), "Awake time must be zero or greater milliseconds");
+            ThrowHelper.ThrowIfNegative(timeout);
             m_AwakeMilliseconds = timeout;
         }
 
@@ -35,10 +34,8 @@
         /// </exception>
         public Awake(TimeSpan timeout)
         {
-            if (timeout.TotalMilliseconds < 0)
-                throw new ArgumentOutOfRangeException(nameof(timeout), "Awake time must be zero or greater milliseconds");
-            if (timeout.TotalMilliseconds > int.MaxValue)
-                throw new ArgumentOutOfRangeException(nameof(timeout), "Awake time is too large");
+            ThrowHelper.ThrowIfNegative(timeout.TotalMilliseconds);
+            ThrowHelper.ThrowIfGreaterThan(timeout.TotalMilliseconds, int.MaxValue);
             m_AwakeMilliseconds = (int)timeout.TotalMilliseconds;
         }
 

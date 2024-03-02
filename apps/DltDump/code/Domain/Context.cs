@@ -51,10 +51,8 @@
         public Context(Constraint filter, int before, int after)
         {
             ArgumentNullException.ThrowIfNull(filter);
-            if (before < 0)
-                throw new ArgumentOutOfRangeException(nameof(before));
-            if (after < 0)
-                throw new ArgumentOutOfRangeException(nameof(after));
+            ThrowHelper.ThrowIfNegative(before);
+            ThrowHelper.ThrowIfNegative(after);
 
             m_Filter = filter;
             m_BeforeContext = before;

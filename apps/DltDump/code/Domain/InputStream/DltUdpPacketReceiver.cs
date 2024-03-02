@@ -31,7 +31,7 @@
         public DltUdpPacketReceiver(IPAddress endPoint, int port)
         {
             ArgumentNullException.ThrowIfNull(endPoint);
-            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            ThrowHelper.ThrowIfNotBetween(port, 1, 65535);
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(endPoint, port));
             Connection = string.Format("{0}://{1}:{2}", Scheme, endPoint, port);
@@ -62,7 +62,7 @@
         {
             ArgumentNullException.ThrowIfNull(bindAddr);
             ArgumentNullException.ThrowIfNull(multicastGroup);
-            if (port is <= 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
+            ThrowHelper.ThrowIfNotBetween(port, 1, 65535);
 
             m_Receiver = new UdpPacketReceiver(new IPEndPoint(bindAddr, port), multicastGroup);
             Connection = string.Format("{0}://{1}:{2}/?bindto={3}", Scheme, multicastGroup, port, bindAddr);

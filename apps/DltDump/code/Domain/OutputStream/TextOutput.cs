@@ -79,8 +79,7 @@
         /// </remarks>
         public void SetInput(string fileName, InputFormat inputFormat)
         {
-            if (!Enum.IsDefined(typeof(InputFormat), inputFormat))
-                throw new ArgumentOutOfRangeException(nameof(inputFormat));
+            ThrowHelper.ThrowIfEnumUndefined(inputFormat);
             if (inputFormat == InputFormat.Automatic)
                 throw new ArgumentOutOfRangeException(nameof(inputFormat));
 

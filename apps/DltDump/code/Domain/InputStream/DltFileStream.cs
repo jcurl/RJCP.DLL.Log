@@ -24,7 +24,7 @@
         /// </exception>
         public DltFileStream(string fileName)
         {
-            ThrowHelper.ThrowIfNullOrEmptyMsg(AppResources.FileOpenError_EmptyName, fileName);
+            ThrowHelper.ThrowIfNullOrEmptyMsg(fileName, AppResources.FileOpenError_EmptyName);
             Connection = fileName;
             m_FileName = fileName;
             InputFileName = Path.GetFileName(fileName);

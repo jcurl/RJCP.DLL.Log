@@ -52,7 +52,6 @@
         {
             ArgumentNullException.ThrowIfNull(stream);
             ArgumentNullException.ThrowIfNull(encoder);
-
             if (!stream.CanWrite) throw new ArgumentException("Stream is not writable", nameof(stream));
 
             m_Stream = stream;

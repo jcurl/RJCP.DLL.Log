@@ -40,7 +40,7 @@
             IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 0);
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -113,7 +113,7 @@
             IPAddress mc = IPAddress.Parse("224.0.1.1");
             Assert.That(() => {
                 _ = new UdpPacketReceiver(ep, mc);
-            }, Throws.TypeOf<ArgumentException>());
+            }, Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]

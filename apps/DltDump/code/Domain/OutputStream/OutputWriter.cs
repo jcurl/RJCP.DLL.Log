@@ -112,12 +112,8 @@
         public void Write(byte[] buffer, int offset, int count)
         {
             if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
-
+            ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
-            ArgumentNullException.ThrowIfNull(buffer);
-            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset), AppResources.InfraArgOutOfRangeNegative);
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), AppResources.InfraArgOutOfRangeNegative);
-            if (offset > buffer.Length - count) throw new ArgumentException(AppResources.InfraArgOutOfRangeIndex);
 
             try {
                 stream.Write(buffer, offset, count);

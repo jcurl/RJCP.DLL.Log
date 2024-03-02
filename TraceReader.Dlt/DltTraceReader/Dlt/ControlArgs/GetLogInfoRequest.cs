@@ -67,7 +67,7 @@
         /// </remarks>
         public GetLogInfoRequest(int options, string appId, string contextId, string comInterface)
         {
-            if (options < 0) throw new ArgumentOutOfRangeException(nameof(options), "Is a negative value");
+            ThrowHelper.ThrowIfNegative(options);
 
             Options = options;
             ApplicationId = appId ?? string.Empty;

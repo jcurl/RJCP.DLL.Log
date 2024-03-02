@@ -39,15 +39,9 @@
         public UdpPacketReceiver(IPEndPoint endPoint)
         {
             ArgumentNullException.ThrowIfNull(endPoint);
-
             if (endPoint.AddressFamily != AddressFamily.InterNetwork)
                 throw new ArgumentException(AppResources.InfraUdpReceiverInvalidFamily, nameof(endPoint));
-
-            // It's not possible to assign an EndPoint with a port of 65536 or larger, but we make it explicit anyway.
-            if (endPoint.Port is <= 0 or > 65535) {
-                string message = string.Format(AppResources.InfraUdpReceiverInvalidPort, endPoint.Port);
-                throw new ArgumentException(message, nameof(endPoint));
-            }
+            ThrowHelper.ThrowIfNotBetween(endPoint.Port, 1, 65535);
 
             if (IsMulticast(endPoint.Address)) {
                 m_BindAddress = new IPEndPoint(IPAddress.Any, endPoint.Port);
@@ -97,10 +91,7 @@
             }
 
             // It's not possible to assign an EndPoint with a port of 65536 or larger, but we make it explicit anyway.
-            if (bindAddr.Port is <= 0 or > 65535) {
-                string message = string.Format(AppResources.InfraUdpReceiverInvalidPort, bindAddr.Port);
-                throw new ArgumentException(message, nameof(bindAddr));
-            }
+            ThrowHelper.ThrowIfNotBetween(bindAddr.Port, 1, 65535);
 
             m_BindAddress = bindAddr;
             m_MulticastGroup = multicastGroup;

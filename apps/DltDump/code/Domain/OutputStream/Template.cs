@@ -156,7 +156,7 @@
         /// <exception cref="ArgumentException"><paramref name="variable"/> is empty.</exception>
         public bool ContainsVariable(string variable)
         {
-            ThrowHelper.ThrowIfNullOrEmptyMsg(AppResources.DomainTemplateEmptyVar, variable);
+            ThrowHelper.ThrowIfNullOrEmptyMsg(variable, AppResources.DomainTemplateEmptyVar);
             return m_Found.Contains(variable);
         }
 

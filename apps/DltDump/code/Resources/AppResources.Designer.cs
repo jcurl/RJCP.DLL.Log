@@ -259,15 +259,6 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Success loading all Fibex files..
-        /// </summary>
-        internal static string FibexApp_FibexLoaded {
-            get {
-                return ResourceManager.GetString("FibexApp_FibexLoaded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fibex File not Found {0}.
         /// </summary>
         internal static string FibexOpenError_NotFound {
@@ -421,24 +412,6 @@ namespace RJCP.App.DltDump.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The length and offset would exceed the boundaries of the array/buffer.
-        /// </summary>
-        internal static string InfraArgOutOfRangeIndex {
-            get {
-                return ResourceManager.GetString("InfraArgOutOfRangeIndex", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to may not be negative.
-        /// </summary>
-        internal static string InfraArgOutOfRangeNegative {
-            get {
-                return ResourceManager.GetString("InfraArgOutOfRangeNegative", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Collection is read only.
         /// </summary>
         internal static string InfraCollectionReadOnly {
@@ -453,60 +426,6 @@ namespace RJCP.App.DltDump.Resources {
         internal static string InfraDltInvalidFormat {
             get {
                 return ResourceManager.GetString("InfraDltInvalidFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to File not found.
-        /// </summary>
-        internal static string InfraFileNotFound {
-            get {
-                return ResourceManager.GetString("InfraFileNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hanging Indent must be zero or more.
-        /// </summary>
-        internal static string InfraFormatHangingIndentException {
-            get {
-                return ResourceManager.GetString("InfraFormatHangingIndentException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Indent must be zero or more.
-        /// </summary>
-        internal static string InfraFormatIndentException {
-            get {
-                return ResourceManager.GetString("InfraFormatIndentException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error parsing string.
-        /// </summary>
-        internal static string InfraFormatMessageParseException {
-            get {
-                return ResourceManager.GetString("InfraFormatMessageParseException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Width should be at least 10 characters including indent.
-        /// </summary>
-        internal static string InfraFormatWidthException {
-            get {
-                return ResourceManager.GetString("InfraFormatWidthException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Class is in an undefined state.
-        /// </summary>
-        internal static string InfraIoFileInfoInvalidState {
-            get {
-                return ResourceManager.GetString("InfraIoFileInfoInvalidState", resourceCulture);
             }
         }
         
@@ -552,15 +471,6 @@ namespace RJCP.App.DltDump.Resources {
         internal static string InfraUdpReceiverInvalidFamily {
             get {
                 return ResourceManager.GetString("InfraUdpReceiverInvalidFamily", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Address port {0} is invalid.
-        /// </summary>
-        internal static string InfraUdpReceiverInvalidPort {
-            get {
-                return ResourceManager.GetString("InfraUdpReceiverInvalidPort", resourceCulture);
             }
         }
         
@@ -732,24 +642,6 @@ namespace RJCP.App.DltDump.Resources {
         internal static string SerialOpenError_AuthorityNotSupported {
             get {
                 return ResourceManager.GetString("SerialOpenError_AuthorityNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid baud rate given for ser:.
-        /// </summary>
-        internal static string SerialOpenError_InvalidBaud {
-            get {
-                return ResourceManager.GetString("SerialOpenError_InvalidBaud", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid data bits given for ser:.
-        /// </summary>
-        internal static string SerialOpenError_InvalidDataBits {
-            get {
-                return ResourceManager.GetString("SerialOpenError_InvalidDataBits", resourceCulture);
             }
         }
         

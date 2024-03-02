@@ -22,9 +22,7 @@
         /// </exception>
         public SwInjectionResponse(int serviceId, int status) : base(status)
         {
-            if (serviceId is >= 0 and < 0xFFF)
-                throw new ArgumentOutOfRangeException(nameof(serviceId), "ServiceID outside valid range of 0xFFF..0xFFFFFFFF");
-
+            ThrowHelper.ThrowIfBetween(serviceId, 0, 0xFFE);
             ServiceId = serviceId;
         }
 

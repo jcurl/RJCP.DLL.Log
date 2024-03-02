@@ -228,35 +228,11 @@
     <value>Couldn't create the output {0}. Don't know how to write this file format.</value>
     <comment>Occurs because Automatic can't guess the output format</comment>
   </data>
-  <data name="InfraArgOutOfRangeIndex" xml:space="preserve">
-    <value>The length and offset would exceed the boundaries of the array/buffer</value>
-  </data>
-  <data name="InfraArgOutOfRangeNegative" xml:space="preserve">
-    <value>may not be negative</value>
-  </data>
   <data name="InfraCollectionReadOnly" xml:space="preserve">
     <value>Collection is read only</value>
   </data>
   <data name="InfraDltInvalidFormat" xml:space="preserve">
     <value>Internal Error: Decoding this format is not implemented</value>
-  </data>
-  <data name="InfraFileNotFound" xml:space="preserve">
-    <value>File not found</value>
-  </data>
-  <data name="InfraFormatHangingIndentException" xml:space="preserve">
-    <value>Hanging Indent must be zero or more</value>
-  </data>
-  <data name="InfraFormatIndentException" xml:space="preserve">
-    <value>Indent must be zero or more</value>
-  </data>
-  <data name="InfraFormatMessageParseException" xml:space="preserve">
-    <value>Error parsing string</value>
-  </data>
-  <data name="InfraFormatWidthException" xml:space="preserve">
-    <value>Width should be at least 10 characters including indent</value>
-  </data>
-  <data name="InfraIoFileInfoInvalidState" xml:space="preserve">
-    <value>Class is in an undefined state</value>
   </data>
   <data name="InfraNetTcpStream_NotConnected" xml:space="preserve">
     <value>Not connected</value>
@@ -272,9 +248,6 @@
   </data>
   <data name="InfraUdpReceiverInvalidFamily" xml:space="preserve">
     <value>Address is not of type IPv4</value>
-  </data>
-  <data name="InfraUdpReceiverInvalidPort" xml:space="preserve">
-    <value>Address port {0} is invalid</value>
   </data>
   <data name="InfraUdpReceiverNotMulticast" xml:space="preserve">
     <value>Address {0} is not multicast</value>
@@ -330,12 +303,6 @@
   <data name="SerialOpenError_AuthorityNotSupported" xml:space="preserve">
     <value>Cannot connect to a remote host with ser:</value>
   </data>
-  <data name="SerialOpenError_InvalidBaud" xml:space="preserve">
-    <value>Invalid baud rate given for ser:</value>
-  </data>
-  <data name="SerialOpenError_InvalidDataBits" xml:space="preserve">
-    <value>Invalid data bits given for ser:</value>
-  </data>
   <data name="SerialOpenError_InvalidHandshake" xml:space="preserve">
     <value>Invalid handshake specified for ser:</value>
   </data>
@@ -380,8 +347,5 @@
   </data>
   <data name="FibexApp_ErrorLoadingFibex" xml:space="preserve">
     <value>Problem when loading FIBEX files: {0}</value>
-  </data>
-  <data name="FibexApp_FibexLoaded" xml:space="preserve">
-    <value>Success loading all Fibex files.</value>
   </data>
 </root>

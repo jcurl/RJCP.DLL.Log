@@ -37,17 +37,12 @@
         /// <exception cref="ArgumentOutOfRangeException">handshake</exception>
         public DltSerialStream(string port, int baud, int data, Parity parity, StopBits stopbits, Handshake handshake)
         {
-            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(AppResources.SerialOpenError_InvalidPort, port);
-            if (baud <= 0)
-                throw new ArgumentOutOfRangeException(nameof(baud), AppResources.SerialOpenError_InvalidBaud);
-            if (data is < 5 or > 8)
-                throw new ArgumentOutOfRangeException(nameof(data), AppResources.SerialOpenError_InvalidDataBits);
-            if (!Enum.IsDefined(typeof(Parity), parity))
-                throw new ArgumentOutOfRangeException(nameof(parity), AppResources.SerialOpenError_InvalidParity);
-            if (!Enum.IsDefined(typeof(StopBits), stopbits))
-                throw new ArgumentOutOfRangeException(nameof(stopbits), AppResources.SerialOpenError_InvalidStopBits);
-            if (!Enum.IsDefined(typeof(Handshake), handshake))
-                throw new ArgumentOutOfRangeException(nameof(handshake), AppResources.SerialOpenError_InvalidHandshake);
+            ThrowHelper.ThrowIfNullOrWhiteSpaceMsg(port, AppResources.SerialOpenError_InvalidPort);
+            ThrowHelper.ThrowIfNegativeOrZero(baud);
+            ThrowHelper.ThrowIfNotBetween(data, 5, 8);
+            ThrowHelper.ThrowIfEnumUndefined(parity);
+            ThrowHelper.ThrowIfEnumUndefined(stopbits);
+            ThrowHelper.ThrowIfEnumUndefined(handshake);
 
             m_PortName = port;
             m_Baud = baud;
