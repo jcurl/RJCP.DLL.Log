@@ -5,4 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+[assembly: SuppressMessage("Style", "IDE0230:Use UTF-8 string literal", Justification = "Testing byte streams, not UTF8 strings")]
 [assembly: SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "Test Case Only")]
