@@ -30,30 +30,38 @@ $ dotnet exec RJCP.Diagnostics.Log.DltBenchmark.dll --filter *
 ## Results
 
 ```text
-Results = netcore
+Results = net6
 
-BenchmarkDotNet=v0.13.12 OS=Windows 10 (10.0.19045.3930/22H2/2022Update)
+BenchmarkDotNet=v0.13.12 OS=Windows 10 (10.0.19045.4046/22H2/2022Update)
 Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical core(s)
-  [HOST] : .NET 6.0.26 (6.0.2623.60508), X64 RyuJIT
+  [HOST] : .NET 6.0.27 (6.0.2724.6912), X64 RyuJIT
 ```
 
-| Project 'dlt' Type     | Method                        | mean (netcore) | stderr |
-|:-----------------------|:------------------------------|---------------:|-------:|
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 13.85          | 0.01   |
-| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 13.42          | 0.03   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 13.79          | 0.03   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 13.87          | 0.01   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 13.76          | 0.02   |
-| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 13.36          | 0.01   |
-| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 12.42          | 0.01   |
-| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 12.10          | 0.02   |
-| DltDecoderArgBenchmark | DecodeBool                    | 10.24          | 0.01   |
-| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 47.14          | 0.03   |
-| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 49.26          | 0.13   |
-| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 37.42          | 0.03   |
-| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 38.05          | 0.05   |
-| DltDecoderBenchmark    | DecodeStringFilePackets       | 3312.25        | 1.83   |
-| DltDecoderBenchmark    | DecodeIntFilePackets          | 2920.22        | 1.96   |
+```text
+Results = net8
+
+BenchmarkDotNet=v0.13.12 OS=Windows 10 (10.0.19045.4046/22H2/2022Update)
+Intel Core i7-6700T CPU 2.80GHz (Skylake), 1 CPU(s), 8 logical and 4 physical core(s)
+  [HOST] : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT
+```
+
+| Project 'dlt' Type     | Method                        | mean (net6) | stderr | mean (net8) | stderr |
+|:-----------------------|:------------------------------|------------:|-------:|------------:|-------:|
+| DltDecoderArgBenchmark | DecodeBool                    | 11.90       | 0.03   | 12.27       | 0.02   |
+| DltDecoderArgBenchmark | DecodeFloat32bitBE            | 13.41       | 0.03   | 11.38       | 0.02   |
+| DltDecoderArgBenchmark | DecodeFloat32bitLE            | 13.36       | 0.02   | 11.59       | 0.01   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitBE    | 15.95       | 0.04   | 12.76       | 0.02   |
+| DltDecoderArgBenchmark | DecodeSignedInteger32bitLE    | 16.04       | 0.01   | 13.44       | 0.03   |
+| DltDecoderArgBenchmark | DecodeStringAsciiBE           | 44.83       | 0.02   | 40.35       | 0.06   |
+| DltDecoderArgBenchmark | DecodeStringAsciiLE           | 44.62       | 0.06   | 41.00       | 0.05   |
+| DltDecoderArgBenchmark | DecodeStringUtf8BE            | 54.46       | 0.08   | 47.00       | 0.11   |
+| DltDecoderArgBenchmark | DecodeStringUtf8LE            | 54.23       | 0.08   | 46.56       | 0.05   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBE  | 15.47       | 0.03   | 12.95       | 0.02   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitBin | 15.65       | 0.02   | 13.00       | 0.03   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitHex | 15.61       | 0.03   | 12.90       | 0.03   |
+| DltDecoderArgBenchmark | DecodeUnsignedInteger32bitLE  | 15.37       | 0.03   | 12.99       | 0.02   |
+| DltDecoderBenchmark    | DecodeIntFilePackets          | 3126.28     | 1.12   | 2413.32     | 2.17   |
+| DltDecoderBenchmark    | DecodeStringFilePackets       | 3580.15     | 1.13   | 2777.60     | 1.23   |
 
 Description of the test results:
 
