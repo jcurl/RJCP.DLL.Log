@@ -122,7 +122,7 @@
         /// </exception>
         public void Open()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltFileStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputStream is not null) return;
 
             try {
@@ -164,8 +164,7 @@
         /// </returns>
         public Task<bool> ConnectAsync()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltFileStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputStream is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 

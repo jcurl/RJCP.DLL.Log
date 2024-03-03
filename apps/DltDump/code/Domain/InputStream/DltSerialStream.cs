@@ -155,7 +155,7 @@
         /// <exception cref="ObjectDisposedException">The object is disposed.</exception>
         public void Open()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltSerialStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputStream is not null) return;
 
             SerialPortStream stream = new() {
@@ -180,8 +180,7 @@
         /// </returns>
         public Task<bool> ConnectAsync()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltSerialStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputStream is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 

@@ -29,17 +29,13 @@
 
         public virtual void Open()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(NullInputStream));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             InputStream ??= new MemoryStream(Array.Empty<byte>());
         }
 
         public virtual Task<bool> ConnectAsync()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(NullInputStream));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             return Task.FromResult(true);
         }
 

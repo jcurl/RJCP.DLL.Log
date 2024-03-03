@@ -163,6 +163,7 @@ Quality:
 - Add README.md to NuGet package (DOTNET-816, DOTNET-817, DOTNET-932)
 - Mark common secondary warnings as Verbose (DOTNET-922)
 - Upgrade to .NET 6.0 (DOTNET-936, DOTNET-942, DOTNET-943, DOTNET-945, DOTNET-951)
+- Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 
 ### 3.2. Version 0.8.0
 

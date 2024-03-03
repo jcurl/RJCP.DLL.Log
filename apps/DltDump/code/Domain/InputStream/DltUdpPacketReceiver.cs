@@ -134,7 +134,7 @@
         /// <exception cref="ObjectDisposedException">Object is disposed.</exception>
         public void Open()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(DltUdpPacketReceiver));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputPacket is object) return;
 
             m_Receiver.Open();
@@ -147,8 +147,7 @@
         /// <returns>Returns if the input stream was connected.</returns>
         public Task<bool> ConnectAsync()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltUdpPacketReceiver));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputPacket is null)
                 throw new InvalidOperationException(AppResources.DomainInputStreamNotOpen);
 

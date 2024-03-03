@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net.Sockets;
     using System.Threading.Tasks;
     using Infrastructure.IO;
 
@@ -51,7 +52,7 @@
         /// </summary>
         public void Open()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(SimulatedPacketReceiver));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_IsOpened) throw new InvalidOperationException("Packet Reader is already open");
             m_IsOpened = true;
         }
@@ -68,7 +69,7 @@
         /// <remarks>This method doesn't take a cancellation token, as in .NET 3.1, we can't cancel.</remarks>
         public ValueTask<PacketReadResult> ReadAsync(Memory<byte> buffer)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(SimulatedPacketReceiver));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!m_IsOpened) throw new InvalidOperationException("Packet Reader is not open");
 
             if (!m_PacketEnumerator.MoveNext())
@@ -94,7 +95,7 @@
         /// </summary>
         public void Close()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(SimulatedPacketReceiver));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!m_IsOpened) throw new InvalidOperationException("Packet Reader is not open");
             m_IsOpened = false;
         }

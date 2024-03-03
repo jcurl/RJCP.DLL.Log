@@ -334,7 +334,7 @@
         /// </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             try {
@@ -372,7 +372,7 @@
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Method wrapper")]
         public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             try {
@@ -407,7 +407,7 @@
         /// </exception>
         public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             try {
@@ -468,7 +468,7 @@
         /// </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             m_TcpStream.Write(buffer, offset, count);
@@ -493,7 +493,7 @@
         /// </exception>
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             return m_TcpStream.WriteAsync(buffer, offset, count, cancellationToken);
@@ -514,7 +514,7 @@
         /// </exception>
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(TcpClientStream));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (!IsConnected) throw new InvalidOperationException(AppResources.InfraNetTcpStream_NotConnected);
 
             return m_TcpStream.WriteAsync(buffer, cancellationToken);

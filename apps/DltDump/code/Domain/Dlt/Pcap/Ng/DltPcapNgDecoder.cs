@@ -62,8 +62,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltPcapNgDecoder));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_FileCorrupted)
                 throw new UnknownPcapFileFormatException(AppResources.DomainPcapBlockCorruption);
 

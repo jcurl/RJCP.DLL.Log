@@ -66,8 +66,7 @@
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
             if (m_PcapDecoder is null) {
-                if (m_IsDisposed)
-                    throw new ObjectDisposedException(nameof(DltPcapLegacyDecoder));
+                ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
 
                 if (m_HeaderLength + buffer.Length < m_Header.Length) {
                     // We don't know what the PCAP type is, so store it and wait for the next write.

@@ -33,9 +33,7 @@
         public async Task ListenAsync()
         {
             lock (m_StartLock) {
-                if (m_IsDisposed)
-                    throw new ObjectDisposedException(nameof(TcpServer));
-
+                ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
                 m_Listener.Start(1);
                 m_Started = true;
             }

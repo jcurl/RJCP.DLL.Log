@@ -155,9 +155,7 @@
         /// <exception cref="ObjectDisposedException">This object is already disposed.</exception>
         public void Open()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(UdpPacketReceiver));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_Socket is not null)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverOpen);
 
@@ -197,9 +195,7 @@
         /// </returns>
         public async ValueTask<PacketReadResult> ReadAsync(Memory<byte> buffer)
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(UdpPacketReceiver));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_Socket is null)
                 throw new InvalidOperationException(AppResources.InfraUdpReceiverNotOpen);
 
@@ -226,8 +222,7 @@
                     return new PacketReadResult(result.ReceivedBytes, m_Channels.Count - 1);
                 }
             } catch (SocketException ex) {
-                if (m_IsDisposed && ex.SocketErrorCode == SocketError.Interrupted)
-                    throw new ObjectDisposedException(nameof(UdpPacketReceiver));
+                ThrowHelper.ThrowIfDisposed(m_IsDisposed && ex.SocketErrorCode == SocketError.Interrupted, this);
                 throw;
             }
         }

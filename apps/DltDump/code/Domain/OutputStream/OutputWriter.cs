@@ -49,7 +49,7 @@
         /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Open(string fileName, FileMode mode)
         {
-            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            ThrowHelper.ThrowIfDisposed(m_Disposed, this);
             ArgumentNullException.ThrowIfNull(fileName);
             if (m_FileStream is not null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
 
@@ -79,7 +79,7 @@
         /// </exception>
         public void Open(Stream stream)
         {
-            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            ThrowHelper.ThrowIfDisposed(m_Disposed, this);
             ArgumentNullException.ThrowIfNull(stream);
             if (m_FileStream is not null) throw new InvalidOperationException(AppResources.DomainOutputWriterOpen);
             if (!stream.CanWrite) throw new InvalidOperationException(AppResources.DomainOutputWriterCantWrite);
@@ -111,7 +111,7 @@
         /// <exception cref="OutputStreamException">The underlying stream threw an exception.</exception>
         public void Write(byte[] buffer, int offset, int count)
         {
-            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            ThrowHelper.ThrowIfDisposed(m_Disposed, this);
             ThrowHelper.ThrowIfArrayOutOfBounds(buffer, offset, count);
             Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
 
@@ -132,7 +132,7 @@
         /// <exception cref="IOException">An I/O error occurred.</exception>
         public void Write(ReadOnlySpan<byte> buffer)
         {
-            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            ThrowHelper.ThrowIfDisposed(m_Disposed, this);
 
             Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             try {
@@ -150,7 +150,7 @@
         /// <exception cref="InvalidOperationException">Writer not opened.</exception>
         public void Flush()
         {
-            if (m_Disposed) throw new ObjectDisposedException(nameof(OutputWriter));
+            ThrowHelper.ThrowIfDisposed(m_Disposed, this);
 
             Stream stream = m_FileStream ?? throw new InvalidOperationException(AppResources.DomainOutputWriterNotOpen);
             try {

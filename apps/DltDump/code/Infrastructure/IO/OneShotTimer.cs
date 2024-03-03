@@ -26,8 +26,7 @@
 
         public void Start()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(OneShotTimer));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_Timer is not null)
                 throw new InvalidOperationException("Timer already initialized");
 
@@ -36,8 +35,7 @@
 
         public void Reset()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(OneShotTimer));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_Timer is null) Start();
 
             m_Timer.Change(m_DueTime, Timeout.Infinite);

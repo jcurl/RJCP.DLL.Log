@@ -47,9 +47,7 @@
 
         public void Open()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(NullInputStream));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (InputStream is not null)
                 throw new InvalidOperationException("TestPacketReader already opened");
 
@@ -62,9 +60,7 @@
 
         public Task<bool> ConnectAsync()
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(NullInputStream));
-
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             ConnectSuccessEventArgs args = new();
             OnConnectEvent(this, args);
             return Task.FromResult(args.Succeed);

@@ -218,7 +218,7 @@
         /// <exception cref="ObjectDisposedException"><see cref="OutputBase"/> is disposed.</exception>
         protected void Write(DateTime timeStamp, string line)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             OpenWriter(timeStamp);
 
             m_Encoder.Convert(line, m_Buffer, true, out int _, out int bytes, out bool _);
@@ -236,7 +236,7 @@
         /// <exception cref="ObjectDisposedException"><see cref="OutputBase"/> is disposed.</exception>
         protected void Write(DateTime timeStamp, string message, params object[] args)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             OpenWriter(timeStamp);
 
             string line = string.Format(message, args);
@@ -254,7 +254,7 @@
         /// <exception cref="ObjectDisposedException"><see cref="OutputBase"/> is disposed.</exception>
         protected void Write(DateTime timeStamp, ReadOnlySpan<byte> buffer)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             OpenWriter(timeStamp);
 
             m_Writer.Write(buffer);
@@ -270,7 +270,7 @@
         /// <exception cref="ObjectDisposedException"><see cref="OutputBase"/> is disposed.</exception>
         protected void Write(DateTime timeStamp, ReadOnlySpan<byte> header, ReadOnlySpan<byte> buffer)
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             OpenWriter(timeStamp);
 
             m_Writer.Write(header);
@@ -356,7 +356,7 @@
         /// <exception cref="ObjectDisposedException"><see cref="OutputBase"/> is disposed.</exception>
         public void Flush()
         {
-            if (m_IsDisposed) throw new ObjectDisposedException(nameof(OutputBase));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
             if (m_Writer.IsOpen) m_Writer.Flush();
         }
 

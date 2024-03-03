@@ -154,6 +154,7 @@ More detailed information can be found in the repository
 Features:
 
 - Implement a TraceWriter (DOTNET-763)
+- Update to .NET 8.0 (DOTNET-982, DOTNET-983, DOTNET-989, DOTNET-990)
 
 Bugfixes:
 

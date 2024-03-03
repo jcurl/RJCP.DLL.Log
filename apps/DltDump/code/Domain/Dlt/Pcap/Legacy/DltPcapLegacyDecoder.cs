@@ -68,8 +68,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Decode(ReadOnlySpan<byte> buffer, long position)
         {
-            if (m_IsDisposed)
-                throw new ObjectDisposedException(nameof(DltPcapLegacyDecoder));
+            ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
 
             if (Format is null) {
                 if (m_Length + buffer.Length < PcapFormat.HeaderLength) {
