@@ -13,7 +13,7 @@
     /// <summary>
     /// Defines the options available for DltDump.
     /// </summary>
-    public class CmdOptions : IOptions
+    public partial class CmdOptions : IOptions
     {
         /// <summary>
         /// Gets a value indicating if the help should be shown.
@@ -360,13 +360,22 @@
                 throw new OptionFormatException("after-context");
         }
 
+#if NET7_0_OR_GREATER
+        [GeneratedRegex(@"^(\d+)(([kKmMgG])?[bB]?)$")]
+        private static partial Regex SplitMatch();
+#endif
+
         private void CheckSplit()
         {
             Split = 0;
             if (string.IsNullOrWhiteSpace(SplitString)) return;
 
             long split = -1;
+#if NET7_0_OR_GREATER
+            Match splitMatch = SplitMatch().Match(SplitString);
+#else
             Match splitMatch = Regex.Match(SplitString, @"^(\d+)(([kKmMgG])?[bB]?)$");
+#endif
             if (splitMatch.Success) {
                 try {
                     split = int.Parse(splitMatch.Groups[1].Value);
