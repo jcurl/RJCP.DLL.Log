@@ -22,9 +22,9 @@ Integration tests are those that might cause problems when running on a CI,
 because they have timing dependencies, or depend on other OS resources. In
 particular, the following tests are marked as explicit:
 
-* Network tests using TCP
-  * TcpClientStream
-  * TcpServer (test code)
+- Network tests using TCP
+  - TcpClientStream
+  - TcpServer (test code)
 
 To run the integration tests on the console
 

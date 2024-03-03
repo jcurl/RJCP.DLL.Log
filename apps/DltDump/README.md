@@ -103,6 +103,7 @@ obtain using the `--version` command. If you don't have this version installed,
 or wish to get performance benefits from a later version:
 
 On Windows:
+
 ```sh
 dltdump --roll-forward LatestMajor /version
 DltDump Version: 1.0.0-alpha.v7.20230605T062448+gfc5aab8, (C) 2022-2023, Jason Curl
@@ -112,7 +113,8 @@ DltDump Version: 1.0.0-alpha.v7.20230605T062448+gfc5aab8, (C) 2022-2023, Jason C
 ```
 
 On Linux:
-```
+
+```sh
 dotnet exec --roll-forward ./dltdump.dll --version
 ```
 
@@ -120,35 +122,35 @@ dotnet exec --roll-forward ./dltdump.dll --version
 
 DltDump can read from:
 
-* A file on disk;
-  * As recorded by a logger, containing a storage header; or
-  * binary data, recorded from a TCP stream (e.g. with `netcat`), or serial.
-  * Recorded with a PCAP or PCAP-NG file
-    * From UDP packets in IPv4
-    * From TECMP packets, as UDP in IPv4
-* a TCP server; or
-* a Serial port.
+- A file on disk;
+  - As recorded by a logger, containing a storage header; or
+  - binary data, recorded from a TCP stream (e.g. with `netcat`), or serial.
+  - Recorded with a PCAP or PCAP-NG file
+    - From UDP packets in IPv4
+    - From TECMP packets, as UDP in IPv4
+- a TCP server; or
+- a Serial port.
 
 ### 1.6. Writing
 
 DltDump can write the output to disk in the formats:
 
-* Text format; or
-* DLT format
+- Text format; or
+- DLT format
 
 ### 1.7. Filtering
 
 When reading the DLT file, the input can be filtered for specific properties,
 searching for:
 
-* ECU identifiers;
-* Application identifiers;
-* Context identifiers;
-* Session identifiers;
-* Verbose, non-verbose, control messages;
-* Message types (e.g. `LOG_INFO`, etc.);
-* substrings; and
-* regular expressions (in .NET format).
+- ECU identifiers;
+- Application identifiers;
+- Context identifiers;
+- Session identifiers;
+- Verbose, non-verbose, control messages;
+- Message types (e.g. `LOG_INFO`, etc.);
+- substrings; and
+- regular expressions (in .NET format).
 
 ## 2. Common Use Cases
 
@@ -358,19 +360,19 @@ dltdump --appid APP1 --output filtered.dlt record.dlt
 
 The options for filtering are:
 
-* `--ecuid`: Filter for an ECU identifier
-* `--appid`: Filter for an application identifier
-* `--ctxid`: Filter for a context identifier
-* `--sessionid`: Filter for a session identifier
-* `--type`: Filter for message types
-* `--verbose`: Filter for verbose messages
-* `--nonverbose`: Filter for non-verbose messages (excluding control messages)
-* `--control`: Filter for control messages
-* `--messageid`: Filter for specific non-verbose messages
-* `--not-before`: Filter for messages after this time
-* `--not-after`: Filter for messages before this time
-* `--before-context=N`: On a filter match, show N lines before
-* `--after-context=N`: On a filter match, show N lines after
+- `--ecuid`: Filter for an ECU identifier
+- `--appid`: Filter for an application identifier
+- `--ctxid`: Filter for a context identifier
+- `--sessionid`: Filter for a session identifier
+- `--type`: Filter for message types
+- `--verbose`: Filter for verbose messages
+- `--nonverbose`: Filter for non-verbose messages (excluding control messages)
+- `--control`: Filter for control messages
+- `--messageid`: Filter for specific non-verbose messages
+- `--not-before`: Filter for messages after this time
+- `--not-after`: Filter for messages before this time
+- `--before-context=N`: On a filter match, show N lines before
+- `--after-context=N`: On a filter match, show N lines after
 
 You can provide the filters, they have a logical "and" relationship. Providing
 the same filter option (e.g. `appid`) has a logical "or" relationship.
@@ -461,12 +463,12 @@ R20-11](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11
 
 It can read files in three different formats:
 
-* As files already stored on the filesystem, that contains a storage header, as
+- As files already stored on the filesystem, that contains a storage header, as
   added by loggers; or as PCAP or PCAP-NG files stored on the file system
   encapsulated in IPv4 UDP packets;
-* As a network stream, described in the PRS, starting with the standard header;
+- As a network stream, described in the PRS, starting with the standard header;
   and
-* As a serial stream, which is the fixed 4-byte marker `DLS\1` followed by the
+- As a serial stream, which is the fixed 4-byte marker `DLS\1` followed by the
   standard header. This is not specified in the PRS, but implemented in the
   Covesa DLT Viewer application.
 
@@ -503,8 +505,8 @@ are applied, as there is usually no other natural way for a stream to close.
 In case that there is a 5-second delay with no data received (the stream may
 still be active), the `dltdump` tool will close the stream. This is useful for:
 
-* Serial streams, the device powered off
-* TCP streams, the device reset, and no TCP RST or TCP FIN was sent.
+- Serial streams, the device powered off
+- TCP streams, the device reset, and no TCP RST or TCP FIN was sent.
 
 Using scripting, one can restart the `dltdump` tool to start a new session.
 
@@ -523,11 +525,11 @@ in memory format is much smaller.
 
 There are multiple modes for interpreting Fibex Files
 
-* Default behaviour reading a FIBEX
-* Read multiple FIBEX files from different ECUs
-* Read multiple FIBEX files from the same ECU
-* Ignore the Application and Context Identifier in the FIBEX files
-* Check the FIBEX files for correctness without a DLT file
+- Default behaviour reading a FIBEX
+- Read multiple FIBEX files from different ECUs
+- Read multiple FIBEX files from the same ECU
+- Ignore the Application and Context Identifier in the FIBEX files
+- Check the FIBEX files for correctness without a DLT file
 
 #### 3.4.1. Default Behaviour When Reading a Fibex File
 
@@ -723,7 +725,7 @@ dltdump --fibex myfibex.xml --nv-multiecu --nv-verbose -o out.dlt input.dlt
 On the output, the verbose messages contain the same arguments as the original
 non-verbose message with the following exceptions:
 
-* There is no message identifier any more associated with the verbose message.
+- There is no message identifier any more associated with the verbose message.
   This information is lost. The DLT standard does not account for this use case.
 
 ### 3.5. Output Files
@@ -744,9 +746,9 @@ such. On Windows, it queries the file system if files are the same.
 
 There are three outputs:
 
-* The console;
-* Text file;
-* DLT (version 1) file.
+- The console;
+- Text file;
+- DLT (version 1) file.
 
 If the `--output` option is not used, the console is assumed. It is not
 recommended to console pipe the output from Windows to disk, as the shell in use
@@ -763,20 +765,20 @@ Otherwise, the file is written in text format using UTF-8 encoding.
 
 Filters are given on the command line option:
 
-* `--ecuid`: Filter for an ECU identifier
-* `--appid`: Filter for an application identifier
-* `--ctxid`: Filter for a context identifier
-* `--sessionid`: Filter for a session identifier, often used as the process
+- `--ecuid`: Filter for an ECU identifier
+- `--appid`: Filter for an application identifier
+- `--ctxid`: Filter for a context identifier
+- `--sessionid`: Filter for a session identifier, often used as the process
   identifier using `dlt-daemon`.
-* `--type`: Filter for message types
-* `--verbose`: Filter for verbose messages
-* `--nonverbose`: Filter for non-verbose messages (excluding control messages)
-* `--control`: Filter for control messages
-* `--not-before`: Filter for messages that occur on, or after this date
-* `--not-after`: Filter for messages that occur on, or before this date
-* `--messageid`: Filter for a non-verbose message identifier
-* `--string`: Filter for a string
-* `--regex`: Filter for a .NET regular expression.
+- `--type`: Filter for message types
+- `--verbose`: Filter for verbose messages
+- `--nonverbose`: Filter for non-verbose messages (excluding control messages)
+- `--control`: Filter for control messages
+- `--not-before`: Filter for messages that occur on, or after this date
+- `--not-after`: Filter for messages that occur on, or before this date
+- `--messageid`: Filter for a non-verbose message identifier
+- `--string`: Filter for a string
+- `--regex`: Filter for a .NET regular expression.
 
 The `string` and `regex` filters can be modified for case insensitive search
 with the option `-i` (similar to the unix tool `grep`).
@@ -827,17 +829,17 @@ size.
 
 Modifiers can be used for the split output:
 
-* `--split=2536K`: Split into 2.5MB files
-* `--split=10M`: Split into 10MB files
-* `--split=1G`: Split into 1GB files
+- `--split=2536K`: Split into 2.5MB files
+- `--split=10M`: Split into 10MB files
+- `--split=1G`: Split into 1GB files
 
 The template describes how to name the file on a split. The following templates
 are known:
 
-* `%CTR%`: Provide a counter, starting at `001` and incrementing on each split
-* `%CDATE%`, `%CTIME%`, `%CDATETIME%`: Provides the date/time of the first line
+- `%CTR%`: Provide a counter, starting at `001` and incrementing on each split
+- `%CDATE%`, `%CTIME%`, `%CDATETIME%`: Provides the date/time of the first line
   in the file that is being split
-* `%FILE%`: Provides the name of the input file being processed without the
+- `%FILE%`: Provides the name of the input file being processed without the
   extension. On each new input file, the `%CTR%` is reset to `001`.
 
 So, if you have a very large input file:
@@ -908,8 +910,8 @@ be incorrectly read) allowing to isolate the DLT packet which is the problem.
 
 The following features are not implemented
 
-* Reading ARXML files are not supported
-* DLT Version 2, as per AutoSAR DLT PRS R21-11 and later.
+- Reading ARXML files are not supported
+- DLT Version 2, as per AutoSAR DLT PRS R21-11 and later.
 
 ### 4.1. Contributing
 
@@ -918,12 +920,12 @@ strong focus on unit testing and design.
 
 Design documentation can be found in this repository:
 
-* DLT Dump
-  * [Design Requirements](docs/designrequirements.md)
-  * [Design Implementation](docs/design.md)
-* DLT Decoder
-  * [Decoder Design](../../TraceReader.Dlt/docs/DLT.DecoderDesign.md)
-  * [Enabling Logging](../../TraceReader.Dlt/docs/DLT.Logging.md)
+- DLT Dump
+  - [Design Requirements](docs/designrequirements.md)
+  - [Design Implementation](docs/design.md)
+- DLT Decoder
+  - [Decoder Design](../../TraceReader.Dlt/docs/DLT.DecoderDesign.md)
+  - [Enabling Logging](../../TraceReader.Dlt/docs/DLT.Logging.md)
 
 To build, see [RJCP.base](https://github.com/jcurl/RJCP.base/). Once all
 repositories are checked out, you can run `dotnet build` within the base of this
@@ -958,7 +960,7 @@ reproducible and provide any log files or samples that show the problem
 
 For reference, see:
 
-* [Covesa DLT Daemon](https://github.com/COVESA/dlt-daemon)
-* [Covesa DLT Viewer](https://github.com/COVESA/dlt-viewer)
-* [AutoSAR DLT PRS
+- [Covesa DLT Daemon](https://github.com/COVESA/dlt-daemon)
+- [Covesa DLT Viewer](https://github.com/COVESA/dlt-viewer)
+- [AutoSAR DLT PRS
   R20-11](https://www.autosar.org/fileadmin/user_upload/standards/foundation/20-11/AUTOSAR_PRS_LogAndTraceProtocol.pdf)
