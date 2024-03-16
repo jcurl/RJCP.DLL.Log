@@ -2,31 +2,32 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using NUnit.Framework;
 
     [TestFixture]
     public class TraceReaderFactoryTest
     {
         [Test]
-        public void NullStream()
+        public async Task NullStream()
         {
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await new EmptyTraceReaderFactory().CreateAsync((Stream)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void NullFile()
+        public async Task NullFile()
         {
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await new EmptyTraceReaderFactory().CreateAsync((string)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void NotFoundFile()
+        public async Task NotFoundFile()
         {
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await new EmptyTraceReaderFactory().CreateAsync("FileNotFound.txt");
             }, Throws.TypeOf<FileNotFoundException>());
         }

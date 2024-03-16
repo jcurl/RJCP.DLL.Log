@@ -148,38 +148,38 @@
         // Ensures the factory returns the correct reader instantiating the correct decoder.
 
         [Test]
-        public void NullFileName()
+        public async Task NullFileName()
         {
             DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await factory.CreateAsync((string)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void NullStream()
+        public async Task NullStream()
         {
             DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.File
             };
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await factory.CreateAsync((Stream)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void NullPacket()
+        public async Task NullPacket()
         {
             DltDumpTraceReaderFactory factory = new() {
                 InputFormat = InputFormat.Network,
                 OnlineMode = true
             };
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await factory.CreateAsync((IPacket)null);
             }, Throws.TypeOf<ArgumentNullException>());
         }

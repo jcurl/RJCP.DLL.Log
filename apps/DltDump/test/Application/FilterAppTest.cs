@@ -90,7 +90,7 @@
         }
 
         [Test]
-        public void OpenErrorUnhandledException()
+        public async Task OpenErrorUnhandledException()
         {
             // An exception occurring here won't be caught, and will bubble up to the top level,
             // so that a core dump can be captured. This exception is not documented by .NET.
@@ -104,7 +104,7 @@
                 // The file won't be accessed, as the InputStreamFactory will handle this and is mocked.
                 FilterConfig config = new(new[] { EmptyFile });
                 FilterApp app = new(config);
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await app.Run();
                 }, Throws.TypeOf<InvalidOperationException>());
             }
@@ -642,7 +642,7 @@
         }
 
         [Test]
-        public void OutputUnhandledException()
+        public async Task OutputUnhandledException()
         {
             var factoryMock = new Mock<IOutputStreamFactory>();
             factoryMock.Setup(m => m.Create(It.IsAny<OutputFormat>(), It.IsAny<string>()))
@@ -655,7 +655,7 @@
 
                 FilterConfig config = new(new[] { EmptyFile });
                 FilterApp app = new(config);
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await app.Run();
                 }, Throws.TypeOf<NotSupportedException>());
 

@@ -265,7 +265,7 @@
         [Test]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        public void ConnectWhenDisposed()
+        public async Task ConnectWhenDisposed()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
             DltUdpPacketReceiver receiver = null;
@@ -273,7 +273,7 @@
                 receiver.Open();
             }
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 await receiver.ConnectAsync();
             }, Throws.TypeOf<ObjectDisposedException>());
         }
@@ -281,12 +281,12 @@
         [Test]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        public void ConnectWhenNotOpen()
+        public async Task ConnectWhenNotOpen()
         {
             IPAddress address = IPAddress.Parse("127.0.0.1");
             DltUdpPacketReceiver receiver = null;
             using (receiver = new DltUdpPacketReceiver(address, 3490)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await receiver.ConnectAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             }

@@ -43,21 +43,21 @@
         }
 
         [Test]
-        public void CreateStreamNull()
+        public async Task CreateStreamNull()
         {
             Stream stream = null;
             ITraceWriterFactory<DltTraceLineBase> writerFactory = new DltFileTraceWriterFactory();
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await writerFactory.CreateAsync(stream);
             }, Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
-        public void CreateFileNull()
+        public async Task CreateFileNull()
         {
             string fileName = null;
             ITraceWriterFactory<DltTraceLineBase> writerFactory = new DltTraceWriterFactory();
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await writerFactory.CreateAsync(fileName);
             }, Throws.TypeOf<ArgumentNullException>());
         }

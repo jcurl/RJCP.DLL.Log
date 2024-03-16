@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.InputStream
 {
     using System;
+    using System.Threading.Tasks;
     using Domain.Dlt;
     using NUnit.Framework;
 
@@ -213,13 +214,13 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltTcpFactory)]
-        public void ConnectUnopenedInputStream(Factory factoryType)
+        public async Task ConnectUnopenedInputStream(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             IInputStream input = null;
             try {
                 input = factory.Create("tcp://127.0.0.1:123");
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             } finally {
@@ -229,7 +230,7 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltTcpFactory)]
-        public void ConnectDisposedInputStream(Factory factoryType)
+        public async Task ConnectDisposedInputStream(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             IInputStream input = null;
@@ -239,7 +240,7 @@
                 Assert.That(input.InputStream, Is.Not.Null);
                 Assert.That(input.InputPacket, Is.Null);
                 input.Dispose();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<ObjectDisposedException>());
             } finally {

@@ -292,7 +292,7 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public async Task ReceiveAsync(string endpoint)
         {
             IPEndPoint src = new(IPAddress.Parse("127.0.0.1"), 8000);
@@ -324,7 +324,7 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public async Task ReceiveAsyncWait(string endpoint)
         {
             IPEndPoint src = new(IPAddress.Parse("127.0.0.1"), 8000);
@@ -359,7 +359,7 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public async Task ReceiveAsync2(string endpoint)
         {
             IPEndPoint src1 = new(IPAddress.Parse("127.0.0.1"), 8000);
@@ -403,7 +403,7 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public async Task ReceiveAsync3(string endpoint)
         {
             IPEndPoint src1 = new(IPAddress.Parse("127.0.0.1"), 8000);
@@ -471,12 +471,12 @@
         }
 
         [Test]
-        public void ReceiveWhenNotOpen()
+        public async Task ReceiveWhenNotOpen()
         {
             IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             using (UdpPacketReceiver receiver = new(ep)) {
                 byte[] buffer = new byte[65536];
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await receiver.ReadAsync(buffer);
                 }, Throws.TypeOf<InvalidOperationException>());
                 Assert.That(receiver.ChannelCount, Is.EqualTo(0));
@@ -486,8 +486,8 @@
         [Test]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
-        public void ReceiveWhenClosed()
+        [CancelAfter(5000)]
+        public async Task ReceiveWhenClosed()
         {
             IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             using (UdpPacketReceiver receiver = new(ep)) {
@@ -495,7 +495,7 @@
                 receiver.Open();
                 receiver.Close();
 
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await receiver.ReadAsync(buffer);
                 }, Throws.TypeOf<InvalidOperationException>());
                 Assert.That(receiver.ChannelCount, Is.EqualTo(0));
@@ -505,8 +505,8 @@
         [Test]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
-        public void ReceiveWhenDisposed()
+        [CancelAfter(5000)]
+        public async Task ReceiveWhenDisposed()
         {
             IPEndPoint ep = new(IPAddress.Parse("127.0.0.1"), 3490);
             UdpPacketReceiver receiver = null;
@@ -515,7 +515,7 @@
                 receiver.Dispose();
 
                 byte[] buffer = new byte[65536];
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await receiver.ReadAsync(buffer);
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
@@ -528,8 +528,8 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
-        public void ReceiveAsyncClose(string endpoint)
+        [CancelAfter(5000)]
+        public async Task ReceiveAsyncClose(string endpoint)
         {
             IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
             using (UdpPacketReceiver receiver = new(ep)) {
@@ -541,7 +541,7 @@
                 Assert.That(task.IsCompleted, Is.False);
                 receiver.Close(); // Should cause thread to abort
 
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await task;
                 }, Throws.TypeOf<SocketException>().With.Property("SocketErrorCode").EqualTo(SocketError.Interrupted));
             }
@@ -551,8 +551,8 @@
         [TestCase("224.0.100.1")]
         [Explicit("Integration Test")]
         [Category("Integration")]
-        [Timeout(5000)]
-        public void ReceiveAsyncDispose(string endpoint)
+        [CancelAfter(5000)]
+        public async Task ReceiveAsyncDispose(string endpoint)
         {
             IPEndPoint ep = new(IPAddress.Parse(endpoint), 3490);
             UdpPacketReceiver receiver = null;
@@ -566,7 +566,7 @@
                 Assert.That(task.IsCompleted, Is.False);
                 receiver.Dispose(); // Should cause thread to abort
 
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await task;
                 }, Throws.TypeOf<ObjectDisposedException>());
                 receiver = null;
@@ -580,7 +580,7 @@
         [Category("Integration")]
         [Platform("Win", Reason = "Exception isn't raised on Linux")]
         [SupportedOSPlatform("windows")]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public void OpenInvalidAddress()
         {
             IPEndPoint ep = new(IPAddress.Parse("255.255.255.255"), 3490);

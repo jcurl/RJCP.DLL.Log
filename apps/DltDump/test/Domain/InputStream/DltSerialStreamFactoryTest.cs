@@ -1,6 +1,7 @@
 ﻿namespace RJCP.App.DltDump.Domain.InputStream
 {
     using System;
+    using System.Threading.Tasks;
     using Domain.Dlt;
     using NUnit.Framework;
 
@@ -161,13 +162,13 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltSerialFactory)]
-        public void ConnectUnopenedInputStream(Factory factoryType)
+        public async Task ConnectUnopenedInputStream(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             IInputStream input = null;
             try {
                 input = factory.Create("ser:com1,115200,8,n,1");
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             } finally {

@@ -201,7 +201,7 @@
                     Assert.That(await stream.ConnectAsync(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
 
-                    Assert.That(async () => {
+                    await Assert.ThatAsync(async () => {
                         _ = await stream.ConnectAsync();
                     }, Throws.TypeOf<InvalidOperationException>());
                 }
@@ -399,32 +399,32 @@
         }
 
         [Test]
-        public void ReadAsyncNotConnected()
+        public async Task ReadAsyncNotConnected()
         {
             using (TcpClientStream stream = new("127.0.0.1", 3490)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await stream.ReadAsync(new byte[100].AsMemory());
                 }, Throws.TypeOf<InvalidOperationException>());
             }
         }
 
         [Test]
-        public void ReadAsyncDisposed()
+        public async Task ReadAsyncDisposed()
         {
             TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await stream.ReadAsync(new byte[100].AsMemory());
             }, Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
-        public void ReadAsyncBufferNotConnected()
+        public async Task ReadAsyncBufferNotConnected()
         {
             using (TcpClientStream stream = new("127.0.0.1", 3490)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await stream.ReadAsync(new byte[100], 0, 100);
                 }, Throws.TypeOf<InvalidOperationException>());
             }
@@ -432,12 +432,12 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
-        public void ReadAsyncBufferDisposed()
+        public async Task ReadAsyncBufferDisposed()
         {
             TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await stream.ReadAsync(new byte[100], 0, 100);
             }, Throws.TypeOf<ObjectDisposedException>());
         }
@@ -464,32 +464,32 @@
         }
 
         [Test]
-        public void WriteAsyncNotConnected()
+        public async Task WriteAsyncNotConnected()
         {
             using (TcpClientStream stream = new("127.0.0.1", 3490)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await stream.WriteAsync(new byte[100].AsMemory());
                 }, Throws.TypeOf<InvalidOperationException>());
             }
         }
 
         [Test]
-        public void WriteAsyncDisposed()
+        public async Task WriteAsyncDisposed()
         {
             TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 await stream.WriteAsync(new byte[100].AsMemory());
             }, Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
-        public void WriteAsyncBufferNotConnected()
+        public async Task WriteAsyncBufferNotConnected()
         {
             using (TcpClientStream stream = new("127.0.0.1", 3490)) {
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     await stream.WriteAsync(new byte[100], 0, 100);
                 }, Throws.TypeOf<InvalidOperationException>());
             }
@@ -497,12 +497,12 @@
 
         [Test]
         [SuppressMessage("Performance", "CA1835:Prefer the 'Memory'-based overloads for 'ReadAsync' and 'WriteAsync'", Justification = "Test Case")]
-        public void WriteAsyncBufferDisposed()
+        public async Task WriteAsyncBufferDisposed()
         {
             TcpClientStream stream = new("127.0.0.1", 3490);
             stream.Dispose();
 
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 await stream.WriteAsync(new byte[100], 0, 100);
             }, Throws.TypeOf<ObjectDisposedException>());
         }

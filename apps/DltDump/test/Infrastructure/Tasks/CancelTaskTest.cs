@@ -9,7 +9,7 @@
     public class CancelTaskTest
     {
         [Test]
-        [Timeout(5000)]
+        [CancelAfter(5000)]
         public async Task CancelStartedTask()
         {
             ManualResetEvent started = new(false);
@@ -35,7 +35,7 @@
         }
 
         [Test]
-        [Timeout(2000)]
+        [CancelAfter(2000)]
         public async Task CancelNotStartedTask()
         {
             CancelTask task = new((t) => {
@@ -54,7 +54,7 @@
         }
 
         [Test]
-        [Timeout(2000)]
+        [CancelAfter(2000)]
         public async Task CancelNotStartedTaskRun()
         {
             CancelTask task = new((t) => {

@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Domain.Dlt;
     using NUnit.Framework;
     using RJCP.CodeQuality.NUnitExtensions;
@@ -199,13 +200,13 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltFileFactory)]
-        public void ConnectUnopenedInputStream(Factory factoryType)
+        public async Task ConnectUnopenedInputStream(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             IInputStream input = null;
             try {
                 input = factory.Create(EmptyFile);
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<InvalidOperationException>());
             } finally {
@@ -215,7 +216,7 @@
 
         [TestCase(Factory.InputStreamFactory)]
         [TestCase(Factory.DltFileFactory)]
-        public void ConnectDisposedInputStream(Factory factoryType)
+        public async Task ConnectDisposedInputStream(Factory factoryType)
         {
             IInputStreamFactory factory = GetFactory(factoryType);
             IInputStream input = null;
@@ -223,7 +224,7 @@
                 input = factory.Create(EmptyFile);
                 input.Open();
                 input.Dispose();
-                Assert.That(async () => {
+                await Assert.ThatAsync(async () => {
                     _ = await input.ConnectAsync();
                 }, Throws.TypeOf<ObjectDisposedException>());
             } finally {

@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Decoder;
     using NUnit.Framework;
     using RJCP.CodeQuality.IO;
@@ -10,9 +11,9 @@
     public class TraceReaderTest
     {
         [Test]
-        public void WriteOnlyStream()
+        public async Task WriteOnlyStream()
         {
-            Assert.That(async () => {
+            await Assert.ThatAsync(async () => {
                 _ = await new EmptyTraceReaderFactory().CreateAsync(new WriteOnlyStream());
             }, Throws.TypeOf<ArgumentException>());
         }

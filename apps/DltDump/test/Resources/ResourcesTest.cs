@@ -55,7 +55,7 @@
             bool allTranslation = true;
             allTranslation &= CheckMissingResources(AppResources, typeof(Program).Assembly, culture);
 
-            Assert.That(allTranslation, Is.True, "Some translations missing for {0}", culture);
+            Assert.That(allTranslation, Is.True, $"Some translations missing for {culture}");
         }
 
         private static bool CheckMissingResources(string baseName, Assembly assembly, CultureInfo culture)
