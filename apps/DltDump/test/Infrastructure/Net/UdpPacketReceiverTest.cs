@@ -543,7 +543,9 @@
 
                 await Assert.ThatAsync(async () => {
                     _ = await task;
-                }, Throws.TypeOf<SocketException>().With.Property("SocketErrorCode").EqualTo(SocketError.Interrupted));
+                }, Throws.TypeOf<SocketException>()
+                    .With.Property("SocketErrorCode").EqualTo(SocketError.Interrupted).Or
+                    .With.Property("SocketErrorCode").EqualTo(SocketError.OperationAborted));
             }
         }
 

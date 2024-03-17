@@ -222,7 +222,11 @@
                     return new PacketReadResult(result.ReceivedBytes, m_Channels.Count - 1);
                 }
             } catch (SocketException ex) {
-                ThrowHelper.ThrowIfDisposed(m_IsDisposed && ex.SocketErrorCode == SocketError.Interrupted, this);
+                // Throw if the user closed or disposed this object while in this call.
+                bool socketClosed =
+                    ex.SocketErrorCode == SocketError.Interrupted ||
+                    ex.SocketErrorCode == SocketError.OperationAborted;
+                ThrowHelper.ThrowIfDisposed(m_IsDisposed && socketClosed, this);
                 throw;
             }
         }
