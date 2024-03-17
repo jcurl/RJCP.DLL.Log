@@ -44,12 +44,15 @@
                     client = await m_Listener.AcceptTcpClientAsync();
                 } catch (ObjectDisposedException) {
                     continue;
+                } catch (SocketException) {
+                    if (m_IsDisposed) continue;
+                    throw;
                 }
                 OnClientConnected(this, new TcpConnectionEventArgs(client));
             }
         }
 
-        private bool m_IsDisposed;
+        private volatile bool m_IsDisposed;
 
         public void Dispose()
         {
