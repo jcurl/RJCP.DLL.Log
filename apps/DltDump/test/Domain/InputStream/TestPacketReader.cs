@@ -68,7 +68,7 @@
 
         public void Close()
         {
-            if (InputPacket is object) InputPacket.Dispose();
+            if (InputPacket is not null) InputPacket.Dispose();
             InputPacket = null;
         }
 

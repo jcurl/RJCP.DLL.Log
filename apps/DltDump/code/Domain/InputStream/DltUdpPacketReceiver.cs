@@ -135,7 +135,7 @@
         public void Open()
         {
             ThrowHelper.ThrowIfDisposed(m_IsDisposed, this);
-            if (InputPacket is object) return;
+            if (InputPacket is not null) return;
 
             m_Receiver.Open();
             InputPacket = m_Receiver;
@@ -159,7 +159,7 @@
         /// </summary>
         public void Close()
         {
-            if (InputPacket is object) InputPacket.Close();
+            if (InputPacket is not null) InputPacket.Close();
             InputPacket = null;
         }
 

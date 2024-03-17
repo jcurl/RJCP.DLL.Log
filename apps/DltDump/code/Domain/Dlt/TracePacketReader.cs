@@ -87,7 +87,7 @@
         public async Task<DltTraceLineBase> GetLineAsync()
         {
             do {
-                if (m_LineEnumerator is object) {
+                if (m_LineEnumerator is not null) {
                     if (m_LineEnumerator.MoveNext()) {
                         return m_LineEnumerator.Current;
                     }
@@ -135,7 +135,7 @@
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            // Must make sure to remove the event handler, as this may occur asynchronously if two threads are running in 
+            // Must make sure to remove the event handler, as this may occur asynchronously if two threads are running in
             // parallel.
 
             // The results are undefined, if other clients are using the enumeration returned by GetLineAsync(), Usually

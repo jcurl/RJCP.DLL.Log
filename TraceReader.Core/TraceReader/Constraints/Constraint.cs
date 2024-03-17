@@ -156,7 +156,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         public Constraint Expr(IMatchConstraint constraint)
         {
             ArgumentNullException.ThrowIfNull(constraint);
-            if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
+            if (m_Constraints is not null) throw new InvalidOperationException("Constraints expression is read only");
             m_Tokens.Append(constraint);
             return this;
         }
@@ -182,7 +182,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         {
             get
             {
-                if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
+                if (m_Constraints is not null) throw new InvalidOperationException("Constraints expression is read only");
                 m_Tokens.Or();
                 return this;
             }
@@ -198,7 +198,7 @@ namespace RJCP.Diagnostics.Log.Constraints
         {
             get
             {
-                if (m_Constraints is object) throw new InvalidOperationException("Constraints expression is read only");
+                if (m_Constraints is not null) throw new InvalidOperationException("Constraints expression is read only");
                 m_Tokens.Not();
                 return this;
             }

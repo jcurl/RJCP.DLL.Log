@@ -118,7 +118,7 @@
         /// </remarks>
         public IEnumerable<DltTraceLineBase> Flush()
         {
-            if (m_PcapDecoder is object) return m_PcapDecoder.Flush();
+            if (m_PcapDecoder is not null) return m_PcapDecoder.Flush();
             return Array.Empty<DltTraceLineBase>();
         }
 
@@ -144,7 +144,7 @@
         protected virtual void Dispose(bool disposing)
         {
             if (disposing) {
-                if (!m_IsDisposed && m_PcapDecoder is object) {
+                if (!m_IsDisposed && m_PcapDecoder is not null) {
                     m_PcapDecoder.Dispose();
                 }
             }

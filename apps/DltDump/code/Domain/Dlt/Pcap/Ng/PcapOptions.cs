@@ -46,7 +46,7 @@
             if (buffer.Length < 4) return null;
 
             IPcapOption option = DecodeOption(block, buffer);
-            if (option is object && option.OptionCode != 0) m_Options.Add(option);
+            if (option is not null && option.OptionCode != 0) m_Options.Add(option);
             return option;
         }
 

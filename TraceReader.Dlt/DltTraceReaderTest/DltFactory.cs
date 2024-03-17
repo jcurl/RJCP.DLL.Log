@@ -39,7 +39,7 @@
                 return Factory.CreateAsync(stream);
             }
 
-            if (Map is object) {
+            if (Map is not null) {
                 switch (FactoryType) {
                 case DltFactoryType.Standard:
                     return new DltTraceReaderFactory(Map).CreateAsync(stream);

@@ -260,7 +260,7 @@
                     return new FilterOutput(filter, output);
                 }
             } catch (Exception ex) {
-                if (output is object) output.Dispose();
+                if (output is not null) output.Dispose();
 
                 Global.Instance.Terminal.StdOut.WrapLine(AppResources.FilterOutputError,
                     m_Config.OutputFileName ?? "(none)",
@@ -274,7 +274,7 @@
             if (input.InputStream is not null)
                 return Global.Instance.DltReaderFactory.CreateAsync(input.InputStream);
 
-            if (input.InputPacket is object)
+            if (input.InputPacket is not null)
                 return Global.Instance.DltReaderFactory.CreateAsync(input.InputPacket);
 
             throw new InvalidOperationException("No reader for the input format");

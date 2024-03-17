@@ -157,7 +157,7 @@
                     "PCAP Block Section Header Block offset 0x{0:x} found with {1}",
                     position, littleEndian ? "little endian" : "big endian");
                 block = SectionHeaderBlock.GetSectionHeaderBlock(buffer, littleEndian, position);
-                if (block is object) {
+                if (block is not null) {
                     m_HasSectionHeader = true;
                     m_LittleEndian = littleEndian;
                 } else {

@@ -82,7 +82,7 @@
         public async Task<T> GetLineAsync()
         {
             do {
-                if (m_LineEnumerator is object) {
+                if (m_LineEnumerator is not null) {
                     if (m_LineEnumerator.MoveNext()) {
                         return m_LineEnumerator.Current;
                     }

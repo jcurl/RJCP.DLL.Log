@@ -21,7 +21,7 @@
 
         public override string ToString()
         {
-            if (Function is object) {
+            if (Function is not null) {
                 return string.Format("{0}: {1}", Operation, Function);
             } else {
                 return string.Format("{0}: --", Operation);

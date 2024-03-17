@@ -306,7 +306,7 @@
 
                         if (opRetNode.Value is BranchTargetOperation opBranchTargetModify) {
                             // From this target, find all the branches and replace them with the "ret" instruction
-                            if (opBranchTargetModify.Branches is object) {
+                            if (opBranchTargetModify.Branches is not null) {
                                 // TODO: Branches might be null if a BranchTargetSetBoolOperation points to this target
                                 // via the SkipBranch collection. We should figure out how to change that also to a
                                 // "ret", because that's also a useless operation.

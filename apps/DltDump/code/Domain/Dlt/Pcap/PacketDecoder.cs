@@ -229,7 +229,7 @@
                         // We have to be careful here, the output of the ScanIpHeader returns the same collection as it did
                         // last time, just the content may now be different. Thus, we must do this check before scanning the
                         // payload, else, we'll discard the last result.
-                        if (payload is object && lines is null)
+                        if (payload is not null && lines is null)
                             lines = new List<DltTraceLineBase>(payload);
                         payload = ScanIpHeader(ethBuff[(poffset + 12)..], timeStamp, position + 16 + 12 + poffset);
                         lines?.AddRange(payload);
@@ -250,7 +250,7 @@
             // A small optimisation, that we don't create a list unless we need to, and when we return, we return the
             // list only if it was created. Otherwise the list of packets that we decoded.
             if (lines is not null) return lines;
-            if (packet is object) return packet;
+            if (packet is not null) return packet;
             return Array.Empty<DltTraceLineBase>();
         }
 

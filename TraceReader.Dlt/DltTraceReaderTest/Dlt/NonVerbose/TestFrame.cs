@@ -83,9 +83,9 @@
                 x.Id != y.Id ||
                 x.MessageType != y.MessageType) return false;
 
-            if (x.Arguments is null && y.Arguments is object) return false;
-            if (x.Arguments is object && y.Arguments is null) return false;
-            if (x.Arguments is object && y.Arguments is object) {
+            if (x.Arguments is null && y.Arguments is not null) return false;
+            if (x.Arguments is not null && y.Arguments is null) return false;
+            if (x.Arguments is not null && y.Arguments is not null) {
                 if (x.Arguments.Count != y.Arguments.Count) return false;
 
                 for (int i = 0; i < x.Arguments.Count; i++) {
@@ -105,7 +105,7 @@
             hash ^= (int)obj.MessageType << 16;
             hash ^= obj.Id;
 
-            if (obj.Arguments is object) {
+            if (obj.Arguments is not null) {
                 foreach (IPdu pdu in obj.Arguments) {
                     hash ^= PduComparer.Comparer.GetHashCode(pdu);
                 }

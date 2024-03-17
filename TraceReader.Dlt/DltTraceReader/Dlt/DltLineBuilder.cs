@@ -554,7 +554,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder AddArgument(IDltArg argument)
         {
-            if (argument is object)
+            if (argument is not null)
                 m_Arguments.Add(argument);
             return this;
         }
@@ -566,7 +566,7 @@
         /// <returns>The current instance of the <see cref="IDltLineBuilder"/>.</returns>
         public IDltLineBuilder AddArguments(IEnumerable<IDltArg> arguments)
         {
-            if (arguments is object) {
+            if (arguments is not null) {
                 foreach (IDltArg argument in arguments)
                     AddArgument(argument);
             }
