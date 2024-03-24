@@ -93,7 +93,7 @@
                 if (m_StreamEnd) return null;
 
                 IEnumerable<T> lines;
-                int read = await m_Stream.ReadAsync(m_BufferMem, CancellationToken.None);
+                int read = await m_Stream.ReadAsync(m_BufferMem, CancellationToken.None).ConfigureAwait(false);
                 if (read <= 0) {
                     m_StreamEnd = true;
                     lines = m_Decoder.Flush();

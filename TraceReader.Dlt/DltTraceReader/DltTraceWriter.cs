@@ -69,7 +69,7 @@
             Result<int> result = m_Encoder.Encode(m_Buffer, line);
             if (!result.TryGet(out int length)) return false;
 
-            await m_Stream.WriteAsync(m_Buffer.AsMemory(0, length), CancellationToken.None);
+            await m_Stream.WriteAsync(m_Buffer.AsMemory(0, length), CancellationToken.None).ConfigureAwait(false);
             return true;
         }
 
