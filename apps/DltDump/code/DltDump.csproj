@@ -17,7 +17,7 @@
     <Copyright>(C) 2022-2024, Jason Curl</Copyright>
     <Company></Company>
     <Description>A command line tool to read a DLT file.</Description>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
 
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -119,6 +119,7 @@
     <Compile Include="Domain\Dlt\Pcap\PacketDecoder.cs" />
     <Compile Include="Domain\Dlt\Pcap\PcapTraceDecoderFactory.cs" />
     <Compile Include="Domain\Dlt\Pcap\UnknownPcapFileFormatException.cs" />
+    <Compile Include="Domain\Dlt\Pcap\UnknownPcapPacketException.cs" />
     <Compile Include="Domain\Dlt\TracePacketReader.cs" />
     <Compile Include="Domain\Dlt\TracePacketReaderFactory.cs" />
     <Compile Include="Domain\IInputStream.cs" />

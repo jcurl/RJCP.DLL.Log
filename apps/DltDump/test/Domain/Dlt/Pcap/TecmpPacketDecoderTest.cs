@@ -39,6 +39,14 @@
             Overflow = 0x8000
         }
 
+        public enum VlanProtoType
+        {
+            None,
+            QinQ,
+            QinQ9100,
+            Vlan
+        }
+
         private static (byte hi, byte lo) Split16(int value)
         {
             byte lo = (byte)(value & 0xFF);
@@ -52,9 +60,25 @@
             packet.AddRange(new byte[] { 0x10, 0xDF, 0x23, 0x41, 0xE4, 0xC2, 0x74, 0xE7, 0xB1, 0x14, 0x44, 0x5E });   // DstMac, SrcMac
         }
 
-        private static void AddVlan(List<byte> packet, byte vlan)
+        private static void AddVlan(List<byte> packet, VlanProtoType vtyp, byte vlan)
         {
-            packet.AddRange(new byte[] { 0x81, 0x00, 0x00, vlan });
+            if (vlan == 0) return;
+
+            switch (vtyp) {
+            case VlanProtoType.None:
+                return;
+            case VlanProtoType.Vlan:
+                packet.AddRange(new byte[] { 0x81, 0x00, 0x00, vlan });
+                return;
+            case VlanProtoType.QinQ:
+                packet.AddRange(new byte[] { 0x88, 0xA8, 0x00, vlan });
+                return;
+            case VlanProtoType.QinQ9100:
+                packet.AddRange(new byte[] { 0x91, 0x00, 0x00, vlan });
+                return;
+            default:
+                throw new InvalidOperationException("Unknown test case");
+            }
         }
 
         private static void AddTecmpHeader(List<byte> packet)
@@ -121,27 +145,37 @@
         }
         #endregion
 
-        [TestCase(0, 0, 0, 0, TestName = "DecodeTecmpPacket")]
-        [TestCase(0x45, 0, 0, 0, TestName = "DecodeVlanTecmpPacket")]
-        [TestCase(0x45, 0x01, 0, 0, TestName = "DecodeVlan2TecmpPacket")]
-        [TestCase(0, 0, 0x49, 0, TestName = "DecodeTecmpPacketVlan")]
-        [TestCase(0, 0, 0x49, 0x01, TestName = "DecodeTecmpPacketVlan2")]
-        [TestCase(0x45, 0, 0x49, 0, TestName = "DecodeVlanTecmpPacketVlan")]
-        [TestCase(0x45, 0, 0x49, 0x01, TestName = "DecodeVlanTecmpPacketVlan2")]
-        [TestCase(0x45, 0x01, 0x49, 0, TestName = "DecodeVlan2TecmpPacketVlan")]
-        [TestCase(0x45, 0x01, 0x49, 0x01, TestName = "DecodeVlan2TecmpPacketVlan2")]
-        public void DecodeTecmpPacket(byte ethVlanOuter, byte ethVlanInner, byte captureVlanOuter, byte captureVlanInner)
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacket_0000")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacket_0100")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacket_1100")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacket_2100")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacket_3100")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacket_0001")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacket_0011")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacket_0021")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacket_0031")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacket_0101")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacket_0111")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacket_0121")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacket_0131")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacket_1101")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacket_2101")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacket_3101")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacket_1111")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacket_2121")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacket_3131")]
+        public void DecodeTecmpPacket(VlanProtoType vtypEth, byte ethVlanOuter, byte ethVlanInner, VlanProtoType vtypCapture, byte captureVlanOuter, byte captureVlanInner)
         {
             List<byte> packet = new();
             AddEthMac(packet);
-            if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
-            if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
+            AddVlan(packet, vtypEth, ethVlanOuter);
+            AddVlan(packet, VlanProtoType.Vlan, ethVlanInner);
             AddTecmpHeader(packet);
 
             List<byte> payload = new();
             AddEthMac(payload);
-            if (captureVlanOuter != 0) AddVlan(payload, captureVlanOuter);
-            if (captureVlanInner != 0) AddVlan(payload, captureVlanInner);
+            AddVlan(payload, vtypCapture, captureVlanOuter);
+            AddVlan(payload, VlanProtoType.Vlan, captureVlanInner);
             AddDltPayload(payload, "DLT Argument test string..");
 
             AddTecmpPayload(packet, payload);
@@ -155,34 +189,44 @@
             }
         }
 
-        [TestCase(0, 0, 0, 0, TestName = "DecodeTecmpPacketMulti")]
-        [TestCase(0x45, 0, 0, 0, TestName = "DecodeVlanTecmpPacketMulti")]
-        [TestCase(0x45, 0x01, 0, 0, TestName = "DecodeVlan2TecmpPacketMulti")]
-        [TestCase(0, 0, 0x49, 0, TestName = "DecodeTecmpPacketVlanMulti")]
-        [TestCase(0, 0, 0x49, 0x01, TestName = "DecodeTecmpPacketVlan2Multi")]
-        [TestCase(0x45, 0, 0x49, 0, TestName = "DecodeVlanTecmpPacketVlanMulti")]
-        [TestCase(0x45, 0, 0x49, 0x01, TestName = "DecodeVlanTecmpPacketVlan2Multi")]
-        [TestCase(0x45, 0x01, 0x49, 0, TestName = "DecodeVlan2TecmpPacketVlanMulti")]
-        [TestCase(0x45, 0x01, 0x49, 0x01, TestName = "DecodeVlan2TecmpPacketVlan2Multi")]
-        public void DecodeTecmpPacketMulti(byte ethVlanOuter, byte ethVlanInner, byte captureVlanOuter, byte captureVlanInner)
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacketMulti_0000")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacketMulti_0100")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacketMulti_1100")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacketMulti_2100")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.None, 0, 0, TestName = "DecodeTecmpPacketMulti_3100")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacketMulti_0001")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0011")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0021")]
+        [TestCase(VlanProtoType.None, 0, 0, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0031")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacketMulti_0101")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0111")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0121")]
+        [TestCase(VlanProtoType.None, 0, 0x45, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_0131")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacketMulti_1101")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacketMulti_2101")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.None, 0, 0x49, TestName = "DecodeTecmpPacketMulti_3101")]
+        [TestCase(VlanProtoType.Vlan, 0x01, 0x45, VlanProtoType.Vlan, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_1111")]
+        [TestCase(VlanProtoType.QinQ, 0x01, 0x45, VlanProtoType.QinQ, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_2121")]
+        [TestCase(VlanProtoType.QinQ9100, 0x01, 0x45, VlanProtoType.QinQ9100, 0x01, 0x49, TestName = "DecodeTecmpPacketMulti_3131")]
+        public void DecodeTecmpPacketMulti(VlanProtoType vtypEth, byte ethVlanOuter, byte ethVlanInner, VlanProtoType vtypCapture, byte captureVlanOuter, byte captureVlanInner)
         {
             List<byte> packet = new();
             AddEthMac(packet);
-            if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
-            if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
+            AddVlan(packet, vtypEth, ethVlanOuter);
+            AddVlan(packet, VlanProtoType.Vlan, ethVlanInner);
             AddTecmpHeader(packet);
 
             List<byte> payload1 = new();
             AddEthMac(payload1);
-            if (captureVlanOuter != 0) AddVlan(payload1, captureVlanOuter);
-            if (captureVlanInner != 0) AddVlan(payload1, captureVlanInner);
+            AddVlan(payload1, vtypCapture, captureVlanOuter);
+            AddVlan(payload1, VlanProtoType.Vlan, captureVlanInner);
             AddDltPayload(payload1, "DLT Argument test string..");
             AddTecmpPayload(packet, payload1);
 
             List<byte> payload2 = new();
             AddEthMac(payload2);
-            if (captureVlanOuter != 0) AddVlan(payload2, captureVlanOuter);
-            if (captureVlanInner != 0) AddVlan(payload2, captureVlanInner);
+            AddVlan(payload2, vtypCapture, captureVlanOuter);
+            AddVlan(payload2, VlanProtoType.Vlan, captureVlanInner);
             AddDltPayload(payload2, "DLT Argument test string 2");
             AddTecmpPayload(packet, payload2);
 
@@ -403,14 +447,14 @@
         {
             List<byte> packet = new();
             AddEthMac(packet);
-            if (ethVlanOuter != 0) AddVlan(packet, ethVlanOuter);
-            if (ethVlanInner != 0) AddVlan(packet, ethVlanInner);
+            AddVlan(packet, VlanProtoType.QinQ, ethVlanOuter);
+            AddVlan(packet, VlanProtoType.Vlan, ethVlanInner);
             AddTecmpHeader(packet);
 
             List<byte> payload = new();
             AddEthMac(payload);
-            if (captureVlanOuter != 0) AddVlan(payload, captureVlanOuter);
-            if (captureVlanInner != 0) AddVlan(payload, captureVlanInner);
+            AddVlan(payload, VlanProtoType.QinQ, captureVlanOuter);
+            AddVlan(payload, VlanProtoType.Vlan, captureVlanInner);
             AddDltPayload(payload, "DLT Argument test string..");
 
             AddTecmpPayload(packet, payload);

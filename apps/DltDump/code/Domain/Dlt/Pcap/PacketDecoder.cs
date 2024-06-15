@@ -55,66 +55,90 @@
             int offset;
             switch (m_LinkType) {
             case LinkTypes.LINKTYPE_ETHERNET:
-                offset = ScanEthernetHeader(buffer);
+                if (!ScanEthernetHeader(buffer).TryGet(out offset))
+                    return Array.Empty<DltTraceLineBase>();
                 break;
             case LinkTypes.LINKTYPE_LINUX_SLL:
-                offset = ScanSslHeader(buffer);
+                if (!ScanSllHeader(buffer).TryGet(out offset))
+                    return Array.Empty<DltTraceLineBase>();
                 break;
             default:
                 throw new UnknownPcapFileFormatException(AppResources.DomainPcapUnknownLinkFormat);
             }
-            if (offset < 0) return Array.Empty<DltTraceLineBase>();
 
-            (int poffset, ushort proto) = ScanVlanHeader(buffer[offset..]);
-            if (proto == 0) return Array.Empty<DltTraceLineBase>();
-            offset += poffset;
+            // Offset now points to the 'proto' field.
+            if (!ScanVlanHeader(buffer[offset..]).TryGet(out int vlanOffset))
+                return Array.Empty<DltTraceLineBase>();
+            offset += vlanOffset;
 
+            ushort proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer[offset..]));
             switch (proto) {
             case 0x800:
-                return ScanIpHeader(buffer[offset..], timeStamp, position + offset);
+                return ScanIpHeader(buffer[(offset + 2)..], timeStamp, position + offset + 2);
             case 0x99FE:
             case 0x2090:
-                return ScanTecmpHeader(buffer[offset..], timeStamp, position + offset);
+                return ScanTecmpHeader(buffer[(offset + 2)..], timeStamp, position + offset + 2);
             default:
                 return Array.Empty<DltTraceLineBase>();
             }
         }
 
-        private static int ScanEthernetHeader(ReadOnlySpan<byte> buffer)
+        /// <summary>
+        /// Parses the header in the "Ethernet Frame" format.
+        /// </summary>
+        /// <param name="buffer">The buffer with the first byte being in the payload.</param>
+        /// <returns>The size of the header, which is 12 bytes.</returns>
+        /// <remarks>The Ethernet Frame header contains the destination MAC, source MAC fields.</remarks>
+        private static Result<int> ScanEthernetHeader(ReadOnlySpan<byte> buffer)
         {
-            if (buffer.Length < 14) return -1;
+            if (buffer.Length < 14) return Result.FromException<int>(new UnknownPcapPacketException("Ethernet Buffer too small"));
             return 12;
         }
 
-        private static int ScanSslHeader(ReadOnlySpan<byte> buffer)
+        /// <summary>
+        /// Parses the header in the "Linux Cooked Frame" format.
+        /// </summary>
+        /// <param name="buffer">The buffer with the first byte being in the payload.</param>
+        /// <returns>The size of the header, which is 14 bytes.</returns>
+        /// <remarks>The Linux Cooked Frame header contains the packet type, and essentially only the sender.</remarks>
+        private static Result<int> ScanSllHeader(ReadOnlySpan<byte> buffer)
         {
-            if (buffer.Length < 16) return -1;
+            if (buffer.Length < 16) return Result.FromException<int>(new UnknownPcapPacketException("Ethernet SSL Buffer too small"));
             return 14;
         }
 
-        private static (int offset, ushort proto) ScanVlanHeader(ReadOnlySpan<byte> buffer)
+        /// <summary>
+        /// Scans the header, stripping away any VLAN headers.
+        /// </summary>
+        /// <param name="buffer">The buffer after the frame, pointing to the protocol field.</param>
+        /// <returns>The number of bytes to skip to get the next protocol field.</returns>
+        /// <remarks>
+        /// Scans the header of 0x88a8/0x9100 (802.1ad header), then 0x8100 (802.1q header), and returns an offset of
+        /// either 0 (no VLAN headers); 4 (one VLAN header); or 8 (Q-in-Q header and VLAN header). It will ensure that
+        /// there is enough bytes so that one can safely check for the non-VLAN proto field afterwards.
+        /// </remarks>
+        private static Result<int> ScanVlanHeader(ReadOnlySpan<byte> buffer)
         {
-            if (buffer.Length < 2) return (0, 0);
+            if (buffer.Length < 6) return Result.FromException<int>(new UnknownPcapPacketException("PCAP packet too small"));
 
-            int offset = 0;
-            ushort proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer));
+            int proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer));
+            if (proto is not 0x8100 and not 0x9100 and not 0x88A8) return 0;
 
-            if (proto == 0x8100) {
-                // Outer VLAN
-                offset = 4;
-                if (buffer.Length < offset + 2) return (0, 0);
-                proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer[4..]));
-                if (proto == 0x8100) {
-                    // Inner VLAN
-                    offset = 8;
-                    if (buffer.Length < offset + 2) return (0, 0);
-                    proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer[8..]));
-                }
-            }
+            if (buffer.Length < 10) return Result.FromException<int>(new UnknownPcapPacketException("PCAP packet too small"));
+            proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(buffer[4..]));
+            if (proto != 0x8100) return 4;
 
-            return (offset + 2, proto);
+            return 8;
         }
 
+        /// <summary>
+        /// Scans the payload looking for DLT data starting at the first byte of the IPv4 header (skipping over the
+        /// 0x800 proto field).
+        /// </summary>
+        /// <param name="buffer">The buffer where the IPv4 packet starts.</param>
+        /// <param name="timeStamp">The time stamp obtained from the Wireshark Packet.</param>
+        /// <param name="position">The position where the IPv4 header starts.</param>
+        /// <returns>A collection of decoded DLT frames.</returns>
         private IEnumerable<DltTraceLineBase> ScanIpHeader(ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
         {
             // * IPv4 Header = 20 bytes (src, dest, proto, length)
@@ -157,6 +181,16 @@
         private bool m_TecmpVersionError = false;
         private int m_TecmpVersionCount = 0;
 
+        /// <summary>
+        /// Scans the payload looking for DLT data starting at the first byte of the TECMP header.
+        /// </summary>
+        /// <param name="buffer">The buffer where the TECMP packet starts.</param>
+        /// <param name="timeStamp">The time stamp obtained from the Wireshark Packet.</param>
+        /// <param name="position">The position where the TECMP header starts.</param>
+        /// <returns>A collection of decoded DLT frames.</returns>
+        /// <remarks>
+        /// This method will decode the inner Ethernet frame looking for the IPv4 packet to extract the DLT payload.
+        /// </remarks>
         private IEnumerable<DltTraceLineBase> ScanTecmpHeader(ReadOnlySpan<byte> buffer, DateTime timeStamp, long position)
         {
             // TECMP Header is 12 bytes, Payload is 16 bytes.
@@ -223,7 +257,10 @@
                     Log.Pcap.TraceEvent(TraceEventType.Warning,
                         "TECMP packet partial payload at 0x{0}, TECMP payload too small, length {1}", position, ethBuff.Length);
                 } else {
-                    (int poffset, ushort proto) = ScanVlanHeader(ethBuff[12..]);
+                    if (!ScanVlanHeader(ethBuff[12..]).TryGet(out int poffset))
+                        return TecmpResult(lines, payload);
+
+                    ushort proto = unchecked((ushort)BitOperations.To16ShiftBigEndian(ethBuff[(poffset + 12)..]));
                     switch (proto) {
                     case 0x800:
                         // We have to be careful here, the output of the ScanIpHeader returns the same collection as it did
@@ -231,7 +268,9 @@
                         // payload, else, we'll discard the last result.
                         if (payload is not null && lines is null)
                             lines = new List<DltTraceLineBase>(payload);
-                        payload = ScanIpHeader(ethBuff[(poffset + 12)..], timeStamp, position + 16 + 12 + poffset);
+
+                        // 12 bytes for MAC; 2 bytes for proto; poffset for VLAN header.
+                        payload = ScanIpHeader(ethBuff[(poffset + 14)..], timeStamp, position + 16 + 14 + poffset);
                         lines?.AddRange(payload);
                         break;
                     default:

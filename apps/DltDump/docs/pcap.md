@@ -5,8 +5,8 @@ implementation for the decoder when reading PCAP or PCAPNG files.
 
 For reference, the specifications can be found at:
 
-* [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html)
-* [PCAP-NG](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcapng.html)
+- [PCAP](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcap.html)
+- [PCAP-NG](https://pcapng.github.io/pcapng/draft-ietf-opsawg-pcapng.html)
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -98,10 +98,10 @@ The Magic Number defines the byte ordering and the time resolution:
 
 The other fields:
 
-* The Major Version is expected to be 2.
-* The Minor Version is expected to be 4.
-* Reserved1 and Reserved2 are ignored.
-* SnapLen is the maximum length for each packet (the snapshot length). No packet
+- The Major Version is expected to be 2.
+- The Minor Version is expected to be 4.
+- Reserved1 and Reserved2 are ignored.
+- SnapLen is the maximum length for each packet (the snapshot length). No packet
   in the file is larger than SnapLen.
 
 #### 2.1.1. PCAP Link Type Field
@@ -120,8 +120,8 @@ this implementation.
 
 The Link-layer type supported is one of two values:
 
-* `LINKTYPE_ETHERNET` = 1
-* `LINKTYPE_LINUX_SLL` = 113
+- `LINKTYPE_ETHERNET` = 1
+- `LINKTYPE_LINUX_SLL` = 113
 
 ### 2.2. Frame
 
@@ -176,19 +176,19 @@ implementation.
 
 The fields have the following meaning:
 
-* Block Type (32 bits): a unique unsigned value that identifies the block.
-* Block Total Length (32 bits): an unsigned value giving the total size of this
+- Block Type (32 bits): a unique unsigned value that identifies the block.
+- Block Total Length (32 bits): an unsigned value giving the total size of this
   block in octets.
-* Block Body: content of the block.
-* Block Total Length: total size of this block, in octets. It's duplicated if
+- Block Body: content of the block.
+- Block Total Length: total size of this block, in octets. It's duplicated if
   the file needs to be read in reverse (e.g. implementing windowing, which is
   not required by this project).
 
 The types of Blocks are:
 
-* `0x0A0D0D0A`: Section Header Block
-* `0x00000001`: Interface Description Block
-* `0x00000006`: Enhanced Packet Block. If this appears in a file, an Interface
+- `0x0A0D0D0A`: Section Header Block
+- `0x00000001`: Interface Description Block
+- `0x00000006`: Enhanced Packet Block. If this appears in a file, an Interface
   Description Block is also required, before this block.
 
 The length is a signed integer type, in the endianness described by the SHB
@@ -255,8 +255,8 @@ once. The DltDump tooling in this project ignores the options.
 The section header block is intended to be endianness agnostic. The `Byte-Order
 Magic` contains the endianness:
 
-* `0x1A2B3C4D`: Big endian
-* `0x4D3C2B1A`: Little endian
+- `0x1A2B3C4D`: Big endian
+- `0x4D3C2B1A`: Little endian
 
 The Major Version and Minor Version are expected to be 1 and 0 respectively.
 
@@ -289,14 +289,14 @@ a SHB. The EPB uses this identifier.
 
 The following options must be parsed:
 
-* `if_tsreso`. Code `9` and length `1`.
-  * If the Most Significant Bit is equal to zero, the remaining bits indicates
+- `if_tsreso`. Code `9` and length `1`.
+  - If the Most Significant Bit is equal to zero, the remaining bits indicates
     the resolution of the timestamp as a negative power of 10 (e.g. 6 means
     microsecond resolution, timestamps are the number of microseconds since
     1970-01-01 00:00:00 UTC).
-  * If the Most Significant Bit is equal to one, the remaining bits indicates
+  - If the Most Significant Bit is equal to one, the remaining bits indicates
     the resolution as negative power of 2 (e.g. 10 means 1/1024 of second).
-  * If this option is not present, a resolution of 10^-6 is assumed (i.e.
+  - If this option is not present, a resolution of 10^-6 is assumed (i.e.
     timestamps have the same resolution of the standard 'libpcap' timestamps).
 
 ### 3.6. Enhanced Packet Block (EPB)
@@ -384,10 +384,12 @@ SLL](https://www.tcpdump.org/linktypes/LINKTYPE_LINUX_SLL.html).
 
 The supported protocols are:
 
-* 0x8100 - 802.1q Virtual LAN
-  * If present, the next two bytes represent the VLAN and Priority Code Point.
-* 0x99FE - TECMP
-* 0x0800 - IPv4
+- 0x88A8 - 802.1ad Q-in-Q header. Expect to be followed by 0x8100.
+  - 0x9100 and 0x8100 are also supported as Q-in-Q header
+- 0x8100 - 802.1q Virtual LAN
+  - If present, the next two bytes represent the VLAN and Priority Code Point.
+- 0x99FE - TECMP
+- 0x0800 - IPv4
 
 ## 6. TECMP Protocol
 
@@ -412,12 +414,12 @@ v1.6](https://raw.githubusercontent.com/Technica-Engineering/libtecmp/master/doc
 
 Values are in big-endian
 
-* Device ID: Unique device sending / recording the packets.
-* Counter: 16 bit monotonic, wrap-around counter
-* Version: Expected to be 3
-* Msg Type: TECMP_MSG_TYPE_LOG_STREAM (0x03)
-* Data Type: TECMP_DATA_TYPE_ETH (0x0080)
-* CM Flags
+- Device ID: Unique device sending / recording the packets.
+- Counter: 16 bit monotonic, wrap-around counter
+- Version: Expected to be 3
+- Msg Type: TECMP_MSG_TYPE_LOG_STREAM (0x03)
+- Data Type: TECMP_DATA_TYPE_ETH (0x0080)
+- CM Flags
 
   | CMFlags (bits) | Meaning                                                       |
   | -------------- | ------------------------------------------------------------- |
@@ -432,10 +434,10 @@ Values are in big-endian
 
   e.g. 0x000F
 
-  * Unsegmented message (0x03)
-  * SPY message (0x04)
-  * Multi-frame message (0x08)
-  * No capture module overflow
+  - Unsegmented message (0x03)
+  - SPY message (0x04)
+  - Multi-frame message (0x08)
+  - No capture module overflow
 
 ### 6.2. TECMP Payload
 
@@ -459,16 +461,16 @@ header.
       /                                                               /
 ```
 
-* Interface ID: uniquely identifies the log data / bus / link
-* Timestamp:
-  * Bits [61..0] are the number of nanoseconds since 1/1/1970 from a
+- Interface ID: uniquely identifies the log data / bus / link
+- Timestamp:
+  - Bits [61..0] are the number of nanoseconds since 1/1/1970 from a
   PTP clock. Independent of the Wireshark recording timestamp.
-  * Bit 62: Timestamp recalculation
-  * Bit 63: Valid for TECMP_MSG_TYPE_LOG_STREAM
-    * 0 = Synchronised with a PTP clock
-    * 1 = Lost synchronisation after 250ms
-* Length: Length of the payload (not including this header)
-* Data Flags: Values for TECMP_DATA_TYPE_ETH
+  - Bit 62: Timestamp recalculation
+  - Bit 63: Valid for TECMP_MSG_TYPE_LOG_STREAM
+    - 0 = Synchronised with a PTP clock
+    - 1 = Lost synchronisation after 250ms
+- Length: Length of the payload (not including this header)
+- Data Flags: Values for TECMP_DATA_TYPE_ETH
 
   | Data Flags Bit | Meaning   |
   | -------------- | --------- |
@@ -509,26 +511,26 @@ The options define further definition for the IPv4 header and is optional. The
 total length of the Internet header is dependent on the IHL field, e.g. if 0x5,
 then the length is 20 bytes.
 
-* Version: Expected to be 0x4
-* IHL: Defines the length of the header in the number of 32-bit octets
-* Type of Service: Ignored
-* Total Length: The length of the entire Internet datagram including the Version
+- Version: Expected to be 0x4
+- IHL: Defines the length of the header in the number of 32-bit octets
+- Type of Service: Ignored
+- Total Length: The length of the entire Internet datagram including the Version
   (but not including the protocol).
-* Identification: Used to identify the packet. Useful for packet fragmentation.
-* Flags: Defines fragmentation
-  * D - Do not Fragment (0x40)
-  * M - More Fragments (0x20)
-* Fragment Offset: The number of 64-bit octets offset from the *data*. If
+- Identification: Used to identify the packet. Useful for packet fragmentation.
+- Flags: Defines fragmentation
+  - D - Do not Fragment (0x40)
+  - M - More Fragments (0x20)
+- Fragment Offset: The number of 64-bit octets offset from the *data*. If
   fragmented (and not the last fragment), the fragment must be a multiple of 8
   bytes.
-* TTL: The number of router hops before the packet should be dropped. Is
+- TTL: The number of router hops before the packet should be dropped. Is
   decremented by each router hop.
-* Protocol: The Internet protocol, e.g.
-  * 17: UDP
-* Header Checksum: The checksum of the IPv4 packet
-* Source Address, Destination Address: The 32-bit octet (network order) address
+- Protocol: The Internet protocol, e.g.
+  - 17: UDP
+- Header Checksum: The checksum of the IPv4 packet
+- Source Address, Destination Address: The 32-bit octet (network order) address
   of the source and destination.
-* Options: Optional data, present if the IHL is more than 0x5.
+- Options: Optional data, present if the IHL is more than 0x5.
 
 ### 7.1. IP Fragmentation
 
@@ -546,10 +548,10 @@ made.
 A group of IP fragments are reconstructed into a single IPv4 packet based on the
 following fields:
 
-* The source address.
-* The destination address.
-* The protocol identifier.
-* The identification field.
+- The source address.
+- The destination address.
+- The protocol identifier.
+- The identification field.
 
 The length of the packet is unknown, until the final packet is received. The
 final packet is identified as having the MF bit set to zero. The length is then

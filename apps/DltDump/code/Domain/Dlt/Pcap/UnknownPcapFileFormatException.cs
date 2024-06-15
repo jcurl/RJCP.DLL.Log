@@ -5,7 +5,6 @@
     /// <summary>
     /// The exception that is thrown when an application error occurs.
     /// </summary>
-    /// <seealso cref="Exception" />
     public class UnknownPcapFileFormatException : Exception
     {
         /// <summary>
