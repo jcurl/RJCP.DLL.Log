@@ -61,6 +61,9 @@ auto main(int argc, char* argv[]) -> int
     if (udp.reuseaddr(true) < 0)
         write_error("setsockopt(SO_REUSEADDR)");
 
+    if (udp.reuseport(true) < 0)
+        write_error("setsockopt(SO_REUSEPORT)");
+
     if (udp.bind(src) < 0)
         write_error("bind");
 

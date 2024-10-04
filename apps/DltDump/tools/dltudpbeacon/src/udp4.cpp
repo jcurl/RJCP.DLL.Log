@@ -54,6 +54,18 @@ auto rjcp::net::udp4::reuseaddr(bool reuse) noexcept -> int
         &value, sizeof(value));
 }
 
+auto rjcp::net::udp4::reuseport(bool reuse) noexcept -> int
+{
+    if (!this->is_open()) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int value = reuse ? 1 : 0;
+    return ::setsockopt(this->m_socket_fd, SOL_SOCKET, SO_REUSEPORT,
+        &value, sizeof(value));
+}
+
 auto rjcp::net::udp4::multicast_loop(sockaddr4& group, bool enabled) noexcept -> int
 {
     if (!group.is_valid() || !this->is_open()) {

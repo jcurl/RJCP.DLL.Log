@@ -79,6 +79,16 @@ namespace rjcp::net {
         auto reuseaddr(bool reuse) noexcept -> int;
 
         /**
+         * @brief Set the socket option for reuse
+         *
+         * This should be called before binding the socket.
+         *
+         * @param reuse a boolean value if the socket port should be reused or not
+         * @return int Success if zero, -1 on error. Check errno.
+         */
+        auto reuseport(bool reuse) noexcept -> int;
+
+        /**
          * @brief Set the amount of send buffer for the socket.
          *
          * @param sendbuf The size of the bytes to send.
