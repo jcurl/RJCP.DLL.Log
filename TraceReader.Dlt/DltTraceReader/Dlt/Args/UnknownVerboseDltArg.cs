@@ -70,7 +70,7 @@
         /// Appends the argument to the end of the <see cref="StringBuilder" />.
         /// </summary>
         /// <param name="strBuilder">The string builder to append this argument to.</param>
-        /// <returns>The reference to the original string builder.</returns>
+        /// <returns>The original <paramref name="strBuilder"/> for chaining.</returns>
         public override StringBuilder Append(StringBuilder strBuilder)
         {
             // Data can't be null, as a ReadOnlySpan can never be null (value type), provided by the .ctor.

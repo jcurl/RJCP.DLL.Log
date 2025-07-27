@@ -6,8 +6,7 @@
     /// <summary>
     /// Interface for writing lines to an output.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <seealso cref="IDisposable" />
+    /// <typeparam name="T">The base-type that describes the line that is to be written.</typeparam>
     public interface ITraceWriter<in T> : IDisposable where T : ITraceLine
     {
         /// <summary>

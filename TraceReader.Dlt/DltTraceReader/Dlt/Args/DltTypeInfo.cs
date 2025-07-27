@@ -102,6 +102,7 @@
         /// Appends the argument to the end of the <see cref="StringBuilder" />.
         /// </summary>
         /// <param name="strBuilder">The string builder to append this argument to.</param>
+        /// <returns>The original <paramref name="strBuilder"/> for chaining.</returns>
         public StringBuilder Append(StringBuilder strBuilder)
         {
             HexConvert.ConvertToHex(strBuilder, Bytes);
