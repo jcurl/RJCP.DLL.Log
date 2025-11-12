@@ -1,0 +1,299 @@
+@startuml DLTv2.BaseHeader
+map "Storage Header v2 (Optional)" as StorageHeader {
+    0..3 => DLT Pattern DLT\2
+    4..11 => Real-Clock Time Stamp
+    12 => ECU ID Length (bytes)
+    13..n => ECU ID
+}
+
+package "Base Header" {
+    map "Base Header (7-22 bytes)" as BaseHeader {
+        0..3 => Header Type (HTYP2)
+        4 => Message Counter (MCNT)
+        5..6 => Length (LEN)
+        7 => Message Info (MSIN, Optional)
+        8 => Number of Arguments (NOAR, Optional)
+        9..12 => Time Stamp nanoseconds (TMSP2 ns, Optional)
+        13..17 => Time Stamp seconds (TMSP2, Optional)
+        18..21 => Message ID (Optional)
+    }
+
+    map "Header Type 2 (4 bytes)" as HeaderType {
+        b0..b1 => Content Information (CNTI)
+        b2 => With ECU ID (WEID)
+        b3 => With App and Context ID (WACID)
+        b4 => With Session ID (WSID)
+        b5..b7 => Version Identifier (VERS = 2)
+        b8 => With Source FIle Name and Line Number (WSFLN)
+        b9 => With Tags (WTGS)
+        b10 => With Privacy Level (WPVL)
+        b11 => With Segmentation (WSGM)
+    }
+
+    map "Content Information" as ContentInfo {
+        0x0 => Verbose Mode Data Message
+        0x1 => Non-Verbose Mode Data Message
+        0x2 => Control Message
+        0x3 => Reserved
+    }
+
+    map "Message Info (1 byte)" as MessageInfo {
+        b0 => 0 (Reserved)
+        b1..b3 => Message Type (MSTP)
+        b4..b7 => Message Type Info (MTIN)
+    }
+
+    map "MTIN DLT_TYPE_LOG (MSTP=0)" as DLT_TYPE_LOG {
+        1 => DLT_LOG_FATAL
+        2 => DLT_LOG_ERROR
+        3 => DLT_LOG_WARN
+        4 => DLT_LOG_INFO
+        5 => DLT_LOG_DEBUG
+        6 => DLT_LOG_VERBOSE
+    }
+
+    map "MTIN DLT_TYPE_APP_TRACE (MSTP=1)" as DLT_TYPE_APP_TRACE {
+        1 => DLT_TRACE_VARIABLE
+        2 => DLT_TRACE_FUNCTION_IN
+        3 => DLT_TRACE_FUNCTION_OUT
+        4 => DLT_TRACE_STATE
+        5 => DLT_TRACE_VFB
+    }
+
+    map "MTIN DLT_TYPE_NW_TRACE (MSTP=2)" as DLT_TYPE_NW_TRACE {
+        1 =>  DLT_NW_TRACE_IPC
+        2 =>  DLT_NW_TRACE_CAN
+        3 =>  DLT_NW_TRACE_FLEXRAY
+        4 =>  DLT_NW_TRACE_MOST
+        5 =>  DLT_NW_TRACE_ETHERNET
+        6 =>  DLT_NW_TRACE_SOMEIP
+        7..15 => User Defined
+    }
+
+    map "MTIN DLT_TYPE_CONTROL (MSTP=3)" as DLT_TYPE_CONTROL {
+        1 => DLT_CONTROL_REQUEST
+        2 => DLT_CONTROL_RESPONSE
+        3 => DLT_CONTROL_TIME
+    }
+}
+
+StorageHeader -> BaseHeader
+BaseHeader -- HeaderType
+BaseHeader -- MessageInfo
+HeaderType -- ContentInfo
+MessageInfo -- DLT_TYPE_LOG
+MessageInfo -- DLT_TYPE_APP_TRACE
+MessageInfo -- DLT_TYPE_NW_TRACE
+MessageInfo -- DLT_TYPE_CONTROL
+@enduml
+
+@startuml DLTv2.ExtensionHeader
+left to right direction
+
+package "Extension Header with Options" as ExtendedHeaderGroup {
+    map "Extension Header (Optional)" as ExtendedHeader {
+        WEID => ECU Identifier (ECU)
+        WACID => Application Identifier (APID)\nContext Identifier (CTID)
+        WSID => Session ID (SEID)
+        WSFLN => Source File Name (FINA)\nLine Number(LINR)
+        WTGS => Tags (TAGS)
+        WPVL => Privacy Level (PRLV)
+        WSGM => Segmentation Info (SGMT)
+    }
+
+    map "Segmentation Info (SGMT)" as ExtendedSGMT {
+
+    }
+    note right {
+        Refer to section 5.1.2.7
+    }
+
+    map "Privacy Level (PRLV)" as ExtendedHeaderPRLV {
+        0 => Privacy Level (uint8_t)
+    }
+    note right {
+        [PRS_Dlt_01036] defines this as one byte.
+    }
+
+    map "Tags (TAGS)" as ExtendedHeaderTAGS {
+        0 => Number of tags (uint8_t, NOTG)
+        1 => Length of Tag 1
+        2..n => ASCII Tag
+        n+1 => Length of Tag 2
+        n+2..m => ASCII Tag
+        m+1 => Length of Tag 'n'
+        m+2..p => ASCII Tag
+    }
+    note right {
+        No NUL terminating character.
+    }
+
+    map "Line Number (LINR)" as ExtendedHeaderLINR {
+        0..3 => Line Number (uint32_t)
+    }
+
+    map "File Name (FINA)" as ExtendedHeaderFINA {
+        0 => Length, Number of UTF-8 code units (8 bit)
+        1..n => UTF8 sequence
+    }
+    note right {
+        Length is conflicting. [PRS_Dlt_01027]
+        defines units in bytes, and overrides
+        [PRS_Dlt_01016] which defines units in
+        number of UTF-8 code units.
+    }
+
+    map "Session Identifier (SEID)" as ExtendedHeaderSEID {
+        0..3 => Session ID (uint32_t)
+    }
+
+    map "Context Identifier (CTID)" as ExtendedHeaderCTID {
+        0 => Length, Number of bytes (8 bit)
+        1..n => ASCII Characters
+    }
+    note right {
+        No NUL terminating character.
+
+        "+" and 16-bit base62 encoded
+        Vendor ID
+    }
+
+    map "Application Identifier (APID)" as ExtendedHeaderAPID {
+        0 => Length, Number of bytes (8 bit)
+        1..n => ASCII Characters
+    }
+    note right {
+        No NUL terminating character
+    }
+
+    map "ECU Identifier (ECU)" as ExtendedHeaderECU {
+        0 => Length, Number of bytes (8 bit)
+        1..n => ASCII Characters
+    }
+    note right {
+        No NUL terminating character
+    }
+}
+
+ExtendedHeader --> ExtendedHeaderECU
+together {
+    ExtendedHeader --> ExtendedHeaderAPID
+    ExtendedHeader --> ExtendedHeaderCTID
+}
+ExtendedHeader --> ExtendedHeaderSEID
+together {
+    ExtendedHeader --> ExtendedHeaderFINA
+    ExtendedHeader --> ExtendedHeaderLINR
+}
+ExtendedHeader --> ExtendedHeaderTAGS
+ExtendedHeader --> ExtendedHeaderPRLV
+ExtendedHeader --> ExtendedSGMT
+@enduml
+
+@startuml DLTv2.NonVerbosePayload
+together {
+    object "Base Header" as BaseHeader
+    object "Extension Header (Optional)" as ExtendedHeader
+}
+
+package "Non-Verbose Payload" {
+    map "Non-verbose Payload" as NonVerbosePayload {
+        0..n => Dynamic Data
+    }
+}
+
+BaseHeader -> NonVerbosePayload
+BaseHeader -> ExtendedHeader
+ExtendedHeader -> NonVerbosePayload
+@enduml
+
+@startuml DLTv2.VerbosePayload
+rectangle "Headers" as Headers {
+    object "Base Header" as BaseHeader
+    object "Extension Header" as ExtendedHeader
+}
+
+package "Verbose Payload" as PayloadGroup {
+    object "Verbose Payload" as Payload {
+        Arg 1
+        Arg 2
+        Arg n
+    }
+
+    map Argument {
+        0..3 => Type Info
+        4..n => Variable Info (Optional)
+        n+1.. => Payload
+    }
+
+    map "Type Info (4 bytes)" as TypeInfo {
+       b0..b3 => Type Length (TYLE)
+       b4 => Boolean (BOOL)
+       b5 => Signed Int (SINT)
+       b6 => Unsigned Int (UINT)
+       b7 => Float (FLOA)
+       b8 => Array (ARAY)
+       b9 => String (STRG)
+       b10 => Raw (RAWD)
+       b11 => Variable Information (VARI)
+       b12 => Fixed Point (FIXP)
+       b13 => Trace Information (TRAI)
+       b14 => Struct (STRU)
+       b15..b17 => Type Format (TYFM)
+       b18..b23 => Type Precision (TYPR)
+    }
+
+    map "Type Length (TYLE)" as TypeLength {
+        0 => Undefined
+        1 => 8-bit
+        2 => 16-bit
+        3 => 32-bit
+        4 => 64-bit
+        5 => 128-bit
+    }
+
+    map "String (STRG) encoding (TYFM)" as StringCoding {
+        0 => ASCII
+        1 => UTF-8
+    }
+
+    map "Integer (SINT/UINT) encoding (TYFM)" as IntegerCoding {
+        0 => Base 10
+        1 => Base 8 (octal)
+        2 => Base 16 (hex)
+        3 => Base 2 (binary)
+    }
+
+    map "Float (FLOA) encoding (TYFM)" as FloatCoding {
+        0 => Implementation defined
+        1 => Decimal Float (%f)
+        2 => Scientific (%e)
+        3 => Hexadecimal (%a)
+        4 => General (%g)
+    }
+
+    map "Integer (SINT/UINT) Precision" as IntegerPrecision {
+        0 => Default (%d)
+        1..63 (n) => Use Precision n+1 (%.'n+1'd)
+    }
+
+    map "Float (FLOA) Precision" as FloatPrecision {
+        0 => Default
+        1..62 (n) => Use Precision n-1 (%.'n-1'f)
+        63 => Lossless
+    }
+
+    Payload "0..*" -- Argument
+    Argument -- TypeInfo
+    TypeInfo - TypeLength
+    TypeInfo -- StringCoding
+    TypeInfo -- IntegerCoding
+    TypeInfo -- FloatCoding
+    TypeInfo --- IntegerPrecision
+    TypeInfo --- FloatPrecision
+}
+
+BaseHeader -d-> Payload
+BaseHeader -r-> ExtendedHeader : <<optional>>
+ExtendedHeader -d-> Payload
+@enduml

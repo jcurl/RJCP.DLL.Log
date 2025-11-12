@@ -5,24 +5,27 @@ map "Storage Header (Optional)" as StorageHeader {
     12..15 => ECU ID
 }
 
-map "Standard Header (4-16 bytes)" as StandardHeader {
-    0 => Header Type (HTYP)
-    1 => Message Counter (MCNT)
-    2..3 => Length (LEN)
-    4..7 => ECU ID (ECU, Optional)
-    8..11 => Session ID (SEID, Optional)
-    12..15 => Device Time Stamp (TMSP, Optional)
+package "Standard Header" {
+    map "Standard Header (4-16 bytes)" as StandardHeader {
+        0 => Header Type (HTYP)
+        1 => Message Counter (MCNT)
+        2..3 => Length (LEN)
+        4..7 => ECU ID (ECU, Optional)
+        8..11 => Session ID (SEID, Optional)
+        12..15 => Device Time Stamp (TMSP, Optional)
+    }
+
+    map "Header Type (1 byte)" as HeaderType {
+        b0 => Use Extended Header (UEH)
+        b1 => Most Significant Byte First (MSBF)
+        b2 => With ECU ID (WEID)
+        b3 => With Session ID (WSID)
+        b4 => With Time Stamp (WTMS)
+        b5..b7 => Version Identifier (VERS = 1)
+    }
 }
 
-map "Header Type (1 byte)" as HeaderType {
-    b0 => Use Extended Header (UEH)
-    b1 => Most Significant Byte First (MSBF)
-    b2 => With ECU ID (WEID)
-    b3 => With Session ID (WSID)
-    b4 => With Time Stamp (WTMS)
-    b5..b7 => Version Identifier (VERS)
-}
-
+package "Extended Header" {
 map "Extended Header (Optional)" as ExtendedHeader {
     0 => Message Info (MSIN)
     1 => Argument Count (NOAR)
@@ -68,16 +71,18 @@ map "MTIN DLT_TYPE_CONTROL (MSTP=3)" as DLT_TYPE_CONTROL {
     2 => DLT_CONTROL_RESPONSE
     3 => DLT_CONTROL_TIME
 }
-
-object "Verbose Payload" as Payload {
-    Arg 1
-    Arg 2
-    Arg n
 }
 
 map "Non-verbose Payload" as NonVerbosePayload {
     0..3 => Message Identifier
     4.. => Dynamic Data
+}
+
+package "Verbose Payload" {
+object "Verbose Payload" as Payload {
+    Arg 1
+    Arg 2
+    Arg n
 }
 
 map Argument {
@@ -115,12 +120,13 @@ map "String encoding (SCOD)" as StringCoding {
     0 => ASCII
     1 => UTF-8
 }
+}
 
-StorageHeader - StandardHeader
-StandardHeader - ExtendedHeader
+StorageHeader -> StandardHeader
+StandardHeader -> ExtendedHeader
 StandardHeader -- HeaderType
-ExtendedHeader - Payload
-ExtendedHeader - NonVerbosePayload
+ExtendedHeader -> Payload
+ExtendedHeader -> NonVerbosePayload
 ExtendedHeader -- MessageInfo
 MessageInfo -- DLT_TYPE_LOG
 MessageInfo -- DLT_TYPE_APP_TRACE
