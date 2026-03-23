@@ -126,7 +126,7 @@
             CustomTimeZoneResponse response = (CustomTimeZoneResponse)service;
             Assert.That(response.Status, Is.EqualTo(status));
             Assert.That(response.ToString(), Is.EqualTo(result));
-            Assert.That(response.TimeZone.Ticks, Is.EqualTo(0));
+            Assert.That(response.TimeZone.Ticks, Is.Zero);
             Assert.That(response.IsDst, Is.EqualTo(isDst != 0));
         }
     }

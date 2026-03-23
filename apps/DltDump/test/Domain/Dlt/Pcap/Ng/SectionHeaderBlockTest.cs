@@ -24,7 +24,7 @@
                 SectionHeaderBlock shbBlock = (SectionHeaderBlock)block;
                 Assert.That(shbBlock.IsLittleEndian, Is.EqualTo(littleEndian));
                 Assert.That(shbBlock.MajorVersion, Is.EqualTo(1));
-                Assert.That(shbBlock.MinorVersion, Is.EqualTo(0));
+                Assert.That(shbBlock.MinorVersion, Is.Zero);
 
                 Assert.That(shbBlock.Options, Has.Count.EqualTo(3));
                 Assert.That(shbBlock.Options[0].OptionCode, Is.EqualTo(OptionCodes.ShbHardware));

@@ -140,7 +140,7 @@
                     int rpos = 0;
                     while (rpos < end) {
                         int read = stream.Read(buffer);
-                        Assert.That(read, Is.Not.EqualTo(0));
+                        Assert.That(read, Is.Not.Zero);
                         rpos += read;
                     }
                     result = rpos;

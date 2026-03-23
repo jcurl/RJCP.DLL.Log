@@ -3,10 +3,16 @@
     using System;
     using System.Threading;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     public sealed class OneShotTimer : IDisposable
     {
         private readonly int m_DueTime;
-        private readonly object m_DisposeLock = new();
+        private readonly Lock m_DisposeLock = new();
         private Timer m_Timer;
 
         public OneShotTimer(int dueTime)

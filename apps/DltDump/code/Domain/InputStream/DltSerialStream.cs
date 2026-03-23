@@ -84,7 +84,7 @@
 
         private static string GetHandshake(Handshake handshake)
         {
-            if (!Enum.IsDefined(typeof(Handshake), handshake)) return "?";
+            if (!Enum.IsDefined(handshake)) return "?";
             return handshake.ToString().ToLowerInvariant();
         }
 

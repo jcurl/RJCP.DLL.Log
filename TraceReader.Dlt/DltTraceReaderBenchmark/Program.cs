@@ -1,4 +1,4 @@
-﻿namespace RJCP.IO
+﻿namespace RJCP.Diagnostics.Log
 {
     using BenchmarkDotNet.Running;
 

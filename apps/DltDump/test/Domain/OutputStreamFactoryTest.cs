@@ -12,7 +12,7 @@
         {
             IOutputStreamFactory factory = new OutputStreamFactory();
             Assert.That(factory.Force, Is.False);
-            Assert.That(factory.Split, Is.EqualTo(0));
+            Assert.That(factory.Split, Is.Zero);
         }
 
         [Test]
@@ -95,7 +95,7 @@
         [Test]
         public void CreateDltOutputWithConvert(
             [Values(OutputFormat.Automatic, OutputFormat.Dlt)] OutputFormat outputFormat,
-            [Values(false, true)] bool nvConvert)
+            [Values] bool nvConvert)
         {
             IOutputStreamFactory factory = new OutputStreamFactory() {
                 ConvertNonVerbose = nvConvert

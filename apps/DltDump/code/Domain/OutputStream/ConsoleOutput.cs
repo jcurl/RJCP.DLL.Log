@@ -4,12 +4,18 @@
     using Domain.Dlt;
     using RJCP.Diagnostics.Log.Dlt;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// Writes the output to the console.
     /// </summary>
     public sealed class ConsoleOutput : IOutputStream
     {
-        private readonly object m_WriteLock = new();
+        private readonly Lock m_WriteLock = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleOutput"/> class.

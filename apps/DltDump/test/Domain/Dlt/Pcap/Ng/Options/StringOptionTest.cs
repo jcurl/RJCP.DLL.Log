@@ -46,7 +46,7 @@
             Assert.That(options.IndexOf(0), Is.EqualTo(-1));
 
             Assert.That(options.Contains(optionCode), Is.True);
-            Assert.That(options.IndexOf(optionCode), Is.EqualTo(0));
+            Assert.That(options.IndexOf(optionCode), Is.Zero);
         }
     }
 }

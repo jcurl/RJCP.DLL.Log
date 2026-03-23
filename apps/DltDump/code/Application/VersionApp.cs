@@ -3,9 +3,15 @@
     using Infrastructure;
     using Resources;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     public static class VersionApp
     {
-        private static readonly object s_Lock = new();
+        private static readonly Lock s_Lock = new();
         private static string s_Version;
 
         public static string GetVersion()

@@ -655,7 +655,7 @@
                 Assert.That(fileInfo1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
                 FileInfo fileInfo2 = new("file_002.txt");
-                Assert.That(fileInfo2.Length, Is.EqualTo(0));  // File was not overwritten
+                Assert.That(fileInfo2.Length, Is.Zero);  // File was not overwritten
 
                 // And we didn't get to create the third file.
                 Assert.That(File.Exists("file_003.txt"), Is.False);
@@ -721,7 +721,7 @@
                 Assert.That(fileInfo1_1.Length,
                     Is.EqualTo(TestLines.Verbose.ToString().Length + Environment.NewLine.Length));
                 FileInfo fileInfo1_2 = new("input1_002.txt");
-                Assert.That(fileInfo1_2.Length, Is.EqualTo(0));
+                Assert.That(fileInfo1_2.Length, Is.Zero);
 
                 FileInfo fileInfo2_1 = new("input2_001.txt");
                 Assert.That(fileInfo2_1.Length,

@@ -63,8 +63,8 @@
 
             // Get the default entry.
             Assert.That(frameMap.TryGetFrame(0, appId, ctxId, null, out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
-            Assert.That(frameMap.GetFrame(0, appId, ctxId, null).Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
+            Assert.That(frameMap.GetFrame(0, appId, ctxId, null).Id, Is.Zero);
 
             // No entry with ECU1 exists for message id 0
             Assert.That(frameMap.TryGetFrame(0, appId, ctxId, "ECU1", out _), Is.False);
@@ -94,8 +94,8 @@
 
             // Get the default entry.
             Assert.That(frameMap.TryGetFrame(0, appId, ctxId, null, out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
-            Assert.That(frameMap.GetFrame(0, appId, ctxId, null).Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
+            Assert.That(frameMap.GetFrame(0, appId, ctxId, null).Id, Is.Zero);
 
             // No entry with ECU1 exists for message id 0, so a fallback to the binary decoder is done.
             Assert.That(frameMap.TryGetFrame(0, appId, ctxId, "ECU1", out _), Is.False);
@@ -122,11 +122,11 @@
             Assert.That(frame.Id, Is.EqualTo(2));
 
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", string.Empty, out frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
 
             // When reading from a line that doesn't have an ECU-ID, the order how the FIBEX is loaded matters.
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", null, out frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
         }
 
         [Test]
@@ -140,7 +140,7 @@
             Assert.That(frame.Id, Is.EqualTo(2));
 
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", string.Empty, out frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
 
             // When reading from a line that doesn't have an ECU-ID, the order how the FIBEX is loaded matters.
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", null, out frame), Is.True);
@@ -179,7 +179,7 @@
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", "ECU2", out _), Is.False);
 
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", "ECU1", out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
             Assert.That(frameMap.TryGetFrame(2, "APP1", "CTX1", "ECU1", out frame), Is.True);
             Assert.That(frame.Id, Is.EqualTo(2));
         }

@@ -18,11 +18,11 @@
             Assert.That(line.EcuId, Is.Null);
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.UNKNOWN));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Text, Is.EqualTo(string.Empty));
 
             Assert.That(line.Features.ApplicationId, Is.False);
@@ -47,11 +47,11 @@
             Assert.That(line.EcuId, Is.Null);
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.UNKNOWN));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Text, Is.EqualTo("string"));
 
             Assert.That(line.Features.ApplicationId, Is.False);
@@ -150,7 +150,7 @@
             IDltArg arg2 = new BinaryIntDltArg(10, 1);
             DltTraceLine line = new(new[] { arg1, arg2 });
             Assert.That(line.Arguments.IndexOf(new BinaryIntDltArg(10, 1)), Is.EqualTo(-1));
-            Assert.That(line.Arguments.IndexOf(arg1), Is.EqualTo(0));
+            Assert.That(line.Arguments.IndexOf(arg1), Is.Zero);
             Assert.That(line.Arguments.IndexOf(arg2), Is.EqualTo(1));
         }
 

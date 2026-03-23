@@ -9,6 +9,12 @@
     using Infrastructure.IO;
     using Resources;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// A TCP based client stream with read timeouts to disconnect.
     /// </summary>
@@ -520,7 +526,7 @@
             return m_TcpStream.WriteAsync(buffer, cancellationToken);
         }
 
-        private readonly object m_DisposeLock = new();
+        private readonly Lock m_DisposeLock = new();
         private bool m_IsDisposed;
 
         /// <summary>

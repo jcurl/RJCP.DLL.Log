@@ -146,7 +146,7 @@
             byte[] buffer = new byte[1024];
 
             int bu = Iso8859_1Accessor.Convert(value, buffer);
-            Assert.That(bu, Is.EqualTo(0));
+            Assert.That(bu, Is.Zero);
         }
 
         [Test]
@@ -154,7 +154,7 @@
         {
             byte[] buffer = new byte[1024];
             int bu = Iso8859_1Accessor.Convert(null, buffer);
-            Assert.That(bu, Is.EqualTo(0));
+            Assert.That(bu, Is.Zero);
         }
 
         [Test]
@@ -162,7 +162,7 @@
         {
             byte[] buffer = new byte[1024];
             int bu = Iso8859_1Accessor.Convert(string.Empty, buffer);
-            Assert.That(bu, Is.EqualTo(0));
+            Assert.That(bu, Is.Zero);
         }
 
         [Test]

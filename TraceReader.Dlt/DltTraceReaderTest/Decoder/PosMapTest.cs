@@ -10,8 +10,8 @@
         public void DefaultPosition()
         {
             PosMapAccessor posmap = new();
-            Assert.That(posmap.Position, Is.EqualTo(0));
-            Assert.That(posmap.Length, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
+            Assert.That(posmap.Length, Is.Zero);
         }
 
         [Test]
@@ -19,7 +19,7 @@
         {
             PosMapAccessor posmap = new();
             posmap.Append(0, 100);
-            Assert.That(posmap.Position, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
             Assert.That(posmap.Length, Is.EqualTo(100));
         }
 
@@ -29,8 +29,8 @@
             PosMapAccessor posmap = new();
             posmap.Append(0, 0);
 
-            Assert.That(posmap.Position, Is.EqualTo(0));
-            Assert.That(posmap.Length, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
+            Assert.That(posmap.Length, Is.Zero);
         }
 
         [Test]
@@ -40,8 +40,8 @@
             posmap.Append(0, 0);
             posmap.Consume(0);
 
-            Assert.That(posmap.Position, Is.EqualTo(0));
-            Assert.That(posmap.Length, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
+            Assert.That(posmap.Length, Is.Zero);
         }
 
         [Test]
@@ -61,7 +61,7 @@
             posmap.Append(0, 100);
             posmap.Consume(100);
             Assert.That(posmap.Position, Is.EqualTo(100));
-            Assert.That(posmap.Length, Is.EqualTo(0));
+            Assert.That(posmap.Length, Is.Zero);
         }
 
         [Test]
@@ -70,7 +70,7 @@
             PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Append(100, 100);
-            Assert.That(posmap.Position, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
             Assert.That(posmap.Length, Is.EqualTo(200));
         }
 
@@ -80,7 +80,7 @@
             PosMapAccessor posmap = new();
             posmap.Append(0, 100);
             posmap.Append(200, 100);
-            Assert.That(posmap.Position, Is.EqualTo(0));
+            Assert.That(posmap.Position, Is.Zero);
             Assert.That(posmap.Length, Is.EqualTo(200));
         }
 
@@ -121,7 +121,7 @@
 
             posmap.Consume(5);
             Assert.That(posmap.Position, Is.EqualTo(60));
-            Assert.That(posmap.Length, Is.EqualTo(0));
+            Assert.That(posmap.Length, Is.Zero);
 
             posmap.Append(275, 25);
             Assert.That(posmap.Position, Is.EqualTo(275));
@@ -179,7 +179,7 @@
             posMap.Append(60, 10);
             posMap.Append(80, 10);
 
-            Assert.That(posMap.Position, Is.EqualTo(0));
+            Assert.That(posMap.Position, Is.Zero);
             posMap.Consume(1); Assert.That(posMap.Position, Is.EqualTo(1)); Assert.That(posMap.Length, Is.EqualTo(49));
             posMap.Consume(1); Assert.That(posMap.Position, Is.EqualTo(2)); Assert.That(posMap.Length, Is.EqualTo(48));
             posMap.Consume(1); Assert.That(posMap.Position, Is.EqualTo(3)); Assert.That(posMap.Length, Is.EqualTo(47));
@@ -189,7 +189,7 @@
             posMap.Consume(8); Assert.That(posMap.Position, Is.EqualTo(28)); Assert.That(posMap.Length, Is.EqualTo(32));
             posMap.Consume(8); Assert.That(posMap.Position, Is.EqualTo(46)); Assert.That(posMap.Length, Is.EqualTo(24));
             posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(66)); Assert.That(posMap.Length, Is.EqualTo(14));
-            posMap.Consume(14); Assert.That(posMap.Position, Is.EqualTo(90)); Assert.That(posMap.Length, Is.EqualTo(0));
+            posMap.Consume(14); Assert.That(posMap.Position, Is.EqualTo(90)); Assert.That(posMap.Length, Is.Zero);
         }
 
         [TestCase(1)]
@@ -228,7 +228,7 @@
             posMap.Consume(8); Assert.That(posMap.Position, Is.EqualTo(66)); Assert.That(posMap.Length, Is.EqualTo(34));
             posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(86)); Assert.That(posMap.Length, Is.EqualTo(24));
             posMap.Consume(14); Assert.That(posMap.Position, Is.EqualTo(120)); Assert.That(posMap.Length, Is.EqualTo(10));
-            posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(130)); Assert.That(posMap.Length, Is.EqualTo(0));
+            posMap.Consume(10); Assert.That(posMap.Position, Is.EqualTo(130)); Assert.That(posMap.Length, Is.Zero);
         }
 
         [Test]

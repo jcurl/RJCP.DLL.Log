@@ -8,12 +8,18 @@
     using RJCP.Diagnostics.Log.Dlt.Args;
     using RJCP.Diagnostics.Log.Encoder;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// An output module that can write binary data as it is received.
     /// </summary>
     public sealed class DltOutput : OutputBase, IOutputStream
     {
-        private readonly object m_WriteLock = new();
+        private readonly Lock m_WriteLock = new();
         private ITraceEncoder<DltTraceLineBase> m_TraceEncoder;
 
         /// <summary>

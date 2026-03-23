@@ -82,7 +82,7 @@
         public void WriteInsufficientBuffer(int len)
         {
             Span<byte> encoded = Encode(TraceLine, len);
-            Assert.That(encoded.Length, Is.EqualTo(0));
+            Assert.That(encoded.Length, Is.Zero);
         }
     }
 }

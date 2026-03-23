@@ -86,7 +86,7 @@
             int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             ReadOnlyArrayListAccessor<int> list = new(array);
 
-            Assert.That(list.IndexOf(1), Is.EqualTo(0));
+            Assert.That(list.IndexOf(1), Is.Zero);
             Assert.That(list.IndexOf(9), Is.EqualTo(8));
             Assert.That(list.IndexOf(42), Is.EqualTo(-1));
             Assert.That(list.IndexOf(0), Is.EqualTo(-1));

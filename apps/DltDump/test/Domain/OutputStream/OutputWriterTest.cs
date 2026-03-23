@@ -15,7 +15,7 @@
         public void StreamDefaults()
         {
             using (OutputWriter writer = new()) {
-                Assert.That(writer.Length, Is.EqualTo(0));
+                Assert.That(writer.Length, Is.Zero);
                 Assert.That(writer.IsOpen, Is.False);
             }
         }
@@ -96,7 +96,7 @@
 
                     Assert.That(writer.IsOpen, Is.True);
                     Assert.That(File.Exists("File.txt"), Is.True);
-                    Assert.That(writer.Length, Is.EqualTo(0));
+                    Assert.That(writer.Length, Is.Zero);
                 }
 
                 Assert.That(writer.IsOpen, Is.False);
@@ -113,7 +113,7 @@
                     writer.Open(stream);
 
                     Assert.That(writer.IsOpen, Is.True);
-                    Assert.That(writer.Length, Is.EqualTo(0));
+                    Assert.That(writer.Length, Is.Zero);
                 }
 
                 Assert.That(writer.IsOpen, Is.False);
@@ -189,7 +189,7 @@
                     Assert.That(File.Exists("File2.txt"), Is.False);
 
                     // Test that the original file is still open.
-                    Assert.That(writer.Length, Is.EqualTo(0));
+                    Assert.That(writer.Length, Is.Zero);
                     writer.Write(buffer.AsSpan());
                     writer.Flush();
                     Assert.That(writer.Length, Is.EqualTo(buffer.Length));
@@ -223,7 +223,7 @@
                     }, Throws.TypeOf<InvalidOperationException>());
 
                     // Test that the original file is still open.
-                    Assert.That(writer.Length, Is.EqualTo(0));
+                    Assert.That(writer.Length, Is.Zero);
                     writer.Write(buffer.AsSpan());
                     writer.Flush();
                     Assert.That(writer.Length, Is.EqualTo(buffer.Length));
@@ -287,7 +287,7 @@
                 writer.Open("File2.txt");
 
                 // On the second open, the length must be reset to zero.
-                Assert.That(writer.Length, Is.EqualTo(0));
+                Assert.That(writer.Length, Is.Zero);
 
                 writer.Write(buffer.AsSpan());
                 writer.Write(buffer.AsSpan());
@@ -595,7 +595,7 @@
                 Assert.That(() => {
                     writer.Write(new byte[10], 0, 10);
                 }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<PlatformNotSupportedException>());
-                Assert.That(writer.Length, Is.EqualTo(0));
+                Assert.That(writer.Length, Is.Zero);
             }
         }
 
@@ -655,7 +655,7 @@
                 Assert.That(() => {
                     writer.Write(new byte[10]);
                 }, Throws.TypeOf<OutputStreamException>().With.InnerException.TypeOf<PlatformNotSupportedException>());
-                Assert.That(writer.Length, Is.EqualTo(0));
+                Assert.That(writer.Length, Is.Zero);
             }
         }
 
@@ -792,7 +792,7 @@
                 Thread.Sleep(50);
 
                 // An exception occurs after to flush counts. Else it would go negative.
-                Assert.That(flushCount, Is.EqualTo(0));
+                Assert.That(flushCount, Is.Zero);
             }
         }
     }

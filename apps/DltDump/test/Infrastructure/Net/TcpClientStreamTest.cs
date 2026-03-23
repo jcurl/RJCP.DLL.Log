@@ -293,7 +293,7 @@
                 }) {
                     Assert.That(stream.Connect(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
-                    Assert.That(stream.Read(new byte[100].AsSpan()), Is.EqualTo(0));
+                    Assert.That(stream.Read(new byte[100].AsSpan()), Is.Zero);
                 }
             }
         }
@@ -312,7 +312,7 @@
                 }) {
                     Assert.That(await stream.ConnectAsync(), Is.True);
                     Assert.That(ConnectedState(stream), Is.True);
-                    Assert.That(await stream.ReadAsync(new byte[100].AsMemory()), Is.EqualTo(0));
+                    Assert.That(await stream.ReadAsync(new byte[100].AsMemory()), Is.Zero);
                 }
             }
         }

@@ -581,7 +581,7 @@
                 FileInfo fileInfo = new("file.txt");
                 if (!force) {
                     Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
-                    Assert.That(fileInfo.Length, Is.EqualTo(0));
+                    Assert.That(fileInfo.Length, Is.Zero);
                 } else {
                     Assert.That(result, Is.EqualTo(ExitCode.Success));
                     Assert.That(fileInfo.Length,
@@ -615,7 +615,7 @@
                 Assert.That(File.Exists("file.txt"), Is.True);
 
                 FileInfo fileInfo = new("file.txt");
-                Assert.That(fileInfo.Length, Is.EqualTo(0));
+                Assert.That(fileInfo.Length, Is.Zero);
             }
         }
 
@@ -755,7 +755,7 @@
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
 
                 FileInfo info = new("input.txt");
-                Assert.That(info.Length, Is.EqualTo(0));
+                Assert.That(info.Length, Is.Zero);
             }
         }
 
@@ -782,7 +782,7 @@
                 Assert.That(result, Is.EqualTo(ExitCode.NoFilesProcessed));
 
                 FileInfo info = new("input_002.txt");
-                Assert.That(info.Length, Is.EqualTo(0));
+                Assert.That(info.Length, Is.Zero);
             }
         }
 

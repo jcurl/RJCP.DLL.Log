@@ -60,15 +60,15 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 1"));
-                Assert.That(line.Position, Is.EqualTo(0));
-                Assert.That(channels, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
+                Assert.That(channels, Is.Zero);
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 2"));
@@ -92,19 +92,19 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 1"));
-                Assert.That(line.Position, Is.EqualTo(0));
-                Assert.That(channels, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
+                Assert.That(channels, Is.Zero);
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 2"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
@@ -128,15 +128,15 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 1"));
-                Assert.That(line.Position, Is.EqualTo(0));
-                Assert.That(channels, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
+                Assert.That(channels, Is.Zero);
 
                 line = await reader.GetLineAsync();
                 Assert.That(line, Is.Null);
@@ -166,21 +166,21 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 1"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
 
                 // Because the packets are incomplete and they're interleaved, we'll get two callbacks in the last call.
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 2"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
@@ -208,21 +208,21 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 2"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
 
                 // Because the packets are incomplete and they're interleaved, we'll get two callbacks in the last call.
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("Skipped: 64 bytes; Reason: Flushing packets at end of stream"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
@@ -250,21 +250,21 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("A DLT message from 192.168.1.109. Count is 1"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
 
                 // Because the packets are incomplete and they're interleaved, we'll get two callbacks in the last call.
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("Skipped: 64 bytes; Reason: Flushing packets at end of stream"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
@@ -291,7 +291,7 @@
                 packet.NewChannel += (s, e) => {
                     channels = e.ChannelNumber;
                 };
-                Assert.That(packet.ChannelCount, Is.EqualTo(0));
+                Assert.That(packet.ChannelCount, Is.Zero);
 
                 TracePacketReader reader = new(packet, new DltTraceDecoderFactory());
                 DltTraceLineBase line;
@@ -300,14 +300,14 @@
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("Skipped: 64 bytes; Reason: Flushing packets at end of stream"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
 
                 // Because the packets are incomplete and they're interleaved, we'll get two callbacks in the last call.
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("Skipped: 60 bytes; Reason: Flushing packets at end of stream"));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
                 Assert.That(channels, Is.EqualTo(1));
 
                 line = await reader.GetLineAsync();

@@ -51,7 +51,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
             }
         }
 
@@ -65,7 +65,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
             }
         }
 
@@ -88,7 +88,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
 
                 Assert.That(lines[1].EcuId, Is.EqualTo(""));
                 Assert.That(lines[1].ApplicationId, Is.EqualTo("SKIP"));
@@ -117,7 +117,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo(""));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("SKIP"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("SKIP"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
 
                 Assert.That(lines[1].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[1].ApplicationId, Is.EqualTo("APP1"));
@@ -154,7 +154,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo(""));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("SKIP"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("SKIP"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
 
                 Assert.That(lines[1].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[1].ApplicationId, Is.EqualTo("APP1"));
@@ -198,7 +198,7 @@
                 Assert.That(lines[0].EcuId, Is.EqualTo("ECU1"));
                 Assert.That(lines[0].ApplicationId, Is.EqualTo("APP1"));
                 Assert.That(lines[0].ContextId, Is.EqualTo("CTX1"));
-                Assert.That(lines[0].Position, Is.EqualTo(0));
+                Assert.That(lines[0].Position, Is.Zero);
 
                 Assert.That(lines[1].EcuId, Is.EqualTo(""));
                 Assert.That(lines[1].ApplicationId, Is.EqualTo("SKIP"));

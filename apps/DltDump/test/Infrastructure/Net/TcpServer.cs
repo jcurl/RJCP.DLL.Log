@@ -5,9 +5,15 @@
     using System.Net.Sockets;
     using System.Threading.Tasks;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     public sealed class TcpServer : IDisposable
     {
-        private readonly object m_StartLock = new();
+        private readonly Lock m_StartLock = new();
         private readonly TcpListener m_Listener;
 
         public TcpServer(IPAddress localAddress, int port)

@@ -5,12 +5,18 @@
     using System.Threading.Tasks;
     using Resources;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     public sealed class CancelTask
     {
         private readonly ManualResetEventSlim m_Started = new(false);
         private readonly CancellationTokenSource m_TokenSource = new();
         private readonly Task m_Task;
-        private readonly object m_CancelLock = new();
+        private readonly Lock m_CancelLock = new();
 
         public CancelTask(Action<CancellationToken> action)
         {

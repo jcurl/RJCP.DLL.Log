@@ -24,7 +24,7 @@
             DltTimeMarker response = new();
 
             Span<byte> payload = ControlEncode(response, len);
-            Assert.That(payload.Length, Is.EqualTo(0));
+            Assert.That(payload.Length, Is.Zero);
         }
     }
 }

@@ -8,6 +8,12 @@
     using Infrastructure.IO;
     using Resources;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// A class that can listen and bind an interface to receive UDP packets.
     /// </summary>
@@ -16,7 +22,7 @@
         private readonly IPEndPoint m_BindAddress;
         private readonly IPAddress m_MulticastGroup;
 
-        private readonly object m_ChannelLock = new();
+        private readonly Lock m_ChannelLock = new();
         private readonly List<IPEndPoint> m_Channels = new();
 
         private Socket m_Socket;

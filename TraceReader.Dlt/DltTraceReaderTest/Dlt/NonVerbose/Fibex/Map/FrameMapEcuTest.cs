@@ -59,8 +59,8 @@
 
             // Get the default entry.
             Assert.That(frameMap.TryGetFrame(0, "APP1", "CTX1", null, out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
-            Assert.That(frameMap.GetFrame(0, "APP1", "CTX1", null).Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
+            Assert.That(frameMap.GetFrame(0, "APP1", "CTX1", null).Id, Is.Zero);
 
             // No entry with ECU1 exists for message id 0, so the ECU-ID is ignored, and the "default" is returned,
             // which is the same behaviour as the DLT-Viewer.
@@ -89,8 +89,8 @@
 
             // Get the default entry.
             Assert.That(frameMap.TryGetFrame(0, "APP1", "CTX1", null, out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
-            Assert.That(frameMap.GetFrame(0, "APP1", "CTX1", null).Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
+            Assert.That(frameMap.GetFrame(0, "APP1", "CTX1", null).Id, Is.Zero);
 
             // No entry with ECU1 exists for message id 0, so the ECU-ID is ignored, and the "default" is returned,
             // which is the same behaviour as the DLT-Viewer.
@@ -128,7 +128,7 @@
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", "ECU2", out _), Is.False);
 
             Assert.That(frameMap.TryGetFrame(1, "APP1", "CTX1", "ECU1", out IFrame frame), Is.True);
-            Assert.That(frame.Id, Is.EqualTo(0));
+            Assert.That(frame.Id, Is.Zero);
             Assert.That(frameMap.TryGetFrame(2, "APP1", "CTX1", "ECU1", out frame), Is.True);
             Assert.That(frame.Id, Is.EqualTo(2));
         }

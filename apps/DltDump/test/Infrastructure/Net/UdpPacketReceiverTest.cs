@@ -48,7 +48,7 @@
         {
             IPEndPoint ep = new(IPAddress.Any, 3490);
             UdpPacketReceiver receiver = new(ep);
-            Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+            Assert.That(receiver.ChannelCount, Is.Zero);
             receiver.Dispose();
         }
 
@@ -57,7 +57,7 @@
         {
             IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             UdpPacketReceiver receiver = new(ep);
-            Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+            Assert.That(receiver.ChannelCount, Is.Zero);
             receiver.Dispose();
         }
 
@@ -66,7 +66,7 @@
         {
             IPEndPoint ep = new(IPAddress.Parse("224.0.1.1"), 3490);
             UdpPacketReceiver receiver = new(ep);
-            Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+            Assert.That(receiver.ChannelCount, Is.Zero);
             receiver.Dispose();
         }
 
@@ -144,7 +144,7 @@
             IPEndPoint ep = new(IPAddress.Parse("10.0.0.1"), 3490);
             IPAddress mc = IPAddress.Parse(multicastGroup);
             UdpPacketReceiver receiver = new(ep, mc);
-            Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+            Assert.That(receiver.ChannelCount, Is.Zero);
             receiver.Dispose();
         }
 
@@ -156,7 +156,7 @@
             IPEndPoint ep = new(IPAddress.Any, 3490);
             IPAddress mc = IPAddress.Parse(multicastGroup);
             UdpPacketReceiver receiver = new(ep, mc);
-            Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+            Assert.That(receiver.ChannelCount, Is.Zero);
             receiver.Dispose();
         }
 
@@ -303,19 +303,19 @@
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
                 };
                 receiver.Open();
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
 
                 byte[] buffer = new byte[65536];
                 Udp.Send(src, ep).Dispose();
                 PacketReadResult result = await receiver.ReadAsync(buffer);
                 Assert.That(result.ReceivedBytes, Is.EqualTo(8));
-                Assert.That(result.Channel, Is.EqualTo(0));
+                Assert.That(result.Channel, Is.Zero);
                 Assert.That(buffer[0..8],
                     Is.EqualTo(
                         new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
                     ).AsCollection);
 
-                Assert.That(count, Is.EqualTo(0));
+                Assert.That(count, Is.Zero);
                 Assert.That(receiver.ChannelCount, Is.EqualTo(1));
             }
         }
@@ -335,7 +335,7 @@
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
                 };
                 receiver.Open();
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
 
                 byte[] buffer = new byte[65536];
                 ValueTask<PacketReadResult> task = receiver.ReadAsync(buffer);
@@ -344,13 +344,13 @@
 
                 PacketReadResult result = await task;
                 Assert.That(result.ReceivedBytes, Is.EqualTo(8));
-                Assert.That(result.Channel, Is.EqualTo(0));
+                Assert.That(result.Channel, Is.Zero);
                 Assert.That(buffer[0..8],
                     Is.EqualTo(
                         new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
                     ).AsCollection);
 
-                Assert.That(count, Is.EqualTo(0));
+                Assert.That(count, Is.Zero);
                 Assert.That(receiver.ChannelCount, Is.EqualTo(1));
             }
         }
@@ -371,13 +371,13 @@
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
                 };
                 receiver.Open();
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
 
                 byte[] buffer = new byte[65536];
                 Udp.Send(src1, ep).Dispose();
                 PacketReadResult result1 = await receiver.ReadAsync(buffer);
                 Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
-                Assert.That(result1.Channel, Is.EqualTo(0));
+                Assert.That(result1.Channel, Is.Zero);
                 Assert.That(receiver.ChannelCount, Is.EqualTo(1));
                 Assert.That(buffer[0..8],
                     Is.EqualTo(
@@ -415,7 +415,7 @@
                     if (count <= e.ChannelNumber) count = e.ChannelNumber;
                 };
                 receiver.Open();
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
 
                 using (Udp udp1 = new(src1, ep))
                 using (Udp udp2 = new(src2, ep)) {
@@ -423,9 +423,9 @@
                     udp1.Send();
                     PacketReadResult result1 = await receiver.ReadAsync(buffer);
                     Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
-                    Assert.That(result1.Channel, Is.EqualTo(0));
+                    Assert.That(result1.Channel, Is.Zero);
                     Assert.That(receiver.ChannelCount, Is.EqualTo(1));
-                    Assert.That(count, Is.EqualTo(0));
+                    Assert.That(count, Is.Zero);
                     Assert.That(buffer[0..8],
                         Is.EqualTo(
                             new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07 }
@@ -447,7 +447,7 @@
                     udp1.Send();
                     result1 = await receiver.ReadAsync(buffer);
                     Assert.That(result1.ReceivedBytes, Is.EqualTo(8));
-                    Assert.That(result1.Channel, Is.EqualTo(0));
+                    Assert.That(result1.Channel, Is.Zero);
                     Assert.That(receiver.ChannelCount, Is.EqualTo(2));
                     Assert.That(count, Is.EqualTo(1));
                     Assert.That(buffer[0..8],
@@ -479,7 +479,7 @@
                 await Assert.ThatAsync(async () => {
                     _ = await receiver.ReadAsync(buffer);
                 }, Throws.TypeOf<InvalidOperationException>());
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
             }
         }
 
@@ -498,7 +498,7 @@
                 await Assert.ThatAsync(async () => {
                     _ = await receiver.ReadAsync(buffer);
                 }, Throws.TypeOf<InvalidOperationException>());
-                Assert.That(receiver.ChannelCount, Is.EqualTo(0));
+                Assert.That(receiver.ChannelCount, Is.Zero);
             }
         }
 

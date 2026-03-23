@@ -5,6 +5,12 @@
     using Infrastructure.Tasks;
     using Resources;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// Manages writing data for DltDump to the output file.
     /// </summary>
@@ -161,7 +167,7 @@
         }
 
         private CancelTask m_AutoFlushTask;
-        private readonly object m_CloseLock = new();
+        private readonly Lock m_CloseLock = new();
 
         /// <summary>
         /// Automatically flushes the output at regular intervals in a Task.

@@ -16,11 +16,11 @@
             Assert.That(line.EcuId, Is.EqualTo(string.Empty));
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Text, Is.EqualTo("Skipped: 10 bytes; Reason: none"));
             Assert.That(line.BytesSkipped, Is.EqualTo(10));
             Assert.That(line.Reason, Is.EqualTo("none"));

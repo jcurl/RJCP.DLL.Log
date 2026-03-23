@@ -41,7 +41,7 @@
 
             Span<byte> buffer = ControlEncode(request, 9);
             Assert.That(BitOperations.To32Shift(buffer[0..4], !IsBigEndian), Is.EqualTo(0x12));
-            Assert.That(buffer[4], Is.EqualTo(0));
+            Assert.That(buffer[4], Is.Zero);
             Assert.That(buffer[5..9].ToArray(), Is.EqualTo(new byte[] { 0x43, 0x4F, 0x4D, 0x31 }));
         }
 

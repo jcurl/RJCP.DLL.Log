@@ -301,7 +301,7 @@
             };
             FibexFile fibex = CheckXml(fibexDoc, FibexWarnings.PduInvalidByteLength, frames);
             Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame), Is.True);
-            Assert.That(frame.Arguments[1].PduLength, Is.EqualTo(0));
+            Assert.That(frame.Arguments[1].PduLength, Is.Zero);
         }
 
         [Test]
@@ -321,7 +321,7 @@
             };
             FibexFile fibex = CheckXml(fibexDoc, FibexWarnings.None, frames);
             Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame), Is.True);
-            Assert.That(frame.Arguments[1].PduLength, Is.EqualTo(0));
+            Assert.That(frame.Arguments[1].PduLength, Is.Zero);
         }
 
         [Test]
@@ -341,7 +341,7 @@
             };
             FibexFile fibex = CheckXml(fibexDoc, FibexWarnings.PduInvalidByteLength, frames);
             Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame), Is.True);
-            Assert.That(frame.Arguments[1].PduLength, Is.EqualTo(0));
+            Assert.That(frame.Arguments[1].PduLength, Is.Zero);
         }
 
         [TestCase("0x10", TestName = "PduElementByteLengthHexValue_Hex10")]
@@ -363,7 +363,7 @@
             };
             FibexFile fibex = CheckXml(fibexDoc, FibexWarnings.PduInvalidByteLength, frames);
             Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame), Is.True);
-            Assert.That(frame.Arguments[1].PduLength, Is.EqualTo(0));
+            Assert.That(frame.Arguments[1].PduLength, Is.Zero);
         }
 
         [Test]
@@ -769,6 +769,7 @@
         }
 
         [Test]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "NUnit4002:Use Specific constraint", Justification = "Would cause a type error")]
         public void FrameElementManufacturerMessageInfoEmpty()
         {
             XmlDocument fibexDoc = GetDocument(FibexPath);
@@ -784,6 +785,8 @@
             };
             FibexFile fibex = CheckXml(fibexDoc, FibexWarnings.None, frames);
             Assert.That(fibex.TryGetFrame(11, null, null, null, out IFrame frame), Is.True);
+
+            // Can't use 'Is.Zero' as that would compare an `(int)0' to a `(DltType)0` which would fail
             Assert.That(frame.MessageType, Is.EqualTo((DltType)0));
         }
 

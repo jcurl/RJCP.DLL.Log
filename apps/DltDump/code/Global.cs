@@ -7,13 +7,19 @@
     using RJCP.Core.Terminal.Log;
     using View;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// The application provides global instance data useful for the application.
     /// </summary>
     public class Global
     {
         private static Global s_Instance;
-        private static readonly object m_Lock = new();
+        private static readonly Lock m_Lock = new();
 
         /// <summary>
         /// Gets the singleton instance for this application.

@@ -35,7 +35,7 @@
 
             TimeResolutionOption timeOption = (TimeResolutionOption)option;
             Assert.That(timeOption.Multiplier, Is.EqualTo(TimeResolutionOption.MultiplierMode.DecimalSi));
-            Assert.That(timeOption.Value, Is.EqualTo(0));
+            Assert.That(timeOption.Value, Is.Zero);
 
             DateTime result = timeOption.GetTimeStamp(0x00000000_5EEA0E8A);
             Assert.That(result, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30)));
@@ -143,7 +143,7 @@
 
             TimeResolutionOption timeOption = (TimeResolutionOption)option;
             Assert.That(timeOption.Multiplier, Is.EqualTo(TimeResolutionOption.MultiplierMode.DecimalSi));
-            Assert.That(timeOption.Value, Is.EqualTo(0));
+            Assert.That(timeOption.Value, Is.Zero);
 
             DateTime result = timeOption.GetTimeStamp(0x0000003A_FFF4417F);
             Assert.That(result, Is.EqualTo(new DateTime(9999, 12, 31, 23, 59, 59)));
@@ -166,7 +166,7 @@
 
             TimeResolutionOption timeOption = (TimeResolutionOption)option;
             Assert.That(timeOption.Multiplier, Is.EqualTo(TimeResolutionOption.MultiplierMode.DecimalSi));
-            Assert.That(timeOption.Value, Is.EqualTo(0));
+            Assert.That(timeOption.Value, Is.Zero);
 
             DateTime result = timeOption.GetTimeStamp(0x7FFFFFFF_FFFFFFFF);
             Assert.That(result, Is.EqualTo(new DateTime(9999, 12, 31, 23, 59, 59).AddNanoSeconds(999999999)));
@@ -251,7 +251,7 @@
 
             TimeResolutionOption timeOption = (TimeResolutionOption)option;
             Assert.That(timeOption.Multiplier, Is.EqualTo(TimeResolutionOption.MultiplierMode.FixedPoint));
-            Assert.That(timeOption.Value, Is.EqualTo(0));
+            Assert.That(timeOption.Value, Is.Zero);
 
             DateTime result = timeOption.GetTimeStamp(0x00000000_5EEA0E8A);
             Assert.That(result, Is.EqualTo(new DateTime(2020, 6, 17, 12, 37, 30)));

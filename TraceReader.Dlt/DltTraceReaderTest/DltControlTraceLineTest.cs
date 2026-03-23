@@ -13,16 +13,16 @@
         {
             DltControlTraceLine line = new(new CustomControlRequest());
 
-            Assert.That(line.ApplicationId, Is.EqualTo(null));
-            Assert.That(line.ContextId, Is.EqualTo(null));
-            Assert.That(line.EcuId, Is.EqualTo(null));
+            Assert.That(line.ApplicationId, Is.Null);
+            Assert.That(line.ContextId, Is.Null);
+            Assert.That(line.EcuId, Is.Null);
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.CONTROL_REQUEST));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Text, Is.EqualTo("[custom_control_request]"));
             Assert.That(line.Service.ServiceId, Is.EqualTo(0x1000));
             Assert.That(line.Service.DefaultType, Is.EqualTo(DltType.CONTROL_REQUEST));
@@ -43,16 +43,16 @@
         {
             DltControlTraceLine line = new(new CustomControlResponse());
 
-            Assert.That(line.ApplicationId, Is.EqualTo(null));
-            Assert.That(line.ContextId, Is.EqualTo(null));
-            Assert.That(line.EcuId, Is.EqualTo(null));
+            Assert.That(line.ApplicationId, Is.Null);
+            Assert.That(line.ContextId, Is.Null);
+            Assert.That(line.EcuId, Is.Null);
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.Type, Is.EqualTo(DltType.CONTROL_RESPONSE));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Text, Is.EqualTo("[custom_control_response]"));
             Assert.That(line.Service.ServiceId, Is.EqualTo(0x1000));
             Assert.That(line.Service.DefaultType, Is.EqualTo(DltType.CONTROL_RESPONSE));

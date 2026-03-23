@@ -48,8 +48,8 @@
 
             using (BlockReader reader = new(DefaultPcapFactory)) {
                 PcapBlock block = reader.GetHeader(buffer);
-                Assert.That(block.BlockId, Is.EqualTo(0));
-                Assert.That(block.Length, Is.EqualTo(0));
+                Assert.That(block.BlockId, Is.Zero);
+                Assert.That(block.Length, Is.Zero);
             }
         }
 
@@ -69,8 +69,8 @@
 
             using (BlockReader reader = new(DefaultPcapFactory)) {
                 PcapBlock block = reader.GetHeader(buffer);
-                Assert.That(block.BlockId, Is.EqualTo(0));
-                Assert.That(block.Length, Is.EqualTo(0));
+                Assert.That(block.BlockId, Is.Zero);
+                Assert.That(block.Length, Is.Zero);
             }
         }
 
@@ -101,8 +101,8 @@
         {
             using (BlockReader reader = new(DefaultPcapFactory)) {
                 PcapBlock block = reader.GetHeader(littleEndian ? PcapBlocks.CustomSmall : PcapBlocks.CustomSmallBigEndian);
-                Assert.That(block.BlockId, Is.EqualTo(0));
-                Assert.That(block.Length, Is.EqualTo(0));
+                Assert.That(block.BlockId, Is.Zero);
+                Assert.That(block.Length, Is.Zero);
             }
         }
 

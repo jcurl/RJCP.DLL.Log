@@ -29,7 +29,7 @@
             IPcapOption option = options.Add(BlockCodes.SectionHeaderBlock, data);
             Assert.That(option, Is.TypeOf<EndOfOption>());
             Assert.That(option.OptionCode, Is.EqualTo(OptionCodes.EndOfOpt));
-            Assert.That(option.Length, Is.EqualTo(0));
+            Assert.That(option.Length, Is.Zero);
 
             Assert.That(options, Is.Empty);
             Assert.That(options.Contains(0), Is.False);
@@ -60,7 +60,7 @@
 
             Assert.That(options, Has.Count.EqualTo(1));
             Assert.That(options.Contains(optionCode), Is.True);
-            Assert.That(options.IndexOf(optionCode), Is.EqualTo(0));
+            Assert.That(options.IndexOf(optionCode), Is.Zero);
             Assert.That(options[0].OptionCode, Is.EqualTo(optionCode));
 
             // Run it a second time
@@ -73,7 +73,7 @@
 
             Assert.That(options, Has.Count.EqualTo(2));
             Assert.That(options.Contains(optionCode), Is.True);
-            Assert.That(options.IndexOf(optionCode), Is.EqualTo(0));
+            Assert.That(options.IndexOf(optionCode), Is.Zero);
             Assert.That(options.IndexOf(optionCode, 1), Is.EqualTo(1));
             Assert.That(options[1].OptionCode, Is.EqualTo(optionCode));
 
@@ -157,7 +157,7 @@
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, TsResData);
 
-            Assert.That(options.IndexOf(OptionCodes.IdbFcsLen), Is.EqualTo(0));
+            Assert.That(options.IndexOf(OptionCodes.IdbFcsLen), Is.Zero);
             Assert.That(options.IndexOf(OptionCodes.IdbSpeed), Is.EqualTo(1));
             Assert.That(options.IndexOf(OptionCodes.IdbTsResolution), Is.EqualTo(2));
             Assert.That(options.IndexOf(OptionCodes.IdbName), Is.EqualTo(-1));
@@ -172,7 +172,7 @@
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, TsResDataInval);
 
-            Assert.That(options.IndexOf(OptionCodes.IdbFcsLen), Is.EqualTo(0));
+            Assert.That(options.IndexOf(OptionCodes.IdbFcsLen), Is.Zero);
             Assert.That(options.IndexOf(OptionCodes.IdbSpeed), Is.EqualTo(1));
             Assert.That(options.IndexOf(OptionCodes.IdbTsResolution), Is.EqualTo(2));
             Assert.That(options.IndexOf(OptionCodes.IdbName), Is.EqualTo(-1));
@@ -187,12 +187,12 @@
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, SpeedData);
             _ = options.Add(BlockCodes.InterfaceDescriptionBlock, TsResData);
 
-            Assert.That(options.IndexOf(OptionCodes.IdbSpeed), Is.EqualTo(0));
+            Assert.That(options.IndexOf(OptionCodes.IdbSpeed), Is.Zero);
             Assert.That(options.IndexOf(OptionCodes.IdbFcsLen), Is.EqualTo(1));
             Assert.That(options.IndexOf(OptionCodes.IdbTsResolution), Is.EqualTo(3));
             Assert.That(options.IndexOf(OptionCodes.IdbName), Is.EqualTo(-1));
 
-            Assert.That(options.IndexOf(OptionCodes.IdbSpeed, 0), Is.EqualTo(0));
+            Assert.That(options.IndexOf(OptionCodes.IdbSpeed, 0), Is.Zero);
             Assert.That(options.IndexOf(OptionCodes.IdbFcsLen, 0), Is.EqualTo(1));
             Assert.That(options.IndexOf(OptionCodes.IdbTsResolution, 0), Is.EqualTo(3));
             Assert.That(options.IndexOf(OptionCodes.IdbName, 0), Is.EqualTo(-1));

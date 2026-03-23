@@ -24,7 +24,7 @@
         [Test]
         public void EncodeNegativeTz(
             [Values(ControlResponse.StatusOk, ControlResponse.StatusError, ControlResponse.StatusNotSupported)] int statusCode,
-            [Values(false, true)] bool isDst)
+            [Values] bool isDst)
         {
             CustomTimeZoneResponse response =
                 new(statusCode, new TimeSpan(-6, 0, 0), isDst);
@@ -43,7 +43,7 @@
         [Test]
         public void EncodePositiveTz(
             [Values(ControlResponse.StatusOk, ControlResponse.StatusError, ControlResponse.StatusNotSupported)] int statusCode,
-            [Values(false, true)] bool isDst)
+            [Values] bool isDst)
         {
             CustomTimeZoneResponse response =
                 new(statusCode, new TimeSpan(9, 30, 0), isDst);

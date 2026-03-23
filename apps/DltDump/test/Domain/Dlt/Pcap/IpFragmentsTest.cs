@@ -12,9 +12,9 @@
         {
             IpFragments fragments = new(10);
             Assert.That(fragments.FragmentId, Is.EqualTo(10));
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.GetFragments(), Is.Empty);
-            Assert.That(fragments.Length, Is.EqualTo(0));
+            Assert.That(fragments.Length, Is.Zero);
         }
 
         private static readonly byte[] Fragment1 = new byte[] {
@@ -65,8 +65,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[1].Position, Is.EqualTo(16));
@@ -85,11 +85,11 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
-            Assert.That(list[1].Position, Is.EqualTo(0));
+            Assert.That(list[1].Position, Is.Zero);
             Assert.That(list[1].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -156,7 +156,7 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(3));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
             Assert.That(list[0].Position, Is.EqualTo(pos1));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
@@ -183,8 +183,8 @@
             // existing collection should remain intact, so that it can be logged what is being dropped.
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[1].Position, Is.EqualTo(16));
@@ -194,7 +194,7 @@
             // tested properly in another test case.
             IpFragments fragmentsNew = new(30);
             Assert.That(fragmentsNew.AddFragment(16, false, GetChecksum(Fragment3), Fragment3, TimeOld, 128), Is.EqualTo(IpFragmentResult.Incomplete));
-            Assert.That(fragmentsNew.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragmentsNew.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragmentsNew.FragmentId, Is.EqualTo(30));
             Assert.That(fragmentsNew.Length, Is.EqualTo(8));
         }
@@ -207,7 +207,7 @@
             Assert.That(fragments.AddFragment(8, true, GetChecksum(Fragment2), Fragment2, Time2, 16), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(0, true, GetChecksum(Fragment1), Fragment1, TimeOld, 32), Is.EqualTo(IpFragmentResult.InvalidTimeOut));
 
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.FragmentId, Is.EqualTo(30));
             Assert.That(fragments.Length, Is.EqualTo(16));
 
@@ -219,7 +219,7 @@
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(16));
-            Assert.That(list[1].Position, Is.EqualTo(0));
+            Assert.That(list[1].Position, Is.Zero);
             Assert.That(list[1].GetArray(), Is.EqualTo(Fragment3).AsCollection);
         }
 
@@ -236,8 +236,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
         }
 
@@ -254,8 +254,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
         }
 
@@ -273,8 +273,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[1].Position, Is.EqualTo(16));
@@ -295,8 +295,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[1].Position, Is.EqualTo(16));
@@ -317,11 +317,11 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
-            Assert.That(list[1].Position, Is.EqualTo(0));
+            Assert.That(list[1].Position, Is.Zero);
             Assert.That(list[1].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -339,11 +339,11 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
             Assert.That(list[0].Position, Is.EqualTo(16));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
-            Assert.That(list[1].Position, Is.EqualTo(0));
+            Assert.That(list[1].Position, Is.Zero);
             Assert.That(list[1].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -361,11 +361,11 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
             Assert.That(list[0].Position, Is.EqualTo(20));
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(12));
-            Assert.That(list[1].Position, Is.EqualTo(0));
+            Assert.That(list[1].Position, Is.Zero);
             Assert.That(list[1].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -382,8 +382,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
         }
 
@@ -394,14 +394,14 @@
             Assert.That(fragments.AddFragment(16, false, GetChecksum(Fragment3), Fragment3, Time1, 0), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(12, true, GetChecksum(Fragment2), Fragment2, Time2, 16), Is.EqualTo(IpFragmentResult.InvalidOverlap));
 
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.FragmentId, Is.EqualTo(40));
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(16));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment3).AsCollection);
         }
 
@@ -412,14 +412,14 @@
             Assert.That(fragments.AddFragment(8, false, GetChecksum(Fragment2), Fragment2, Time1, 0), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(16, true, GetChecksum(Fragment3), Fragment3, Time2, 16), Is.EqualTo(IpFragmentResult.InvalidOffset));
 
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.FragmentId, Is.EqualTo(50));
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(8));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -430,14 +430,14 @@
             Assert.That(fragments.AddFragment(16, true, GetChecksum(Fragment3), Fragment3, Time1, 0), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(8, false, GetChecksum(Fragment2), Fragment2, Time2, 16), Is.EqualTo(IpFragmentResult.InvalidOffset));
 
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.FragmentId, Is.EqualTo(50));
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(16));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment3).AsCollection);
         }
 
@@ -448,14 +448,14 @@
             Assert.That(fragments.AddFragment(8, false, GetChecksum(Fragment2), Fragment2, Time1, 0), Is.EqualTo(IpFragmentResult.Incomplete));
             Assert.That(fragments.AddFragment(8, false, GetChecksum(Fragment3), Fragment3, Time2, 16), Is.EqualTo(IpFragmentResult.InvalidOffset));
 
-            Assert.That(fragments.TimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(fragments.TimeStamp.Ticks, Is.Zero);
             Assert.That(fragments.FragmentId, Is.EqualTo(60));
             Assert.That(fragments.Length, Is.EqualTo(8));
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(1));
             Assert.That(list[0].FragmentOffset, Is.EqualTo(8));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment2).AsCollection);
         }
 
@@ -473,8 +473,8 @@
 
             List<IpFragment> list = new(fragments.GetFragments());
             Assert.That(list, Has.Count.EqualTo(2));
-            Assert.That(list[0].FragmentOffset, Is.EqualTo(0));
-            Assert.That(list[0].Position, Is.EqualTo(0));
+            Assert.That(list[0].FragmentOffset, Is.Zero);
+            Assert.That(list[0].Position, Is.Zero);
             Assert.That(list[0].GetArray(), Is.EqualTo(Fragment1).AsCollection);
             Assert.That(list[1].FragmentOffset, Is.EqualTo(8));
             Assert.That(list[1].Position, Is.EqualTo(16));

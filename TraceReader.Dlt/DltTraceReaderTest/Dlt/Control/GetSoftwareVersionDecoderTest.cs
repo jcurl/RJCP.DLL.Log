@@ -38,7 +38,7 @@
 
             GetSoftwareVersionResponse response = (GetSoftwareVersionResponse)service;
             Assert.That(response.SwVersion, Is.EqualTo("Version"));
-            Assert.That(response.Status, Is.EqualTo(0));
+            Assert.That(response.Status, Is.Zero);
             Assert.That(response.ToString(), Is.EqualTo("[get_software_version ok] Version"));
         }
 
@@ -52,7 +52,7 @@
 
             GetSoftwareVersionResponse response = (GetSoftwareVersionResponse)service;
             Assert.That(response.SwVersion, Is.EqualTo("Version"));
-            Assert.That(response.Status, Is.EqualTo(0));
+            Assert.That(response.Status, Is.Zero);
             Assert.That(response.ToString(), Is.EqualTo("[get_software_version ok] Version"));
         }
 

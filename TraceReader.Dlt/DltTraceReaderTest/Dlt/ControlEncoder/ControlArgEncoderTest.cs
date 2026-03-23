@@ -77,7 +77,7 @@
         }
 
         [Test]
-        public void ControlErrorNotSupportedResponse([Values(false, true)] bool bigEndian)
+        public void ControlErrorNotSupportedResponse([Values] bool bigEndian)
         {
             byte[] buffer = new byte[1024];
 

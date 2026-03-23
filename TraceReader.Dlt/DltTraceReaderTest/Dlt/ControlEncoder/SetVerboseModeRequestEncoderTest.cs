@@ -22,7 +22,7 @@
             : base(encoderType, endianness) { }
 
         [Test]
-        public void Encode([Values(false, true)] bool enabled)
+        public void Encode([Values] bool enabled)
         {
             SetVerboseModeRequest request = new(enabled);
 

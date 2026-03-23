@@ -20,11 +20,11 @@
             Assert.That(builder.DltType, Is.EqualTo(DltType.UNKNOWN));
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
             Assert.That(builder.IsVerbose, Is.False);
-            Assert.That(builder.SessionId, Is.EqualTo(0));
+            Assert.That(builder.SessionId, Is.Zero);
             Assert.That(builder.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(builder.BigEndian, Is.False);
-            Assert.That(builder.Position, Is.EqualTo(0));
-            Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
+            Assert.That(builder.Position, Is.Zero);
+            Assert.That(builder.NumberOfArgs, Is.Zero);
             Assert.That(builder.Arguments, Is.Empty);
         }
 
@@ -39,9 +39,9 @@
 
             // The features shouldn't be set, as nothing was assigned to the builder
             DltNonVerboseTraceLine dltLine = (DltNonVerboseTraceLine)line;
-            Assert.That(dltLine.Line, Is.EqualTo(0));
-            Assert.That(dltLine.Position, Is.EqualTo(0));
-            Assert.That(dltLine.MessageId, Is.EqualTo(0));
+            Assert.That(dltLine.Line, Is.Zero);
+            Assert.That(dltLine.Position, Is.Zero);
+            Assert.That(dltLine.MessageId, Is.Zero);
             Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info non-verbose 0 [0] "));
             Assert.That(dltLine.Text, Is.EqualTo("[0] "));
             Assert.That(dltLine.Features.EcuId, Is.False);
@@ -54,7 +54,7 @@
             Assert.That(dltLine.Features.MessageType, Is.True);
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.Features.SessionId, Is.False);
-            Assert.That(dltLine.SessionId, Is.EqualTo(0));
+            Assert.That(dltLine.SessionId, Is.Zero);
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.False);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
             Assert.That(dltLine.Features.TimeStamp, Is.False);
@@ -76,8 +76,8 @@
 
             // The features shouldn't be set, as nothing was assigned to the builder
             DltTraceLine dltLine = (DltTraceLine)line;
-            Assert.That(dltLine.Line, Is.EqualTo(0));
-            Assert.That(dltLine.Position, Is.EqualTo(0));
+            Assert.That(dltLine.Line, Is.Zero);
+            Assert.That(dltLine.Position, Is.Zero);
             Assert.That(dltLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 log info verbose 0 "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
             Assert.That(dltLine.Features.EcuId, Is.False);
@@ -90,7 +90,7 @@
             Assert.That(dltLine.Features.MessageType, Is.True);
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.Features.SessionId, Is.False);
-            Assert.That(dltLine.SessionId, Is.EqualTo(0));
+            Assert.That(dltLine.SessionId, Is.Zero);
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.False);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
             Assert.That(dltLine.Features.TimeStamp, Is.False);
@@ -137,7 +137,7 @@
             Assert.That(line, Is.TypeOf<DltTraceLine>());
 
             DltTraceLine dltLine = (DltTraceLine)line;
-            Assert.That(dltLine.Line, Is.EqualTo(0));
+            Assert.That(dltLine.Line, Is.Zero);
             Assert.That(dltLine.Position, Is.EqualTo(10));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 1 custom"));
             Assert.That(dltLine.Text, Is.EqualTo("custom"));
@@ -198,7 +198,7 @@
             Assert.That(line, Is.TypeOf<DltTraceLine>());
 
             DltTraceLine dltLine = (DltTraceLine)line;
-            Assert.That(dltLine.Line, Is.EqualTo(0));
+            Assert.That(dltLine.Line, Is.Zero);
             Assert.That(dltLine.Position, Is.EqualTo(10));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 2 custom foo"));
             Assert.That(dltLine.Text, Is.EqualTo("custom foo"));
@@ -246,7 +246,7 @@
             Assert.That(builder.DltType, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(builder.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(builder.IsVerbose, Is.True);
-            Assert.That(builder.SessionId, Is.EqualTo(0));
+            Assert.That(builder.SessionId, Is.Zero);
             Assert.That(builder.TimeStamp, Is.EqualTo(time));
             Assert.That(builder.BigEndian, Is.False);
             Assert.That(builder.Position, Is.EqualTo(10));
@@ -255,7 +255,7 @@
             Assert.That(line, Is.TypeOf<DltTraceLine>());
 
             DltTraceLine dltLine = (DltTraceLine)line;
-            Assert.That(dltLine.Line, Is.EqualTo(0));
+            Assert.That(dltLine.Line, Is.Zero);
             Assert.That(dltLine.Position, Is.EqualTo(10));
             Assert.That(dltLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 0 log info verbose 0 "));
             Assert.That(dltLine.Text, Is.EqualTo(string.Empty));
@@ -269,7 +269,7 @@
             Assert.That(dltLine.Features.MessageType, Is.True);
             Assert.That(dltLine.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(dltLine.Features.SessionId, Is.False);
-            Assert.That(dltLine.SessionId, Is.EqualTo(0));
+            Assert.That(dltLine.SessionId, Is.Zero);
             Assert.That(dltLine.Features.DeviceTimeStamp, Is.True);
             Assert.That(dltLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55352000)));
             Assert.That(dltLine.Features.TimeStamp, Is.True);
@@ -300,7 +300,7 @@
 
             DltTraceLine line = (DltTraceLine)builder.GetResult();
             builder.Reset();
-            Assert.That(line.Line, Is.EqualTo(0));
+            Assert.That(line.Line, Is.Zero);
             Assert.That(line.Position, Is.EqualTo(10));
             Assert.That(line.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 log info verbose 0 "));
             Assert.That(line.Text, Is.EqualTo(string.Empty));
@@ -350,7 +350,7 @@
             Assert.That(line.Features.MessageType, Is.True);
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_INFO));
             Assert.That(line.Features.SessionId, Is.False);            // After builder.Reset(), this is cleared.
-            Assert.That(line.SessionId, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
             Assert.That(line.Features.DeviceTimeStamp, Is.True);
             Assert.That(line.DeviceTimeStamp, Is.EqualTo(new TimeSpan(55356000)));
             Assert.That(line.Features.TimeStamp, Is.True);
@@ -459,7 +459,7 @@
 
             builder.Reset();
             Assert.That(builder.Features.SessionId, Is.False);
-            Assert.That(builder.SessionId, Is.EqualTo(0));
+            Assert.That(builder.SessionId, Is.Zero);
         }
 
         [Test]
@@ -590,7 +590,7 @@
             Assert.That(line.Arguments, Is.Empty);       // The number of arguments isn't used.
 
             builder.Reset();
-            Assert.That(builder.NumberOfArgs, Is.EqualTo(0));
+            Assert.That(builder.NumberOfArgs, Is.Zero);
         }
 
         [Test]
@@ -705,7 +705,7 @@
             builder.SetStorageHeaderEcuId("FCU1");
 
             DltTraceLine line1 = (DltTraceLine)builder.GetResult();
-            Assert.That(line1.Line, Is.EqualTo(0));
+            Assert.That(line1.Line, Is.Zero);
             Assert.That(line1.TimeStamp, Is.GreaterThan(DateTime.Now.AddSeconds(-30)));
             Assert.That(line1.Features.TimeStamp, Is.True);
             builder.Reset();
@@ -726,8 +726,8 @@
 
             builder.AddSkippedBytes(25, "header");
             DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
-            Assert.That(line.Line, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
+            Assert.That(line.Line, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.Default));
             Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; Reason: header"));
             Assert.That(line.BytesSkipped, Is.EqualTo(25));
@@ -745,8 +745,8 @@
 
             builder.AddSkippedBytes(25, "header");
             DltSkippedTraceLine line = (DltSkippedTraceLine)builder.GetSkippedResult();
-            Assert.That(line.Line, Is.EqualTo(0));
-            Assert.That(line.Position, Is.EqualTo(0));
+            Assert.That(line.Line, Is.Zero);
+            Assert.That(line.Position, Is.Zero);
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 5, 10, 39, 23.0456)));
             Assert.That(line.Text, Is.EqualTo("Skipped: 25 bytes; Reason: header"));
             Assert.That(line.BytesSkipped, Is.EqualTo(25));
@@ -783,8 +783,8 @@
             Assert.That(line.TimeStamp, Is.EqualTo(DltTime.FileTime(2021, 12, 4, 17, 56, 23.5634)));
             Assert.That(line.Count, Is.EqualTo(-1));
             Assert.That(line.EcuId, Is.EqualTo(string.Empty));
-            Assert.That(line.SessionId, Is.EqualTo(0));
-            Assert.That(line.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(line.SessionId, Is.Zero);
+            Assert.That(line.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(line.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(line.ApplicationId, Is.EqualTo("SKIP"));
             Assert.That(line.ContextId, Is.EqualTo("SKIP"));
@@ -824,8 +824,8 @@
             Assert.That(line, Is.TypeOf<DltControlTraceLine>());
 
             DltControlTraceLine controlLine = (DltControlTraceLine)line;
-            Assert.That(controlLine.Line, Is.EqualTo(0));
-            Assert.That(controlLine.Position, Is.EqualTo(0));
+            Assert.That(controlLine.Line, Is.Zero);
+            Assert.That(controlLine.Position, Is.Zero);
             Assert.That(controlLine.ToString(), Is.EqualTo("1970/01/01 00:00:00.000000 0.0000 -1    0 control request non-verbose [custom_control_request]"));
             Assert.That(controlLine.Text, Is.EqualTo("[custom_control_request]"));
             Assert.That(controlLine.Features.EcuId, Is.False);
@@ -838,7 +838,7 @@
             Assert.That(controlLine.Features.MessageType, Is.True);
             Assert.That(controlLine.Type, Is.EqualTo(DltType.CONTROL_REQUEST));
             Assert.That(controlLine.Features.SessionId, Is.False);
-            Assert.That(controlLine.SessionId, Is.EqualTo(0));
+            Assert.That(controlLine.SessionId, Is.Zero);
             Assert.That(controlLine.Features.DeviceTimeStamp, Is.False);
             Assert.That(controlLine.DeviceTimeStamp, Is.EqualTo(new TimeSpan(0)));
             Assert.That(controlLine.Features.TimeStamp, Is.False);
@@ -873,7 +873,7 @@
             Assert.That(line, Is.TypeOf<DltControlTraceLine>());
 
             DltControlTraceLine controlLine = (DltControlTraceLine)line;
-            Assert.That(controlLine.Line, Is.EqualTo(0));
+            Assert.That(controlLine.Line, Is.Zero);
             Assert.That(controlLine.Position, Is.EqualTo(10));
             Assert.That(controlLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 control request non-verbose [custom_control_request]"));
             Assert.That(controlLine.Text, Is.EqualTo("[custom_control_request]"));
@@ -922,7 +922,7 @@
             Assert.That(line, Is.TypeOf<DltControlTraceLine>());
 
             DltControlTraceLine controlLine = (DltControlTraceLine)line;
-            Assert.That(controlLine.Line, Is.EqualTo(0));
+            Assert.That(controlLine.Line, Is.Zero);
             Assert.That(controlLine.Position, Is.EqualTo(10));
             Assert.That(controlLine.ToString(), Is.EqualTo($"{DltTime.LocalTime(time)} 5.5352 127 ECU1 APP1 CTX1 1435 control time non-verbose []"));
             Assert.That(controlLine.Text, Is.EqualTo("[]"));

@@ -1459,7 +1459,7 @@
                 Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
-                Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.AfterContext, Is.Zero);
             }
         }
 
@@ -1477,7 +1477,7 @@
                 Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
                 Assert.That(cmdOptions.BeforeContext, Is.EqualTo(1));
-                Assert.That(cmdOptions.AfterContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.AfterContext, Is.Zero);
             }
         }
 
@@ -1536,7 +1536,7 @@
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
-                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.BeforeContext, Is.Zero);
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));
             }
         }
@@ -1554,7 +1554,7 @@
                 }), Is.EqualTo(ExitCode.Success));
                 Assert.That(cmdOptions.Arguments, Has.Count.EqualTo(1));
                 Assert.That(cmdOptions.Arguments[0], Is.EqualTo(EmptyFile));
-                Assert.That(cmdOptions.BeforeContext, Is.EqualTo(0));
+                Assert.That(cmdOptions.BeforeContext, Is.Zero);
                 Assert.That(cmdOptions.AfterContext, Is.EqualTo(1));
             }
         }

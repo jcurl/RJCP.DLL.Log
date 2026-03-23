@@ -404,7 +404,7 @@
             LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<LogTraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(true));
+            Assert.That(c.Check(line), Is.True);
         }
 
         [Test]
@@ -413,7 +413,7 @@
             TraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<LogTraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(false));
+            Assert.That(c.Check(line), Is.False);
         }
 
         [Test]
@@ -422,7 +422,7 @@
             LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().TypeOf<TraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(false));
+            Assert.That(c.Check(line), Is.False);
         }
 
         [Test]
@@ -447,7 +447,7 @@
             LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<LogTraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(true));
+            Assert.That(c.Check(line), Is.True);
         }
 
         [Test]
@@ -456,7 +456,7 @@
             TraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<LogTraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(false));
+            Assert.That(c.Check(line), Is.False);
         }
 
         [Test]
@@ -465,7 +465,7 @@
             LogTraceLine line = new("X", 0, 0);
             Constraint c = Constraint().InstanceOf<TraceLine>();
 
-            Assert.That(c.Check(line), Is.EqualTo(true));
+            Assert.That(c.Check(line), Is.True);
         }
 
         [Test]

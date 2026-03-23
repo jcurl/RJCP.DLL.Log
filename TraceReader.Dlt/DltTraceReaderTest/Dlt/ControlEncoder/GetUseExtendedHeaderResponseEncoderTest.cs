@@ -22,7 +22,7 @@
             : base(encoderType, endianness) { }
 
         [Test]
-        public void EncodeSuccess([Values(false, true)] bool enabled)
+        public void EncodeSuccess([Values] bool enabled)
         {
             GetUseExtendedHeaderResponse response =
                 new(ControlResponse.StatusOk, enabled);

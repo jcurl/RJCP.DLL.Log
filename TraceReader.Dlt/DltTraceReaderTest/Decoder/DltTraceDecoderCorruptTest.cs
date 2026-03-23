@@ -107,7 +107,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, new[] { 4, 16, 4, 500 }))
                 using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
-                    Assert.That(line.Line, Is.EqualTo(0));
+                    Assert.That(line.Line, Is.Zero);
                     m_Factory.IsSkippedLine(line, DltTime.Default, l1 + r);
 
                     line = await reader.GetLineAsync();
@@ -140,7 +140,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, new[] { 4, 16, 4, 500 }))
                 using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
-                    Assert.That(line.Line, Is.EqualTo(0));
+                    Assert.That(line.Line, Is.Zero);
                     m_Factory.IsSkippedLine(line, DltTestData.Time4, l1 + r);
 
                     line = await reader.GetLineAsync();
@@ -243,7 +243,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes))
                 using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
-                    Assert.That(line.Line, Is.EqualTo(0));
+                    Assert.That(line.Line, Is.Zero);
                     m_Factory.IsSkippedLine(line, DltTestData.Time1, l1);
 
                     line = await reader.GetLineAsync();
@@ -292,7 +292,7 @@
                 using (Stream readStream = new ReadLimitStream(stream, maxBytes))
                 using (ITraceReader<DltTraceLineBase> reader = await m_Factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
-                    Assert.That(line.Line, Is.EqualTo(0));
+                    Assert.That(line.Line, Is.Zero);
                     m_Factory.IsSkippedLine(line, DltTestData.Time1, l1);
 
                     line = await reader.GetLineAsync();

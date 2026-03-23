@@ -81,7 +81,7 @@
             using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 factory.IsLine1(line, 0, 127, nv);
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
             }
         }
 
@@ -135,7 +135,7 @@
             using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(stream)) {
                 DltTraceLineBase line = await reader.GetLineAsync();
                 factory.IsLine1(line, 0, 127);
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Position, Is.Zero);
 
                 line = await reader.GetLineAsync();
                 factory.IsLine2(line, 1, 128);
@@ -184,7 +184,7 @@
                 using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
                     factory.IsLine2(line, 0, 127);
-                    Assert.That(line.Position, Is.EqualTo(0));
+                    Assert.That(line.Position, Is.Zero);
 
                     line = await reader.GetLineAsync();
                     factory.IsSkippedLine(line, DltTestData.Time2, d);
@@ -212,7 +212,7 @@
                 using (ITraceReader<DltTraceLineBase> reader = await factory.DltReaderFactory(readStream)) {
                     DltTraceLineBase line = await reader.GetLineAsync();
                     factory.IsLine2(line, 0, 127);
-                    Assert.That(line.Position, Is.EqualTo(0));
+                    Assert.That(line.Position, Is.Zero);
 
                     line = await reader.GetLineAsync();
                     factory.IsSkippedLine(line, DltTestData.Time2, l2);

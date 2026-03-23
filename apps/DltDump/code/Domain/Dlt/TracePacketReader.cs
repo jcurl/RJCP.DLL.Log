@@ -9,6 +9,12 @@
     using RJCP.Diagnostics.Log.Decoder;
     using RJCP.Diagnostics.Log.Dlt;
 
+#if NET10_0_OR_GREATER
+    using Lock = System.Threading.Lock;
+#else
+    using Lock = System.Object;
+#endif
+
     /// <summary>
     /// Instantiate a <see cref="ITraceReader{DltTraceLineBase}"/> specifically for reading from an input stream of
     /// <see cref="IPacket"/>.
@@ -30,7 +36,7 @@
         private readonly IPacket m_Packet;
         private readonly ITraceDecoderFactory<DltTraceLineBase> m_DecoderFactory;
 
-        private readonly object m_DecodersLock = new();
+        private readonly Lock m_DecodersLock = new();
         private readonly List<DecoderState> m_Decoders = new();
 
         private readonly byte[] m_Buffer = new byte[65536];

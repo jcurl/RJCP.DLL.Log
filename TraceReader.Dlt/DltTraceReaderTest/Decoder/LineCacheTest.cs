@@ -16,7 +16,7 @@
         public void DefaultLength()
         {
             LineCacheAccessor cache = new();
-            Assert.That(cache.CacheLength, Is.EqualTo(0));
+            Assert.That(cache.CacheLength, Is.Zero);
         }
 
         [Test]
@@ -42,7 +42,7 @@
             Assert.That(() => {
                 cache.Append(buffer.AsSpan());
             }, Throws.TypeOf<InsufficientMemoryException>());
-            Assert.That(cache.CacheLength, Is.EqualTo(0));
+            Assert.That(cache.CacheLength, Is.Zero);
         }
     }
 }

@@ -16,7 +16,7 @@
 
             IVerboseDltDecoder dltDecoder = new VerboseDltDecoder(new VerboseArgDecoder());
             Result<int> length = dltDecoder.Decode(Array.Empty<byte>(), lineBuilder);
-            Assert.That(length.Value, Is.EqualTo(0));
+            Assert.That(length.Value, Is.Zero);
         }
     }
 }

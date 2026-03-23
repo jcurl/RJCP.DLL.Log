@@ -149,7 +149,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
@@ -185,7 +185,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100);
@@ -221,7 +221,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 }
 
@@ -252,7 +252,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
                 }
 
@@ -345,7 +345,7 @@
                 Assert.That(lines, Is.Empty);
                 if (decoder is DltPcapLegacyDecoder legacy) {
                     Assert.That(legacy.Format, Is.Not.Null);
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                 }
 
                 lines = Flush(decoder);
@@ -603,7 +603,7 @@
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
                 Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
                 Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
-                Assert.That(lines[0].Line, Is.EqualTo(0));
+                Assert.That(lines[0].Line, Is.Zero);
                 Assert.That(lines[0].Position, Is.EqualTo(82));
                 Assert.That(lines[1].Features.TimeStamp, Is.True);
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
@@ -620,7 +620,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
@@ -678,7 +678,7 @@
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
                 Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
                 Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
-                Assert.That(lines[0].Line, Is.EqualTo(0));
+                Assert.That(lines[0].Line, Is.Zero);
                 Assert.That(lines[0].Position, Is.EqualTo(82));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
                 Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
@@ -706,7 +706,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
@@ -785,7 +785,7 @@
                 Assert.That(lines[0].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line1.DeviceTimeStamp));
                 Assert.That(lines[0].Text, Is.EqualTo(PcapLegacyLines.Line1.Text));
                 Assert.That(lines[0].Count, Is.EqualTo(PcapLegacyLines.Line1.Count));
-                Assert.That(lines[0].Line, Is.EqualTo(0));
+                Assert.That(lines[0].Line, Is.Zero);
                 Assert.That(lines[0].Position, Is.EqualTo(82));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
                 Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
@@ -813,7 +813,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);
@@ -865,10 +865,10 @@
                 Assert.That(lines, Has.Count.EqualTo(2));
                 // Skipped line
                 Assert.That(lines[0].TimeStamp, Is.EqualTo(PcapLegacyLines.Line1.TimeStamp));
-                Assert.That(lines[0].DeviceTimeStamp.Ticks, Is.EqualTo(0));
+                Assert.That(lines[0].DeviceTimeStamp.Ticks, Is.Zero);
                 Assert.That(lines[0].Text, Is.EqualTo("Skipped: 59 bytes; Reason: Invalid packet standard header"));
                 Assert.That(lines[0].Count, Is.EqualTo(-1));
-                Assert.That(lines[0].Line, Is.EqualTo(0));
+                Assert.That(lines[0].Line, Is.Zero);
                 Assert.That(lines[0].Position, Is.EqualTo(82));
                 Assert.That(lines[1].TimeStamp, Is.EqualTo(PcapLegacyLines.Line2.TimeStamp));
                 Assert.That(lines[1].DeviceTimeStamp, Is.EqualTo(PcapLegacyLines.Line2.DeviceTimeStamp));
@@ -884,7 +884,7 @@
                     Assert.That(legacy.Format.MajorVersion, Is.EqualTo(2));
                     Assert.That(legacy.Format.MinorVersion, Is.EqualTo(4));
                     Assert.That(legacy.Format.SnapLen, Is.EqualTo(0x40000));
-                    Assert.That(legacy.Format.FcsLen, Is.EqualTo(0));
+                    Assert.That(legacy.Format.FcsLen, Is.Zero);
                     Assert.That(legacy.Format.LinkType, Is.EqualTo(LinkTypes.LINKTYPE_ETHERNET));
 
                     DateTime expected = DateTime.UnixEpoch.AddNanoSeconds(100000);

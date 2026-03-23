@@ -426,8 +426,8 @@ namespace RJCP.Diagnostics.Log
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(stream)) {
                 TraceLine line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo(firstLine));
-                Assert.That(line.Line, Is.EqualTo(0));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Line, Is.Zero);
+                Assert.That(line.Position, Is.Zero);
 
                 // On reading the second line, the actual position where the line starts is approximate. It is not
                 // possible to calculate an exact position as the .NET decoder caches bytes as they're read, and the
@@ -460,8 +460,8 @@ namespace RJCP.Diagnostics.Log
             using (ITraceReader<TraceLine> reader = await new TextTraceReaderFactory().CreateAsync(path)) {
                 TraceLine line = await reader.GetLineAsync();
                 Assert.That(line.Text, Is.EqualTo("This is Line 1"));
-                Assert.That(line.Line, Is.EqualTo(0));
-                Assert.That(line.Position, Is.EqualTo(0));
+                Assert.That(line.Line, Is.Zero);
+                Assert.That(line.Position, Is.Zero);
 
                 // The external file could be Windows or Linux format (depending on the Revision control system, and how
                 // it checks the file out), which changes the position.

@@ -1,4 +1,4 @@
-﻿namespace RJCP.App.DltDump
+﻿namespace RJCP.App.DltDump.Benchmark
 {
     using System;
     using BenchmarkDotNet.Attributes;

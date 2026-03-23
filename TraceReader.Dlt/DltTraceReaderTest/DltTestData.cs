@@ -26,8 +26,8 @@
             Assert.That(skipLine.TimeStamp, Is.EqualTo(expectedTime));
             Assert.That(skipLine.Count, Is.EqualTo(-1));
             Assert.That(skipLine.EcuId, Is.EqualTo(string.Empty));
-            Assert.That(skipLine.SessionId, Is.EqualTo(0));
-            Assert.That(skipLine.DeviceTimeStamp.Ticks, Is.EqualTo(0));
+            Assert.That(skipLine.SessionId, Is.Zero);
+            Assert.That(skipLine.DeviceTimeStamp.Ticks, Is.Zero);
             Assert.That(skipLine.Type, Is.EqualTo(DltType.LOG_WARN));
             Assert.That(skipLine.ApplicationId, Is.EqualTo("SKIP"));
             Assert.That(skipLine.ContextId, Is.EqualTo("SKIP"));
